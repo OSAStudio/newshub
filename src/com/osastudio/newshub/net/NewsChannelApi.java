@@ -17,14 +17,11 @@ public class NewsChannelApi extends NewsBaseApi {
    
    private static final String TAG = "NewsChannelApi";
    
-   private static final String KEY_PAGE_COUNT = "deviceTYPE";
    
-   
-   public static NewsChannelList getNewsChannelList(Context context, int pageCount) {
+   public static NewsChannelList getNewsChannelList(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
-      params.add(new BasicNameValuePair(KEY_PAGE_COUNT, String.valueOf(pageCount)));
       String jsonString = getString(getNewsChannelListServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {
          return null;

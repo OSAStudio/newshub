@@ -7,10 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class NewsChannelList extends NewsBaseObject implements Parcelable {
+public class NewsChannelList extends NewsBaseObject {
 
    public static final String JSON_KEY_CHANNEL_LIST = "list";
 
@@ -18,10 +15,6 @@ public class NewsChannelList extends NewsBaseObject implements Parcelable {
 
    public NewsChannelList() {
       this.channelList = new ArrayList<NewsChannel>();
-   }
-
-   public NewsChannelList(Parcel src) {
-      this.channelList = src.createTypedArrayList(NewsChannel.CREATOR);
    }
 
    public List<NewsChannel> getChannelList() {
@@ -64,27 +57,5 @@ public class NewsChannelList extends NewsBaseObject implements Parcelable {
 
       return result;
    }
-
-   @Override
-   public int describeContents() {
-      return 0;
-   }
-
-   @Override
-   public void writeToParcel(Parcel dst, int flags) {
-      dst.writeTypedList(this.channelList);
-   }
-
-   public static final Parcelable.Creator<NewsChannelList> CREATOR = new Creator<NewsChannelList>() {
-      @Override
-      public NewsChannelList createFromParcel(Parcel src) {
-         return new NewsChannelList(src);
-      }
-
-      @Override
-      public NewsChannelList[] newArray(int size) {
-         return new NewsChannelList[size];
-      }
-   };
 
 }

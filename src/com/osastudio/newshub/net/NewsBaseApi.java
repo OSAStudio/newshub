@@ -52,12 +52,12 @@ public class NewsBaseApi {
             "lesson!getLessonContentByMobile.do").toString();
    }
 
-   public static String getString(String serviceUrl,
+   protected static String getString(String serviceUrl,
          List<NameValuePair> params) {
       return getString(serviceUrl, params, DEFAULT_HTTP_METHOD);
    }
    
-   public static String getString(String serviceUrl,
+   protected static String getString(String serviceUrl,
          List<NameValuePair> params, HttpMethod method) {
       if (method == HttpMethod.HTTP_GET) {
          return getStringByHttpGet(serviceUrl, params);
@@ -66,12 +66,12 @@ public class NewsBaseApi {
       }
    }
 
-   public static String getStringByHttpGet(String serviceUrl,
+   protected static String getStringByHttpGet(String serviceUrl,
          List<NameValuePair> params) {
       return null;
    }
 
-   public static String getStringByHttpPost(String serviceUrl,
+   protected static String getStringByHttpPost(String serviceUrl,
          List<NameValuePair> params) {
       try {
          HttpPost httpRequest = new HttpPost(serviceUrl);
