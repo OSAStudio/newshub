@@ -1,0 +1,9 @@
+<resources>
+   <color name="transparent">#00000000</color>
+   <color name="holo_blue">#ff33b5e5</color>
+   <color name="translucent_black">#4c000000</color>
+   <color name="gray">#ffcccccc</color>
+   <color name="bg_gray">#ff454545</color>
+   <color name="line_gray">#ff666666</color>
+   <drawable name="transparent_background">#00000000</drawable>
+</resources>
