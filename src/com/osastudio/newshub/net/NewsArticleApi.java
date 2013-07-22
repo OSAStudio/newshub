@@ -16,7 +16,7 @@ import com.osastudio.newshub.data.NewsChannelList;
 
 public class NewsArticleApi extends NewsBaseApi {
    
-   private static final String TAG = "NewsChannelApi";
+   private static final String TAG = "NewsArticleApi";
    
    private static final String KEY_NEWS_ARTICLE_ID = "serviceID";
    

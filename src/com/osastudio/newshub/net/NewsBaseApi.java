@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import com.osastudio.newshub.utils.InputStreamHelper;
 import com.osastudio.newshub.utils.Utils;
 
 public class NewsBaseApi {
@@ -133,4 +134,17 @@ public class NewsBaseApi {
       return null;
    }
 
+   public static String getFile(String url, String path) {
+      InputStream is = getStream(url);
+      if (is != null) {
+         InputStreamHelper helper = new InputStreamHelper(is);
+         if (helper.writeToFile(path)) {
+            Utils.logi(TAG, "getFile() PATH=" + url);
+            return path;
+         }
+      }
+      
+      return null;
+   }
+   
 }
