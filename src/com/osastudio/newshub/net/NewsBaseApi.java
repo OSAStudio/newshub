@@ -79,7 +79,6 @@ public class NewsBaseApi {
       try {
          HttpPost httpRequest = new HttpPost(serviceUrl);
          httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-         Utils.logi(TAG, "getString() URL=" + httpRequest.toString());
 
          HttpResponse httpResponse = new DefaultHttpClient()
                .execute(httpRequest);

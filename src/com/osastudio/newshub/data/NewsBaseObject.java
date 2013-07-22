@@ -21,11 +21,15 @@ public class NewsBaseObject {
       if (!TextUtils.isEmpty(hexString)) {
          try {
             return hexString.startsWith("#") ? Integer.decode(hexString)
-                  : Integer.decode("#".concat(hexString));
+                  : Integer.decode("#FF".concat(hexString));
          } catch (NumberFormatException e) {
             // e.printStackTrace();
          }
       }
+      return getDefaultColor();
+   }
+   
+   public static int getDefaultColor() {
       return 0x00000000;
    }
 
