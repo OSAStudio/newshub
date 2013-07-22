@@ -15,6 +15,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    public static final String JSON_KEY_TITLE = "lesson_title";
    
    private String articleId;
+   private String channelId;
    private int color;
    private String publishedTime;
    private String publisher;
@@ -26,6 +27,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    
    public NewsAbstract(Parcel src) {
       this.articleId = src.readString().trim();
+      this.channelId = src.readString().trim();
       this.color = src.readInt();
       this.publishedTime = src.readString().trim();
       this.publisher = src.readString().trim();
@@ -34,7 +36,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
 
 
    public String getArticleId() {
-      return articleId;
+      return this.articleId;
    }
 
    public NewsAbstract setArticleId(String articleId) {
@@ -42,8 +44,17 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       return this;
    }
 
+   public String getChannelId() {
+      return this.channelId;
+   }
+
+   public NewsAbstract setChannelId(String channelId) {
+      this.channelId = channelId;
+      return this;
+   }
+
    public int getColor() {
-      return color;
+      return this.color;
    }
 
    public NewsAbstract setColor(int color) {
@@ -52,7 +63,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public String getPublishedTime() {
-      return publishedTime;
+      return this.publishedTime;
    }
 
    public NewsAbstract setPublishedTime(String publishedTime) {
@@ -61,7 +72,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public String getPublisher() {
-      return publisher;
+      return this.publisher;
    }
 
    public NewsAbstract setPublisher(String publisher) {
@@ -70,7 +81,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public String getTitle() {
-      return title;
+      return this.title;
    }
 
    public NewsAbstract setTitle(String title) {
@@ -115,6 +126,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    @Override
    public void writeToParcel(Parcel dst, int flags) {
       dst.writeString(this.articleId);
+      dst.writeString(this.channelId);
       dst.writeInt(this.color);
       dst.writeString(this.publishedTime);
       dst.writeString(this.publisher);

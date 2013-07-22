@@ -39,7 +39,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public String getChannelId() {
-      return channelId;
+      return this.channelId;
    }
 
    public NewsChannel setChannelId(String channelId) {
@@ -48,7 +48,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public String getIconId() {
-      return iconId;
+      return this.iconId;
    }
 
    public NewsChannel setIconId(String iconId) {
@@ -57,7 +57,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public String getIconUrl() {
-      return iconUrl;
+      return this.iconUrl;
    }
 
    public NewsChannel setIconUrl(String iconUrl) {
@@ -66,7 +66,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public int getTitleColor() {
-      return titleColor;
+      return this.titleColor;
    }
 
    public NewsChannel setTitleColor(int titleColor) {
@@ -75,7 +75,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public String getTitleId() {
-      return titleId;
+      return this.titleId;
    }
 
    public NewsChannel setTitleId(String titleId) {
@@ -84,7 +84,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public String getTitleName() {
-      return titleName;
+      return this.titleName;
    }
 
    public NewsChannel setTitleName(String titleName) {
@@ -93,7 +93,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public String getTitleType() {
-      return titleType;
+      return this.titleType;
    }
 
    public NewsChannel setTitleType(String titleType) {

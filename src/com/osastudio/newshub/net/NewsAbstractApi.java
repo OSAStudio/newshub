@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsChannelList;
 
@@ -41,7 +42,15 @@ public class NewsAbstractApi extends NewsBaseApi {
          return null;
       }
       
-      return NewsAbstractList.parseJsonObject(jsonObject);
+      NewsAbstractList result = NewsAbstractList.parseJsonObject(jsonObject);
+      if (result != null && result.getAbstractList().size() > 0) {
+         for (NewsAbstract abs : result.getAbstractList()) {
+            if (abs != null) {
+               abs.setChannelId(newsChannelId);
+            }
+         }
+      }
+      return result;
    }
 
 }

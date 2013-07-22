@@ -18,7 +18,7 @@ public class NewsAbstractList extends NewsBaseObject {
    }
 
    public List<NewsAbstract> getAbstractList() {
-      return abstractList;
+      return this.abstractList;
    }
 
    public NewsAbstractList setAbstractList(List<NewsAbstract> list) {

@@ -35,6 +35,18 @@ public class NewsArticle extends NewsBaseObject {
       return this;
    }
 
+   public String getChannelId() {
+      return (this.newsAbstract != null) ? this.newsAbstract.getChannelId() : null;
+   }
+
+   public NewsArticle setChannelId(String channelId) {
+      if (this.newsAbstract == null) {
+         this.newsAbstract = new NewsAbstract();
+      }
+      this.newsAbstract.setChannelId(channelId);
+      return this;
+   }
+
    public int getColor() {
       return (this.newsAbstract != null) ? this.newsAbstract.getColor() : getDefaultColor();
    }
@@ -85,7 +97,7 @@ public class NewsArticle extends NewsBaseObject {
 
    
    public String getContent() {
-      return content;
+      return this.content;
    }
 
    public NewsArticle setContent(String content) {
