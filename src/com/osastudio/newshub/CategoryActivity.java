@@ -242,8 +242,7 @@ public class CategoryActivity extends Activity {
 				TextView tv = (TextView)category.findViewById(R.id.name);
 				
 				NewsChannel data = mCategoryList.get(index);
-				int color = 0xff000000 | data.getTitleColor();
-				base.setBackgroundColor(color);
+				base.setBackgroundColor(data.getTitleColor());
 				tv.setText(data.getTitleName());
 				return category;
 			} else {

@@ -23,7 +23,7 @@ public class NewsBaseObject {
             return hexString.startsWith("#") ? Integer.decode(hexString)
                   : Integer.decode("#AA".concat(hexString));
          } catch (NumberFormatException e) {
-            // e.printStackTrace();
+             e.printStackTrace();
          }
       }
       return getDefaultColor();
