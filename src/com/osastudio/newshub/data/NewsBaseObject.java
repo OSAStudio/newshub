@@ -21,7 +21,7 @@ public class NewsBaseObject {
       if (!TextUtils.isEmpty(hexString)) {
          try {
             return hexString.startsWith("#") ? Integer.decode(hexString)
-                  : Integer.decode("#FF".concat(hexString));
+                  : Integer.decode("#AA".concat(hexString));
          } catch (NumberFormatException e) {
             // e.printStackTrace();
          }
