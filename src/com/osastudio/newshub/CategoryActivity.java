@@ -174,7 +174,11 @@ public class CategoryActivity extends Activity {
 
 		@Override
 		public void onClick(int position, View v) {
-			startSummaryActivity();
+			int page = mSwitcher.getCurrentIndex();
+			int index = page * 8 + position;
+			if (index < mCategoryList.size()) {
+				startSummaryActivity(mCategoryList.get(index));
+			}
 			
 		}
 		
@@ -249,10 +253,10 @@ public class CategoryActivity extends Activity {
 
 	}
 	
-	private void startSummaryActivity() {
+	private void startSummaryActivity(NewsChannel data) {
 		 Intent it = new Intent(this, SummaryActivity.class);
 	        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  //Add for PresenterWidget. dwy.
-	        
+	        it.putExtra(SummaryActivity.CATEGORY_DATA, data);
 	        startActivityForResult(it,1);
 	}
 

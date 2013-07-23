@@ -2,6 +2,7 @@ package com.osastudio.newshub;
 
 import java.util.ArrayList;
 
+import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 import com.osastudio.newshub.widgets.SummaryGrid;
@@ -21,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SummaryActivity extends Activity {
+	public static final String CATEGORY_DATA = "Category_data";
+	private NewsChannel mCategoryData = null;
 	private SlideSwitcher mSwitcher = null;
 	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
 	private int mTouchSlop;
@@ -32,6 +35,11 @@ public class SummaryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			mCategoryData =  extras.getParcelable(CATEGORY_DATA);
+		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
@@ -165,7 +173,7 @@ public class SummaryActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			int index = mPage * 8 + position;
+			int index = mPage * 6 + position;
 			if (index < mSummaries.size()) {
 				View summary = convertView;
 				if (summary == null) {
