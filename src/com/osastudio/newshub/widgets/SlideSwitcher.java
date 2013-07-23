@@ -146,9 +146,6 @@ public class SlideSwitcher extends ViewSwitcher implements ViewSwitcher.ViewFact
 		return mCurrentIndex;
 	}
 	
-	
-
-	
 	private class AnimItem {
 		public int mInAnim;
 		public int mOutAnit;

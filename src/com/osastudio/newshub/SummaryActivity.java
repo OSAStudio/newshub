@@ -110,7 +110,7 @@ public class SummaryActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			if (mSummaries.size() % 8 == 0) {
+			if (mSummaries.size() % 6 == 0) {
 				return mSummaries.size() / 6;
 			} else {
 				return mSummaries.size() / 6 + 1;
@@ -179,7 +179,7 @@ public class SummaryActivity extends Activity {
 				tv.setText(data.lesson_title);
 
 				TextView name = (TextView)summary.findViewById(R.id.expert_name);
-				tv.setText(data.expert_name);
+				name.setText(data.expert_name);
 				return summary;
 			} else {
 				return null;
