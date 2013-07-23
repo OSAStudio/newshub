@@ -9,23 +9,27 @@ public class NewsBaseObject {
 
    protected static final String RESULT_OK = "1";
 
-   public static boolean isResultSuccess(final String resultCode) {
+   protected static boolean isResultSuccess(final String resultCode) {
       return !TextUtils.isEmpty(resultCode) && RESULT_OK.equals(resultCode);
    }
 
-   public static boolean isResultFailure(final String resultCode) {
+   protected static boolean isResultFailure(final String resultCode) {
       return !isResultSuccess(resultCode);
    }
 
-   public static int parseColorValue(final String hexString) {
+   protected static int parseColorValue(final String hexString) {
       if (!TextUtils.isEmpty(hexString)) {
          try {
             return hexString.startsWith("#") ? Integer.decode(hexString)
-                  : Integer.decode("#".concat(hexString));
+                  : Integer.decode("#FF".concat(hexString));
          } catch (NumberFormatException e) {
             // e.printStackTrace();
          }
       }
+      return getDefaultColor();
+   }
+   
+   protected static int getDefaultColor() {
       return 0x00000000;
    }
 

@@ -18,11 +18,11 @@ public class NewsChannelList extends NewsBaseObject {
    }
 
    public List<NewsChannel> getChannelList() {
-      return channelList;
+      return this.channelList;
    }
 
-   public NewsChannelList setChannelList(List<NewsChannel> channelList) {
-      this.channelList = channelList;
+   public NewsChannelList setChannelList(List<NewsChannel> list) {
+      this.channelList = list;
       return this;
    }
 

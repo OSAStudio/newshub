@@ -11,17 +11,21 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.osastudio.newshub.data.NewsArticle;
 import com.osastudio.newshub.data.NewsChannelList;
 
-public class NewsChannelApi extends NewsBaseApi {
+public class NewsArticleApi extends NewsBaseApi {
    
-   private static final String TAG = "NewsChannelApi";
+   private static final String TAG = "NewsArticleApi";
    
-   public static NewsChannelList getNewsChannelList(Context context) {
+   private static final String KEY_NEWS_ARTICLE_ID = "serviceID";
+   
+   public static NewsArticle getNewsArticle(Context context, String newsArticleId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
-      String jsonString = getString(getNewsChannelListServiceUrl(), params);
+      params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsArticleId));
+      String jsonString = getString(getNewsArticleServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {
          return null;
       }
@@ -37,7 +41,7 @@ public class NewsChannelApi extends NewsBaseApi {
          return null;
       }
       
-      return NewsChannelList.parseJsonObject(jsonObject);
+      return NewsArticle.parseJsonObject(jsonObject);
    }
 
 }

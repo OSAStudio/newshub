@@ -11,17 +11,17 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.data.NewsSplash;
 
-public class NewsChannelApi extends NewsBaseApi {
+public class NewsSplashApi extends NewsBaseApi {
    
-   private static final String TAG = "NewsChannelApi";
+   private static final String TAG = "NewsSplashApi";
    
-   public static NewsChannelList getNewsChannelList(Context context) {
+   public static NewsSplash getNewsSpalsh(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
-      String jsonString = getString(getNewsChannelListServiceUrl(), params);
+      String jsonString = getString(getNewsSplashServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {
          return null;
       }
@@ -37,7 +37,7 @@ public class NewsChannelApi extends NewsBaseApi {
          return null;
       }
       
-      return NewsChannelList.parseJsonObject(jsonObject);
+      return NewsSplash.parseJsonObject(jsonObject);
    }
 
 }

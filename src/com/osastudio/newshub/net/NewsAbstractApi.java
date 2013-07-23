@@ -11,17 +11,22 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.osastudio.newshub.data.NewsAbstract;
+import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsChannelList;
 
-public class NewsChannelApi extends NewsBaseApi {
+public class NewsAbstractApi extends NewsBaseApi {
    
-   private static final String TAG = "NewsChannelApi";
+   private static final String TAG = "NewsAbstractApi";
    
-   public static NewsChannelList getNewsChannelList(Context context) {
+   private static final String KEY_NEWS_CHANNEL_ID = "serviceID";
+   
+   public static NewsAbstractList getNewsAbstractList(Context context, String newsChannelId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
-      String jsonString = getString(getNewsChannelListServiceUrl(), params);
+      params.add(new BasicNameValuePair(KEY_NEWS_CHANNEL_ID, newsChannelId));
+      String jsonString = getString(getNewsAbstractListServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {
          return null;
       }
@@ -37,7 +42,15 @@ public class NewsChannelApi extends NewsBaseApi {
          return null;
       }
       
-      return NewsChannelList.parseJsonObject(jsonObject);
+      NewsAbstractList result = NewsAbstractList.parseJsonObject(jsonObject);
+      if (result != null && result.getAbstractList().size() > 0) {
+         for (NewsAbstract abs : result.getAbstractList()) {
+            if (abs != null) {
+               abs.setChannelId(newsChannelId);
+            }
+         }
+      }
+      return result;
    }
 
 }
