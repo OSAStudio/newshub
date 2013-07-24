@@ -2,9 +2,11 @@ package com.osastudio.newshub;
 
 import java.util.ArrayList;
 
-import com.osastudio.newshub.data.NewsBaseObject;
-import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.data.NewsBaseObject;
+import com.osastudio.newshub.data.NewsChannel;
+import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
 import com.osastudio.newshub.widgets.BaseAssistent;
@@ -27,7 +29,8 @@ import android.widget.TextView;
 
 public class CategoryActivity extends NewsBaseActivity {
 	private SlideSwitcher mSwitcher = null;
-	private ArrayList<CategoryData> mCategories = new ArrayList<CategoryData>();
+//	private ArrayList<CategoryData> mCategories = new ArrayList<CategoryData>();
+	private ArrayList<NewsChannel> mCategoryList = null;
 	private int mTouchSlop;
 	private int mBaseX, mBaseY;
 	private int mDirection = -1; // 0 is preview; 1 is next;
@@ -90,29 +93,33 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			for (int i = 0; i < 20; i++) {
-				CategoryData category = new CategoryData();
-				category.title_id = i;
-				category.icon_id = i;
-				if (i == 0) {
-					category.title_class = "֪ͨ";
-					category.title_color = 0xFFEE7942;
-					category.title_name = "���û���һ����";
-				} else if (i == 1) {
-
-					category.title_class = "��";
-					category.title_color = 0xFFFAF0E6;
-					category.title_name = "��һ��";
-				} else {
-					category.title_class = "����";
-					category.title_color = 0xFFC6E2FF;
-					category.title_name = "���� " + i;
-
-				}
-				category.icon_url = null;
-				category.service_id = 1;
-				mCategories.add(category);
-			}
+//			for (int i = 0; i < 20; i++) {
+//				CategoryData category = new CategoryData();
+//				category.title_id = i;
+//				category.icon_id = i;
+//				if (i == 0) {
+//					category.title_class = "通知";
+//					category.title_color = 0xFFEE7942;
+//					category.title_name = "致用户的一封信";
+//				} else if (i == 1) {
+//
+//					category.title_class = "包";
+//					category.title_color = 0xFFFAF0E6;
+//					category.title_name = "第一包";
+//				} else {
+//					category.title_class = "课题";
+//					category.title_color = 0xFFC6E2FF;
+//					category.title_name = "课题 " + i;
+//
+//				}
+//				category.icon_url = null;
+//				category.service_id = 1;
+//				mCategories.add(category);
+//			}
+			
+			NewsChannelList channel_list = NewsChannelApi.getNewsChannelList(getApplicationContext());
+			mCategoryList = (ArrayList<NewsChannel>)channel_list.getChannelList();
+			
 			return null;
 		}
 
@@ -133,10 +140,15 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-			if (mCategories.size() % 8 == 0) {
-				return mCategories.size() / 8;
+//			if (mCategories.size() % 8 == 0) {
+//				return mCategories.size() / 8;
+//			} else {
+//				return mCategories.size() / 8 + 1;
+//			}
+			if (mCategoryList.size() % 8 == 0) {
+				return mCategoryList.size() / 8;
 			} else {
-				return mCategories.size() / 8 + 1;
+				return mCategoryList.size() / 8 + 1;
 			}
 		}
 
@@ -167,7 +179,11 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public void onClick(int position, View v) {
-			startSummaryActivity();
+			int page = mSwitcher.getCurrentIndex();
+			int index = page * 8 + position;
+			if (index < mCategoryList.size()) {
+				startSummaryActivity(mCategoryList.get(index));
+			}
 			
 		}
 		
@@ -181,10 +197,15 @@ public class CategoryActivity extends NewsBaseActivity {
 		@Override
 		public int getCount() {
 			int count = 0;
-			if ((mPage+1) * 8 <= mCategories.size()) {
+//			if ((mPage+1) * 8 <= mCategories.size()) {
+//				count = 8;
+//			} else {
+//				count = 8 - ((mPage+1) * 8 - mCategories.size());
+//			}
+			if ((mPage+1) * 8 <= mCategoryList.size()) {
 				count = 8;
 			} else {
-				count = 8 - ((mPage+1) * 8 - mCategories.size());
+				count = 8 - ((mPage+1) * 8 - mCategoryList.size());
 			}
 			return count;
 		}
@@ -192,8 +213,13 @@ public class CategoryActivity extends NewsBaseActivity {
 		@Override
 		public Object getItem(int position) {
 			int index = mPage * 8 + position;
-			if (index < mCategories.size()) {
-				return mCategories.get(index);
+//			if (index < mCategories.size()) {
+//				return mCategories.get(index);
+//			} else {
+//				return null;
+//			}
+			if (index < mCategoryList.size()) {
+				return mCategoryList.get(index);
 			} else {
 				return null;
 			}
@@ -202,18 +228,27 @@ public class CategoryActivity extends NewsBaseActivity {
 		@Override
 		public View getView(int position, View convertView) {
 			int index = mPage * 8 + position;
-			if (index < mCategories.size()) {
+//			if (index < mCategories.size()) {
+			if (index < mCategoryList.size()) {
 				RelativeLayout category = (RelativeLayout)convertView;
 				if (category == null) {
 					LayoutInflater inflater = LayoutInflater.from(CategoryActivity.this);
 					category = (RelativeLayout)inflater.inflate(R.layout.category_item, null);
 				}
-				CategoryData data = mCategories.get(index);
+//				CategoryData data = mCategories.get(index);
+//				View base = category.findViewById(R.id.base);
+//				base.setBackgroundColor(data.title_color);
+//				ImageView iv = (ImageView)category.findViewById(R.id.image);
+//				TextView tv = (TextView)category.findViewById(R.id.name);
+//				tv.setText(data.title_name);
+
 				View base = category.findViewById(R.id.base);
-				base.setBackgroundColor(data.title_color);
 				ImageView iv = (ImageView)category.findViewById(R.id.image);
 				TextView tv = (TextView)category.findViewById(R.id.name);
-				tv.setText(data.title_name);
+				
+				NewsChannel data = mCategoryList.get(index);
+				base.setBackgroundColor(data.getTitleColor());
+				tv.setText(data.getTitleName());
 				return category;
 			} else {
 				return null;
@@ -222,10 +257,10 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	}
 	
-	private void startSummaryActivity() {
+	private void startSummaryActivity(NewsChannel data) {
 		 Intent it = new Intent(this, SummaryActivity.class);
 	        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  //Add for PresenterWidget. dwy.
-	        
+	        it.putExtra(SummaryActivity.CATEGORY_DATA, data);
 	        startActivityForResult(it,1);
 	}
 

@@ -1,7 +1,14 @@
 package com.osastudio.newshub;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import com.osastudio.newshub.data.NewsAbstract;
+import com.osastudio.newshub.data.NewsAbstractList;
+import com.osastudio.newshub.data.NewsChannel;
+import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.net.NewsAbstractApi;
+import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 import com.osastudio.newshub.widgets.SummaryGrid;
@@ -21,8 +28,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SummaryActivity extends NewsBaseActivity {
+	public static final String CATEGORY_DATA = "Category_data";
+	private NewsChannel mCategoryData = null;
 	private SlideSwitcher mSwitcher = null;
-	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
+//	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
+	private ArrayList<NewsAbstract> mSummaries = new ArrayList<NewsAbstract>();
 	private int mTouchSlop;
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
@@ -32,6 +42,11 @@ public class SummaryActivity extends NewsBaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			mCategoryData =  extras.getParcelable(CATEGORY_DATA);
+		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
@@ -80,16 +95,21 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			for (int i = 0; i < 20; i++) {
-				SummaryData summary = new SummaryData();
-				summary.lesson_id = i;
-
-				summary.lesson_title = "title "+i;
-				summary.lesson_colour = 0xFFFAF0E6;
-				summary.post_date = "07月15日";
-				summary.expert_name = "孔教授";
-				mSummaries.add(summary);
-			}
+//			for (int i = 0; i < 20; i++) {
+//				SummaryData summary = new SummaryData();
+//				summary.lesson_id = i;
+//
+//				summary.lesson_title = "title "+i;
+//				summary.lesson_colour = 0xFFFAF0E6;
+//				summary.post_date = "07月15日";
+//				summary.expert_name = "孔教授";
+//				mSummaries.add(summary);
+//			}
+//			NewsChannelList channel_list = NewsChannelApi.getNewsChannelList(getApplicationContext());
+//			mCategoryList = (ArrayList<NewsChannel>)channel_list.getChannelList();
+			
+			NewsAbstractList summary_list = NewsAbstractApi.getNewsAbstractList(getApplicationContext(), mCategoryData.getChannelId());
+			mSummaries = (ArrayList<NewsAbstract>)summary_list.getAbstractList();
 			return null;
 		}
 
@@ -110,7 +130,7 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-			if (mSummaries.size() % 8 == 0) {
+			if (mSummaries.size() % 6 == 0) {
 				return mSummaries.size() / 6;
 			} else {
 				return mSummaries.size() / 6 + 1;
@@ -165,21 +185,22 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			int index = mPage * 8 + position;
+			int index = mPage * 6 + position;
 			if (index < mSummaries.size()) {
 				View summary = convertView;
 				if (summary == null) {
 					LayoutInflater inflater = LayoutInflater.from(SummaryActivity.this);
 					summary = inflater.inflate(R.layout.summary_item, null);
 				}
-				SummaryData data = mSummaries.get(index);
+				NewsAbstract data = mSummaries.get(index);
 //				View base = summary.findViewById(R.id.base);
 //				base.setBackgroundColor(data.title_color);
 				TextView tv = (TextView)summary.findViewById(R.id.title);
-				tv.setText(data.lesson_title);
+				tv.setText(data.getTitle());
 
 				TextView name = (TextView)summary.findViewById(R.id.expert_name);
-				tv.setText(data.expert_name);
+				name.setText(data.getPublisher());
+				summary.setBackgroundColor(data.getColor());
 				return summary;
 			} else {
 				return null;
@@ -188,13 +209,13 @@ public class SummaryActivity extends NewsBaseActivity {
 
 	}
 	
-	public class SummaryData {
-		int lesson_id;//�γ�ID��Ψһ����񰴴�ID������ʾ��
-		String lesson_title;//�γ̱���
-		int lesson_colour;//��ɫ
-		String post_date;//��������
-		String expert_name;//����ר��
-	}
+//	public class SummaryData {
+//		int lesson_id;//�γ�ID��Ψһ����񰴴�ID������ʾ��
+//		String lesson_title;//�γ̱���
+//		int lesson_colour;//��ɫ
+//		String post_date;//��������
+//		String expert_name;//����ר��
+//	}
 
 
 }
