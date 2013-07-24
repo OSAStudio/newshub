@@ -28,8 +28,8 @@ public class NewsArticleApi extends NewsBaseApi {
    
    public static NewsArticle getNewsArticle(Context context, NewsAbstract newsAbstract) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
-      params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
-      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsAbstract.getArticleId()));
       String jsonString = getString(getNewsArticleServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {

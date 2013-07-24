@@ -3,6 +3,7 @@ package com.osastudio.newshub.net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -18,10 +19,13 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
+import com.osastudio.newshub.library.DeviceUuidFactory;
+import com.osastudio.newshub.library.Installation;
 import com.osastudio.newshub.utils.InputStreamHelper;
 import com.osastudio.newshub.utils.Utils;
 
@@ -39,8 +43,21 @@ public class NewsBaseApi {
    protected static final String KEY_DEVICE_ID = "deviceID";
    protected static final String KEY_DEVICE_TYPE = "deviceTYPE";
    
-   protected static final String DEVICE_TYPE = "android";
+   protected static String getDeviceId(Context context) {
+      String id = null;
+      UUID uuid = new DeviceUuidFactory(context).getDeviceUuid();
+      if (uuid != null) {
+         id = uuid.toString();
+      }
+      if (TextUtils.isEmpty(id)) {
+         id = Installation.id(context);
+      }
+      return id;
+   }
    
+   protected static String getDeviceType() {
+      return "android";
+   }
 
    protected static String getWebServer() {
       return DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER;
