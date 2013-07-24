@@ -2,6 +2,9 @@ package com.osastudio.newshub;
 
 import java.util.ArrayList;
 
+import com.osastudio.newshub.data.NewsBaseObject;
+import com.osastudio.newshub.net.NewsChannelApi;
+import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
 import com.osastudio.newshub.widgets.BaseAssistent;
@@ -12,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -21,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class CategoryActivity extends Activity {
+public class CategoryActivity extends NewsBaseActivity {
 	private SlideSwitcher mSwitcher = null;
 	private ArrayList<CategoryData> mCategories = new ArrayList<CategoryData>();
 	private int mTouchSlop;
@@ -39,6 +43,8 @@ public class CategoryActivity extends Activity {
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 		setupData();
+        int color = NewsBaseObject.parseColorValue("808080");
+        Utils.logi("", "____________" + color);
 	}
 
 	private void setupData() {

@@ -17,20 +17,21 @@ public class NewsBaseObject {
       return !isResultSuccess(resultCode);
    }
 
-   protected static int parseColorValue(final String hexString) {
+   public static int parseColorValue(final String hexString) {
       if (!TextUtils.isEmpty(hexString)) {
          try {
-            return hexString.startsWith("#") ? Integer.decode(hexString)
-                  : Integer.decode("#AA".concat(hexString));
+            int result = hexString.startsWith("#") ? Integer.decode(hexString)
+                  : Integer.decode("#".concat(hexString));
+            return (result & 0xFFFFFF) | 0x80000000;
          } catch (NumberFormatException e) {
-            // e.printStackTrace();
+             e.printStackTrace();
          }
       }
       return getDefaultColor();
    }
    
    protected static int getDefaultColor() {
-      return 0x00000000;
+      return 0x80000000;
    }
 
 }

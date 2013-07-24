@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SummaryActivity extends Activity {
+public class SummaryActivity extends NewsBaseActivity {
 	private SlideSwitcher mSwitcher = null;
 	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
 	private int mTouchSlop;

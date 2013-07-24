@@ -88,6 +88,21 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       this.title = title;
       return this;
    }
+   
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) {
+         return true;
+      }
+      
+      if ((obj == null) || !(obj instanceof NewsAbstract)) {
+         return false;
+      }
+      
+      NewsAbstract that = (NewsAbstract) obj;
+      return this.channelId.equals(that.getChannelId())
+            && this.articleId.equals(that.getArticleId());
+   }
 
    public static NewsAbstract parseJsonObject(JSONObject jsonObject) {
       NewsAbstract result = new NewsAbstract();

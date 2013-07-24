@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsArticle;
 import com.osastudio.newshub.data.NewsChannelList;
 
@@ -20,11 +21,16 @@ public class NewsArticleApi extends NewsBaseApi {
    
    private static final String KEY_NEWS_ARTICLE_ID = "serviceID";
    
+   @Deprecated
    public static NewsArticle getNewsArticle(Context context, String newsArticleId) {
+      return getNewsArticle(context, new NewsAbstract().setArticleId(newsArticleId));
+   }
+   
+   public static NewsArticle getNewsArticle(Context context, NewsAbstract newsAbstract) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
-      params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsArticleId));
+      params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsAbstract.getArticleId()));
       String jsonString = getString(getNewsArticleServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {
          return null;
@@ -41,7 +47,11 @@ public class NewsArticleApi extends NewsBaseApi {
          return null;
       }
       
-      return NewsArticle.parseJsonObject(jsonObject);
+      NewsArticle result = NewsArticle.parseJsonObject(jsonObject);
+      if (result != null) {
+         result.setAbstract(newsAbstract);
+      }
+      return result;
    }
 
 }

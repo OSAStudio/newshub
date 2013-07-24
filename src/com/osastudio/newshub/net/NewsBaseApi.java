@@ -17,6 +17,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
+
+import com.osastudio.newshub.NewsApp;
+import com.osastudio.newshub.cache.CacheManager;
+import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.utils.InputStreamHelper;
 import com.osastudio.newshub.utils.Utils;
 
@@ -145,6 +150,14 @@ public class NewsBaseApi {
       }
       
       return null;
+   }
+   
+   protected static CacheManager getCacheManager(Context context) {
+      return ((NewsApp) context.getApplicationContext()).getCacheManager();
+   }
+   
+   protected static NewsAbstractCache getNewsAbstractCache(Context context) {
+      return getCacheManager(context).getNewsAbstractCache();
    }
    
 }

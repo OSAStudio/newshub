@@ -49,7 +49,9 @@ public class NewsAbstractApi extends NewsBaseApi {
                abs.setChannelId(newsChannelId);
             }
          }
+         getNewsAbstractCache(context).setNewsAbstractList(result);
       }
+      
       return result;
    }
 

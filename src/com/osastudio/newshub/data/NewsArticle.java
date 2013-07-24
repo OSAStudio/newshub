@@ -14,11 +14,11 @@ public class NewsArticle extends NewsBaseObject {
       
    }
    
-   protected NewsAbstract getAbstract() {
+   public NewsAbstract getAbstract() {
       return newsAbstract;
    }
 
-   protected NewsArticle setAbstract(NewsAbstract abs) {
+   public NewsArticle setAbstract(NewsAbstract abs) {
       this.newsAbstract = abs;
       return this;
    }
