@@ -19,8 +19,7 @@ public class NewsAbstractList extends NewsBaseObject {
    private HashMap<String, Integer> abstractMap;
 
    public NewsAbstractList() {
-      this.abstractList = new ArrayList<NewsAbstract>();
-      this.abstractMap = new LinkedHashMap<String, Integer>();
+      
    }
 
    public List<NewsAbstract> getAbstractList() {
@@ -29,7 +28,8 @@ public class NewsAbstractList extends NewsBaseObject {
 
    public NewsAbstractList setAbstractList(List<NewsAbstract> list) {
       this.abstractList = list;
-
+      this.abstractMap = new LinkedHashMap<String, Integer>();
+      
       NewsAbstract abs = null;
       for (int i = 0; i < this.abstractList.size(); i++) {
          abs = this.abstractList.get(i);
