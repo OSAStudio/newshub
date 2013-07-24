@@ -2,8 +2,6 @@ package com.osastudio.newshub;
 
 import java.util.ArrayList;
 
-import com.osastudio.newshub.utils.Utils;
-import com.osastudio.newshub.data.NewsBaseObject;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.net.NewsChannelApi;
@@ -46,8 +44,6 @@ public class CategoryActivity extends NewsBaseActivity {
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 		setupData();
-        int color = NewsBaseObject.parseColorValue("808080");
-        Utils.logi("", "____________" + color);
 	}
 
 	private void setupData() {

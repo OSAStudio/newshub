@@ -22,7 +22,7 @@ public class NewsBaseObject {
          try {
             int result = hexString.startsWith("#") ? Integer.decode(hexString)
                   : Integer.decode("#".concat(hexString));
-            return (result & 0xFFFFFF) | 0x80000000;
+            return (result & 0xFFFFFF) | 0xAA000000;
          } catch (NumberFormatException e) {
              e.printStackTrace();
          }
