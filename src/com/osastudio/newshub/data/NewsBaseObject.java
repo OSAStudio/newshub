@@ -2,15 +2,24 @@ package com.osastudio.newshub.data;
 
 import android.text.TextUtils;
 
-public class NewsBaseObject {
+public class NewsBaseObject implements NewsResult {
 
    protected static final String JSON_KEY_RESULT_DESC = "msg";
    protected static final String JSON_KEY_RESULT_CODE = "stat";
-
-   protected static final String RESULT_OK = "1";
+   
+   protected static final int DEFAULT_COLOR = 0xAA000000;
+   
 
    protected static boolean isResultSuccess(final String resultCode) {
-      return !TextUtils.isEmpty(resultCode) && RESULT_OK.equals(resultCode);
+      try {
+         if (!TextUtils.isEmpty(resultCode) 
+               && Integer.parseInt(resultCode) == RESULT_OK) {
+            return true;
+         }
+      } catch (NumberFormatException e) {
+         
+      }
+      return false;
    }
 
    protected static boolean isResultFailure(final String resultCode) {
@@ -31,7 +40,7 @@ public class NewsBaseObject {
    }
    
    protected static int getDefaultColor() {
-      return 0x80000000;
+      return 0xAA000000;
    }
 
 }
