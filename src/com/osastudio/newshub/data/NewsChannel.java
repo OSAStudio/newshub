@@ -16,13 +16,13 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    public static final String JSON_KEY_ICON_ID = "icon_id";
    public static final String JSON_KEY_ICON_URL = "icon_url";
 
-   private String channelId;
-   private String iconId;
-   private String iconUrl;
-   private int titleColor;
-   private String titleId;
-   private String titleName;
-   private String titleType;
+   private String channelId = "";
+   private String iconId = "";
+   private String iconUrl = "";
+   private int titleColor = DEFAULT_COLOR;
+   private String titleId = "";
+   private String titleName = "";
+   private String titleType = "";
 
    public NewsChannel() {
 
@@ -43,7 +43,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public NewsChannel setChannelId(String channelId) {
-      this.channelId = channelId;
+      this.channelId = (channelId != null) ? channelId : "";
       return this;
    }
 
@@ -52,7 +52,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public NewsChannel setIconId(String iconId) {
-      this.iconId = iconId;
+      this.iconId = (iconId != null) ? iconId : "";
       return this;
    }
 
@@ -61,7 +61,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public NewsChannel setIconUrl(String iconUrl) {
-      this.iconUrl = iconUrl;
+      this.iconUrl = (iconUrl != null) ? iconUrl : "";
       return this;
    }
 
@@ -80,6 +80,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
 
    public NewsChannel setTitleId(String titleId) {
       this.titleId = titleId;
+      this.titleId = (titleId != null) ? titleId : "";
       return this;
    }
 
@@ -88,7 +89,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public NewsChannel setTitleName(String titleName) {
-      this.titleName = titleName;
+      this.titleName = (titleName != null) ? titleName : "";
       return this;
    }
 
@@ -97,7 +98,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public NewsChannel setTitleType(String titleType) {
-      this.titleType = titleType;
+      this.titleType = (titleType != null) ? titleType : "";
       return this;
    }
 
@@ -108,9 +109,15 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
             result.setChannelId(jsonObject.getString(JSON_KEY_CHANNEL_ID)
                   .trim());
          }
-         if (!jsonObject.isNull(JSON_KEY_TITLE_TYPE)) {
-            result.setTitleType(jsonObject.getString(JSON_KEY_TITLE_TYPE)
-                  .trim());
+         if (!jsonObject.isNull(JSON_KEY_ICON_ID)) {
+            result.setIconId(jsonObject.getString(JSON_KEY_ICON_ID));
+         }
+         if (!jsonObject.isNull(JSON_KEY_ICON_URL)) {
+            result.setIconUrl(jsonObject.getString(JSON_KEY_ICON_URL));
+         }
+         if (!jsonObject.isNull(JSON_KEY_TITLE_COLOR)) {
+            result.setTitleColor(NewsChannel.parseColorValue(jsonObject
+                  .getString(JSON_KEY_TITLE_COLOR).trim()));
          }
          if (!jsonObject.isNull(JSON_KEY_TITLE_ID)) {
             result.setTitleId(jsonObject.getString(JSON_KEY_TITLE_ID).trim());
@@ -119,15 +126,9 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
             result.setTitleName(jsonObject.getString(JSON_KEY_TITLE_NAME)
                   .trim());
          }
-         if (!jsonObject.isNull(JSON_KEY_TITLE_COLOR)) {
-            result.setTitleColor(NewsChannel.parseColorValue(jsonObject
-                  .getString(JSON_KEY_TITLE_COLOR).trim()));
-         }
-         if (!jsonObject.isNull(JSON_KEY_ICON_ID)) {
-            result.setIconId(jsonObject.getString(JSON_KEY_ICON_ID));
-         }
-         if (!jsonObject.isNull(JSON_KEY_ICON_URL)) {
-            result.setIconUrl(jsonObject.getString(JSON_KEY_ICON_URL));
+         if (!jsonObject.isNull(JSON_KEY_TITLE_TYPE)) {
+            result.setTitleType(jsonObject.getString(JSON_KEY_TITLE_TYPE)
+                  .trim());
          }
       } catch (JSONException e) {
 

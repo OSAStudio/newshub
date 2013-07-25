@@ -14,12 +14,12 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    public static final String JSON_KEY_PUBLISHER = "expert_name";
    public static final String JSON_KEY_TITLE = "lesson_title";
    
-   private String articleId;
-   private String channelId;
-   private int color;
+   private String articleId = "";
+   private String channelId = "";
+   private int color = DEFAULT_COLOR;
    private String publishedTime;
-   private String publisher;
-   private String title;
+   private String publisher = "";
+   private String title = "";
    
    public NewsAbstract() {
       
@@ -29,7 +29,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       this.articleId = src.readString().trim();
       this.channelId = src.readString().trim();
       this.color = src.readInt();
-//      this.publishedTime = src.readString().trim();
+      this.publishedTime = src.readString().trim();
       this.publisher = src.readString().trim();
       this.title = src.readString().trim();
    }
@@ -40,7 +40,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public NewsAbstract setArticleId(String articleId) {
-      this.articleId = articleId;
+      this.articleId = (articleId != null) ? articleId : "";
       return this;
    }
 
@@ -49,7 +49,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public NewsAbstract setChannelId(String channelId) {
-      this.channelId = channelId;
+      this.channelId = (channelId != null) ? channelId : "";
       return this;
    }
 
@@ -67,7 +67,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public NewsAbstract setPublishedTime(String publishedTime) {
-      this.publishedTime = publishedTime;
+      this.publishedTime = (publishedTime != null) ? publishedTime : "";
       return this;
    }
 
@@ -76,7 +76,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public NewsAbstract setPublisher(String publisher) {
-      this.publisher = publisher;
+      this.publisher = (publisher != null) ? publisher : "";
       return this;
    }
 
@@ -85,7 +85,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    }
 
    public NewsAbstract setTitle(String title) {
-      this.title = title;
+      this.title = (title != null) ? title : "";
       return this;
    }
    
@@ -143,7 +143,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       dst.writeString(this.articleId);
       dst.writeString(this.channelId);
       dst.writeInt(this.color);
-//      dst.writeString(this.publishedTime);
+      dst.writeString(this.publishedTime);
       dst.writeString(this.publisher);
       dst.writeString(this.title);
    }

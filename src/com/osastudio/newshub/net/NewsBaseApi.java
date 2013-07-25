@@ -63,7 +63,7 @@ public class NewsBaseApi {
       return DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER;
    }
 
-   protected static String getNewsSplashServiceUrl() {
+   protected static String getAppPropertiesServiceUrl() {
       return new StringBuilder(getWebServer()).append(
             "loginpicture!getLoginPictureByMobile.do").toString();
    }
