@@ -19,8 +19,8 @@ public class NewsChannelApi extends NewsBaseApi {
    
    public static NewsChannelList getNewsChannelList(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
-      params.add(new BasicNameValuePair(KEY_DEVICE_ID, "1234567890"));
-      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, DEVICE_TYPE));
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       String jsonString = getString(getNewsChannelListServiceUrl(), params);
       if (TextUtils.isEmpty(jsonString)) {
          return null;

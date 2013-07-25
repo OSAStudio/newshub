@@ -53,6 +53,17 @@ public class SlideSwitcher extends ViewSwitcher implements ViewSwitcher.ViewFact
 		invalidate();
 	}
 	
+	public void setAssistant(BaseAssistent assistant, int page) {
+		mAssistant = assistant;
+		mSize = assistant.getCount();
+		mCurrentIndex = page < mSize ? page : 0;
+		if (mSize > 0) {
+			RelativeLayout layout = (RelativeLayout)getCurrentView();
+			setupLayout(mCurrentIndex, layout);
+		}
+		invalidate();
+	}
+	
 	public void setRepeat(boolean bLoop) {
 		mbLoop = bLoop;
 	}
@@ -130,10 +141,11 @@ public class SlideSwitcher extends ViewSwitcher implements ViewSwitcher.ViewFact
 		if (layout != null) {
 			view = mAssistant.getView(childIndex, layout.getChildAt(0));
 		}
+
+		if (layout.getChildCount() > 0) {
+			layout.removeAllViews();
+		}
 		if (view != null) {
-			if (layout.getChildCount() > 0) {
-				layout.removeAllViews();
-			}
 			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 			layout.addView(view, lp);
 			layout.invalidate();

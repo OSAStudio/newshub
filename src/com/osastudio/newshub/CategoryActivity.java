@@ -1,10 +1,12 @@
 package com.osastudio.newshub;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.net.NewsChannelApi;
+import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
 import com.osastudio.newshub.widgets.BaseAssistent;
@@ -13,6 +15,7 @@ import com.osastudio.newshub.widgets.SlideSwitcher;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -27,7 +30,8 @@ import android.widget.TextView;
 
 public class CategoryActivity extends NewsBaseActivity {
 	private SlideSwitcher mSwitcher = null;
-//	private ArrayList<CategoryData> mCategories = new ArrayList<CategoryData>();
+	// private ArrayList<CategoryData> mCategories = new
+	// ArrayList<CategoryData>();
 	private ArrayList<NewsChannel> mCategoryList = null;
 	private int mTouchSlop;
 	private int mBaseX, mBaseY;
@@ -40,6 +44,29 @@ public class CategoryActivity extends NewsBaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
 
+//		String serialnum = null;
+//
+//		try {
+//
+//			Class<?> c = Class.forName("android.os.SystemProperties");
+//
+//			Method get = c.getMethod("get", String.class, String.class);
+//
+//			serialnum = (String) (get.invoke(c, "ro.serialno", "unknown"));
+//			Utils.log("pp", serialnum);
+//
+//			String androidId = Settings.Secure.getString(getContentResolver(),
+//
+//			Settings.Secure.ANDROID_ID);
+//			Utils.log("pp", androidId);
+//		}
+//
+//		catch (Exception ignored)
+//
+//		{
+//
+//		}
+
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
@@ -49,10 +76,9 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void setupData() {
 		new LoadDataTask().execute();
 	}
-	
-	
+
 	public boolean dispatchTouchEvent(MotionEvent event) {
-//		mGd.onTouchEvent(event);
+		// mGd.onTouchEvent(event);
 		int y = (int) event.getRawY();
 		int x = (int) event.getRawX();
 		switch (event.getAction()) {
@@ -84,38 +110,41 @@ public class CategoryActivity extends NewsBaseActivity {
 		return super.dispatchTouchEvent(event);
 	}
 
-
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-//			for (int i = 0; i < 20; i++) {
-//				CategoryData category = new CategoryData();
-//				category.title_id = i;
-//				category.icon_id = i;
-//				if (i == 0) {
-//					category.title_class = "通知";
-//					category.title_color = 0xFFEE7942;
-//					category.title_name = "致用户的一封信";
-//				} else if (i == 1) {
-//
-//					category.title_class = "包";
-//					category.title_color = 0xFFFAF0E6;
-//					category.title_name = "第一包";
-//				} else {
-//					category.title_class = "课题";
-//					category.title_color = 0xFFC6E2FF;
-//					category.title_name = "课题 " + i;
-//
-//				}
-//				category.icon_url = null;
-//				category.service_id = 1;
-//				mCategories.add(category);
-//			}
-			
-			NewsChannelList channel_list = NewsChannelApi.getNewsChannelList(getApplicationContext());
-			mCategoryList = (ArrayList<NewsChannel>)channel_list.getChannelList();
-			
+			// for (int i = 0; i < 20; i++) {
+			// CategoryData category = new CategoryData();
+			// category.title_id = i;
+			// category.icon_id = i;
+			// if (i == 0) {
+			// category.title_class = "通知";
+			// category.title_color = 0xFFEE7942;
+			// category.title_name = "致用户的一封信";
+			// } else if (i == 1) {
+			//
+			// category.title_class = "包";
+			// category.title_color = 0xFFFAF0E6;
+			// category.title_name = "第一包";
+			// } else {
+			// category.title_class = "课题";
+			// category.title_color = 0xFFC6E2FF;
+			// category.title_name = "课题 " + i;
+			//
+			// }
+			// category.icon_url = null;
+			// category.service_id = 1;
+			// mCategories.add(category);
+			// }
+
+			NewsChannelList channel_list = NewsChannelApi
+					.getNewsChannelList(getApplicationContext());
+			if (channel_list != null) {
+				mCategoryList = (ArrayList<NewsChannel>) channel_list
+						.getChannelList();
+			}
+
 			return null;
 		}
 
@@ -136,11 +165,11 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-//			if (mCategories.size() % 8 == 0) {
-//				return mCategories.size() / 8;
-//			} else {
-//				return mCategories.size() / 8 + 1;
-//			}
+			// if (mCategories.size() % 8 == 0) {
+			// return mCategories.size() / 8;
+			// } else {
+			// return mCategories.size() / 8 + 1;
+			// }
 			if (mCategoryList.size() % 8 == 0) {
 				return mCategoryList.size() / 8;
 			} else {
@@ -160,7 +189,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (grid_layout == null) {
 				grid_layout = new AzkerGridLayout(CategoryActivity.this);
 			}
-			
+
 			setupGridLayout(grid_layout, position);
 
 			grid_layout.setGridItemClickListener(new GridItemClickListener());
@@ -169,8 +198,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 	}
-	
-	
+
 	private class GridItemClickListener implements OnGridItemClickListener {
 
 		@Override
@@ -180,28 +208,30 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (index < mCategoryList.size()) {
 				startSummaryActivity(mCategoryList.get(index));
 			}
-			
+
 		}
-		
+
 	}
 
 	private class GridLayoutAssistent extends BaseAssistent {
 		int mPage = 0;
+
 		public GridLayoutAssistent(int thispage) {
 			mPage = thispage;
 		}
+
 		@Override
 		public int getCount() {
 			int count = 0;
-//			if ((mPage+1) * 8 <= mCategories.size()) {
-//				count = 8;
-//			} else {
-//				count = 8 - ((mPage+1) * 8 - mCategories.size());
-//			}
-			if ((mPage+1) * 8 <= mCategoryList.size()) {
+			// if ((mPage+1) * 8 <= mCategories.size()) {
+			// count = 8;
+			// } else {
+			// count = 8 - ((mPage+1) * 8 - mCategories.size());
+			// }
+			if ((mPage + 1) * 8 <= mCategoryList.size()) {
 				count = 8;
 			} else {
-				count = 8 - ((mPage+1) * 8 - mCategoryList.size());
+				count = 8 - ((mPage + 1) * 8 - mCategoryList.size());
 			}
 			return count;
 		}
@@ -209,11 +239,11 @@ public class CategoryActivity extends NewsBaseActivity {
 		@Override
 		public Object getItem(int position) {
 			int index = mPage * 8 + position;
-//			if (index < mCategories.size()) {
-//				return mCategories.get(index);
-//			} else {
-//				return null;
-//			}
+			// if (index < mCategories.size()) {
+			// return mCategories.get(index);
+			// } else {
+			// return null;
+			// }
 			if (index < mCategoryList.size()) {
 				return mCategoryList.get(index);
 			} else {
@@ -224,24 +254,26 @@ public class CategoryActivity extends NewsBaseActivity {
 		@Override
 		public View getView(int position, View convertView) {
 			int index = mPage * 8 + position;
-//			if (index < mCategories.size()) {
+			// if (index < mCategories.size()) {
 			if (index < mCategoryList.size()) {
-				RelativeLayout category = (RelativeLayout)convertView;
+				RelativeLayout category = (RelativeLayout) convertView;
 				if (category == null) {
-					LayoutInflater inflater = LayoutInflater.from(CategoryActivity.this);
-					category = (RelativeLayout)inflater.inflate(R.layout.category_item, null);
+					LayoutInflater inflater = LayoutInflater
+							.from(CategoryActivity.this);
+					category = (RelativeLayout) inflater.inflate(
+							R.layout.category_item, null);
 				}
-//				CategoryData data = mCategories.get(index);
-//				View base = category.findViewById(R.id.base);
-//				base.setBackgroundColor(data.title_color);
-//				ImageView iv = (ImageView)category.findViewById(R.id.image);
-//				TextView tv = (TextView)category.findViewById(R.id.name);
-//				tv.setText(data.title_name);
+				// CategoryData data = mCategories.get(index);
+				// View base = category.findViewById(R.id.base);
+				// base.setBackgroundColor(data.title_color);
+				// ImageView iv = (ImageView)category.findViewById(R.id.image);
+				// TextView tv = (TextView)category.findViewById(R.id.name);
+				// tv.setText(data.title_name);
 
 				View base = category.findViewById(R.id.base);
-				ImageView iv = (ImageView)category.findViewById(R.id.image);
-				TextView tv = (TextView)category.findViewById(R.id.name);
-				
+				ImageView iv = (ImageView) category.findViewById(R.id.image);
+				TextView tv = (TextView) category.findViewById(R.id.name);
+
 				NewsChannel data = mCategoryList.get(index);
 				base.setBackgroundColor(data.getTitleColor());
 				tv.setText(data.getTitleName());
@@ -252,13 +284,12 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 	}
-	
-	private void startSummaryActivity(NewsChannel data) {
-		 Intent it = new Intent(this, SummaryActivity.class);
-	        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
-	        it.putExtra(SummaryActivity.CATEGORY_DATA, data);
-	        startActivityForResult(it,1);
-	}
 
+	private void startSummaryActivity(NewsChannel data) {
+		Intent it = new Intent(this, SummaryActivity.class);
+		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		it.putExtra(SummaryActivity.CATEGORY_DATA, data);
+		startActivityForResult(it, 1);
+	}
 
 }

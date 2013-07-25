@@ -40,6 +40,7 @@ public class FileView extends LinearLayout {
 		mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setJavaScriptEnabled(true);
 
+		mWebView.getSettings().setBlockNetworkImage(true);
 	}
 	
 	public void setData(String html) {

@@ -116,12 +116,11 @@ public class SummaryActivity extends NewsBaseActivity {
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
 	}
 	
-	private void startFileActivity(NewsAbstract data) {
+	private void startFileActivity(int index) {
 		 Intent it = new Intent(this, FileActivity.class);
          it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
-         it.putExtra(FileActivity.SUMMARY_DATA, data);
-         it.putExtra(FileActivity.FILE_SIZE, mSummaries.size());
-         it.putExtra(CATEGORY_DATA, mCategoryData);
+         it.putExtra(FileActivity.START_INDEX, index);
+         it.putExtra(FileActivity.CATEGORY_TITLE, mCategoryData.getTitleName());
          startActivityForResult(it,1);
 	}
 
@@ -131,7 +130,7 @@ public class SummaryActivity extends NewsBaseActivity {
 			int page = mSwitcher.getCurrentIndex();
 			int index = page * 6 + position;
 			if (index < mSummaries.size()) {
-				startFileActivity(mSummaries.get(index));
+				startFileActivity(index);
 			}
 			
 		}
