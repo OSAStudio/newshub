@@ -1,8 +1,14 @@
 package com.osastudio.newshub;
 
 import com.osastudio.newshub.data.NewsAbstract;
+import com.osastudio.newshub.data.NewsArticle;
+import com.osastudio.newshub.data.NewsChannel;
+import com.osastudio.newshub.net.NewsArticleApi;
 import com.osastudio.newshub.widgets.BaseAssistent;
+import com.osastudio.newshub.widgets.FileView;
 import com.osastudio.newshub.widgets.SlideSwitcher;
+import com.osastudio.newshub.widgets.SummaryGrid;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,9 +18,10 @@ import android.view.ViewConfiguration;
 
 public class FileActivity extends Activity {
 	public static final String SUMMARY_DATA = "Summary_data";
-
+	
 	public static final String FILE_SIZE = "File_size";
 	private NewsAbstract mSummary_data = null;
+	private NewsChannel mCategoryData = null;
 	private int mFileSize = 1;
 	private SlideSwitcher mSwitcher = null;
 //	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
@@ -22,6 +29,9 @@ public class FileActivity extends Activity {
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
 	private boolean mbSwitchAble = true;
+	
+	private NewsArticle mNewsArticle = null;
+	private String mHtmlCotent = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -30,8 +40,9 @@ public class FileActivity extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			mSummary_data =  extras.getParcelable(SUMMARY_DATA);
-			mFileSize = extras.getInt(FILE_SIZE);
+//			mSummary_data =  extras.getParcelable(SUMMARY_DATA);
+//			mFileSize = extras.getInt(FILE_SIZE);
+//			mCategoryData = extras.getParcelable(SummaryActivity.CATEGORY_DATA);
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
@@ -74,7 +85,7 @@ public class FileActivity extends Activity {
 			}
 			break;
 		}
-		return false;
+		return super.dispatchTouchEvent(event);
 	}
 
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
@@ -83,6 +94,8 @@ public class FileActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 //			NewsAbstractList summary_list = NewsAbstractApi.getNewsAbstractList(getApplicationContext(), mCategoryData.getChannelId());
 //			mSummaries = (ArrayList<NewsAbstract>)summary_list.getAbstractList();
+			mNewsArticle = NewsArticleApi.getNewsArticle(FileActivity.this, "1");//mSummary_data.getArticleId());
+			mHtmlCotent = mNewsArticle.getContent();
 			return null;
 		}
 
@@ -94,17 +107,13 @@ public class FileActivity extends Activity {
 		}
 
 	}
-	
-	private void setupPage() {
-		
-	}
 
 
 	private class SwitchAssistent extends BaseAssistent {
 
 		@Override
 		public int getCount() {
-			return mFileSize;
+			return 1;
 		}
 
 		@Override
@@ -115,9 +124,12 @@ public class FileActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			
-			setupPage();
-			return convertView;
+			FileView fileview = (FileView) convertView;
+			if (fileview == null) {
+				fileview = new FileView(FileActivity.this);
+			}
+			fileview.setData(mHtmlCotent);
+			return fileview;
 
 		}
 

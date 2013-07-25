@@ -12,11 +12,13 @@ import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 import com.osastudio.newshub.widgets.SummaryGrid;
+import com.osastudio.newshub.widgets.SummaryGrid.OnGridItemClickListener;
 
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -88,25 +90,13 @@ public class SummaryActivity extends NewsBaseActivity {
 			}
 			break;
 		}
-		return false;
+		return super.dispatchTouchEvent(event);
 	}
 
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-//			for (int i = 0; i < 20; i++) {
-//				SummaryData summary = new SummaryData();
-//				summary.lesson_id = i;
-//
-//				summary.lesson_title = "title "+i;
-//				summary.lesson_colour = 0xFFFAF0E6;
-//				summary.post_date = "07月15日";
-//				summary.expert_name = "孔教授";
-//				mSummaries.add(summary);
-//			}
-//			NewsChannelList channel_list = NewsChannelApi.getNewsChannelList(getApplicationContext());
-//			mCategoryList = (ArrayList<NewsChannel>)channel_list.getChannelList();
 			
 			NewsAbstractList summary_list = NewsAbstractApi.getNewsAbstractList(getApplicationContext(), mCategoryData.getChannelId());
 			mSummaries = (ArrayList<NewsAbstract>)summary_list.getAbstractList();
@@ -125,7 +115,29 @@ public class SummaryActivity extends NewsBaseActivity {
 	private void setupGridLayout(SummaryGrid grid_layout, int page) {
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
 	}
+	
+	private void startFileActivity(NewsAbstract data) {
+		 Intent it = new Intent(this, FileActivity.class);
+         it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
+         it.putExtra(FileActivity.SUMMARY_DATA, data);
+         it.putExtra(FileActivity.FILE_SIZE, mSummaries.size());
+         it.putExtra(CATEGORY_DATA, mCategoryData);
+         startActivityForResult(it,1);
+	}
 
+	private class SummaryItemClickListener implements OnGridItemClickListener {
+		@Override
+		public void onClick(int position, View v) {
+			int page = mSwitcher.getCurrentIndex();
+			int index = page * 6 + position;
+			if (index < mSummaries.size()) {
+				startFileActivity(mSummaries.get(index));
+			}
+			
+		}
+		
+	}
+	
 	private class SwitchAssistent extends BaseAssistent {
 
 		@Override
@@ -150,7 +162,7 @@ public class SummaryActivity extends NewsBaseActivity {
 				grid_layout = new SummaryGrid(SummaryActivity.this);
 			}
 			setupGridLayout(grid_layout, position);
-
+			grid_layout.setGridItemClickListener(new SummaryItemClickListener());
 			return grid_layout;
 
 		}
@@ -208,14 +220,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		}
 
 	}
-	
-//	public class SummaryData {
-//		int lesson_id;//�γ�ID��Ψһ����񰴴�ID������ʾ��
-//		String lesson_title;//�γ̱���
-//		int lesson_colour;//��ɫ
-//		String post_date;//��������
-//		String expert_name;//����ר��
-//	}
+
 
 
 }

@@ -255,19 +255,10 @@ public class CategoryActivity extends NewsBaseActivity {
 	
 	private void startSummaryActivity(NewsChannel data) {
 		 Intent it = new Intent(this, SummaryActivity.class);
-	        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  //Add for PresenterWidget. dwy.
+	        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
 	        it.putExtra(SummaryActivity.CATEGORY_DATA, data);
 	        startActivityForResult(it,1);
 	}
 
-	public class CategoryData {
-		int title_id;
-		String title_class;
-		String title_name;
-		int title_color;
-		int icon_id;
-		String icon_url;
-		int service_id;
-	}
 
 }
