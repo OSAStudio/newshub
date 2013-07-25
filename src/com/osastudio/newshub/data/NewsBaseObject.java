@@ -2,7 +2,7 @@ package com.osastudio.newshub.data;
 
 import android.text.TextUtils;
 
-public class NewsBaseObject implements NewsResult {
+public class NewsBaseObject implements ResultCode {
 
    protected static final String JSON_KEY_RESULT_DESC = "msg";
    protected static final String JSON_KEY_RESULT_CODE = "stat";
@@ -10,20 +10,12 @@ public class NewsBaseObject implements NewsResult {
    protected static final int DEFAULT_COLOR = 0xAA000000;
    
 
-   protected static boolean isResultSuccess(final String resultCode) {
-      try {
-         if (!TextUtils.isEmpty(resultCode) 
-               && Integer.parseInt(resultCode) == RESULT_OK) {
-            return true;
-         }
-      } catch (NumberFormatException e) {
-         
-      }
-      return false;
+   protected static boolean isResultSuccess(final String resultString) {
+      return new NewsResult(resultString).isSuccess();
    }
 
-   protected static boolean isResultFailure(final String resultCode) {
-      return !isResultSuccess(resultCode);
+   protected static boolean isResultFailure(final String resultString) {
+      return new NewsResult(resultString).isFailure();
    }
 
    public static int parseColorValue(final String hexString) {
