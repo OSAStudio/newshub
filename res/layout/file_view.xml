@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/title_line"
         android:layout_width="fill_parent"
-        android:layout_height="5px"
+        android:layout_height="5dp"
         android:background="#ff0000dd" />
 
     <LinearLayout
@@ -24,7 +24,9 @@
             android:minWidth="100dp" 
             android:gravity="center"
             android:text="category_name"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:padding="5dp"/>
         <TextView
             android:id="@+id/category_name"
             android:layout_width="fill_parent"

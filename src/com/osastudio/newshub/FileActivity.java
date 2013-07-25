@@ -44,6 +44,7 @@ public class FileActivity extends NewsBaseActivity {
 	private int mTouchSlop;
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
+	private int mBaseX, mBaseY;
 	private boolean mbSwitchAble = true;
 
 	private NewsArticle mNewsArticle = null;
@@ -92,24 +93,35 @@ public class FileActivity extends NewsBaseActivity {
 			mbSwitchAble = true;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			break;
-		case MotionEvent.ACTION_UP:
 			if (mbSwitchAble) {
-				if (Math.abs(mInitX - x) > mTouchSlop
-						&& Math.abs(mInitX - x) > Math.abs(mInitY - y)) {
+				if (Math.abs(mBaseX - x) > mTouchSlop
+						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
 					if (mInitX > x) {
 						mDirection = 1;
 					} else {
 						mDirection = 0;
 					}
+
+					int lastIndex = mSwitcher.getCurrentIndex();
 					mSwitcher.SwitcherOnScroll(mDirection);
+					mLastIndex = lastIndex;
 					Utils.logd("FileActivity", "switch scroll " + mDirection);
+					mbSwitchAble = false;
 					break;
 				}
 			}
 			break;
+		case MotionEvent.ACTION_UP:
+			
+			break;
 		}
-		return super.dispatchTouchEvent(event);
+		mBaseX = x;
+		mBaseY = y;
+		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+			return true;//super.dispatchTouchEvent(event);
+		} else {
+			return super.dispatchTouchEvent(event);
+		}
 	}
 
 	private class LoadDataTask extends AsyncTask<Integer, Void, Integer> {
@@ -204,8 +216,10 @@ public class FileActivity extends NewsBaseActivity {
 //			return fileview;
 			
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position);
-			if (mLastIndex == position) {
+			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
+			if (mLastIndex == position && convertView != null) {
+				Utils.log("getView", " last data");
+				((FileView) convertView).displayTop();
 				return convertView;
 			}else if (mCurrentId == mCurrentShowId) {
 				FileView fileview = (FileView) convertView;
@@ -213,7 +227,6 @@ public class FileActivity extends NewsBaseActivity {
 					fileview = new FileView(FileActivity.this);
 				}
 				fileview.setData(mHtmlCotent);
-				mLastIndex = position;
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
