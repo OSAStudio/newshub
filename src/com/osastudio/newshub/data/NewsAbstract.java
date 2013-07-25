@@ -29,7 +29,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       this.articleId = src.readString().trim();
       this.channelId = src.readString().trim();
       this.color = src.readInt();
-      this.publishedTime = src.readString().trim();
+//      this.publishedTime = src.readString().trim();
       this.publisher = src.readString().trim();
       this.title = src.readString().trim();
    }
@@ -143,7 +143,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       dst.writeString(this.articleId);
       dst.writeString(this.channelId);
       dst.writeInt(this.color);
-      dst.writeString(this.publishedTime);
+//      dst.writeString(this.publishedTime);
       dst.writeString(this.publisher);
       dst.writeString(this.title);
    }

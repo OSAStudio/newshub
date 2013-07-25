@@ -13,7 +13,6 @@ import android.text.TextUtils;
 
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsArticle;
-import com.osastudio.newshub.data.NewsChannelList;
 
 public class NewsArticleApi extends NewsBaseApi {
    
