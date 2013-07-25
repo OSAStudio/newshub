@@ -5,6 +5,7 @@ import com.osastudio.newshub.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.LinearLayout;
@@ -39,13 +40,24 @@ public class FileView extends LinearLayout {
 		mWebView.setBackgroundColor(0);
 		mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setJavaScriptEnabled(true);
-
-		mWebView.getSettings().setBlockNetworkImage(true);
+//		mWebView.cancelLongPress();
+		mWebView.setOnLongClickListener(new WebView.OnLongClickListener() {
+            
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+//		mWebView.getSettings().setBlockNetworkImage(true);
 	}
 	
 	public void setData(String html) {
 		mHtml = html;
 		mWebView.loadDataWithBaseURL("about:blank", html, MIMETYPE, ENCODING, "");
+	}
+	
+	public void displayTop() {
+
+		mWebView.scrollTo(getScrollX(), 0);
 	}
 	
 }
