@@ -6,13 +6,13 @@ import org.json.JSONObject;
 public class AppProperties extends NewsBaseObject {
    
    public static final String JSON_KEY_APK_URL = "android_url";
-   public static final String JSON_KEY_IMAGE_URL = "picture_url";
+   public static final String JSON_KEY_SPLASH_IMAGE_URL = "picture_url";
    public static final String JSON_KEY_RELEASE_NOTES = "update_note";
    public static final String JSON_KEY_USER_STATUS = "user_status";
    public static final String JSON_KEY_VERSION_NAME = "version_id";
 
    private String apkUrl;
-   private String imageUrl;
+   private String splashImageUrl;
    private String releaseNotes;
    private int userStatus;
    private String versionName;
@@ -21,12 +21,12 @@ public class AppProperties extends NewsBaseObject {
       
    }
    
-   public String getImageUrl() {
-      return this.imageUrl;
+   public String getSplashImageUrl() {
+      return this.splashImageUrl;
    }
 
-   public AppProperties setImageUrl(String imageUrl) {
-      this.imageUrl = imageUrl;
+   public AppProperties setSplashImageUrl(String imageUrl) {
+      this.splashImageUrl = imageUrl;
       return this;
    }
 
@@ -78,8 +78,8 @@ public class AppProperties extends NewsBaseObject {
          if (!jsonObject.isNull(JSON_KEY_APK_URL)) {
             result.setApkUrl(jsonObject.getString(JSON_KEY_APK_URL).trim());
          }
-         if (!jsonObject.isNull(JSON_KEY_IMAGE_URL)) {
-            result.setImageUrl(jsonObject.getString(JSON_KEY_IMAGE_URL).trim());
+         if (!jsonObject.isNull(JSON_KEY_SPLASH_IMAGE_URL)) {
+            result.setSplashImageUrl(jsonObject.getString(JSON_KEY_SPLASH_IMAGE_URL).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_RELEASE_NOTES)) {
             result.setReleaseNotes(jsonObject.getString(JSON_KEY_RELEASE_NOTES).trim());
