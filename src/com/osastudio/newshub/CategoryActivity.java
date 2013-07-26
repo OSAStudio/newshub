@@ -1,5 +1,7 @@
 package com.osastudio.newshub;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -17,18 +19,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class CategoryActivity extends NewsBaseActivity {
+	private static final String DEFAULT_SPLASH_FILE = "file:///android_asset/0.jpg";
+	private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
+	
 	private SlideSwitcher mSwitcher = null;
 	// private ArrayList<CategoryData> mCategories = new
 	// ArrayList<CategoryData>();
@@ -38,11 +47,13 @@ public class CategoryActivity extends NewsBaseActivity {
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
 	private boolean mbSwitchAble = true;
+	private LayoutInflater mInflater = null;
+	private int mScreenWidth = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_switcher);
+		setContentView(R.layout.category_activity);
 
 //		String serialnum = null;
 //
@@ -70,11 +81,25 @@ public class CategoryActivity extends NewsBaseActivity {
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
+
+		mInflater = LayoutInflater.from(this);
+		
+		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		mScreenWidth = display.getWidth();
+		mScreenWidth = mScreenWidth > 0 ? mScreenWidth : 0;
 		setupData();
 	}
 
 	private void setupData() {
 		new LoadDataTask().execute();
+//        InputStream myInput = null;
+//        try {
+//			myInput = getAssets().open("0.jpg");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	public boolean dispatchTouchEvent(MotionEvent event) {
@@ -109,35 +134,44 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 		return super.dispatchTouchEvent(event);
 	}
+	
+	private class BMP_Item {
+		String mPath;
+		Bitmap mBitmap;
+	}
+	private class LoadImageTask extends AsyncTask<Void, BMP_Item, Void> {
+		
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			BMP_Item item = new BMP_Item();
+			item.mPath = DEFAULT_SPLASH_FILE;
+			item.mBitmap = Utils.loadBitmap(DEFAULT_SPLASH_FILE, mScreenWidth, 0, 0);
+			if (item.mBitmap != null) {
+				publishProgress(item);
+			}
+			item = new BMP_Item();
+			item.mPath = DEFAULT_BACKGROUND_FILE;
+			item.mBitmap = Utils.loadBitmap(DEFAULT_SPLASH_FILE, mScreenWidth, 0, 0);
+			if (item.mBitmap != null) {
+				publishProgress(item);
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(BMP_Item... values) {
+			BMP_Item item = values[0];
+			super.onProgressUpdate(values);
+		}
+
+
+	}
 
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			// for (int i = 0; i < 20; i++) {
-			// CategoryData category = new CategoryData();
-			// category.title_id = i;
-			// category.icon_id = i;
-			// if (i == 0) {
-			// category.title_class = "通知";
-			// category.title_color = 0xFFEE7942;
-			// category.title_name = "致用户的一封信";
-			// } else if (i == 1) {
-			//
-			// category.title_class = "包";
-			// category.title_color = 0xFFFAF0E6;
-			// category.title_name = "第一包";
-			// } else {
-			// category.title_class = "课题";
-			// category.title_color = 0xFFC6E2FF;
-			// category.title_name = "课题 " + i;
-			//
-			// }
-			// category.icon_url = null;
-			// category.service_id = 1;
-			// mCategories.add(category);
-			// }
-
 			NewsChannelList channel_list = NewsChannelApi
 					.getNewsChannelList(getApplicationContext());
 			if (channel_list != null) {
@@ -165,11 +199,6 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-			// if (mCategories.size() % 8 == 0) {
-			// return mCategories.size() / 8;
-			// } else {
-			// return mCategories.size() / 8 + 1;
-			// }
 			if (mCategoryList.size() % 8 == 0) {
 				return mCategoryList.size() / 8;
 			} else {
@@ -185,15 +214,19 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView;
-			if (grid_layout == null) {
-				grid_layout = new AzkerGridLayout(CategoryActivity.this);
+//			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView;
+//			if (grid_layout == null) {
+//				grid_layout = new AzkerGridLayout(CategoryActivity.this);
+//			}
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.category_view, null);
 			}
+			AzkerGridLayout grid_layout = (AzkerGridLayout)convertView.findViewById(R.id.grid);
 
 			setupGridLayout(grid_layout, position);
 
 			grid_layout.setGridItemClickListener(new GridItemClickListener());
-			return grid_layout;
+			return convertView;
 
 		}
 
