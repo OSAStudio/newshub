@@ -2,10 +2,13 @@ package com.osastudio.newshub.library;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 public class DeviceUuidFactory {
@@ -14,6 +17,7 @@ public class DeviceUuidFactory {
    protected static final String PREFS_DEVICE_ID = "device_id";
 
    protected volatile static UUID uuid = null;
+   protected volatile static String id = null;
 
    public DeviceUuidFactory(Context context) {
       if (uuid == null) {
@@ -21,19 +25,42 @@ public class DeviceUuidFactory {
             if (uuid == null) {
                final SharedPreferences prefs = context.getSharedPreferences(
                      PREFS_FILE, 0);
-               final String id = prefs.getString(PREFS_DEVICE_ID, null);
+               final String prefsId = prefs.getString(PREFS_DEVICE_ID, null);
 
-               if (id != null) {
+               if (prefsId != null) {
                   // Use the ids previously computed and stored in the prefs
                   // file
-                  uuid = UUID.fromString(id);
-
+                  id = prefsId;
+//                  uuid = UUID.fromString(prefsId);
                } else {
+                  String serialNumber = null;
+                  try {
+                     Class<?> cls = Class
+                           .forName("android.os.SystemProperties");
+                     Method get = cls.getMethod("get", String.class,
+                           String.class);
+                     serialNumber = (String) (get
+                           .invoke(cls, "ro.serialno", "unknown"));
+                  } catch (Exception e) {
+//                     e.printStackTrace();
+                  }
+
+                  if (!TextUtils.isEmpty(serialNumber) 
+                        && !"unknown".equals(serialNumber)) {
+                     try {
+                        id = serialNumber;
+                        uuid = UUID.nameUUIDFromBytes(serialNumber
+                              .getBytes("utf8"));
+                     } catch (UnsupportedEncodingException e) {
+                        // e.printStackTrace();
+                     }
+                  } else {
+                  /*
                   final String androidId = Secure.getString(
                         context.getContentResolver(), Secure.ANDROID_ID);
 
                   // Use the Android ID unless it's broken, in which case
-                  // fallback on deviceId, unless it's not available, then 
+                  // fallback on deviceId, unless it's not available, then
                   // fallback on a random number which we store to a prefs file
                   try {
                      if (!"9774d56d682e549c".equals(androidId)) {
@@ -48,12 +75,12 @@ public class DeviceUuidFactory {
                               : UUID.randomUUID();
                      }
                   } catch (UnsupportedEncodingException e) {
-//                     throw new RuntimeException(e);
+                     // throw new RuntimeException(e);
                   }
-
+                  */
+                  }
                   // Write the value out to the prefs file
-                  prefs.edit().putString(PREFS_DEVICE_ID, uuid.toString())
-                        .commit();
+                  prefs.edit().putString(PREFS_DEVICE_ID, id).commit();
                }
             }
          }
@@ -90,7 +117,18 @@ public class DeviceUuidFactory {
     *         purposes.
     */
    public UUID getDeviceUuid() {
+      try {
+         if ((uuid == null) && !TextUtils.isEmpty(id)) {
+            uuid = UUID.nameUUIDFromBytes(id.getBytes("utf8"));
+         }
+      } catch (UnsupportedEncodingException e) {
+//         e.printStackTrace();
+      }
       return uuid;
    }
-   
+
+   public String getDeviceId() {
+      return id;
+   }
+
 }
