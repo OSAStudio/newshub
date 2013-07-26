@@ -1,11 +1,14 @@
 package com.osastudio.newshub.widgets;
 
 import com.osastudio.newshub.R;
+import com.osastudio.newshub.utils.Utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebSettings.TextSize;
 import android.webkit.WebView;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.widget.LinearLayout;
@@ -37,9 +40,15 @@ public class FileView extends LinearLayout {
 		mWebView = (WebView)findViewById(R.id.web_view);
 //		mWebView.addJavascriptInterface(new Js2JavaInterface(),
 //				HtmlParser.Js2JavaInterfaceName);
+		WebSettings ws = mWebView.getSettings();
+		
+		TextSize size = ws.getTextSize();
+		Utils.logd("getTextSize", "size="+size);
+		
 		mWebView.setBackgroundColor(0);
 		mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.getSettings().setDefaultFontSize(20);
 //		mWebView.cancelLongPress();
 		mWebView.setOnLongClickListener(new WebView.OnLongClickListener() {
             
