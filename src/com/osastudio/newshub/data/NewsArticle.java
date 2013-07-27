@@ -4,16 +4,31 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NewsArticle extends NewsBaseObject {
-   
+
    public static final String JSON_KEY_CONTENT = "lesson_content";
 
    private NewsAbstract newsAbstract;
    private String content;
-   
+
    public NewsArticle() {
-      
+
    }
-   
+
+   public NewsArticle(JSONObject jsonObject) {
+      super(jsonObject);
+
+      if (isSuccess()) {
+         try {
+            if (!jsonObject.isNull(JSON_KEY_CONTENT)) {
+               setContent(jsonObject.getString(JSON_KEY_CONTENT).trim());
+            }
+            setAbstract(NewsAbstract.parseJsonObject(jsonObject));
+         } catch (JSONException e) {
+
+         }
+      }
+   }
+
    public NewsAbstract getAbstract() {
       return newsAbstract;
    }
@@ -24,7 +39,8 @@ public class NewsArticle extends NewsBaseObject {
    }
 
    public String getArticleId() {
-      return (this.newsAbstract != null) ? this.newsAbstract.getArticleId() : null;
+      return (this.newsAbstract != null) ? this.newsAbstract.getArticleId()
+            : null;
    }
 
    public NewsArticle setArticleId(String articleId) {
@@ -36,7 +52,8 @@ public class NewsArticle extends NewsBaseObject {
    }
 
    public String getChannelId() {
-      return (this.newsAbstract != null) ? this.newsAbstract.getChannelId() : null;
+      return (this.newsAbstract != null) ? this.newsAbstract.getChannelId()
+            : null;
    }
 
    public NewsArticle setChannelId(String channelId) {
@@ -48,7 +65,8 @@ public class NewsArticle extends NewsBaseObject {
    }
 
    public int getColor() {
-      return (this.newsAbstract != null) ? this.newsAbstract.getColor() : getDefaultColor();
+      return (this.newsAbstract != null) ? this.newsAbstract.getColor()
+            : getDefaultColor();
    }
 
    public NewsArticle setColor(int color) {
@@ -60,7 +78,8 @@ public class NewsArticle extends NewsBaseObject {
    }
 
    public String getPublishedTime() {
-      return (this.newsAbstract != null) ? this.newsAbstract.getPublishedTime() : null;
+      return (this.newsAbstract != null) ? this.newsAbstract.getPublishedTime()
+            : null;
    }
 
    public NewsArticle setPublishedTime(String publishedTime) {
@@ -72,7 +91,8 @@ public class NewsArticle extends NewsBaseObject {
    }
 
    public String getPublisher() {
-      return (this.newsAbstract != null) ? this.newsAbstract.getPublisher() : null;
+      return (this.newsAbstract != null) ? this.newsAbstract.getPublisher()
+            : null;
    }
 
    public NewsArticle setPublisher(String publisher) {
@@ -95,7 +115,6 @@ public class NewsArticle extends NewsBaseObject {
       return this;
    }
 
-   
    public String getContent() {
       return this.content;
    }
@@ -105,24 +124,4 @@ public class NewsArticle extends NewsBaseObject {
       return this;
    }
 
-   public static NewsArticle parseJsonObject(JSONObject jsonObject) {
-      NewsArticle result = new NewsArticle();
-      try {
-         if (jsonObject.isNull(JSON_KEY_RESULT_CODE)
-               || NewsArticle.isResultFailure(jsonObject
-                     .getString(JSON_KEY_RESULT_CODE))) {
-            return null;
-         }
-
-         if (!jsonObject.isNull(JSON_KEY_CONTENT)) {
-            result.setContent(jsonObject.getString(JSON_KEY_CONTENT)
-                  .trim());
-         }
-         result.setAbstract(NewsAbstract.parseJsonObject(jsonObject));
-      } catch (JSONException e) {
-         
-      }
-      return result;
-   }
-   
 }

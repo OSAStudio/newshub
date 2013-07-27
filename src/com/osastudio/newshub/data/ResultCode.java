@@ -2,6 +2,7 @@ package com.osastudio.newshub.data;
 
 public interface ResultCode {
 
+   public static final int RESULT_NONE = 0;
    public static final int RESULT_OK = 1;
    
    public static final int RESULT_PARAMETER_ERROR = 100;

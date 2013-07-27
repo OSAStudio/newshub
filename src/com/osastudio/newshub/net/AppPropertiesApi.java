@@ -37,7 +37,7 @@ public class AppPropertiesApi extends NewsBaseApi {
          return null;
       }
       
-      return AppProperties.parseJsonObject(jsonObject);
+      return new AppProperties(jsonObject);
    }
 
 }

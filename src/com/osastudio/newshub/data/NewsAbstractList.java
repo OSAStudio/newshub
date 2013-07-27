@@ -19,7 +19,38 @@ public class NewsAbstractList extends NewsBaseObject {
    private HashMap<String, Integer> abstractMap;
 
    public NewsAbstractList() {
-      
+
+   }
+
+   public NewsAbstractList(JSONObject jsonObject) {
+      super(jsonObject);
+
+      if (isSuccess()) {
+         try {
+            if (!jsonObject.isNull(JSON_KEY_ABSTRACT_LIST)) {
+               JSONArray jsonArray = jsonObject
+                     .getJSONArray(JSON_KEY_ABSTRACT_LIST);
+               List<NewsAbstract> list = new ArrayList<NewsAbstract>();
+               NewsAbstract abs = null;
+               for (int i = 0; i < jsonArray.length(); i++) {
+                  try {
+                     if (!jsonArray.isNull(i)) {
+                        abs = NewsAbstract.parseJsonObject(jsonArray
+                              .getJSONObject(i));
+                        if (abs != null) {
+                           list.add(abs);
+                        }
+                     }
+                  } catch (JSONException e) {
+                     continue;
+                  }
+               }
+               setAbstractList(list);
+            }
+         } catch (JSONException e) {
+
+         }
+      }
    }
 
    public List<NewsAbstract> getAbstractList() {
@@ -29,7 +60,7 @@ public class NewsAbstractList extends NewsBaseObject {
    public NewsAbstractList setAbstractList(List<NewsAbstract> list) {
       this.abstractList = list;
       this.abstractMap = new LinkedHashMap<String, Integer>();
-      
+
       NewsAbstract abs = null;
       for (int i = 0; i < this.abstractList.size(); i++) {
          abs = this.abstractList.get(i);
@@ -39,50 +70,13 @@ public class NewsAbstractList extends NewsBaseObject {
       }
       return this;
    }
-   
+
    public int getNewsAbstractIndex(NewsAbstract abs) {
       if (abs == null || TextUtils.isEmpty(abs.getArticleId())
             || !this.abstractMap.containsKey(abs.getArticleId())) {
          return -1;
       }
       return this.abstractMap.get(abs.getArticleId());
-   }
-   
-   public static NewsAbstractList parseJsonObject(JSONObject jsonObject) {
-      NewsAbstractList result = null;
-      try {
-         if (jsonObject.isNull(JSON_KEY_RESULT_CODE)
-               || NewsAbstractList.isResultFailure(jsonObject
-                     .getString(JSON_KEY_RESULT_CODE))) {
-            return null;
-         }
-
-         result = new NewsAbstractList();
-         if (!jsonObject.isNull(JSON_KEY_ABSTRACT_LIST)) {
-            JSONArray jsonArray = jsonObject
-                  .getJSONArray(JSON_KEY_ABSTRACT_LIST);
-            List<NewsAbstract> list = new ArrayList<NewsAbstract>();
-            NewsAbstract abs = null;
-            for (int i = 0; i < jsonArray.length(); i++) {
-               try {
-                  if (!jsonArray.isNull(i)) {
-                     abs = NewsAbstract.parseJsonObject(jsonArray
-                           .getJSONObject(i));
-                     if (abs != null) {
-                        list.add(abs);
-                     }
-                  }
-               } catch (JSONException e) {
-                  continue;
-               }
-            }
-            result.setAbstractList(list);
-         }
-      } catch (JSONException e) {
-
-      }
-
-      return result;
    }
 
 }

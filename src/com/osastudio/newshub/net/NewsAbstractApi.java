@@ -41,7 +41,7 @@ public class NewsAbstractApi extends NewsBaseApi {
          return null;
       }
       
-      NewsAbstractList result = NewsAbstractList.parseJsonObject(jsonObject);
+      NewsAbstractList result = new NewsAbstractList(jsonObject);
       if (result != null && result.getAbstractList().size() > 0) {
          for (NewsAbstract abs : result.getAbstractList()) {
             if (abs != null) {

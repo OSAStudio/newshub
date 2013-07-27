@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AppProperties extends NewsBaseObject {
-   
+
    public static final String JSON_KEY_APK_URL = "android_url";
    public static final String JSON_KEY_SPLASH_IMAGE_URL = "picture_url";
    public static final String JSON_KEY_RELEASE_NOTES = "update_note";
@@ -16,11 +16,40 @@ public class AppProperties extends NewsBaseObject {
    private String releaseNotes;
    private int userStatus;
    private String versionName;
-   
+
    public AppProperties() {
-      
+
    }
-   
+
+   public AppProperties(JSONObject jsonObject) {
+      super(jsonObject);
+
+      if (isSuccess()) {
+         try {
+            if (!jsonObject.isNull(JSON_KEY_APK_URL)) {
+               setApkUrl(jsonObject.getString(JSON_KEY_APK_URL).trim());
+            }
+            if (!jsonObject.isNull(JSON_KEY_SPLASH_IMAGE_URL)) {
+               setSplashImageUrl(jsonObject
+                     .getString(JSON_KEY_SPLASH_IMAGE_URL).trim());
+            }
+            if (!jsonObject.isNull(JSON_KEY_RELEASE_NOTES)) {
+               setReleaseNotes(jsonObject.getString(JSON_KEY_RELEASE_NOTES)
+                     .trim());
+            }
+            if (!jsonObject.isNull(JSON_KEY_USER_STATUS)) {
+               setUserStatus(jsonObject.getInt(JSON_KEY_USER_STATUS));
+            }
+            if (!jsonObject.isNull(JSON_KEY_VERSION_NAME)) {
+               setVersionName(jsonObject.getString(JSON_KEY_VERSION_NAME)
+                     .trim());
+            }
+         } catch (JSONException e) {
+
+         }
+      }
+   }
+
    public String getSplashImageUrl() {
       return this.splashImageUrl;
    }
@@ -66,34 +95,4 @@ public class AppProperties extends NewsBaseObject {
       return this;
    }
 
-   public static AppProperties parseJsonObject(JSONObject jsonObject) {
-      AppProperties result = new AppProperties();
-      try {
-         if (jsonObject.isNull(JSON_KEY_RESULT_CODE)
-               || AppProperties.isResultFailure(jsonObject
-                     .getString(JSON_KEY_RESULT_CODE))) {
-            return null;
-         }
-
-         if (!jsonObject.isNull(JSON_KEY_APK_URL)) {
-            result.setApkUrl(jsonObject.getString(JSON_KEY_APK_URL).trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_SPLASH_IMAGE_URL)) {
-            result.setSplashImageUrl(jsonObject.getString(JSON_KEY_SPLASH_IMAGE_URL).trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_RELEASE_NOTES)) {
-            result.setReleaseNotes(jsonObject.getString(JSON_KEY_RELEASE_NOTES).trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_USER_STATUS)) {
-            result.setUserStatus(jsonObject.getInt(JSON_KEY_USER_STATUS));
-         }
-         if (!jsonObject.isNull(JSON_KEY_VERSION_NAME)) {
-            result.setVersionName(jsonObject.getString(JSON_KEY_VERSION_NAME).trim());
-         }
-      } catch (JSONException e) {
-         
-      }
-      return result;
-   }
-   
 }

@@ -37,7 +37,7 @@ public class NewsChannelApi extends NewsBaseApi {
          return null;
       }
       
-      return NewsChannelList.parseJsonObject(jsonObject);
+      return new NewsChannelList(jsonObject);
    }
 
 }

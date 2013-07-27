@@ -1,21 +1,20 @@
 package com.osastudio.newshub.data;
 
+import org.json.JSONObject;
+
 import android.text.TextUtils;
 
-public class NewsBaseObject implements ResultCode {
+public class NewsBaseObject extends NewsResult implements ResultCode {
 
-   protected static final String JSON_KEY_RESULT_DESC = "msg";
-   protected static final String JSON_KEY_RESULT_CODE = "stat";
-   
-   protected static final int DEFAULT_COLOR = 0xAA000000;
-   
+   protected static final int DEFAULT_ALPHA = 0xAA;
+   protected static final int DEFAULT_COLOR = 0x000000 | (DEFAULT_ALPHA << 24);
 
-   protected static boolean isResultSuccess(final String resultString) {
-      return new NewsResult(resultString).isSuccess();
+   public NewsBaseObject() {
+
    }
 
-   protected static boolean isResultFailure(final String resultString) {
-      return new NewsResult(resultString).isFailure();
+   public NewsBaseObject(JSONObject jsonObject) {
+      super(jsonObject);
    }
 
    public static int parseColorValue(final String hexString) {
@@ -23,16 +22,16 @@ public class NewsBaseObject implements ResultCode {
          try {
             int result = hexString.startsWith("#") ? Integer.decode(hexString)
                   : Integer.decode("#".concat(hexString));
-            return (result & 0xFFFFFF) | 0xAA000000;
+            return (result & 0xFFFFFF) | (DEFAULT_ALPHA << 24);
          } catch (NumberFormatException e) {
-             e.printStackTrace();
+            e.printStackTrace();
          }
       }
       return getDefaultColor();
    }
-   
+
    protected static int getDefaultColor() {
-      return 0xAA000000;
+      return DEFAULT_COLOR;
    }
 
 }
