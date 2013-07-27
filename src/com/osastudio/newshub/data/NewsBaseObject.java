@@ -10,7 +10,7 @@ public class NewsBaseObject extends NewsResult implements ResultCode {
    protected static final int DEFAULT_COLOR = 0x000000 | (DEFAULT_ALPHA << 24);
 
    public NewsBaseObject() {
-
+      super();
    }
 
    public NewsBaseObject(JSONObject jsonObject) {

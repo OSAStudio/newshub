@@ -127,7 +127,6 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       } catch (JSONException e) {
 
       }
-
       return result;
    }
 

@@ -133,7 +133,6 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
       } catch (JSONException e) {
 
       }
-
       return result;
    }
 

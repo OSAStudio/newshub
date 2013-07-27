@@ -11,25 +11,17 @@ import org.json.JSONObject;
 
 import android.text.TextUtils;
 
-public class NewsAbstractList extends NewsBaseObject {
+public class NewsAbstractList extends NewsObjectList<NewsAbstract> {
 
-   public static final String JSON_KEY_ABSTRACT_LIST = "list";
-
-   private List<NewsAbstract> abstractList;
    private HashMap<String, Integer> abstractMap;
-
-   public NewsAbstractList() {
-
-   }
 
    public NewsAbstractList(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
          try {
-            if (!jsonObject.isNull(JSON_KEY_ABSTRACT_LIST)) {
-               JSONArray jsonArray = jsonObject
-                     .getJSONArray(JSON_KEY_ABSTRACT_LIST);
+            if (!jsonObject.isNull(JSON_KEY_LIST)) {
+               JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_LIST);
                List<NewsAbstract> list = new ArrayList<NewsAbstract>();
                NewsAbstract abs = null;
                for (int i = 0; i < jsonArray.length(); i++) {
@@ -54,16 +46,16 @@ public class NewsAbstractList extends NewsBaseObject {
    }
 
    public List<NewsAbstract> getAbstractList() {
-      return this.abstractList;
+      return this.list;
    }
 
    public NewsAbstractList setAbstractList(List<NewsAbstract> list) {
-      this.abstractList = list;
+      this.list = list;
       this.abstractMap = new LinkedHashMap<String, Integer>();
 
       NewsAbstract abs = null;
-      for (int i = 0; i < this.abstractList.size(); i++) {
-         abs = this.abstractList.get(i);
+      for (int i = 0; i < this.list.size(); i++) {
+         abs = this.list.get(i);
          if (abs != null) {
             this.abstractMap.put(abs.getArticleId(), i);
          }

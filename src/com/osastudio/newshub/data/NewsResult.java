@@ -12,15 +12,15 @@ public class NewsResult implements ResultCode {
    private String resultDesc;
 
    public NewsResult() {
-
+      
    }
 
    public NewsResult(JSONObject jsonObject) {
       try {
-         if (jsonObject.isNull(JSON_KEY_RESULT_CODE)) {
+         if (!jsonObject.isNull(JSON_KEY_RESULT_CODE)) {
             setResultCode(jsonObject.getString(JSON_KEY_RESULT_CODE));
          }
-         if (jsonObject.isNull(JSON_KEY_RESULT_DESCRIPTION)) {
+         if (!jsonObject.isNull(JSON_KEY_RESULT_DESCRIPTION)) {
             setResultDescription(jsonObject
                   .getString(JSON_KEY_RESULT_DESCRIPTION));
          }
