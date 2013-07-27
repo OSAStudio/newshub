@@ -8,8 +8,8 @@ public class NewsResult implements ResultCode {
    protected static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
    protected static final String JSON_KEY_RESULT_CODE = "stat";
 
-   private int resultCode = RESULT_NONE;
-   private String resultDesc;
+   protected int resultCode = RESULT_NONE;
+   protected String resultDesc;
 
    public NewsResult() {
       
@@ -68,7 +68,17 @@ public class NewsResult implements ResultCode {
       return this;
    }
    
-   public boolean isAlert() {
+   public boolean needAlert() {
+      if (this.resultCode == RESULT_INVALID_VALIDATE_CODE
+            || this.resultCode == RESULT_VALIDATE_FAILURE
+            || this.resultCode == RESULT_ILLEGAL_VALIDATE_CODE_STATUS
+            || this.resultCode == RESULT_VALIDATE_CODE_ALREADY_EXISTS
+            || this.resultCode == RESULT_REGISTER_FAILURE
+            || this.resultCode == RESULT_NO_DEVICE_IDENTIFIER
+            || this.resultCode == RESULT_PAYMENT_NEEDED
+            || this.resultCode == RESULT_ADD_SUBACCOUNT_FAILURE) {
+         return true;
+      }
       return false;
    }
 

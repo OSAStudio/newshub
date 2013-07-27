@@ -1,7 +1,9 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.user;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.osastudio.newshub.data.PairedStringFieldsObject;
 
 public class SchoolClass extends PairedStringFieldsObject {
 

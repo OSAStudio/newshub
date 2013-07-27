@@ -1,15 +1,17 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.user;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SchoolYear extends PairedStringFieldsObject {
+import com.osastudio.newshub.data.PairedStringFieldsObject;
 
-   public static final String JSON_KEY_ID = "year_id";
-   public static final String JSON_KEY_NAME = "year_name";
+public class School extends PairedStringFieldsObject {
 
-   public static SchoolYear parseJsonObject(JSONObject jsonObject) {
-      SchoolYear result = new SchoolYear();
+   public static final String JSON_KEY_ID = "school_id";
+   public static final String JSON_KEY_NAME = "school_name";
+
+   public static School parseJsonObject(JSONObject jsonObject) {
+      School result = new School();
       try {
          if (!jsonObject.isNull(JSON_KEY_ID)) {
             result.setId(jsonObject.getString(JSON_KEY_ID).trim());

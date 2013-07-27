@@ -3,7 +3,9 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AppProperties extends NewsBaseObject {
+import com.osastudio.newshub.data.user.UserStatus;
+
+public class AppProperties extends NewsBaseObject implements UserStatus {
 
    public static final String JSON_KEY_APK_URL = "android_url";
    public static final String JSON_KEY_SPLASH_IMAGE_URL = "picture_url";
@@ -85,7 +87,7 @@ public class AppProperties extends NewsBaseObject {
       this.userStatus = userStatus;
       return this;
    }
-
+   
    public String getVersionName() {
       return this.versionName;
    }

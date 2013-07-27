@@ -1,4 +1,4 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.user;
 
 public class RegisterParameters {
    
@@ -10,8 +10,4 @@ public class RegisterParameters {
    public String userName;
    public String yearId;
 
-   public RegisterParameters() {
-      
-   }
-   
 }

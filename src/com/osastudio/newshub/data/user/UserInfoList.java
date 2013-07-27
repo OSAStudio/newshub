@@ -1,10 +1,12 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.user;
 
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.osastudio.newshub.data.NewsObjectList;
 
 public class UserInfoList extends NewsObjectList<UserInfo> {
 

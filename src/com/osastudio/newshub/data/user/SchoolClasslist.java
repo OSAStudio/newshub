@@ -1,4 +1,4 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.user;
 
 import java.util.ArrayList;
 
@@ -6,20 +6,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CityDistrictList extends NewsObjectList<CityDistrict> {
+import com.osastudio.newshub.data.NewsObjectList;
 
-   public CityDistrictList(JSONObject jsonObject) {
+public class SchoolClasslist extends NewsObjectList<SchoolClass> {
+
+   public SchoolClasslist(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
          try {
             if (!jsonObject.isNull(JSON_KEY_LIST)) {
                JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_LIST);
-               this.list = new ArrayList<CityDistrict>();
+               this.list = new ArrayList<SchoolClass>();
                for (int i = 0; i < jsonArray.length(); i++) {
                   try {
                      if (!jsonArray.isNull(i)) {
-                        this.list.add(CityDistrict.parseJsonObject(jsonArray
+                        this.list.add(SchoolClass.parseJsonObject(jsonArray
                               .getJSONObject(i)));
                      }
                   } catch (JSONException e) {
