@@ -50,9 +50,13 @@ public class NewsAbstractList extends NewsObjectList<NewsAbstract> {
    }
 
    public NewsAbstractList setAbstractList(List<NewsAbstract> list) {
+      setList(list);
+      return this;
+   }
+   
+   public void setList(List<NewsAbstract> list) {
       this.list = list;
       this.abstractMap = new LinkedHashMap<String, Integer>();
-
       NewsAbstract abs = null;
       for (int i = 0; i < this.list.size(); i++) {
          abs = this.list.get(i);
@@ -60,7 +64,6 @@ public class NewsAbstractList extends NewsObjectList<NewsAbstract> {
             this.abstractMap.put(abs.getArticleId(), i);
          }
       }
-      return this;
    }
 
    public int getNewsAbstractIndex(NewsAbstract abs) {
