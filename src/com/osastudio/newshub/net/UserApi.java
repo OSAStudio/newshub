@@ -20,6 +20,7 @@ import com.osastudio.newshub.data.user.SchoolTypeList;
 import com.osastudio.newshub.data.user.SchoolYearlist;
 import com.osastudio.newshub.data.user.UserInfoList;
 import com.osastudio.newshub.data.user.ValidateResult;
+import com.osastudio.newshub.library.ChecksumHelper;
 
 public class UserApi extends NewsBaseApi {
 
@@ -48,7 +49,8 @@ public class UserApi extends NewsBaseApi {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-      params.add(new BasicNameValuePair(KEY_VALIDATE_CODE, validateCode));
+      params.add(new BasicNameValuePair(KEY_VALIDATE_CODE, ChecksumHelper
+            .toMD5(validateCode)));
       JSONObject jsonObject = getJsonObject(validateService(), params);
       return (jsonObject != null) ? new ValidateResult(jsonObject) : null;
    }
