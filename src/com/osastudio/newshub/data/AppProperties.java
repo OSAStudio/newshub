@@ -61,7 +61,7 @@ public class AppProperties extends NewsBaseObject implements UserStatus {
                   if (ids != null && ids.length > 0) {
                      ArrayList<String> list = new ArrayList<String>();
                      Collections.addAll(list, ids);
-                     setUserIds(userIds);
+                     setUserIds(list);
                   }
                }
             }
