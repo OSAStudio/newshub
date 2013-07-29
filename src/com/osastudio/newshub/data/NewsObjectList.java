@@ -18,6 +18,7 @@ public class NewsObjectList<T> extends NewsBaseObject {
    
    public NewsObjectList(JSONObject jsonObject) {
       super(jsonObject);
+      this.list = new ArrayList<T>();
    }
 
    public List<T> getList() {
