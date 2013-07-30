@@ -11,14 +11,14 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
    public static final String JSON_KEY_ARTICLE_ID = "lesson_id";
    public static final String JSON_KEY_COLOR = "lesson_colour";
    public static final String JSON_KEY_PUBLISHED_TIME = "post_date";
-   public static final String JSON_KEY_PUBLISHER = "expert_name";
+   public static final String JSON_KEY_AUTHOR = "expert_name";
    public static final String JSON_KEY_TITLE = "lesson_title";
 
    private String articleId = "";
    private String channelId = "";
    private int color = DEFAULT_COLOR;
    private String publishedTime;
-   private String publisher = "";
+   private String author = "";
    private String title = "";
 
    public NewsAbstract() {
@@ -30,7 +30,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       this.channelId = src.readString().trim();
       this.color = src.readInt();
       this.publishedTime = src.readString().trim();
-      this.publisher = src.readString().trim();
+      this.author = src.readString().trim();
       this.title = src.readString().trim();
    }
 
@@ -70,12 +70,12 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       return this;
    }
 
-   public String getPublisher() {
-      return this.publisher;
+   public String getAuthor() {
+      return this.author;
    }
 
-   public NewsAbstract setPublisher(String publisher) {
-      this.publisher = (publisher != null) ? publisher : "";
+   public NewsAbstract setAuthor(String author) {
+      this.author = (author != null) ? author : "";
       return this;
    }
 
@@ -118,8 +118,8 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
             result.setPublishedTime(jsonObject.getString(
                   JSON_KEY_PUBLISHED_TIME).trim());
          }
-         if (!jsonObject.isNull(JSON_KEY_PUBLISHER)) {
-            result.setPublisher(jsonObject.getString(JSON_KEY_PUBLISHER).trim());
+         if (!jsonObject.isNull(JSON_KEY_AUTHOR)) {
+            result.setAuthor(jsonObject.getString(JSON_KEY_AUTHOR).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_TITLE)) {
             result.setTitle(jsonObject.getString(JSON_KEY_TITLE).trim());
@@ -141,7 +141,7 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       dst.writeString(this.channelId);
       dst.writeInt(this.color);
       dst.writeString(this.publishedTime);
-      dst.writeString(this.publisher);
+      dst.writeString(this.author);
       dst.writeString(this.title);
    }
 

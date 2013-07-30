@@ -90,16 +90,16 @@ public class NewsArticle extends NewsBaseObject {
       return this;
    }
 
-   public String getPublisher() {
-      return (this.newsAbstract != null) ? this.newsAbstract.getPublisher()
+   public String getAuthor() {
+      return (this.newsAbstract != null) ? this.newsAbstract.getAuthor()
             : null;
    }
 
-   public NewsArticle setPublisher(String publisher) {
+   public NewsArticle setAuthor(String author) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsAbstract();
       }
-      this.newsAbstract.setPublisher(publisher);
+      this.newsAbstract.setAuthor(author);
       return this;
    }
 

@@ -211,7 +211,7 @@ public class SummaryActivity extends NewsBaseActivity {
 				tv.setText(data.getTitle());
 
 				TextView name = (TextView)summary.findViewById(R.id.expert_name);
-				name.setText(data.getPublisher());
+				name.setText(data.getAuthor());
 				summary.setBackgroundColor(data.getColor());
 				return summary;
 			} else {
