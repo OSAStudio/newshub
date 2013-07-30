@@ -53,7 +53,7 @@ public class NewsBaseApi {
 
    protected static final String KEY_DEVICE_ID = "deviceID";
    protected static final String KEY_DEVICE_TYPE = "deviceTYPE";
-   
+
    protected static final String KEY_USER_ID = "studentID";
 
    protected static String getDeviceId(Context context) {
@@ -216,9 +216,15 @@ public class NewsBaseApi {
    protected static String getStringByHttpPost(String service,
          List<NameValuePair> params) {
       try {
+         Utils.logi(TAG, "getString() [SERVICE] " + service);
          HttpPost httpRequest = new HttpPost(service);
          if (params != null && params.size() > 0) {
             httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            Utils.logi(
+                  TAG,
+                  "getString() [PARAMS] "
+                        + EntityUtils.toString(httpRequest.getEntity(),
+                              HTTP.UTF_8));
          }
 
          HttpResponse httpResponse = new DefaultHttpClient()
@@ -226,7 +232,7 @@ public class NewsBaseApi {
          if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             String responseString = EntityUtils.toString(
                   httpResponse.getEntity(), HTTP.UTF_8);
-            Utils.logi(TAG, "getString() RESPONSE=" + responseString);
+            Utils.logi(TAG, "getString() [RESPONSE] " + responseString);
             return responseString;
          }
       } catch (ClientProtocolException e) {
