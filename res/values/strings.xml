@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">NewsHub</string>
+    <string name="app_name">Azker</string>
     <string name="male_name">男</string>
     <string name="female_name">女</string>
     <string name="activite_msg">请输入交易号验证</string>
