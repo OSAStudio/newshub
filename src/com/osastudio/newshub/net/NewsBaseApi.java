@@ -176,6 +176,16 @@ public class NewsBaseApi {
             "notify!getNotifyContentByMobile.do").toString();
    }
 
+   protected static String getNewsColumnistListService() {
+      return new StringBuilder(getWebServer()).append(
+            "").toString();
+   }
+
+   protected static String getNewsColumnistInfoService() {
+      return new StringBuilder(getWebServer()).append(
+            "").toString();
+   }
+
    protected static JSONObject getJsonObject(String service,
          List<NameValuePair> params) {
       String jsonString = getString(service, params);
