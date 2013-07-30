@@ -53,6 +53,8 @@ public class NewsBaseApi {
 
    protected static final String KEY_DEVICE_ID = "deviceID";
    protected static final String KEY_DEVICE_TYPE = "deviceTYPE";
+   
+   protected static final String KEY_USER_ID = "studentID";
 
    protected static String getDeviceId(Context context) {
       String id = null;
@@ -162,6 +164,16 @@ public class NewsBaseApi {
    protected static String feedbackService() {
       return new StringBuilder(getWebServer()).append(
             "problemfeedback!submitProblemFeedbackByMobile.do").toString();
+   }
+
+   protected static String getNewsNoticeListService() {
+      return new StringBuilder(getWebServer()).append(
+            "notify!getNotifyListByMobile.do").toString();
+   }
+
+   protected static String getNewsNoticeArticleService() {
+      return new StringBuilder(getWebServer()).append(
+            "notify!getNotifyContentByMobile.do").toString();
    }
 
    protected static JSONObject getJsonObject(String service,
