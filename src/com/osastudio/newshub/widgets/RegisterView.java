@@ -155,7 +155,7 @@ public class RegisterView extends Dialog {
 
 			public void onClick(View v) {
 				ArrayList<Data> sexList = new ArrayList<Data>();
-				Data data = new Data("0", "ÄÐ");
+				Data data = new Data("0", "ï¿½ï¿½");
 				sexList.add(data);
 				data = new Data("1", "Å®");
 				sexList.add(data);
@@ -421,7 +421,7 @@ public class RegisterView extends Dialog {
 				}
 			} else if (type.equals(LIST_TYPE.EDU)) {
 				QualificationList edulist = UserApi
-						.getqQualificationList(mContext);
+						.getQualificationList(mContext);
 				List<Qualification> edu_list = edulist.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();

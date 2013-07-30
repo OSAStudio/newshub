@@ -1,6 +1,5 @@
 package com.osastudio.newshub.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,7 +21,6 @@ public class NewsAbstractList extends NewsObjectList<NewsAbstract> {
          try {
             if (!jsonObject.isNull(JSON_KEY_LIST)) {
                JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_LIST);
-               List<NewsAbstract> list = new ArrayList<NewsAbstract>();
                NewsAbstract abs = null;
                for (int i = 0; i < jsonArray.length(); i++) {
                   try {

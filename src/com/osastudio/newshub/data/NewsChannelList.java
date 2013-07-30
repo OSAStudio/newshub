@@ -1,6 +1,5 @@
 package com.osastudio.newshub.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -16,7 +15,6 @@ public class NewsChannelList extends NewsObjectList<NewsChannel> {
          try {
             if (!jsonObject.isNull(JSON_KEY_LIST)) {
                JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_LIST);
-               this.list = new ArrayList<NewsChannel>();
                for (int i = 0; i < jsonArray.length(); i++) {
                   try {
                      if (!jsonArray.isNull(i)) {
