@@ -135,8 +135,8 @@ public class UserApi extends NewsBaseApi {
       return (jsonObject != null) ? new SchoolClasslist(jsonObject) : null;
    }
 
-   public static QualificationList getqQualificationList(Context context) {
-      JSONObject jsonObject = getJsonObject(getCityListService(), null);
+   public static QualificationList getQualificationList(Context context) {
+      JSONObject jsonObject = getJsonObject(getQualificationListService(), null);
       return (jsonObject != null) ? new QualificationList(jsonObject) : null;
    }
 
