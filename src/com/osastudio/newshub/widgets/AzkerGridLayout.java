@@ -2,7 +2,8 @@ package com.osastudio.newshub.widgets;
 
 import java.util.ArrayList;
 
-import com.osastudio.newshub.R;
+import com.huadi.azker_phone.R;
+
 
 
 import android.content.Context;
@@ -12,8 +13,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-public class AzkerGridLayout extends LinearLayout implements
-		View.OnClickListener {
+public class AzkerGridLayout extends LinearLayout implements View.OnClickListener {
 	private final static int RAW_ID[] = { R.id.row0, R.id.row1, R.id.row2,
 			R.id.row3 };
 	private final static int CONTINER_ID[] = { R.id.container0,
@@ -78,7 +78,6 @@ public class AzkerGridLayout extends LinearLayout implements
 		
 	}
 
-	@Override
 	public void onClick(View v) {
 		if (mClickListener != null) {
 			int id = v.getId();

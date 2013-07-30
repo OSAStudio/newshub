@@ -3,6 +3,7 @@ package com.osastudio.newshub;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsChannel;

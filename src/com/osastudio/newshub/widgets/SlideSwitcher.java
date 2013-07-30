@@ -1,7 +1,8 @@
 package com.osastudio.newshub.widgets;
 
 
-import com.osastudio.newshub.R;
+
+import com.huadi.azker_phone.R;
 
 import android.content.Context;
 import android.util.AttributeSet;

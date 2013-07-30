@@ -2,6 +2,8 @@ package com.osastudio.newshub.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 import android.graphics.Bitmap;
@@ -149,6 +151,46 @@ public class Utils {
 	      return bmp;
 
 	   }
+   
+	public static Bitmap getBitmapFromUrl(String url) {
+		Bitmap bmp = null;
+		if (url != null) {
+			URL newurl;
+			try {
+				newurl = new URL(convertUrl(url));
+
+				try {
+					bmp = BitmapFactory.decodeStream(newurl.openConnection()
+							.getInputStream());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return bmp;
+
+	}
+	
+	public static String convertUrl(String title) {
+		title = title.replace("%", "%25");
+		title = title.replace(" ", "%20");
+		title = title.replace("!", "%21");
+		// title = title.replace("\"", "%22");
+		title = title.replace("#", "%23");
+		title = title.replace("$", "%24");
+
+		title = title.replace("&", "%26");
+		title = title.replace(";", "%3b");
+		title = title.replace("[", "%5b");
+		title = title.replace("]", "%5d");
+		return title;
+	}
    
    public static void log(String tag, String info) {
       logi(tag, info);
