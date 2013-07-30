@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.osastudio.newshub"
+    package="com.huadi.azker_phone"
     android:versionCode="1"
     android:versionName="0.80.00" >
 
@@ -16,13 +16,13 @@
     
 
     <application
-	     android:name=".NewsApp"
+	     android:name="com.osastudio.newshub.NewsApp"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".CategoryActivity"
+            android:name="com.osastudio.newshub.CategoryActivity"
             android:label="@string/app_name"
 			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.Light.NoTitleBar">
@@ -33,12 +33,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SummaryActivity"
+            android:name="com.osastudio.newshub.SummaryActivity"
             android:label="@string/app_name" 
 			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.Light.NoTitleBar"/>
         <activity
-            android:name=".FileActivity"
+            android:name="com.osastudio.newshub.FileActivity"
             android:label="@string/app_name" 
 			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.Light.NoTitleBar"/>

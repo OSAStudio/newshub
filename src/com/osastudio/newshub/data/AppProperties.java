@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import com.osastudio.newshub.data.user.UserStatus;
 
 public class AppProperties extends NewsBaseObject implements UserStatus {
-
+   public static final String JSON_KEY_LOGIN_INFO = "list";
    public static final String JSON_KEY_APK_URL = "android_url";
    public static final String JSON_KEY_MIN_VERSION_CODE = "min_version_code";
    public static final String JSON_KEY_SPLASH_IMAGE_URL = "picture_url";
@@ -35,11 +35,16 @@ public class AppProperties extends NewsBaseObject implements UserStatus {
 
    }
 
-   public AppProperties(JSONObject jsonObject) {
-      super(jsonObject);
+   public AppProperties(JSONObject jsonObj) {
+      super(jsonObj);
 
       if (isSuccess()) {
          try {
+        	JSONObject jsonObject = jsonObj.getJSONObject(JSON_KEY_LOGIN_INFO);
+        	if (jsonObject == null) {
+        		return;
+        	}
+        	 
             if (!jsonObject.isNull(JSON_KEY_APK_URL)) {
                setApkUrl(jsonObject.getString(JSON_KEY_APK_URL).trim());
             }

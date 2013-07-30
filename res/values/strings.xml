@@ -2,5 +2,17 @@
 <resources>
 
     <string name="app_name">NewsHub</string>
-
+    <string name="male_name">男</string>
+    <string name="female_name">女</string>
+    <string name="activite_msg">请输入交易号验证</string>
+    <string name="activite_btn">激活</string>
+    <string name="school_c">学校</string>
+    <string name="grade_c">年级</string>
+    <string name="class_c">班级</string>
+    <string name="register">注册</string>
+    <string name="register_msg">请正确填写基础信息</string>
+    <string name="name">学生姓名</string>
+	<string name="sex">学生性别</string>
+	<string name="birth">出生日期</string>
+	<string name="education">家长学历</string>
 </resources>

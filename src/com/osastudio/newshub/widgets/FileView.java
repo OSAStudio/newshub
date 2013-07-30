@@ -1,6 +1,6 @@
 package com.osastudio.newshub.widgets;
 
-import com.osastudio.newshub.R;
+import com.huadi.azker_phone.R;
 import com.osastudio.newshub.utils.Utils;
 
 import android.content.Context;

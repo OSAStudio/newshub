@@ -8,12 +8,14 @@
         android:id="@+id/title_line"
         android:layout_width="fill_parent"
         android:layout_height="5dp"
-        android:background="#ff0000dd" />
+        android:background="#ff0000dd" 
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/category_name"

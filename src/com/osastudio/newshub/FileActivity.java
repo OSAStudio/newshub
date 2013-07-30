@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import com.huadi.azker_phone.R;
 import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;

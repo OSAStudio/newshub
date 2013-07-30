@@ -76,7 +76,7 @@ public class NewsBaseApi {
 
    protected static String getAppPropertiesService() {
       return new StringBuilder(getWebServer()).append(
-            "loginpicture!getLoginPictureByMobile.do").toString();
+            "loginpicture!checkLoginInfoByMobile.do").toString();
    }
 
    protected static String getNewsChannelListService() {
