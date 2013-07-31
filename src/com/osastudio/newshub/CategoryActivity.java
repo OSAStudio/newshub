@@ -42,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -65,6 +66,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private View mActivateLayout = null;
 	private EditText mActivateEdit = null;
 	private View mActivateBtn = null;
+	private View mAccount_btn = null;
+	
 	// private ArrayList<CategoryData> mCategories = new
 	// ArrayList<CategoryData>();
 	private ArrayList<NewsChannel> mCategoryList = null;
@@ -141,8 +144,6 @@ public class CategoryActivity extends NewsBaseActivity {
 		mActivateEdit = (EditText) findViewById(R.id.activite_edit);
 		mActivateBtn = findViewById(R.id.activite_btn);
 		mActivateBtn.setOnClickListener(new View.OnClickListener() {
-
-			@Override
 			public void onClick(View v) {
 				String activate_str = mActivateEdit.getEditableText()
 						.toString();
@@ -150,6 +151,15 @@ public class CategoryActivity extends NewsBaseActivity {
 					new ActivateTask().execute(activate_str);
 				}
 
+			}
+		});
+		
+		mAccount_btn = findViewById(R.id.account_btn);
+		mAccount_btn.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				showRegisterView();
+				
 			}
 		});
 	}

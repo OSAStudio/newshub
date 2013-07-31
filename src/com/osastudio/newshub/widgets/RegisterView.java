@@ -80,11 +80,15 @@ public class RegisterView extends Dialog {
 	ArrayList<Data> mDispList = null;
 	LIST_TYPE mCurrentType;
 	private LayoutInflater mInflater = null;
+	private String mMale = null;
+	private String mFemale = null;
 
 	// @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		mMale = mContext.getResources().getString(R.string.male_name);
+		mFemale = mContext.getResources().getString(R.string.female_name);
 		setContentView(R.layout.register_view);
 		findViews();
 		setCancelable(false);
@@ -155,9 +159,9 @@ public class RegisterView extends Dialog {
 
 			public void onClick(View v) {
 				ArrayList<Data> sexList = new ArrayList<Data>();
-				Data data = new Data("0", "��");
+				Data data = new Data("0", mMale);
 				sexList.add(data);
-				data = new Data("1", "Ů");
+				data = new Data("1", mFemale);
 				sexList.add(data);
 				setupList(LIST_TYPE.SEX, sexList);
 			}
