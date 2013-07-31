@@ -436,7 +436,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			int page = mSwitcher.getCurrentIndex();
 			int index = page * 8 + position;
 			if (index < mCategoryList.size()) {
-				startSummaryActivity(mCategoryList.get(index));
+				startNextActivity(mCategoryList.get(index));
 			}
 
 		}
@@ -493,12 +493,6 @@ public class CategoryActivity extends NewsBaseActivity {
 					category = (RelativeLayout) inflater.inflate(
 							R.layout.category_item, null);
 				}
-				// CategoryData data = mCategories.get(index);
-				// View base = category.findViewById(R.id.base);
-				// base.setBackgroundColor(data.title_color);
-				// ImageView iv = (ImageView)category.findViewById(R.id.image);
-				// TextView tv = (TextView)category.findViewById(R.id.name);
-				// tv.setText(data.title_name);
 
 				View base = category.findViewById(R.id.base);
 				ImageView iv = (ImageView) category.findViewById(R.id.image);
@@ -512,11 +506,23 @@ public class CategoryActivity extends NewsBaseActivity {
 				return null;
 			}
 		}
-
 	}
+	
+	public static final String TYPE_NOTIFY_LIST = "1";
+	public static final String TYPE_EXPERT_LIST = "3";
+	public static final String TYPE_USETLSSUES_MOBILE = "5";
+	public static final String TYPE_LESSON_LIST="6";
 
-	private void startSummaryActivity(NewsChannel data) {
-		Intent it = new Intent(this, SummaryActivity.class);
+
+	private void startNextActivity(NewsChannel data) {
+		String type = data.getTitleType();
+		if (type.equals(TYPE_NOTIFY_LIST)) {
+			
+		} else if (type.equals(TYPE_EXPERT_LIST)) {
+			
+		}
+		
+ 		Intent it = new Intent(this, SummaryActivity.class);
 		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		it.putExtra(SummaryActivity.CATEGORY_DATA, data);
 		startActivityForResult(it, 1);

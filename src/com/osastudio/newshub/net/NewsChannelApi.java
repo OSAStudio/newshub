@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.utils.Utils;
 
 public class NewsChannelApi extends NewsBaseApi {
 
