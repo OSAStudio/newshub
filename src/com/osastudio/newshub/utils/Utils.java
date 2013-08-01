@@ -5,7 +5,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.huadi.azker_phone.R;
 
+
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -190,6 +197,92 @@ public class Utils {
 		title = title.replace("[", "%5b");
 		title = title.replace("]", "%5d");
 		return title;
+	}
+	
+	public static ProgressDialog showProgressDlg(Context context, String msg) {
+		ProgressDialog dlg = null;
+		if (msg == null) {
+			msg = context.getString(R.string.wait);
+		}
+		try {
+			dlg = new ProgressDialog(context);
+			dlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dlg.setMax(100);
+			dlg.setMessage(msg);
+			dlg.setCancelable(false);
+			dlg.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dlg;
+	}
+
+	public static void closeProgressDlg(ProgressDialog dlg) {
+		if (dlg != null) {
+			dlg.dismiss();
+		}
+	}
+	
+	
+	public static void ShowConfirmDialog(Context context, String msg, final DialogConfirmCallback cb) {
+		new AlertDialog.Builder(context)
+		.setMessage(msg)
+		.setPositiveButton(R.string.confirm,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						if (cb != null) {
+							cb.onConfirm(dialog);
+						}
+
+					}
+				})
+		.setCancelable(false).show();
+	}
+	
+	public interface DialogConfirmCallback {
+		void onConfirm(DialogInterface dialog);
+	}
+
+	public static String getErrorResultMsg(Context context, int recult_code) {
+		String msg = null;
+		int msgId = -1;
+		switch(recult_code) {
+		case 102:
+		case 104:
+		case 105:
+			msgId = R.string.msg_key_error;
+			break;
+		case 103:
+			msgId = R.string.msg_activate_error;
+			break;
+		case 106:
+			msgId = R.string.msg_register_error;
+			break;
+		case 107:
+			msgId = R.string.msg_error_deviceid;
+			break;
+		case 108:
+			msgId = R.string.msg_no_pay;
+			break;
+		case 109:
+			msgId = R.string.msg_add_account_error;
+			break;
+		case 110:
+			msgId = R.string.msg_feedback_error;
+			break;
+		case 111:
+			msgId = R.string.msg_no_authority;
+			break;
+		case 112:
+			msgId = R.string.msg_accout_full;
+			break;
+		
+		}
+		if (msgId > 0) {
+			msg = context.getString(msgId);
+		}
+		return msg;
 	}
    
    public static void log(String tag, String info) {

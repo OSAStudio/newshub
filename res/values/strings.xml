@@ -2,6 +2,11 @@
 <resources>
 
     <string name="app_name">Azker</string>
+    
+   <string name="wait">请稍等......</string>
+   <string name="confirm">确认</string>
+   <string name="empty_alert">您未填写完全</string>
+   
     <string name="male_name">男</string>
     <string name="female_name">女</string>
     <string name="activite_msg">请输入交易号验证</string>
@@ -17,10 +22,26 @@
 	<string name="education">家长学历</string>
 	<string name="end_day">截止日期</string>
 	<string name="user_infos">账号切换</string>
-	<string name="confirm">确认</string>
 	<string name="user_infos_msg">点击切换用户信息</string>
+	
+   <string name="regist_success_msg">注册成功！</string>
 	
 	<string name="feedback_title">使用反馈</string>
 	<string name="feedback_type">反馈类型</string>
 	<string name="feedback_content">反馈内容</string>
+   <string name="feedback_confirm">提交反馈</string>
+   <string name="feedback_success">提交反馈成功</string>
+   
+    <!-- alert msg  -->
+    <string name="msg_key_error">激活码无效</string><!--102, 104, 105-->
+    <string name="msg_activate_error">激活失败</string><!--103-->
+    <string name="msg_register_error">注册失败</string><!--106-->
+    <string name="msg_error_deviceid">对不起，您的设备不支持此款应用！</string><!--107-->
+    <string name="msg_no_pay">对不起，您还还未缴费。</string><!--108-->
+    <string name="msg_add_account_error">账号添加失败。</string><!--109-->
+    <string name="msg_feedback_error">问题反馈失败。</string><!--110-->
+    <string name="msg_no_authority">设备无权限或已过有效期。</string><!--111-->
+    <string name="msg_accout_full">子账号数量超过限制。</string><!--112-->
+  
+   
 </resources>

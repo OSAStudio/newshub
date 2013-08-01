@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.FeedbackActivity;
 import com.osastudio.newshub.data.NewsBaseObject;
 import com.osastudio.newshub.data.NewsObjectList;
 import com.osastudio.newshub.data.NewsResult;
@@ -27,10 +28,13 @@ import com.osastudio.newshub.data.user.SchoolYear;
 import com.osastudio.newshub.data.user.SchoolYearlist;
 import com.osastudio.newshub.net.UserApi;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,18 +55,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RegisterView extends Dialog {
-	// public RegisterView(Context context) {
-	// // this(context, null);
-	// mContext = context;
-	// }
-
-	// public RegisterView(Context context, AttributeSet attrs) {
-	// super(context, attrs);
-	// mContext = context;
-	// mInflater = LayoutInflater.from(mContext);
-	// mInflater.inflate(R.layout.register_view, this);
-	// findViews();
-	// }
 
 	public RegisterView(Context context, int theme, int width, int height) {
 		super(context, theme);
@@ -83,6 +75,36 @@ public class RegisterView extends Dialog {
 	private LayoutInflater mInflater = null;
 	private String mMale = null;
 	private String mFemale = null;
+	private RegistTask mRegistTask = null;
+	private LoadTask mLoadTask = null;
+	private ProgressDialog mDlg = null;
+
+	private String mDistrictId = null;
+	private String mSchoolType = null;
+	private String mSchoolId = null;
+	private String mGradeId = null;
+	private String mClassId = null;
+	private String mSexStr = null;
+	private String mEduStr = null;
+	private String mDateStr = null;
+
+	private int mYear = 2000;
+	private int mMonth = 0;
+	private int mDay = 1;
+
+	private View mBase = null;
+	private View mSchool = null;
+	private View mGrade = null;
+	private View mClass = null;
+	private View mName = null;
+	private View mSex = null;
+	private View mBirth = null;
+	private View nEdu = null;
+	private View mConfirm = null;
+	private View mListLayout = null;
+	private ListView mListView = null;
+
+	private String mCityId = null;
 
 	// @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +124,6 @@ public class RegisterView extends Dialog {
 		}
 	}
 
-	private View mBase = null;
-	private View mSchool = null;
-	private View mGrade = null;
-	private View mClass = null;
-	private View mName = null;
-	private View mSex = null;
-	private View mBirth = null;
-	private View nEdu = null;
-	private View mConfirm = null;
-	private View mListLayout = null;
-	private ListView mListView = null;
-
-	private String mCityId = null;
-
 	private void findViews() {
 		if (mWidth > 0 && mHeight > 0) {
 			View base = findViewById(R.id.base);
@@ -129,30 +137,34 @@ public class RegisterView extends Dialog {
 		mSchool.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Utils.logd("pp", "mSchool onClick");
-				if (mLoadTask == null) {
-					mLoadTask = new LoadTask();
-					mLoadTask.execute(LIST_TYPE.CITY);
-				}
+				// if (mLoadTask == null) {
+				// mLoadTask = new LoadTask();
+				// mLoadTask.execute(LIST_TYPE.CITY);
+				// }
+				startLoadTask(LIST_TYPE.CITY);
 			}
 		});
 		mGrade = findViewById(R.id.grade);
 		mGrade.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				if (mLoadTask == null) {
-					mLoadTask = new LoadTask();
-					mLoadTask.execute(LIST_TYPE.GRADE);
-				}
+				// if (mLoadTask == null) {
+				// mLoadTask = new LoadTask();
+				// mLoadTask.execute(LIST_TYPE.GRADE);
+				// }
+				startLoadTask(LIST_TYPE.GRADE);
 			}
 		});
 		mClass = findViewById(R.id.clas);
 		mClass.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				if (mLoadTask == null) {
-					mLoadTask = new LoadTask();
-					mLoadTask.execute(LIST_TYPE.CLASS);
-				}
+				// if (mLoadTask == null) {
+				// mLoadTask = new LoadTask();
+				// mLoadTask.execute(LIST_TYPE.CLASS);
+				// }
+
+				startLoadTask(LIST_TYPE.CLASS);
 			}
 		});
 		mName = findViewById(R.id.name);
@@ -200,10 +212,11 @@ public class RegisterView extends Dialog {
 		nEdu.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				if (mLoadTask == null) {
-					mLoadTask = new LoadTask();
-					mLoadTask.execute(LIST_TYPE.EDU);
-				}
+				// if (mLoadTask == null) {
+				// mLoadTask = new LoadTask();
+				// mLoadTask.execute(LIST_TYPE.EDU);
+				// }
+				startLoadTask(LIST_TYPE.EDU);
 			}
 		});
 		mListLayout = findViewById(R.id.list_layout);
@@ -215,34 +228,33 @@ public class RegisterView extends Dialog {
 			public void onClick(View v) {
 				String userName = ((EditText) findViewById(R.id.name_text))
 						.getEditableText().toString();
-				RegisterParameters params = new RegisterParameters();
-				params.birthday = mDateStr;
-				params.classId = mClassId;
-				params.gender = mSexStr;
-				params.qualification = mEduStr;
-				params.schoolId = mSchoolId;
-				params.userName = userName;
-				params.yearId = mGradeId;
-				RegistTask task = new RegistTask();
-				task.execute(params);
+				if (mDateStr == null || mClassId == null || mSexStr == null
+						|| mEduStr == null || mSchoolId == null
+						|| userName == null || mGradeId == null) {
+					Utils.ShowConfirmDialog(mContext,
+							mContext.getString(R.string.empty_alert), null);
+				} else {
+
+					RegisterParameters params = new RegisterParameters();
+					params.birthday = mDateStr;
+					params.classId = mClassId;
+					params.gender = mSexStr;
+					params.qualification = mEduStr;
+					params.schoolId = mSchoolId;
+					params.userName = userName;
+					params.yearId = mGradeId;
+					if (mRegistTask == null) {
+						mRegistTask = new RegistTask();
+						mRegistTask.execute(params);
+						if (mDlg == null) {
+							mDlg = Utils.showProgressDlg(mContext, null);
+						}
+					}
+				}
 
 			}
 		});
 	}
-
-	private LoadTask mLoadTask = null;
-	private String mDistrictId = null;
-	private String mSchoolType = null;
-	private String mSchoolId = null;
-	private String mGradeId = "1";
-	private String mClassId = "1";
-	private String mSexStr = null;
-	private String mEduStr = null;
-	private String mDateStr = null;
-
-	private int mYear = 2000;
-	private int mMonth = 0;
-	private int mDay = 1;
 
 	// private List<PairedStringFieldsObject> mCityList = null;
 	private void setupList(LIST_TYPE type, ArrayList<Data> list) {
@@ -260,37 +272,62 @@ public class RegisterView extends Dialog {
 						int position, long id) {
 					Data data = mDispList.get(position);
 					if (mCurrentType.equals(LIST_TYPE.CITY)) {
-						if (mLoadTask == null) {
-							mLoadTask = new LoadTask();
-							mLoadTask.execute(LIST_TYPE.DISTRICT, data.mId);
-						}
+						// if (mLoadTask == null) {
+						// mLoadTask = new LoadTask();
+						// mLoadTask.execute(LIST_TYPE.DISTRICT, data.mId);
+						// }
+						startLoadTask(LIST_TYPE.DISTRICT, data.mId);
 					} else if (mCurrentType.equals(LIST_TYPE.DISTRICT)) {
 						mDistrictId = data.mId;
-						if (mLoadTask == null) {
-							mLoadTask = new LoadTask();
-							mLoadTask.execute(LIST_TYPE.SCHOOLTYPE);
-						}
+						// if (mLoadTask == null) {
+						// mLoadTask = new LoadTask();
+						// mLoadTask.execute(LIST_TYPE.SCHOOLTYPE);
+						// }
+						startLoadTask(LIST_TYPE.SCHOOLTYPE);
 					} else if (mCurrentType.equals(LIST_TYPE.SCHOOLTYPE)) {
 						mSchoolType = data.mName;
-						if (mLoadTask == null) {
-							mLoadTask = new LoadTask();
-							mLoadTask.execute(LIST_TYPE.SCHOOL);
-						}
+						// if (mLoadTask == null) {
+						// mLoadTask = new LoadTask();
+						// mLoadTask.execute(LIST_TYPE.SCHOOL);
+						// }
+						startLoadTask(LIST_TYPE.SCHOOL);
 					} else if (mCurrentType.equals(LIST_TYPE.SCHOOL)) {
-						mSchoolId = data.mId;
-						String schoolName = data.mName;
-						TextView schoolNameText = (TextView) findViewById(R.id.school_text);
-						schoolNameText.setText(schoolName);
-						mGrade.setVisibility(View.VISIBLE);
+						if (mSchoolId == null
+								|| (data.mId != null && !mSchoolId
+										.equals(data.mId))) {
+							mSchoolId = data.mId;
+							String schoolName = data.mName;
+							TextView schoolNameText = (TextView) findViewById(R.id.school_text);
+							schoolNameText.setText(schoolName);
+
+							mGradeId = null;
+							TextView gradeNameView = (TextView) findViewById(R.id.grade_text);
+							gradeNameView.setText(null);
+							mGrade.setVisibility(View.VISIBLE);
+
+							mClassId = null;
+							TextView className = (TextView) findViewById(R.id.class_text);
+							className.setText(null);
+							mClass.setVisibility(View.GONE);
+
+						}
+
 						mListLayout.setVisibility(View.GONE);
 
 					} else if (mCurrentType.equals(LIST_TYPE.GRADE)) {
+						if (mGradeId == null
+								|| (data.mId != null && !mGradeId
+										.equals(data.mId))) {
+							mGradeId = data.mId;
+							String gradeName = data.mName;
+							TextView gradeNameView = (TextView) findViewById(R.id.grade_text);
+							gradeNameView.setText(gradeName);
+							mClassId = null;
+							TextView className = (TextView) findViewById(R.id.class_text);
+							className.setText(null);
+							mClass.setVisibility(View.VISIBLE);
+						}
 
-						mGradeId = data.mId;
-						String mGradeName = data.mName;
-						TextView gradeName = (TextView) findViewById(R.id.grade_text);
-						gradeName.setText(mGradeName);
-						mClass.setVisibility(View.VISIBLE);
 						mListLayout.setVisibility(View.GONE);
 					} else if (mCurrentType.equals(LIST_TYPE.CLASS)) {
 						mClassId = data.mId;
@@ -329,22 +366,74 @@ public class RegisterView extends Dialog {
 		String mId;
 		String mName;
 	}
-	
-	private class RegistTask extends AsyncTask<RegisterParameters, Void, Boolean> {
+
+	private void startLoadTask(LIST_TYPE type) {
+		if (mLoadTask == null) {
+			mLoadTask = new LoadTask();
+			mLoadTask.execute(type);
+
+			mDlg = Utils.showProgressDlg(mContext, null);
+		}
+	}
+
+	private void startLoadTask(LIST_TYPE type, String id) {
+		if (mLoadTask == null) {
+			mLoadTask = new LoadTask();
+			mLoadTask.execute(type, id);
+
+			if (mDlg == null) {
+				mDlg = Utils.showProgressDlg(mContext, null);
+			}
+		}
+	}
+
+	private class RegistTask extends
+			AsyncTask<RegisterParameters, Void, Boolean> {
+		private NewsResult mResult = null;
 
 		@Override
 		protected Boolean doInBackground(RegisterParameters... params) {
 			RegisterParameters param = params[0];
-			NewsResult rtn = UserApi.registerUser(mContext, param);
-			return rtn.isSuccess();
+			mResult = UserApi.registerUser(mContext, param);
+			return mResult.isSuccess();
 		}
-		
+
 		@Override
-		protected void onPostExecute(Boolean result) {
-			RegisterView.this.dismiss();
-			super.onPostExecute(result);
+		protected void onPostExecute(Boolean bSuccess) {
+			if (!bSuccess) {
+				int code = mResult.getResultCode();
+				String msg = Utils.getErrorResultMsg(mContext, code);
+				if (msg != null) {
+					Utils.ShowConfirmDialog(mContext, msg, null);
+				}
+			} else {
+				Utils.ShowConfirmDialog(mContext,
+						mContext.getString(R.string.regist_success_msg),
+						new DialogConfirmCallback() {
+							public void onConfirm(DialogInterface dialog) {
+								RegisterView.this.dismiss();
+
+							}
+						});
+			}
+			mRegistTask = null;
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			super.onPostExecute(bSuccess);
 		}
-		
+
+		@Override
+		protected void onCancelled() {
+			mRegistTask = null;
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			super.onCancelled();
+		}
+
 	}
 
 	private class LoadTask extends AsyncTask<Object, Void, Object> {
@@ -444,10 +533,26 @@ public class RegisterView extends Dialog {
 
 		@Override
 		protected void onPostExecute(Object result) {
+
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
 			mLoadTask = null;
 			LIST_TYPE type = (LIST_TYPE) result;
 			setupList(type, datalist);
 			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onCancelled() {
+
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			mLoadTask = null;
+			super.onCancelled();
 		}
 
 	}
@@ -481,9 +586,10 @@ public class RegisterView extends Dialog {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View item = convertView;
 			if (item == null) {
-				item = LayoutInflater.from(mContext).inflate(R.layout.text_item, null);
+				item = LayoutInflater.from(mContext).inflate(
+						R.layout.text_item, null);
 			}
-			TextView tv = (TextView)item.findViewById(R.id.text);
+			TextView tv = (TextView) item.findViewById(R.id.text);
 			if (tv != null) {
 				tv.setText(mList.get(position).mName);
 			}
@@ -491,23 +597,6 @@ public class RegisterView extends Dialog {
 		}
 
 	}
-
-	// @Override
-	// public boolean onTouchEvent(MotionEvent event) {
-	// // TODO Auto-generated method stub
-	//
-	// Utils.logd("RegisterView", "onTouchEvent");
-	// super.onTouchEvent(event);
-	// return true;
-	// }
-	//
-	// @Override
-	// public boolean dispatchTouchEvent(MotionEvent ev) {
-	// // TODO Auto-generated method stub
-	// Utils.logd("RegisterView", "dispatchTouchEvent");
-	// onTouchEvent(ev);
-	// return true;
-	// }
 
 	public void onClick(View v) {
 		Utils.logd("RegisterView", "onClick");

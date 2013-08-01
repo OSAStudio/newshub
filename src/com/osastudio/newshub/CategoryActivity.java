@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.net.ssl.SSLEngineResult.Status;
+
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.data.NewsChannel;
@@ -30,6 +32,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -78,6 +81,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private EditText mActivateEdit = null;
 	private View mActivateBtn = null;
 	private View mAccount_btn = null;
+	private View mFeedback_btn = null;
 	
 	// private ArrayList<CategoryData> mCategories = new
 	// ArrayList<CategoryData>();
@@ -92,34 +96,15 @@ public class CategoryActivity extends NewsBaseActivity {
 	private int mScreenHeight = 0;
 	private int mUserStatus = 3;
 	private boolean mIsSplashShow = true;
+	
+	private LoadDataTask mTask = null;
+	private ProgressDialog mDlg = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.category_activity);
 		findViews();
-		// String serialnum = null;
-		//
-		// try {
-		//
-		// Class<?> c = Class.forName("android.os.SystemProperties");
-		//
-		// Method get = c.getMethod("get", String.class, String.class);
-		//
-		// serialnum = (String) (get.invoke(c, "ro.serialno", "unknown"));
-		// Utils.log("pp", serialnum);
-		//
-		// String androidId = Settings.Secure.getString(getContentResolver(),
-		//
-		// Settings.Secure.ANDROID_ID);
-		// Utils.log("pp", androidId);
-		// }
-		//
-		// catch (Exception ignored)
-		//
-		// {
-		//
-		// }
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
@@ -133,6 +118,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		mScreenHeight = display.getHeight();
 		mScreenHeight = mScreenHeight > 0 ? mScreenHeight : 0;
 		setupData();
+		mDlg = Utils.showProgressDlg(this, null);
 	}
 
 	private void findViews() {
@@ -169,11 +155,30 @@ public class CategoryActivity extends NewsBaseActivity {
 		mAccount_btn.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				showRegisterView();
-//				startUserInfosActivity();
+				startUserInfosActivity();
 				
 			}
 		});
+		
+		mFeedback_btn = findViewById(R.id.feedback);
+		mFeedback_btn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				startFeedbackActivity();
+			}
+		});
+		
+		
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (mTask != null && 
+				!mTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+			mTask.cancel(true);
+			mTask = null;
+		}
 	}
 
 	private Bitmap getImageFromAssetsFile(String fileName) {
@@ -193,7 +198,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void hideCover() {
 		View cover = findViewById(R.id.cover_layout);
-		if (cover.getVisibility() == View.VISIBLE) {
+		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
 			Animation anim = AnimationUtils.loadAnimation(this,
 					R.anim.pull_out_to_top);
 			cover.setVisibility(View.GONE);
@@ -225,14 +230,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	}
 
 	private void setupData() {
-		new LoadDataTask().execute();
-		// InputStream myInput = null;
-		// try {
-		// myInput = getAssets().open("0.jpg");
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		mTask = new LoadDataTask();
+		mTask.execute();
 	}
 
 	public boolean dispatchTouchEvent(MotionEvent event) {
@@ -390,11 +389,26 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
 			if (mCategoryList != null && mCategoryList.size() > 0) {
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);
 			}
+			mTask = null;
 			super.onPostExecute(result);
+		}
+		
+		@Override
+		protected void onCancelled() {
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			mTask = null;
+			super.onCancelled();
 		}
 
 	}
@@ -541,6 +555,12 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void startUserInfosActivity() {
 		Intent it = new Intent(this, UserInfosActivity.class);
 		startActivityForResult(it, REQUEST_USER_INFO);
+	}
+	
+	private void startFeedbackActivity() {
+
+		Intent it = new Intent(this, FeedbackActivity.class);
+		startActivity(it);
 	}
 
 }
