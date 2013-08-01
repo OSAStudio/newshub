@@ -19,4 +19,8 @@
 	<string name="user_infos">账号切换</string>
 	<string name="confirm">确认</string>
 	<string name="user_infos_msg">点击切换用户信息</string>
+	
+	<string name="feedback_title">使用反馈</string>
+	<string name="feedback_type">反馈类型</string>
+	<string name="feedback_content">反馈内容</string>
 </resources>

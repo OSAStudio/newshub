@@ -45,6 +45,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -96,8 +97,8 @@ public class RegisterView extends Dialog {
 
 	@Override
 	public void onBackPressed() {
-		if (mListView.getVisibility() == View.VISIBLE) {
-			mListView.setVisibility(View.GONE);
+		if (mListLayout.getVisibility() == View.VISIBLE) {
+			mListLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -110,6 +111,7 @@ public class RegisterView extends Dialog {
 	private View mBirth = null;
 	private View nEdu = null;
 	private View mConfirm = null;
+	private View mListLayout = null;
 	private ListView mListView = null;
 
 	private String mCityId = null;
@@ -204,6 +206,7 @@ public class RegisterView extends Dialog {
 				}
 			}
 		});
+		mListLayout = findViewById(R.id.list_layout);
 		mListView = (ListView) findViewById(R.id.list);
 		mConfirm = findViewById(R.id.confirm_btn);
 		mConfirm.setOnClickListener(new View.OnClickListener() {
@@ -248,7 +251,7 @@ public class RegisterView extends Dialog {
 
 		if (list != null) {
 
-			mListView.setVisibility(View.VISIBLE);
+			mListLayout.setVisibility(View.VISIBLE);
 			MyAdapter adapter = new MyAdapter(list);
 			mListView.setAdapter(adapter);
 			mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -279,7 +282,7 @@ public class RegisterView extends Dialog {
 						TextView schoolNameText = (TextView) findViewById(R.id.school_text);
 						schoolNameText.setText(schoolName);
 						mGrade.setVisibility(View.VISIBLE);
-						mListView.setVisibility(View.GONE);
+						mListLayout.setVisibility(View.GONE);
 
 					} else if (mCurrentType.equals(LIST_TYPE.GRADE)) {
 
@@ -288,25 +291,25 @@ public class RegisterView extends Dialog {
 						TextView gradeName = (TextView) findViewById(R.id.grade_text);
 						gradeName.setText(mGradeName);
 						mClass.setVisibility(View.VISIBLE);
-						mListView.setVisibility(View.GONE);
+						mListLayout.setVisibility(View.GONE);
 					} else if (mCurrentType.equals(LIST_TYPE.CLASS)) {
 						mClassId = data.mId;
 						String name = data.mName;
 						TextView className = (TextView) findViewById(R.id.class_text);
 						className.setText(name);
-						mListView.setVisibility(View.GONE);
+						mListLayout.setVisibility(View.GONE);
 
 					} else if (mCurrentType.equals(LIST_TYPE.SEX)) {
 						mSexStr = data.mName;
 						TextView sexName = (TextView) findViewById(R.id.sex_text);
 						sexName.setText(mSexStr);
-						mListView.setVisibility(View.GONE);
+						mListLayout.setVisibility(View.GONE);
 
 					} else if (mCurrentType.equals(LIST_TYPE.EDU)) {
 						mEduStr = data.mName;
 						TextView eduName = (TextView) findViewById(R.id.education_text);
 						eduName.setText(mEduStr);
-						mListView.setVisibility(View.GONE);
+						mListLayout.setVisibility(View.GONE);
 
 					}
 
@@ -476,15 +479,15 @@ public class RegisterView extends Dialog {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			TextView tv = (TextView) convertView;
-			if (tv == null) {
-				tv = new TextView(mContext);
-				tv.setTextSize(18);
-				tv.setPadding(10, 10, 10, 0);
-				tv.setTextColor(Color.BLACK);
+			View item = convertView;
+			if (item == null) {
+				item = LayoutInflater.from(mContext).inflate(R.layout.text_item, null);
 			}
-			tv.setText(mList.get(position).mName);
-			return tv;
+			TextView tv = (TextView)item.findViewById(R.id.text);
+			if (tv != null) {
+				tv.setText(mList.get(position).mName);
+			}
+			return item;
 		}
 
 	}

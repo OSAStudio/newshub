@@ -56,6 +56,17 @@ import android.widget.TextView;
 @SuppressLint("NewApi")
 public class CategoryActivity extends NewsBaseActivity {
 	private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
+	
+	public static final String TYPE_NOTIFY_LIST = "1";
+	public static final String TYPE_EXPERT_LIST = "3";
+	public static final String TYPE_USETLSSUES_MOBILE = "5";
+	public static final String TYPE_LESSON_LIST="6";
+	
+	public static final int REQUEST_NOTIFY_LIST = 1;
+	public static final int REQUEST_EXPERT_LIST = 3;
+	public static final int REQUEST_USETLSSUES_MOBILE = 5;
+	public static final int REQUEST_LESSON_LIST=6;
+	public static final int REQUEST_USER_INFO=7;
 
 	private AppProperties mAppProperties = null;
 	private Bitmap mReceiveBmp = null;
@@ -159,6 +170,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			
 			public void onClick(View v) {
 				showRegisterView();
+//				startUserInfosActivity();
 				
 			}
 		});
@@ -507,25 +519,28 @@ public class CategoryActivity extends NewsBaseActivity {
 			}
 		}
 	}
-	
-	public static final String TYPE_NOTIFY_LIST = "1";
-	public static final String TYPE_EXPERT_LIST = "3";
-	public static final String TYPE_USETLSSUES_MOBILE = "5";
-	public static final String TYPE_LESSON_LIST="6";
 
 
 	private void startNextActivity(NewsChannel data) {
 		String type = data.getTitleType();
+		int requestCode = REQUEST_LESSON_LIST;
 		if (type.equals(TYPE_NOTIFY_LIST)) {
+			requestCode = REQUEST_NOTIFY_LIST;
 			
 		} else if (type.equals(TYPE_EXPERT_LIST)) {
+			requestCode = REQUEST_EXPERT_LIST;
 			
-		}
+		} 
 		
  		Intent it = new Intent(this, SummaryActivity.class);
 		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		it.putExtra(SummaryActivity.CATEGORY_DATA, data);
-		startActivityForResult(it, 1);
+		startActivityForResult(it, requestCode);
+	}
+	
+	private void startUserInfosActivity() {
+		Intent it = new Intent(this, UserInfosActivity.class);
+		startActivityForResult(it, REQUEST_USER_INFO);
 	}
 
 }

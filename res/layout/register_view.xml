@@ -50,29 +50,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp" >
+                    android:orientation="horizontal" >
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/school_c"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/school_c" />
 
                     <TextView
+                        style="@style/text_black"
                         android:id="@+id/school_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="3"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -81,29 +73,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
                     android:visibility="gone" >
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/grade_c"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/grade_c" />
 
                     <TextView
+                        style="@style/text_black"
                         android:id="@+id/grade_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="3" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -112,29 +96,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
                     android:visibility="gone" >
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/class_c"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/class_c" />
 
                     <TextView
+                        style="@style/text_black"
                         android:id="@+id/class_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="3" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -151,19 +127,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp" 
                     android:gravity="center_vertical">
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/name"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/name" />
 
                     <EditText
                         android:id="@+id/name_text"
@@ -180,29 +151,21 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp" >
+                    android:orientation="horizontal" >
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/sex"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/sex" />
 
                     <TextView
+                        style="@style/text_black"
                         android:id="@+id/sex_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="3" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -210,29 +173,21 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp" >
+                    android:orientation="horizontal" >
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/birth"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/birth" />
 
                     <TextView
+                        style="@style/text_black"
                         android:id="@+id/birth_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="3"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -240,55 +195,48 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp" >
+                    android:orientation="horizontal" >
 
                     <TextView
+                        style="@style/text_black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="@string/education"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:text="@string/education" />
 
                     <TextView
+                        style="@style/text_black"
                         android:id="@+id/education_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
+                        android:layout_weight="3" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <TextView
+            style="@style/text_black"
             android:id="@+id/confirm_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#ff33b5e5"
             android:gravity="center"
-            android:padding="10dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:text="@android:string/ok"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:text="@android:string/ok" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/list"
+   <LinearLayout 
+        android:id="@+id/list_layout"
+        android:visibility="gone" 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@android:color/darker_gray"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="30dp"
-        android:visibility="gone" />
-
+        android:paddingBottom="30dp">
+	    <ListView
+	        android:id="@+id/list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:background="@android:drawable/editbox_background_normal"/>
+</LinearLayout>
 </RelativeLayout>
