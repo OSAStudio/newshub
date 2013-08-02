@@ -11,10 +11,7 @@ public class ValidateResult extends NewsResult {
    }
    
    public boolean isValidated() {
-      if (this.resultCode == RESULT_OK) {
-         return true;
-      }
-      return false;
+      return isSuccess();
    }
    
 }

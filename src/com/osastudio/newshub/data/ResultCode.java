@@ -14,9 +14,11 @@ public interface ResultCode {
    public static final int RESULT_REGISTER_FAILURE = 106;
    public static final int RESULT_NO_DEVICE_IDENTIFIER = 107;
    public static final int RESULT_PAYMENT_NEEDED = 108;
-   public static final int RESULT_ADD_SUBACCOUNT_FAILURE = 109;
+   public static final int RESULT_ADD_ACCOUNT_FAILURE = 109;
    public static final int RESULT_FEEDBACK_FAILURE = 110;
    public static final int RESULT_ILLEGAL_DEVICE = 111;
+   public static final int RESULT_MAX_ACCOUNT_REACHED = 112;
+   public static final int RESULT_NOTICE_ALREADY_FEEDBACK = 113;
    
    public static final int RESULT_UNKNOWN_ERROR = -1;
    

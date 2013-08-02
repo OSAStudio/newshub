@@ -96,6 +96,16 @@ public class NewsBaseApi {
             "lesson!getLessonContentByMobile.do").toString();
    }
 
+   protected static String likeArticleService() {
+      return new StringBuilder(getWebServer()).append(
+            "lesson!submitLessonUPByMobile.do").toString();
+   }
+
+   protected static String getUserListService() {
+      return new StringBuilder(getWebServer()).append(
+            "custom!getUserInfosByMobile.do").toString();
+   }
+
    protected static String getUserInfoListService() {
       return new StringBuilder(getWebServer()).append(
             "custom!getUserInfoAndServiceInfoByMobile.do").toString();
@@ -174,6 +184,46 @@ public class NewsBaseApi {
    protected static String getNewsNoticeArticleService() {
       return new StringBuilder(getWebServer()).append(
             "notify!getNotifyContentByMobile.do").toString();
+   }
+
+   protected static String feedbackNoticeService() {
+      return new StringBuilder(getWebServer()).append(
+            "notify!submitNotifyFeedbackByMobile.do").toString();
+   }
+
+   protected static String getDailyReminderListService() {
+      return new StringBuilder(getWebServer()).append(
+            "dailyreminder!getDailyReminderListByMobile.do").toString();
+   }
+
+   protected static String getDailyReminderArticleService() {
+      return new StringBuilder(getWebServer()).append(
+            "dailyreminder!getDailyReminderContentByMobile.do").toString();
+   }
+
+   protected static String getSubscribedNewsTopicListService() {
+      return new StringBuilder(getWebServer()).append(
+            "expandlssue!getUserLssuesByMobile.do").toString();
+   }
+
+   protected static String getSubscribedNewsAbstractListService() {
+      return new StringBuilder(getWebServer()).append(
+            "expandlesson!getExpandLessonsByMobile.do").toString();
+   }
+
+   protected static String getSubscribedNewsArticleService() {
+      return new StringBuilder(getWebServer()).append(
+            "expandlesson!getExpandLessonContentByMobile.do").toString();
+   }
+
+   protected static String getRecommendedNewsTopicListService() {
+      return new StringBuilder(getWebServer()).append(
+            "expandlssue!getRecommendLssueListByMobile.do").toString();
+   }
+
+   protected static String getRecommendedNewsArticleService() {
+      return new StringBuilder(getWebServer()).append(
+            "expandlssue!getRecommendLssueContentByMobile.do").toString();
    }
 
    protected static String getNewsColumnistListService() {

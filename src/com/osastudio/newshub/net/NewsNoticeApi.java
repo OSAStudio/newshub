@@ -12,6 +12,7 @@ import android.content.Context;
 import com.osastudio.newshub.data.NewsNotice;
 import com.osastudio.newshub.data.NewsNoticeArticle;
 import com.osastudio.newshub.data.NewsNoticeList;
+import com.osastudio.newshub.data.NoticeResult;
 
 public class NewsNoticeApi extends NewsBaseApi {
 
@@ -46,6 +47,14 @@ public class NewsNoticeApi extends NewsBaseApi {
          result.setNotice(newsNotice);
       }
       return result;
+   }
+
+   public static NoticeResult feedbackNotice(Context context, String noticeId) {
+      List<NameValuePair> params = new ArrayList<NameValuePair>();
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+      params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, noticeId));
+      JSONObject jsonObject = getJsonObject(feedbackNoticeService(), params);
+      return (jsonObject != null) ? new NoticeResult(jsonObject) : null;
    }
 
 }

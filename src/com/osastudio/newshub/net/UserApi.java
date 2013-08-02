@@ -19,6 +19,7 @@ import com.osastudio.newshub.data.user.SchoolList;
 import com.osastudio.newshub.data.user.SchoolTypeList;
 import com.osastudio.newshub.data.user.SchoolYearlist;
 import com.osastudio.newshub.data.user.UserInfoList;
+import com.osastudio.newshub.data.user.UserList;
 import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.library.ChecksumHelper;
 
@@ -55,6 +56,13 @@ public class UserApi extends NewsBaseApi {
       return (jsonObject != null) ? new ValidateResult(jsonObject) : null;
    }
 
+   public static UserList getUserList(Context context) {
+      List<NameValuePair> params = new ArrayList<NameValuePair>();
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+      JSONObject jsonObject = getJsonObject(getUserListService(), params);
+      return (jsonObject != null) ? new UserList(jsonObject) : null;
+   }
+
    public static UserInfoList getUserInfoList(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
@@ -87,7 +95,7 @@ public class UserApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_USER_NAME, register.userName));
       params.add(new BasicNameValuePair(KEY_GENDER, register.gender));
       params.add(new BasicNameValuePair(KEY_BIRTHDAY, register.birthday));
-      JSONObject jsonObject = getJsonObject(registerService(), params);
+      JSONObject jsonObject = getJsonObject(addUserService(), params);
       return (jsonObject != null) ? new NewsResult(jsonObject) : null;
    }
 

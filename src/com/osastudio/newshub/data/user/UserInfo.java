@@ -7,83 +7,91 @@ import com.osastudio.newshub.data.NewsBaseObject;
 
 public class UserInfo extends NewsBaseObject {
 
-   public static final String FEMALE_NAME = "Å®";
-   public static final String MALE_NAME = "ÄÐ";
-
-   public static final String JSON_KEY_BIRTHDAY = "birthday";
-   public static final String JSON_KEY_CLASS_NAME = "class_name";
-   public static final String JSON_KEY_GENDER = "sex";
-   public static final String JSON_KEY_SCHOOL_NAME = "school_name";
-   public static final String JSON_KEY_SERVICE_EXPIRED_TIME = "end_date";
    public static final String JSON_KEY_SERVICE_TYPE = "custom_type";
    public static final String JSON_KEY_SERVICE_VALIDATED_TIME = "active_date";
-   public static final String JSON_KEY_USER_NAME = "student_name";
-   public static final String JSON_KEY_YEAR_NAME = "year_name";
 
-   private String birthday;
-   private String className;
-   private String gender;
-   private String schoolName;
-   private String serviceExpiredTime;
+   private User user;
    private String serviceType;
    private String serviceValidatedTime;
-   private String userName;
-   private String yearName;
 
    public UserInfo() {
 
    }
 
+   public User getUser() {
+      return this.user;
+   }
+
+   public UserInfo setUser(User user) {
+      this.user = user;
+      return this;
+   }
+
    public String getBirthday() {
-      return this.birthday;
+      return (this.user != null) ? this.user.getBirthday() : null;
    }
 
    public UserInfo setBirthday(String birthday) {
-      this.birthday = birthday;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setBirthday(birthday);
       return this;
    }
 
    public String getClassName() {
-      return this.className;
+      return (this.user != null) ? this.user.getClassName() : null;
    }
 
    public UserInfo setClassName(String className) {
-      this.className = className;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setClassName(className);
       return this;
    }
 
    public String getGender() {
-      return this.gender;
+      return (this.user != null) ? this.user.getGender() : null;
    }
 
    public UserInfo setGender(String gender) {
-      this.gender = gender;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setGender(gender);
       return this;
    }
 
    public boolean isFemale() {
-      return FEMALE_NAME.equals(this.gender);
+      return (this.user != null) ? this.user.isFemale() : false;
    }
 
    public boolean isMale() {
-      return MALE_NAME.equals(this.gender);
+      return (this.user != null) ? this.user.isMale() : false;
    }
 
    public String getSchoolName() {
-      return this.schoolName;
+      return (this.user != null) ? this.user.getSchoolName() : null;
    }
 
    public UserInfo setSchoolName(String schoolName) {
-      this.schoolName = schoolName;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setSchoolName(schoolName);
       return this;
    }
 
    public String getServiceExpiredTime() {
-      return this.serviceExpiredTime;
+      return (this.user != null) ? this.user.getServiceExpiredTime() : null;
    }
 
    public UserInfo setServiceExpiredTime(String serviceExpiredTime) {
-      this.serviceExpiredTime = serviceExpiredTime;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setServiceExpiredTime(serviceExpiredTime);
       return this;
    }
 
@@ -106,44 +114,32 @@ public class UserInfo extends NewsBaseObject {
    }
 
    public String getUserName() {
-      return this.userName;
+      return (this.user != null) ? this.user.getUserName() : null;
    }
 
    public UserInfo setUserName(String userName) {
-      this.userName = userName;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setUserName(userName);
       return this;
    }
 
    public String getYearName() {
-      return this.yearName;
+      return (this.user != null) ? this.user.getYearName() : null;
    }
 
    public UserInfo setYearName(String yearName) {
-      this.yearName = yearName;
+      if (this.user == null) {
+         this.user = new User();
+      }
+      this.user.setYearName(yearName);
       return this;
    }
 
    public static UserInfo parseJsonObject(JSONObject jsonObject) {
       UserInfo result = new UserInfo();
       try {
-         if (!jsonObject.isNull(JSON_KEY_BIRTHDAY)) {
-            result.setBirthday(jsonObject.getString(JSON_KEY_BIRTHDAY).trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_CLASS_NAME)) {
-            result.setClassName(jsonObject.getString(JSON_KEY_CLASS_NAME)
-                  .trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_GENDER)) {
-            result.setGender(jsonObject.getString(JSON_KEY_GENDER).trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_SCHOOL_NAME)) {
-            result.setSchoolName(jsonObject.getString(JSON_KEY_SCHOOL_NAME)
-                  .trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_SERVICE_EXPIRED_TIME)) {
-            result.setServiceExpiredTime(jsonObject.getString(
-                  JSON_KEY_SERVICE_EXPIRED_TIME).trim());
-         }
          if (!jsonObject.isNull(JSON_KEY_SERVICE_TYPE)) {
             result.setServiceType(jsonObject.getString(JSON_KEY_SERVICE_TYPE)
                   .trim());
@@ -152,12 +148,7 @@ public class UserInfo extends NewsBaseObject {
             result.setServiceValidatedTime(jsonObject.getString(
                   JSON_KEY_SERVICE_VALIDATED_TIME).trim());
          }
-         if (!jsonObject.isNull(JSON_KEY_USER_NAME)) {
-            result.setUserName(jsonObject.getString(JSON_KEY_USER_NAME).trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_YEAR_NAME)) {
-            result.setYearName(jsonObject.getString(JSON_KEY_YEAR_NAME).trim());
-         }
+         result.setUser(User.parseJsonObject(jsonObject));
       } catch (JSONException e) {
 
       }

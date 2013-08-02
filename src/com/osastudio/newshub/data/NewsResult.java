@@ -76,7 +76,7 @@ public class NewsResult implements ResultCode {
             || this.resultCode == RESULT_REGISTER_FAILURE
             || this.resultCode == RESULT_NO_DEVICE_IDENTIFIER
             || this.resultCode == RESULT_PAYMENT_NEEDED
-            || this.resultCode == RESULT_ADD_SUBACCOUNT_FAILURE) {
+            || this.resultCode == RESULT_ADD_ACCOUNT_FAILURE) {
          return true;
       }
       return false;
