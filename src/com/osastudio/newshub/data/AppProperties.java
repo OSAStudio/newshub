@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.data.user.UserStatus;
 
 public class AppProperties extends NewsBaseObject implements UserStatus {

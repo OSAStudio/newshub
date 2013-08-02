@@ -3,7 +3,7 @@ package com.osastudio.newshub.data.user;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.NewsBaseObject;
+import com.osastudio.newshub.data.base.NewsBaseObject;
 
 public class User extends NewsBaseObject {
 

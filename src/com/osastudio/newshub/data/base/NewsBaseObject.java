@@ -1,6 +1,9 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.base;
 
 import org.json.JSONObject;
+
+import com.osastudio.newshub.data.NewsResult;
+import com.osastudio.newshub.data.ResultCode;
 
 import android.text.TextUtils;
 

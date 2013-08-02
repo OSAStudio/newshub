@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsObjectList;
+
 public class NewsChannelList extends NewsObjectList<NewsChannel> {
 
    public NewsChannelList(JSONObject jsonObject) {

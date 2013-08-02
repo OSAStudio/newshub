@@ -1,26 +1,29 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.base;
 
-import org.json.JSONObject;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class NewsBaseArticle extends NewsBaseObject implements NewsId {
+public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Parcelable {
 
    protected NewsBaseAbstract newsAbstract;
-   protected String content;
+   protected String topicId;
 
-   public NewsBaseArticle() {
+   public NewsBaseTopicAbstract() {
       this.newsAbstract = new NewsBaseAbstract();
    }
-   
-   public NewsBaseArticle(JSONObject jsonObject) {
-      super(jsonObject);
+
+   public NewsBaseTopicAbstract(Parcel src) {
+      this.newsAbstract = src.readParcelable(NewsBaseAbstract.class
+            .getClassLoader());
+      this.topicId = src.readString();
    }
 
    public NewsBaseAbstract getNewsBaseAbstract() {
       return this.newsAbstract;
    }
 
-   public NewsBaseArticle setNewsBaseAbstract(NewsBaseAbstract title) {
-      this.newsAbstract = title;
+   public NewsBaseTopicAbstract setNewsBaseAbstract(NewsBaseAbstract abs) {
+      this.newsAbstract = abs;
       return this;
    }
 
@@ -28,7 +31,7 @@ public class NewsBaseArticle extends NewsBaseObject implements NewsId {
       return (this.newsAbstract != null) ? this.newsAbstract.getId() : null;
    }
 
-   public NewsBaseArticle setId(String id) {
+   public NewsBaseTopicAbstract setId(String id) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -40,7 +43,7 @@ public class NewsBaseArticle extends NewsBaseObject implements NewsId {
       return (this.newsAbstract != null) ? this.newsAbstract.getTitle() : null;
    }
 
-   public NewsBaseArticle setTitle(String title) {
+   public NewsBaseTopicAbstract setTitle(String title) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -53,7 +56,7 @@ public class NewsBaseArticle extends NewsBaseObject implements NewsId {
             : null;
    }
 
-   public NewsBaseArticle setPublishedTime(String time) {
+   public NewsBaseTopicAbstract setPublishedTime(String time) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -65,7 +68,7 @@ public class NewsBaseArticle extends NewsBaseObject implements NewsId {
       return (this.newsAbstract != null) ? this.newsAbstract.getAuthor() : null;
    }
 
-   public NewsBaseArticle setAuthor(String author) {
+   public NewsBaseTopicAbstract setAuthor(String author) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -77,7 +80,7 @@ public class NewsBaseArticle extends NewsBaseObject implements NewsId {
       return (this.newsAbstract != null) ? this.newsAbstract.getColor() : null;
    }
 
-   public NewsBaseArticle setColor(int color) {
+   public NewsBaseTopicAbstract setColor(int color) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -85,13 +88,36 @@ public class NewsBaseArticle extends NewsBaseObject implements NewsId {
       return this;
    }
 
-   public String getContent() {
-      return this.content;
+   public String getTopicId() {
+      return this.topicId;
    }
 
-   public NewsBaseArticle setContent(String content) {
-      this.content = content;
+   public NewsBaseTopicAbstract setTopicId(String id) {
+      this.topicId = id;
       return this;
    }
+
+   @Override
+   public int describeContents() {
+      return 0;
+   }
+
+   @Override
+   public void writeToParcel(Parcel dst, int flags) {
+      dst.writeParcelable(this.newsAbstract, flags);
+      dst.writeString(this.topicId);
+   }
+
+   public static final Parcelable.Creator<NewsBaseTopicAbstract> CREATOR = new Creator<NewsBaseTopicAbstract>() {
+      @Override
+      public NewsBaseTopicAbstract createFromParcel(Parcel src) {
+         return new NewsBaseTopicAbstract(src);
+      }
+
+      @Override
+      public NewsBaseTopicAbstract[] newArray(int size) {
+         return new NewsBaseTopicAbstract[size];
+      }
+   };
 
 }

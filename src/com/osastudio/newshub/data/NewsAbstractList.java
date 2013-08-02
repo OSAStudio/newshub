@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsObjectList;
+
 import android.text.TextUtils;
 
 public class NewsAbstractList extends NewsObjectList<NewsAbstract> {

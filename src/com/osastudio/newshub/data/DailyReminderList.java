@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsItemList;
+
 public class DailyReminderList extends NewsItemList<DailyReminder> {
 
    public DailyReminderList(JSONObject jsonObject) {

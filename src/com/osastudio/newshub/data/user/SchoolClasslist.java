@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.NewsObjectList;
+import com.osastudio.newshub.data.base.NewsObjectList;
 
 public class SchoolClasslist extends NewsObjectList<SchoolClass> {
 

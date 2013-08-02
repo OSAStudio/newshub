@@ -1,29 +1,26 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.base;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import org.json.JSONObject;
 
-public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Parcelable {
+public class NewsBaseArticle extends NewsBaseObject implements NewsId {
 
    protected NewsBaseAbstract newsAbstract;
-   protected String topicId;
+   protected String content;
 
-   public NewsBaseTopicAbstract() {
+   public NewsBaseArticle() {
       this.newsAbstract = new NewsBaseAbstract();
    }
-
-   public NewsBaseTopicAbstract(Parcel src) {
-      this.newsAbstract = src.readParcelable(NewsBaseAbstract.class
-            .getClassLoader());
-      this.topicId = src.readString();
+   
+   public NewsBaseArticle(JSONObject jsonObject) {
+      super(jsonObject);
    }
 
    public NewsBaseAbstract getNewsBaseAbstract() {
       return this.newsAbstract;
    }
 
-   public NewsBaseTopicAbstract setNewsBaseAbstract(NewsBaseAbstract abs) {
-      this.newsAbstract = abs;
+   public NewsBaseArticle setNewsBaseAbstract(NewsBaseAbstract title) {
+      this.newsAbstract = title;
       return this;
    }
 
@@ -31,7 +28,7 @@ public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Par
       return (this.newsAbstract != null) ? this.newsAbstract.getId() : null;
    }
 
-   public NewsBaseTopicAbstract setId(String id) {
+   public NewsBaseArticle setId(String id) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -43,7 +40,7 @@ public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Par
       return (this.newsAbstract != null) ? this.newsAbstract.getTitle() : null;
    }
 
-   public NewsBaseTopicAbstract setTitle(String title) {
+   public NewsBaseArticle setTitle(String title) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -56,7 +53,7 @@ public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Par
             : null;
    }
 
-   public NewsBaseTopicAbstract setPublishedTime(String time) {
+   public NewsBaseArticle setPublishedTime(String time) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -68,7 +65,7 @@ public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Par
       return (this.newsAbstract != null) ? this.newsAbstract.getAuthor() : null;
    }
 
-   public NewsBaseTopicAbstract setAuthor(String author) {
+   public NewsBaseArticle setAuthor(String author) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -80,7 +77,7 @@ public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Par
       return (this.newsAbstract != null) ? this.newsAbstract.getColor() : null;
    }
 
-   public NewsBaseTopicAbstract setColor(int color) {
+   public NewsBaseArticle setColor(int color) {
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsBaseAbstract();
       }
@@ -88,36 +85,13 @@ public class NewsBaseTopicAbstract extends NewsBaseObject implements NewsId, Par
       return this;
    }
 
-   public String getTopicId() {
-      return this.topicId;
+   public String getContent() {
+      return this.content;
    }
 
-   public NewsBaseTopicAbstract setTopicId(String id) {
-      this.topicId = id;
+   public NewsBaseArticle setContent(String content) {
+      this.content = content;
       return this;
    }
-
-   @Override
-   public int describeContents() {
-      return 0;
-   }
-
-   @Override
-   public void writeToParcel(Parcel dst, int flags) {
-      dst.writeParcelable(this.newsAbstract, flags);
-      dst.writeString(this.topicId);
-   }
-
-   public static final Parcelable.Creator<NewsBaseTopicAbstract> CREATOR = new Creator<NewsBaseTopicAbstract>() {
-      @Override
-      public NewsBaseTopicAbstract createFromParcel(Parcel src) {
-         return new NewsBaseTopicAbstract(src);
-      }
-
-      @Override
-      public NewsBaseTopicAbstract[] newArray(int size) {
-         return new NewsBaseTopicAbstract[size];
-      }
-   };
 
 }

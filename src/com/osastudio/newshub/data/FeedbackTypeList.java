@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsObjectList;
+
 public class FeedbackTypeList extends NewsObjectList<FeedbackType> {
 
    public FeedbackTypeList(JSONObject jsonObject) {

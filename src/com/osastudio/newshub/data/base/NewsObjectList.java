@@ -1,4 +1,4 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.base;
 
 import java.util.ArrayList;
 import java.util.List;

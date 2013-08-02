@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.FeedbackActivity;
-import com.osastudio.newshub.data.NewsBaseObject;
-import com.osastudio.newshub.data.NewsObjectList;
 import com.osastudio.newshub.data.NewsResult;
-import com.osastudio.newshub.data.PairedStringFieldsObject;
+import com.osastudio.newshub.data.base.NewsBaseObject;
+import com.osastudio.newshub.data.base.NewsObjectList;
+import com.osastudio.newshub.data.base.PairedStringFieldsObject;
 import com.osastudio.newshub.data.user.City;
 import com.osastudio.newshub.data.user.CityDistrict;
 import com.osastudio.newshub.data.user.CityDistrictList;

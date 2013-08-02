@@ -3,7 +3,7 @@ package com.osastudio.newshub.data.user;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.PairedStringFieldsObject;
+import com.osastudio.newshub.data.base.PairedStringFieldsObject;
 
 public class School extends PairedStringFieldsObject {
 

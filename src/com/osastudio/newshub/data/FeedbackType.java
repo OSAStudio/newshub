@@ -3,6 +3,8 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.PairedStringFieldsObject;
+
 public class FeedbackType extends PairedStringFieldsObject {
 
    public static final String JSON_KEY_ID = "problem_type_id";

@@ -3,6 +3,8 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsBaseTopicArticle;
+
 public class SubscribedNewsArticle extends NewsBaseTopicArticle {
 
    public static final String JSON_KEY_CONTENT = "expand_lesson_content";

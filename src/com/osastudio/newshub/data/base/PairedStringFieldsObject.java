@@ -1,4 +1,5 @@
-package com.osastudio.newshub.data;
+package com.osastudio.newshub.data.base;
+
 
 public abstract class PairedStringFieldsObject extends NewsBaseObject {
 

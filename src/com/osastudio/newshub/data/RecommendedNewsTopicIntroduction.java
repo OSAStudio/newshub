@@ -3,6 +3,8 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.osastudio.newshub.data.base.NewsBaseTopicIntroduction;
+
 public class RecommendedNewsTopicIntroduction extends NewsBaseTopicIntroduction {
 
    public static final String JSON_KEY_CONTENT = "recommand_lssue_content";
