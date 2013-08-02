@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import com.huadi.azker_phone.R;
 
@@ -165,7 +166,7 @@ public class Utils {
 			URL newurl;
 			try {
 				newurl = new URL(convertUrl(url));
-
+				
 				try {
 					bmp = BitmapFactory.decodeStream(newurl.openConnection()
 							.getInputStream());

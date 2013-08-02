@@ -7,7 +7,9 @@ import java.util.List;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.FeedbackActivity;
+import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.data.NewsResult;
+import com.osastudio.newshub.data.RegisterResult;
 import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.data.base.NewsObjectList;
 import com.osastudio.newshub.data.base.PairedStringFieldsObject;
@@ -30,6 +32,7 @@ import com.osastudio.newshub.net.UserApi;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -388,25 +391,25 @@ public class RegisterView extends Dialog {
 	}
 
 	private class RegistTask extends
-			AsyncTask<RegisterParameters, Void, Boolean> {
-		private NewsResult mResult = null;
+			AsyncTask<RegisterParameters, Void, RegisterResult> {
 
 		@Override
-		protected Boolean doInBackground(RegisterParameters... params) {
+		protected RegisterResult doInBackground(RegisterParameters... params) {
 			RegisterParameters param = params[0];
-			mResult = UserApi.registerUser(mContext, param);
-			return mResult.isSuccess();
+			RegisterResult result = UserApi.registerUser(mContext, param);
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean bSuccess) {
-			if (!bSuccess) {
-				int code = mResult.getResultCode();
-				String msg = Utils.getErrorResultMsg(mContext, code);
+		protected void onPostExecute(RegisterResult result) {
+			if (result == null || result.getUserId() == null) {
+				String msg = mContext.getString(R.string.msg_register_error);
 				if (msg != null) {
 					Utils.ShowConfirmDialog(mContext, msg, null);
 				}
 			} else {
+				String userid = result.getUserId();
+				((NewsApp)((Activity)mContext).getApplication()).setCurrentUserId(userid);
 				Utils.ShowConfirmDialog(mContext,
 						mContext.getString(R.string.regist_success_msg),
 						new DialogConfirmCallback() {
@@ -421,7 +424,7 @@ public class RegisterView extends Dialog {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
 			}
-			super.onPostExecute(bSuccess);
+			super.onPostExecute(result);
 		}
 
 		@Override

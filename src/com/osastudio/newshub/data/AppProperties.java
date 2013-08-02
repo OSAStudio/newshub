@@ -89,6 +89,7 @@ public class AppProperties extends NewsBaseObject implements UserStatus {
          }
       }
    }
+   
 
    public String getApkUrl() {
       return this.apkUrl;

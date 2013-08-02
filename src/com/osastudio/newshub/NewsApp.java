@@ -7,9 +7,10 @@ import android.app.Application;
 import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
-   
+   final public static boolean IS_DEBUG = true;
    private ActivityStack mActivityStack;
    private CacheManager mCacheManager;
+   private String mCurrentUserId = null;
    
    @Override
    public void onCreate() {
@@ -69,6 +70,17 @@ public class NewsApp extends Application {
       DisplayMetrics dm = new DisplayMetrics();
       context.getWindowManager().getDefaultDisplay().getMetrics(dm);
       return dm;
+   }
+   
+   public void setCurrentUserId(String userid) {
+	   mCurrentUserId = userid;
+   }
+   
+   public String getCurrentUserId() {
+	   if (IS_DEBUG) {
+		   mCurrentUserId = "2";
+	   }
+	   return mCurrentUserId;
    }
    
 }

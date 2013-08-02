@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.SSLEngineResult.Status;
 
@@ -81,6 +82,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private EditText mActivateEdit = null;
 	private View mActivateBtn = null;
 	private View mAccount_btn = null;
+	private View mRecommend_btn = null;
 	private View mFeedback_btn = null;
 	
 	// private ArrayList<CategoryData> mCategories = new
@@ -156,6 +158,15 @@ public class CategoryActivity extends NewsBaseActivity {
 			
 			public void onClick(View v) {
 				startUserInfosActivity();
+				
+			}
+		});
+		
+		mRecommend_btn = findViewById(R.id.recommend);
+		mRecommend_btn.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				startListActivity(AzkerListActivity.RECOMMEND_LIST_TYPE);
 				
 			}
 		});
@@ -368,6 +379,11 @@ public class CategoryActivity extends NewsBaseActivity {
 					mActivateLayout.setVisibility(View.INVISIBLE);
 					if (mUserStatus == 2) {
 						showRegisterView();
+					} else if (mUserStatus == 3) {
+						List<String> userIds = mAppProperties.getUserIds();
+						if (userIds != null && userIds.size() > 0) {
+							((NewsApp)getApplication()).setCurrentUserId(userIds.get(0));
+						}
 					}
 				}
 				break;
@@ -555,6 +571,32 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void startUserInfosActivity() {
 		Intent it = new Intent(this, UserInfosActivity.class);
 		startActivityForResult(it, REQUEST_USER_INFO);
+	}
+	
+	private void startListActivity(int listtype) {
+		int title_resid = 0;
+		String title = null;
+		switch (listtype) {
+		case AzkerListActivity.RECOMMEND_LIST_TYPE:
+			title_resid = R.string.recommend;
+			break;
+		case AzkerListActivity.EXPERT_LIST_TYPE:
+			break;
+		case AzkerListActivity.USER_LSSUES_TYPE:
+			break;
+
+		case AzkerListActivity.NOTIFY_LIST_TYPE:
+			break;
+		case AzkerListActivity.DAILY_REMINDER_TYPE:
+			break;
+		}
+		if (title_resid > 0) {
+			title = getString(title_resid);
+		}
+		Intent it = new Intent(this, AzkerListActivity.class);
+		it.putExtra(AzkerListActivity.LIST_TYPE, listtype);
+		it.putExtra(AzkerListActivity.LIST_TITLE, title);
+		startActivity(it);
 	}
 	
 	private void startFeedbackActivity() {
