@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.osastudio.newshub.data.NewsResult;
+import com.osastudio.newshub.data.RegisterResult;
 import com.osastudio.newshub.data.user.CityDistrictList;
 import com.osastudio.newshub.data.user.CityList;
 import com.osastudio.newshub.data.user.QualificationList;
@@ -70,7 +71,7 @@ public class UserApi extends NewsBaseApi {
       return (jsonObject != null) ? new UserInfoList(jsonObject) : null;
    }
 
-   public static NewsResult registerUser(Context context,
+   public static RegisterResult registerUser(Context context,
          RegisterParameters register) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
@@ -83,7 +84,7 @@ public class UserApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_QUALIFICATION,
             register.qualification));
       JSONObject jsonObject = getJsonObject(registerService(), params);
-      return (jsonObject != null) ? new NewsResult(jsonObject) : null;
+      return (jsonObject != null) ? new RegisterResult(jsonObject) : null;
    }
 
    public static NewsResult addUser(Context context, RegisterParameters register) {

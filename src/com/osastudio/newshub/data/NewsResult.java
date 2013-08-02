@@ -7,6 +7,9 @@ public class NewsResult implements ResultCode {
 
    protected static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
    protected static final String JSON_KEY_RESULT_CODE = "stat";
+   
+   protected static final String JSON_KEY_LIST = "list";
+   protected static final String JSON_KEY_USER_ID = "student_id";
 
    protected int resultCode = RESULT_NONE;
    protected String resultDesc;

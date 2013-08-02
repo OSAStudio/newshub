@@ -21,6 +21,7 @@ public class User extends NewsBaseObject {
    private String birthday;
    private String className;
    private String gender;
+   private String userId;
    private String schoolName;
    private String serviceExpiredTime;
    private String userName;
@@ -83,6 +84,15 @@ public class User extends NewsBaseObject {
       return this;
    }
 
+   public String getUserId() {
+      return this.userId;
+   }
+
+   public User setUserId(String id) {
+      this.userId = id;
+      return this;
+   }
+
    public String getUserName() {
       return this.userName;
    }
@@ -113,6 +123,9 @@ public class User extends NewsBaseObject {
          }
          if (!jsonObject.isNull(JSON_KEY_GENDER)) {
             result.setGender(jsonObject.getString(JSON_KEY_GENDER).trim());
+         }
+         if (!jsonObject.isNull(JSON_KEY_USER_ID)) {
+            result.setUserId(jsonObject.getString(JSON_KEY_USER_ID).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_SCHOOL_NAME)) {
             result.setSchoolName(jsonObject.getString(JSON_KEY_SCHOOL_NAME)
