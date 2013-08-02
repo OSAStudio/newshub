@@ -196,32 +196,27 @@ public class NewsBaseApi {
             "dailyreminder!getDailyReminderListByMobile.do").toString();
    }
 
-   protected static String getDailyReminderArticleService() {
-      return new StringBuilder(getWebServer()).append(
-            "dailyreminder!getDailyReminderContentByMobile.do").toString();
-   }
-
-   protected static String getSubscribedNewsTopicListService() {
+   protected static String getSubscriptionTopicListService() {
       return new StringBuilder(getWebServer()).append(
             "expandlssue!getUserLssuesByMobile.do").toString();
    }
 
-   protected static String getSubscribedNewsAbstractListService() {
+   protected static String getSubscriptionAbstractListService() {
       return new StringBuilder(getWebServer()).append(
             "expandlesson!getExpandLessonsByMobile.do").toString();
    }
 
-   protected static String getSubscribedNewsArticleService() {
+   protected static String getSubscriptionArticleService() {
       return new StringBuilder(getWebServer()).append(
             "expandlesson!getExpandLessonContentByMobile.do").toString();
    }
 
-   protected static String getRecommendedNewsTopicListService() {
+   protected static String getRecommendedTopicListService() {
       return new StringBuilder(getWebServer()).append(
             "expandlssue!getRecommendLssueListByMobile.do").toString();
    }
 
-   protected static String getRecommendedNewsArticleService() {
+   protected static String getRecommendedTopicIntroService() {
       return new StringBuilder(getWebServer()).append(
             "expandlssue!getRecommendLssueContentByMobile.do").toString();
    }

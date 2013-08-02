@@ -5,12 +5,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseTopicArticle;
 
-public class SubscribedNewsArticle extends NewsBaseTopicArticle {
+public class SubscriptionArticle extends NewsBaseTopicArticle {
 
    public static final String JSON_KEY_CONTENT = "expand_lesson_content";
    public static final String JSON_KEY_ARTICLE = "list";
 
-   public SubscribedNewsArticle(JSONObject jsonObject) {
+   public SubscriptionArticle(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
@@ -26,7 +26,7 @@ public class SubscribedNewsArticle extends NewsBaseTopicArticle {
             if (!articleObject.isNull(JSON_KEY_CONTENT)) {
                setContent(articleObject.getString(JSON_KEY_CONTENT).trim());
             }
-            setNewsBaseTopicAbstract(SubscribedNewsAbstract
+            setNewsBaseTopicAbstract(SubscriptionAbstract
                   .parseJsonObject(articleObject));
          } catch (JSONException e) {
 

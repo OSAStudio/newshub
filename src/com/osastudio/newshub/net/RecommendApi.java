@@ -9,43 +9,41 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.osastudio.newshub.data.RecommendedNewsTopic;
-import com.osastudio.newshub.data.RecommendedNewsTopicIntroduction;
-import com.osastudio.newshub.data.RecommendedNewsTopicList;
+import com.osastudio.newshub.data.RecommendedTopic;
+import com.osastudio.newshub.data.RecommendedTopicIntro;
+import com.osastudio.newshub.data.RecommendedTopicList;
 
-public class RecommendedNewsApi extends NewsBaseApi {
+public class RecommendApi extends NewsBaseApi {
 
    private static final String TAG = "RecommendedNewsApi";
 
    private static final String KEY_NEWS_TOPIC_ID = "recommendLssueID";
 
-   public static RecommendedNewsTopicList getRecommendedNewsTopicList(
-         Context context, String userId) {
+   public static RecommendedTopicList getRecommendedTopicList(Context context,
+         String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(
-            getRecommendedNewsTopicListService(), params);
-      return (jsonObject != null) ? new RecommendedNewsTopicList(jsonObject)
-            : null;
+      JSONObject jsonObject = getJsonObject(getRecommendedTopicListService(),
+            params);
+      return (jsonObject != null) ? new RecommendedTopicList(jsonObject) : null;
    }
 
-   public static RecommendedNewsTopicIntroduction getNewsNoticeArticle(
-         Context context, String userId, RecommendedNewsTopic newsTopic) {
+   public static RecommendedTopicIntro getRecommendedTopicIntro(
+         Context context, String userId, RecommendedTopic newsTopic) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, newsTopic.getId()));
-      JSONObject jsonObject = getJsonObject(getRecommendedNewsArticleService(),
+      JSONObject jsonObject = getJsonObject(getRecommendedTopicIntroService(),
             params);
       if (jsonObject == null) {
          return null;
       }
 
-      RecommendedNewsTopicIntroduction result = new RecommendedNewsTopicIntroduction(
-            jsonObject);
+      RecommendedTopicIntro result = new RecommendedTopicIntro(jsonObject);
       if (result != null) {
          result.setNewsBaseTopic(newsTopic);
       }

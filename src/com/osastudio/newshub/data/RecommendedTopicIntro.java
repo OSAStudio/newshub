@@ -3,14 +3,14 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.base.NewsBaseTopicIntroduction;
+import com.osastudio.newshub.data.base.NewsBaseTopicIntro;
 
-public class RecommendedNewsTopicIntroduction extends NewsBaseTopicIntroduction {
+public class RecommendedTopicIntro extends NewsBaseTopicIntro {
 
    public static final String JSON_KEY_CONTENT = "recommand_lssue_content";
    public static final String JSON_KEY_ARTICLE = "list";
 
-   public RecommendedNewsTopicIntroduction(JSONObject jsonObject) {
+   public RecommendedTopicIntro(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
@@ -26,7 +26,7 @@ public class RecommendedNewsTopicIntroduction extends NewsBaseTopicIntroduction 
             if (!articleObject.isNull(JSON_KEY_CONTENT)) {
                setContent(articleObject.getString(JSON_KEY_CONTENT).trim());
             }
-            setNewsBaseTopic(RecommendedNewsTopic
+            setNewsBaseTopic(RecommendedTopic
                   .parseJsonObject(articleObject));
          } catch (JSONException e) {
 

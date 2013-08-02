@@ -36,7 +36,7 @@ public class NewsNoticeApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, newsNotice
-            .getNoticeId()));
+            .getId()));
       JSONObject jsonObject = getJsonObject(getNewsNoticeArticleService(), params);
       if (jsonObject == null) {
          return null;
@@ -44,7 +44,7 @@ public class NewsNoticeApi extends NewsBaseApi {
 
       NewsNoticeArticle result = new NewsNoticeArticle(jsonObject);
       if (result != null) {
-         result.setNotice(newsNotice);
+         result.setNewsBaseTitle(newsNotice);
       }
       return result;
    }

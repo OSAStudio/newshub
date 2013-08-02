@@ -8,7 +8,7 @@ import com.osastudio.newshub.data.base.NewsBaseTopicAbstract;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SubscribedNewsAbstract extends NewsBaseTopicAbstract implements
+public class SubscriptionAbstract extends NewsBaseTopicAbstract implements
       Parcelable {
 
    public static final String JSON_KEY_ID = "expand_lesson_id";
@@ -17,22 +17,22 @@ public class SubscribedNewsAbstract extends NewsBaseTopicAbstract implements
    public static final String JSON_KEY_AUTHOR = "expert_name";
    public static final String JSON_KEY_TITLE = "expand_lesson_title";
 
-   public SubscribedNewsAbstract() {
+   public SubscriptionAbstract() {
       super();
    }
 
-   public SubscribedNewsAbstract(Parcel src) {
+   public SubscriptionAbstract(Parcel src) {
       super(src);
    }
 
-   public static SubscribedNewsAbstract parseJsonObject(JSONObject jsonObject) {
-      SubscribedNewsAbstract result = new SubscribedNewsAbstract();
+   public static SubscriptionAbstract parseJsonObject(JSONObject jsonObject) {
+      SubscriptionAbstract result = new SubscriptionAbstract();
       try {
          if (!jsonObject.isNull(JSON_KEY_ID)) {
             result.setId(jsonObject.getString(JSON_KEY_ID).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_COLOR)) {
-            result.setColor(SubscribedNewsAbstract.parseColorValue(jsonObject
+            result.setColor(SubscriptionAbstract.parseColorValue(jsonObject
                   .getString(JSON_KEY_COLOR).trim()));
          }
          if (!jsonObject.isNull(JSON_KEY_PUBLISHED_TIME)) {
@@ -61,15 +61,15 @@ public class SubscribedNewsAbstract extends NewsBaseTopicAbstract implements
       super.writeToParcel(dst, flags);
    }
 
-   public static final Parcelable.Creator<SubscribedNewsAbstract> CREATOR = new Creator<SubscribedNewsAbstract>() {
+   public static final Parcelable.Creator<SubscriptionAbstract> CREATOR = new Creator<SubscriptionAbstract>() {
       @Override
-      public SubscribedNewsAbstract createFromParcel(Parcel src) {
-         return new SubscribedNewsAbstract(src);
+      public SubscriptionAbstract createFromParcel(Parcel src) {
+         return new SubscriptionAbstract(src);
       }
 
       @Override
-      public SubscribedNewsAbstract[] newArray(int size) {
-         return new SubscribedNewsAbstract[size];
+      public SubscriptionAbstract[] newArray(int size) {
+         return new SubscriptionAbstract[size];
       }
    };
 

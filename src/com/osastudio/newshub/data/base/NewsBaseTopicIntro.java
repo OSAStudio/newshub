@@ -2,16 +2,16 @@ package com.osastudio.newshub.data.base;
 
 import org.json.JSONObject;
 
-public class NewsBaseTopicIntroduction extends NewsBaseObject implements NewsId {
+public class NewsBaseTopicIntro extends NewsBaseObject implements NewsId {
 
    protected NewsBaseTopic newsTopic;
    protected String content;
 
-   public NewsBaseTopicIntroduction() {
+   public NewsBaseTopicIntro() {
       this.newsTopic = new NewsBaseTopic();
    }
 
-   public NewsBaseTopicIntroduction(JSONObject jsonObject) {
+   public NewsBaseTopicIntro(JSONObject jsonObject) {
       super(jsonObject);
    }
 
@@ -19,7 +19,7 @@ public class NewsBaseTopicIntroduction extends NewsBaseObject implements NewsId 
       return this.newsTopic;
    }
 
-   public NewsBaseTopicIntroduction setNewsBaseTopic(NewsBaseTopic topic) {
+   public NewsBaseTopicIntro setNewsBaseTopic(NewsBaseTopic topic) {
       this.newsTopic = topic;
       return this;
    }
@@ -28,7 +28,7 @@ public class NewsBaseTopicIntroduction extends NewsBaseObject implements NewsId 
       return (this.newsTopic != null) ? this.newsTopic.getId() : null;
    }
 
-   public NewsBaseTopicIntroduction setId(String id) {
+   public NewsBaseTopicIntro setId(String id) {
       if (this.newsTopic == null) {
          this.newsTopic = new NewsBaseTopic();
       }
@@ -40,7 +40,7 @@ public class NewsBaseTopicIntroduction extends NewsBaseObject implements NewsId 
       return (this.newsTopic != null) ? this.newsTopic.getTitle() : null;
    }
 
-   public NewsBaseTopicIntroduction setTitle(String title) {
+   public NewsBaseTopicIntro setTitle(String title) {
       if (this.newsTopic == null) {
          this.newsTopic = new NewsBaseTopic();
       }
@@ -52,7 +52,7 @@ public class NewsBaseTopicIntroduction extends NewsBaseObject implements NewsId 
       return (this.newsTopic != null) ? this.newsTopic.getIconUrl() : null;
    }
 
-   public NewsBaseTopicIntroduction setIconUrl(String url) {
+   public NewsBaseTopicIntro setIconUrl(String url) {
       if (this.newsTopic == null) {
          this.newsTopic = new NewsBaseTopic();
       }
@@ -64,7 +64,7 @@ public class NewsBaseTopicIntroduction extends NewsBaseObject implements NewsId 
       return this.content;
    }
 
-   public NewsBaseTopicIntroduction setContent(String introduction) {
+   public NewsBaseTopicIntro setContent(String introduction) {
       this.content = introduction;
       return this;
    }

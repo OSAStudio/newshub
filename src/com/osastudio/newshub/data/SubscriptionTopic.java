@@ -8,22 +8,22 @@ import com.osastudio.newshub.data.base.NewsBaseTopic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SubscribedNewsTopic extends NewsBaseTopic implements Parcelable {
+public class SubscriptionTopic extends NewsBaseTopic implements Parcelable {
 
    public static final String JSON_KEY_ICON_URL = "recommend_lssue_icon";
    public static final String JSON_KEY_TITLE = "recommend_lssue_title";
    public static final String JSON_KEY_ID = "recommend_lssue_id";
 
-   public SubscribedNewsTopic() {
+   public SubscriptionTopic() {
       super();
    }
 
-   public SubscribedNewsTopic(Parcel src) {
+   public SubscriptionTopic(Parcel src) {
       super(src);
    }
 
-   public static SubscribedNewsTopic parseJsonObject(JSONObject jsonObject) {
-      SubscribedNewsTopic result = new SubscribedNewsTopic();
+   public static SubscriptionTopic parseJsonObject(JSONObject jsonObject) {
+      SubscriptionTopic result = new SubscriptionTopic();
       try {
          if (!jsonObject.isNull(JSON_KEY_ICON_URL)) {
             result.setIconUrl(jsonObject.getString(JSON_KEY_ICON_URL).trim());
@@ -51,15 +51,15 @@ public class SubscribedNewsTopic extends NewsBaseTopic implements Parcelable {
       ;
    }
 
-   public static final Parcelable.Creator<SubscribedNewsTopic> CREATOR = new Creator<SubscribedNewsTopic>() {
+   public static final Parcelable.Creator<SubscriptionTopic> CREATOR = new Creator<SubscriptionTopic>() {
       @Override
-      public SubscribedNewsTopic createFromParcel(Parcel src) {
-         return new SubscribedNewsTopic(src);
+      public SubscriptionTopic createFromParcel(Parcel src) {
+         return new SubscriptionTopic(src);
       }
 
       @Override
-      public SubscribedNewsTopic[] newArray(int size) {
-         return new SubscribedNewsTopic[size];
+      public SubscriptionTopic[] newArray(int size) {
+         return new SubscriptionTopic[size];
       }
    };
 

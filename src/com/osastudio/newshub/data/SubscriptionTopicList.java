@@ -8,32 +8,31 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsItemList;
 
-public class SubscribedNewsAbstractList extends
-      NewsItemList<SubscribedNewsAbstract> {
+public class SubscriptionTopicList extends NewsItemList<SubscriptionTopic> {
 
-   public SubscribedNewsAbstractList(JSONObject jsonObject) {
+   public SubscriptionTopicList(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
          try {
             if (!jsonObject.isNull(JSON_KEY_LIST)) {
                JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_LIST);
-               SubscribedNewsAbstract abs = null;
-               ArrayList<SubscribedNewsAbstract> abstracts = new ArrayList<SubscribedNewsAbstract>();
+               SubscriptionTopic topic = null;
+               ArrayList<SubscriptionTopic> topics = new ArrayList<SubscriptionTopic>();
                for (int i = 0; i < jsonArray.length(); i++) {
                   try {
                      if (!jsonArray.isNull(i)) {
-                        abs = SubscribedNewsAbstract.parseJsonObject(jsonArray
+                        topic = SubscriptionTopic.parseJsonObject(jsonArray
                               .getJSONObject(i));
-                        if (abs != null) {
-                           abstracts.add(abs);
+                        if (topic != null) {
+                           topics.add(topic);
                         }
                      }
                   } catch (JSONException e) {
                      continue;
                   }
                }
-               setList(abstracts);
+               setList(topics);
             }
          } catch (JSONException e) {
 

@@ -3,46 +3,28 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.base.NewsBaseObject;
+import com.osastudio.newshub.data.base.NewsBaseAbstract;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NewsAbstract extends NewsBaseObject implements Parcelable {
+public class NewsAbstract extends NewsBaseAbstract implements Parcelable {
 
-   public static final String JSON_KEY_ARTICLE_ID = "lesson_id";
+   public static final String JSON_KEY_ID = "lesson_id";
    public static final String JSON_KEY_COLOR = "lesson_colour";
    public static final String JSON_KEY_PUBLISHED_TIME = "post_date";
    public static final String JSON_KEY_AUTHOR = "expert_name";
    public static final String JSON_KEY_TITLE = "lesson_title";
 
-   private String articleId = "";
    private String channelId = "";
-   private int color = DEFAULT_COLOR;
-   private String publishedTime;
-   private String author = "";
-   private String title = "";
 
    public NewsAbstract() {
-
+      super();
    }
 
    public NewsAbstract(Parcel src) {
-      this.articleId = src.readString().trim();
+      super(src);
       this.channelId = src.readString().trim();
-      this.color = src.readInt();
-      this.publishedTime = src.readString().trim();
-      this.author = src.readString().trim();
-      this.title = src.readString().trim();
-   }
-
-   public String getArticleId() {
-      return this.articleId;
-   }
-
-   public NewsAbstract setArticleId(String articleId) {
-      this.articleId = (articleId != null) ? articleId : "";
-      return this;
    }
 
    public String getChannelId() {
@@ -54,63 +36,11 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
       return this;
    }
 
-   public int getColor() {
-      return this.color;
-   }
-
-   public NewsAbstract setColor(int color) {
-      this.color = color;
-      return this;
-   }
-
-   public String getPublishedTime() {
-      return this.publishedTime;
-   }
-
-   public NewsAbstract setPublishedTime(String publishedTime) {
-      this.publishedTime = (publishedTime != null) ? publishedTime : "";
-      return this;
-   }
-
-   public String getAuthor() {
-      return this.author;
-   }
-
-   public NewsAbstract setAuthor(String author) {
-      this.author = (author != null) ? author : "";
-      return this;
-   }
-
-   public String getTitle() {
-      return this.title;
-   }
-
-   public NewsAbstract setTitle(String title) {
-      this.title = (title != null) ? title : "";
-      return this;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) {
-         return true;
-      }
-
-      if ((obj == null) || !(obj instanceof NewsAbstract)) {
-         return false;
-      }
-
-      NewsAbstract that = (NewsAbstract) obj;
-      return this.channelId.equals(that.getChannelId())
-            && this.articleId.equals(that.getArticleId());
-   }
-
    public static NewsAbstract parseJsonObject(JSONObject jsonObject) {
       NewsAbstract result = new NewsAbstract();
       try {
-         if (!jsonObject.isNull(JSON_KEY_ARTICLE_ID)) {
-            result.setArticleId(jsonObject.getString(JSON_KEY_ARTICLE_ID)
-                  .trim());
+         if (!jsonObject.isNull(JSON_KEY_ID)) {
+            result.setId(jsonObject.getString(JSON_KEY_ID).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_COLOR)) {
             result.setColor(NewsAbstract.parseColorValue(jsonObject.getString(
@@ -139,12 +69,8 @@ public class NewsAbstract extends NewsBaseObject implements Parcelable {
 
    @Override
    public void writeToParcel(Parcel dst, int flags) {
-      dst.writeString(this.articleId);
+      super.writeToParcel(dst, flags);
       dst.writeString(this.channelId);
-      dst.writeInt(this.color);
-      dst.writeString(this.publishedTime);
-      dst.writeString(this.author);
-      dst.writeString(this.title);
    }
 
    public static final Parcelable.Creator<NewsAbstract> CREATOR = new Creator<NewsAbstract>() {

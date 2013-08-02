@@ -3,52 +3,18 @@ package com.osastudio.newshub.data.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NewsBaseTimestampTitle extends NewsBaseObject implements
-      NewsId, Parcelable {
+public class NewsBaseTimestampTitle extends NewsBaseTitle implements NewsId,
+      Parcelable {
 
-   protected NewsBaseTitle newsTitle;
-   private String publishedTime;
+   protected String publishedTime;
 
    public NewsBaseTimestampTitle() {
-      this.newsTitle = new NewsBaseTitle();
+      super();
    }
 
    public NewsBaseTimestampTitle(Parcel src) {
-      this.newsTitle = src.readParcelable(NewsBaseTitle.class.getClassLoader());
+      super(src);
       this.publishedTime = src.readString();
-   }
-
-   public NewsBaseTitle getNewsBaseTitle() {
-      return this.newsTitle;
-   }
-
-   public NewsBaseTimestampTitle setNewsBaseTitle(NewsBaseTitle title) {
-      this.newsTitle = title;
-      return this;
-   }
-
-   public String getId() {
-      return (this.newsTitle != null) ? this.newsTitle.getId() : null;
-   }
-
-   public NewsBaseTimestampTitle setId(String id) {
-      if (this.newsTitle == null) {
-         this.newsTitle = new NewsBaseTitle();
-      }
-      this.newsTitle.setId(id);
-      return this;
-   }
-
-   public String getTitle() {
-      return (this.newsTitle != null) ? this.newsTitle.getTitle() : null;
-   }
-
-   public NewsBaseTimestampTitle setTitle(String title) {
-      if (this.newsTitle == null) {
-         this.newsTitle = new NewsBaseTitle();
-      }
-      this.newsTitle.setTitle(title);
-      return this;
    }
 
    public String getPublishedTime() {
@@ -67,7 +33,7 @@ public class NewsBaseTimestampTitle extends NewsBaseObject implements
 
    @Override
    public void writeToParcel(Parcel dst, int flags) {
-      dst.writeParcelable(this.newsTitle, flags);
+      super.writeToParcel(dst, flags);
       dst.writeString(this.publishedTime);
    }
 

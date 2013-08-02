@@ -3,51 +3,17 @@ package com.osastudio.newshub.data.base;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NewsBaseTopic extends NewsBaseObject implements NewsId, Parcelable {
+public class NewsBaseTopic extends NewsBaseTitle implements NewsId, Parcelable {
 
-   protected NewsBaseTitle newsTitle;
    protected String iconUrl;
 
    public NewsBaseTopic() {
-      this.newsTitle = new NewsBaseTitle();
+      super();
    }
 
    public NewsBaseTopic(Parcel src) {
-      this.newsTitle = src.readParcelable(NewsBaseTitle.class.getClassLoader());
+      super(src);
       this.iconUrl = src.readString();
-   }
-
-   public NewsBaseTitle getNewsBaseTitle() {
-      return this.newsTitle;
-   }
-
-   public NewsBaseTopic setNewsBaseTitle(NewsBaseTitle title) {
-      this.newsTitle = title;
-      return this;
-   }
-
-   public String getId() {
-      return (this.newsTitle != null) ? this.newsTitle.getId() : null;
-   }
-
-   public NewsBaseTopic setId(String id) {
-      if (this.newsTitle == null) {
-         this.newsTitle = new NewsBaseTitle();
-      }
-      this.newsTitle.setId(id);
-      return this;
-   }
-
-   public String getTitle() {
-      return (this.newsTitle != null) ? this.newsTitle.getTitle() : null;
-   }
-
-   public NewsBaseTopic setTitle(String title) {
-      if (this.newsTitle == null) {
-         this.newsTitle = new NewsBaseTitle();
-      }
-      this.newsTitle.setTitle(title);
-      return this;
    }
 
    public String getIconUrl() {
@@ -66,7 +32,7 @@ public class NewsBaseTopic extends NewsBaseObject implements NewsId, Parcelable 
 
    @Override
    public void writeToParcel(Parcel dst, int flags) {
-      dst.writeParcelable(this.newsTitle, flags);
+      super.writeToParcel(dst, flags);
       dst.writeString(this.iconUrl);
    }
 
