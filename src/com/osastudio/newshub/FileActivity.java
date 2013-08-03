@@ -12,7 +12,6 @@ import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsArticle;
-import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.net.NewsArticleApi;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
@@ -37,7 +36,6 @@ public class FileActivity extends NewsBaseActivity {
 	public int mCurrentShowId = -1;
 
 	private NewsAbstract mSummary_data = null;
-	// private NewsChannel mCategoryData = null;
 	private NewsAbstractList mSummary_list = null;
 	private int mFileSize = 1;
 	private SlideSwitcher mSwitcher = null;

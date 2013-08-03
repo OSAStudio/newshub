@@ -60,17 +60,17 @@ import android.widget.TextView;
 @SuppressLint("NewApi")
 public class CategoryActivity extends NewsBaseActivity {
 	private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
-	
+
 	public static final String TYPE_NOTIFY_LIST = "1";
 	public static final String TYPE_EXPERT_LIST = "3";
 	public static final String TYPE_USETLSSUES_MOBILE = "5";
-	public static final String TYPE_LESSON_LIST="6";
-	
+	public static final String TYPE_LESSON_LIST = "6";
+
 	public static final int REQUEST_NOTIFY_LIST = 1;
 	public static final int REQUEST_EXPERT_LIST = 3;
 	public static final int REQUEST_USETLSSUES_MOBILE = 5;
-	public static final int REQUEST_LESSON_LIST=6;
-	public static final int REQUEST_USER_INFO=7;
+	public static final int REQUEST_LESSON_LIST = 6;
+	public static final int REQUEST_USER_INFO = 7;
 
 	private AppProperties mAppProperties = null;
 	private Bitmap mReceiveBmp = null;
@@ -83,8 +83,9 @@ public class CategoryActivity extends NewsBaseActivity {
 	private View mActivateBtn = null;
 	private View mAccount_btn = null;
 	private View mRecommend_btn = null;
+	private View mExpertlist_btn = null;
 	private View mFeedback_btn = null;
-	
+
 	// private ArrayList<CategoryData> mCategories = new
 	// ArrayList<CategoryData>();
 	private ArrayList<NewsChannel> mCategoryList = null;
@@ -98,7 +99,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private int mScreenHeight = 0;
 	private int mUserStatus = 3;
 	private boolean mIsSplashShow = true;
-	
+
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
 
@@ -152,43 +153,68 @@ public class CategoryActivity extends NewsBaseActivity {
 
 			}
 		});
-		
+
 		mAccount_btn = findViewById(R.id.account_btn);
 		mAccount_btn.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				startUserInfosActivity();
-				
+
 			}
 		});
-		
+
 		mRecommend_btn = findViewById(R.id.recommend);
 		mRecommend_btn.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
-				startListActivity(AzkerListActivity.RECOMMEND_LIST_TYPE);
-				
+				startListActivity(Utils.RECOMMEND_LIST_TYPE, null);
+
 			}
 		});
-		
+
+		mExpertlist_btn = findViewById(R.id.expertlist);
+		mExpertlist_btn.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				startListActivity(Utils.EXPERT_LIST_TYPE, null);
+
+			}
+		});
+
 		mFeedback_btn = findViewById(R.id.feedback);
 		mFeedback_btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				startFeedbackActivity();
 			}
 		});
-		
-		
+
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if (mTask != null && 
-				!mTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+		if (mTask != null
+				&& !mTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
 			mTask.cancel(true);
 			mTask = null;
+		}
+
+		if (mLoadBitmapTask != null
+				&& !mLoadBitmapTask.getStatus().equals(
+						AsyncTask.Status.FINISHED)) {
+			mLoadBitmapTask.cancel(true);
+			mLoadBitmapTask = null;
+		}
+
+		if (mIconList != null) {
+			for (int i = 0; i < mIconList.size(); i++) {
+				if (mIconList.get(i) != null && mIconList.get(i).mBmp != null
+						&& !mIconList.get(i).mBmp.isRecycled()) {
+					mIconList.get(i).mBmp.recycle();
+					mIconList.get(i).mBmp = null;
+				}
+			}
 		}
 	}
 
@@ -382,7 +408,8 @@ public class CategoryActivity extends NewsBaseActivity {
 					} else if (mUserStatus == 3) {
 						List<String> userIds = mAppProperties.getUserIds();
 						if (userIds != null && userIds.size() > 0) {
-							((NewsApp)getApplication()).setCurrentUserId(userIds.get(0));
+							((NewsApp) getApplication())
+									.setCurrentUserId(userIds.get(0));
 						}
 					}
 				}
@@ -414,9 +441,11 @@ public class CategoryActivity extends NewsBaseActivity {
 				mSwitcher.setAssistant(assistent);
 			}
 			mTask = null;
+			mLoadBitmapTask = new LoadBitmapTask();
+			mLoadBitmapTask.execute();
 			super.onPostExecute(result);
 		}
-		
+
 		@Override
 		protected void onCancelled() {
 			if (mDlg != null) {
@@ -425,6 +454,66 @@ public class CategoryActivity extends NewsBaseActivity {
 			}
 			mTask = null;
 			super.onCancelled();
+		}
+
+	}
+
+	private ArrayList<IconData> mIconList = null;
+	private LoadBitmapTask mLoadBitmapTask = null;
+
+	private class IconData {
+		String mIconUrl = null;
+		Bitmap mBmp = null;
+	}
+
+	private class LoadBitmapTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Utils.logd("LoadBitmapTask", "execute "+mCategoryList.size());
+			if (mIconList == null) {
+				mIconList = new ArrayList<IconData>();
+			}
+			for (int i = 0; i < mCategoryList.size(); i++) {
+				boolean bNeedDecode = true;
+				NewsChannel channel = mCategoryList.get(i);
+				for (int j = 0; i < mIconList.size(); i++) {
+					IconData data = mIconList.get(j);
+					if (channel.getIconUrl().equals(data.mIconUrl)) {
+						bNeedDecode = false;
+						break;
+					}
+				}
+				if (bNeedDecode) {
+					Bitmap bmp = Utils.getBitmapFromUrl(channel.getIconUrl());
+
+					Utils.logd("LoadBitmapTask", "decode icon "+channel.getIconUrl()+ " "+bmp);
+					if (bmp != null) {
+						IconData iconData = new IconData();
+						iconData.mIconUrl = channel.getIconUrl();
+						iconData.mBmp = bmp;
+						mIconList.add(iconData);
+						publishProgress();
+					}
+				}
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			SwitchAssistent assistent = new SwitchAssistent();
+			mSwitcher.setAssistant(assistent);
+
+			Utils.logd("LoadBitmapTask", "update icon ui");
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			mLoadBitmapTask = null;
+			super.onPostExecute(result);
 		}
 
 	}
@@ -478,7 +567,19 @@ public class CategoryActivity extends NewsBaseActivity {
 			int page = mSwitcher.getCurrentIndex();
 			int index = page * 8 + position;
 			if (index < mCategoryList.size()) {
-				startNextActivity(mCategoryList.get(index));
+				NewsChannel data = mCategoryList.get(index);
+				if (data.getTitleType() != null) {
+					int type = Integer.parseInt(data.getTitleType());
+					switch (type) {
+					case Utils.USER_ISSUES_TYPE:
+						startListActivity(Utils.USER_ISSUES_TYPE,
+								data.getTitleName());
+						break;
+					case Utils.LESSON_LIST_TYPE:
+						startNextActivity(mCategoryList.get(index));
+						break;
+					}
+				}
 			}
 
 		}
@@ -543,6 +644,16 @@ public class CategoryActivity extends NewsBaseActivity {
 				NewsChannel data = mCategoryList.get(index);
 				base.setBackgroundColor(data.getTitleColor());
 				tv.setText(data.getTitleName());
+				if (mIconList != null) {
+					for (int i = 0; i < mIconList.size(); i++) {
+						IconData icondata = mIconList.get(i);
+						if (icondata != null && icondata.mIconUrl.equals(data.getIconUrl())) {
+							if (icondata.mBmp != null && !icondata.mBmp.isRecycled()) {
+								iv.setImageBitmap(icondata.mBmp);
+							}
+						}
+					}
+				}
 				return category;
 			} else {
 				return null;
@@ -550,55 +661,57 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 	}
 
-
 	private void startNextActivity(NewsChannel data) {
 		String type = data.getTitleType();
 		int requestCode = REQUEST_LESSON_LIST;
 		if (type.equals(TYPE_NOTIFY_LIST)) {
 			requestCode = REQUEST_NOTIFY_LIST;
-			
+
 		} else if (type.equals(TYPE_EXPERT_LIST)) {
 			requestCode = REQUEST_EXPERT_LIST;
-			
-		} 
-		
- 		Intent it = new Intent(this, SummaryActivity.class);
+
+		}
+
+		Intent it = new Intent(this, SummaryActivity.class);
 		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		it.putExtra(SummaryActivity.CATEGORY_DATA, data);
+		it.putExtra(SummaryActivity.CHANNEL_ID, data.getTitleId());
+		it.putExtra(SummaryActivity.CHANNEL_TITLE, data.getTitleName());
 		startActivityForResult(it, requestCode);
 	}
-	
+
 	private void startUserInfosActivity() {
 		Intent it = new Intent(this, UserInfosActivity.class);
 		startActivityForResult(it, REQUEST_USER_INFO);
 	}
-	
-	private void startListActivity(int listtype) {
-		int title_resid = 0;
-		String title = null;
-		switch (listtype) {
-		case AzkerListActivity.RECOMMEND_LIST_TYPE:
-			title_resid = R.string.recommend;
-			break;
-		case AzkerListActivity.EXPERT_LIST_TYPE:
-			break;
-		case AzkerListActivity.USER_LSSUES_TYPE:
-			break;
 
-		case AzkerListActivity.NOTIFY_LIST_TYPE:
-			break;
-		case AzkerListActivity.DAILY_REMINDER_TYPE:
-			break;
-		}
-		if (title_resid > 0) {
-			title = getString(title_resid);
+	private void startListActivity(int listtype, String title) {
+		int title_resid = 0;
+		if (title == null) {
+			switch (listtype) {
+			case Utils.RECOMMEND_LIST_TYPE:
+				title_resid = R.string.recommend;
+				break;
+			case Utils.EXPERT_LIST_TYPE:
+				title_resid = R.string.expertlist;
+				break;
+			case Utils.USER_ISSUES_TYPE:
+				break;
+
+			case Utils.NOTIFY_LIST_TYPE:
+				break;
+			case Utils.DAILY_REMINDER_TYPE:
+				break;
+			}
+			if (title_resid > 0) {
+				title = getString(title_resid);
+			}
 		}
 		Intent it = new Intent(this, AzkerListActivity.class);
 		it.putExtra(AzkerListActivity.LIST_TYPE, listtype);
 		it.putExtra(AzkerListActivity.LIST_TITLE, title);
 		startActivity(it);
 	}
-	
+
 	private void startFeedbackActivity() {
 
 		Intent it = new Intent(this, FeedbackActivity.class);

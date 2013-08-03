@@ -34,7 +34,7 @@
             android:layout_gravity="bottom"
             android:text="sub"
             android:textColor="@color/text_gray"
-            android:textSize="16sp" 
+            android:textSize="12sp" 
             android:visibility="gone"
             />
         

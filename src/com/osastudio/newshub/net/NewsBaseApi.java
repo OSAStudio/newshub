@@ -65,6 +65,10 @@ public class NewsBaseApi {
       if (TextUtils.isEmpty(id)) {
          id = Installation.id(context);
       }
+      
+      if (NewsApp.IS_DEBUG) {
+    	  id = "667ebbbf9fcd9229344681aebf4ec67316645186";
+      }
       return id;
    }
 
@@ -223,12 +227,12 @@ public class NewsBaseApi {
 
    protected static String getNewsColumnistListService() {
       return new StringBuilder(getWebServer()).append(
-            "").toString();
+            "expert!getExpertListByMobile.do").toString();
    }
 
    protected static String getNewsColumnistInfoService() {
       return new StringBuilder(getWebServer()).append(
-            "").toString();
+            "expert!getExpertContentByMobile.do").toString();
    }
 
    protected static JSONObject getJsonObject(String service,

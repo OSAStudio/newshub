@@ -23,11 +23,7 @@ public class RecommendApi extends NewsBaseApi {
    public static RecommendedTopicList getRecommendedTopicList(Context context,
          String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
-      if (NewsApp.IS_DEBUG) {
-    	  params.add(new BasicNameValuePair(KEY_DEVICE_ID, "667ebbbf9fcd9229344681aebf4ec67316645186"));
-      } else {
-    	  params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-      }
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       JSONObject jsonObject = getJsonObject(getRecommendedTopicListService(),

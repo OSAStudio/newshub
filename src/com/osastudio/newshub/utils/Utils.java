@@ -28,6 +28,17 @@ public class Utils {
 
    private static final boolean DEBUG = true;
    
+
+	final static public int NOTIFY_LIST_TYPE = 1;
+	final static public int IMPORT_NOTIFY_TYPE = 2;
+	final static public int EXPERT_LIST_TYPE = 3;
+	final static public int IMPORT_EXPERT_TYPE = 4;
+	final static public int USER_ISSUES_TYPE = 5;
+	final static public int LESSON_LIST_TYPE = 6;
+	final static public int DAILY_REMINDER_TYPE = 7;
+	final static public int RECOMMEND_LIST_TYPE = 8;
+
+   
    public synchronized static Bitmap loadBitmap(String pathName, int outputW, int outputH, int rotate) {
 	      BitmapFactory.Options options = new BitmapFactory.Options();
 	      options.inJustDecodeBounds = true;

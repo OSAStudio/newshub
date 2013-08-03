@@ -31,8 +31,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SummaryActivity extends NewsBaseActivity {
-	public static final String CATEGORY_DATA = "Category_data";
-	private NewsChannel mCategoryData = null;
+	public static final String CHANNEL_ID = "Channel_id";
+	public static final String CHANNEL_TITLE = "Channel_title";
+	
+	private String mChannelId = null;
+	private String mChannelTitle = null;
+//	private NewsChannel mCategoryData = null;
 	private SlideSwitcher mSwitcher = null;
 //	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
 	private ArrayList<NewsAbstract> mSummaries = new ArrayList<NewsAbstract>();
@@ -48,7 +52,8 @@ public class SummaryActivity extends NewsBaseActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			mCategoryData =  extras.getParcelable(CATEGORY_DATA);
+			mChannelId = extras.getString(CHANNEL_ID);
+			mChannelTitle = extras.getString(CHANNEL_TITLE);
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
@@ -99,7 +104,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			NewsAbstractList summary_list = NewsAbstractApi.getNewsAbstractList(getApplicationContext(), mCategoryData.getChannelId());
+			NewsAbstractList summary_list = NewsAbstractApi.getNewsAbstractList(getApplicationContext(), mChannelId);
 			mSummaries = (ArrayList<NewsAbstract>)summary_list.getAbstractList();
 			return null;
 		}
@@ -121,7 +126,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		 Intent it = new Intent(this, FileActivity.class);
          it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  
          it.putExtra(FileActivity.START_INDEX, index);
-         it.putExtra(FileActivity.CATEGORY_TITLE, mCategoryData.getTitleName());
+         it.putExtra(FileActivity.CATEGORY_TITLE, mChannelTitle);
          startActivityForResult(it,1);
 	}
 

@@ -5,9 +5,15 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.NewsColumnist;
+import com.osastudio.newshub.data.NewsColumnistList;
 import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.RecommendedTopicList;
+import com.osastudio.newshub.data.SubscriptionTopic;
+import com.osastudio.newshub.data.SubscriptionTopicList;
+import com.osastudio.newshub.net.NewsColumnistApi;
 import com.osastudio.newshub.net.RecommendApi;
+import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
 
 import android.graphics.Bitmap;
@@ -27,12 +33,6 @@ public class AzkerListActivity extends NewsBaseActivity {
 	final static public String LIST_TYPE = "list type";
 	final static public String LIST_TITLE = "list title";
 
-	final static public int RECOMMEND_LIST_TYPE = 1;
-	final static public int EXPERT_LIST_TYPE = 2;
-	final static public int USER_LSSUES_TYPE = 3;
-
-	final static public int NOTIFY_LIST_TYPE = 4;
-	final static public int DAILY_REMINDER_TYPE = 5;
 
 	private int mListType = -1;
 	private String mTitle = null;
@@ -101,17 +101,20 @@ public class AzkerListActivity extends NewsBaseActivity {
 		protected Boolean doInBackground(Void... params) {
 			boolean rtn = false;
 			switch (mListType) {
-			case RECOMMEND_LIST_TYPE:
+			case Utils.RECOMMEND_LIST_TYPE:
 				rtn = getRecommendListData();
 				break;
-			case EXPERT_LIST_TYPE:
+			case Utils.EXPERT_LIST_TYPE:
+
+				rtn = getExpertListData();
 				break;
-			case USER_LSSUES_TYPE:
+			case Utils.USER_ISSUES_TYPE:
+				rtn = getUserIssuesData();
 				break;
 
-			case NOTIFY_LIST_TYPE:
+			case Utils.NOTIFY_LIST_TYPE:
 				break;
-			case DAILY_REMINDER_TYPE:
+			case Utils.DAILY_REMINDER_TYPE:
 				break;
 			}
 			return rtn;
@@ -122,20 +125,18 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mLoadTask = null;
 			if (result) {
 				switch (mListType) {
-				case RECOMMEND_LIST_TYPE:
+				case Utils.RECOMMEND_LIST_TYPE:
+				case Utils.EXPERT_LIST_TYPE:
+				case Utils.USER_ISSUES_TYPE:
 					mAdapter = new IconTextAdapter();
 					mListView.setAdapter(mAdapter);
 					mLoadBitmapTask = new LoadBitmapTask();
 					mLoadBitmapTask.execute();
 					break;
-				case EXPERT_LIST_TYPE:
-					break;
-				case USER_LSSUES_TYPE:
-					break;
 
-				case NOTIFY_LIST_TYPE:
+				case Utils.NOTIFY_LIST_TYPE:
 					break;
-				case DAILY_REMINDER_TYPE:
+				case Utils.DAILY_REMINDER_TYPE:
 					break;
 				}
 
@@ -205,6 +206,61 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 		return false;
 	}
+	
+	private boolean getExpertListData() {
+		if (mListDatas != null) {
+			mListDatas.clear();
+			mListDatas = null;
+		}
+		String userId = ((NewsApp) getApplication()).getCurrentUserId();
+		if (userId != null) {
+			NewsColumnistList list = NewsColumnistApi.getNewsColumnistList(
+					this, userId);
+			if (list != null) {
+				List<NewsColumnist> ExpertList = list.getList();
+				if (ExpertList != null && ExpertList.size() > 0) {
+					if (mListDatas == null) {
+						mListDatas = new ArrayList<ListData>();
+					}
+					for (int i = 0; i < ExpertList.size(); i++) {
+						NewsColumnist expert = ExpertList.get(i);
+						mListDatas.add(new ListData(expert.getId(), expert.getName(), 
+								expert.getIconUrl(), expert.getOutline(), expert.getSortOrder()));
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean getUserIssuesData() {
+		if (mListDatas != null) {
+			mListDatas.clear();
+			mListDatas = null;
+		}
+		String userId = ((NewsApp) getApplication()).getCurrentUserId();
+		if (userId != null) {
+			SubscriptionTopicList list = SubscriptionApi.getSubscriptionTopicList(
+					this, userId);
+			if (list != null) {
+				List<SubscriptionTopic> userIssuesList = list.getList();
+				if (userIssuesList != null && userIssuesList.size() > 0) {
+					if (mListDatas == null) {
+						mListDatas = new ArrayList<ListData>();
+					}
+					for (int i = 0; i < userIssuesList.size(); i++) {
+						SubscriptionTopic userIssue = userIssuesList.get(i);
+						mListDatas.add(new ListData(userIssue.getId(), userIssue.getTitle(), 
+								userIssue.getIconUrl()));
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 
 	private class IconTextAdapter extends BaseAdapter {
 
@@ -272,11 +328,21 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mIconUrl = iconUrl;
 			mSubTitle = subTitle;
 		}
+		
 
-		String mId = "";
-		String mTitle = "";
-		String mIconUrl;
+		public ListData(String id, String title, String iconUrl, String subTitle, int sortNum) {
+			mId = id;
+			mTitle = title;
+			mIconUrl = iconUrl;
+			mSubTitle = subTitle;
+			mSortNum = mSortNum;
+		}
+		
+		String mId = null;
+		String mTitle = null;
+		String mIconUrl = null;;
 		String mSubTitle = null;
 		Bitmap mBitmap = null;
+		int mSortNum;
 	}
 }
