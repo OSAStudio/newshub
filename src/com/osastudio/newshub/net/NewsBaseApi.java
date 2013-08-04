@@ -59,14 +59,14 @@ public class NewsBaseApi {
    protected static final String KEY_USER_ID = "studentID";
 
    protected static String getDeviceId(Context context) {
-      String id = null;
-      UUID uuid = new DeviceUuidFactory(context).getDeviceUuid();
-      if (uuid != null) {
-         id = uuid.toString();
-      }
-      if (TextUtils.isEmpty(id)) {
-         id = Installation.id(context);
-      }
+      String id = new DeviceUuidFactory(context).getDeviceId();
+//      UUID uuid = new DeviceUuidFactory(context).getDeviceUuid();
+//      if (uuid != null) {
+//         id = uuid.toString();
+//      }
+//      if (TextUtils.isEmpty(id)) {
+//         id = Installation.id(context);
+//      }
 
       if (NewsApp.IS_DEBUG) {
          id = "667ebbbf9fcd9229344681aebf4ec67316645186";
