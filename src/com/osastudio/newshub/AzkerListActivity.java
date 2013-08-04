@@ -5,13 +5,19 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.DailyReminder;
+import com.osastudio.newshub.data.DailyReminderList;
 import com.osastudio.newshub.data.NewsColumnist;
 import com.osastudio.newshub.data.NewsColumnistList;
+import com.osastudio.newshub.data.NewsNotice;
+import com.osastudio.newshub.data.NewsNoticeList;
 import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.RecommendedTopicList;
 import com.osastudio.newshub.data.SubscriptionTopic;
 import com.osastudio.newshub.data.SubscriptionTopicList;
+import com.osastudio.newshub.net.DailyReminderApi;
 import com.osastudio.newshub.net.NewsColumnistApi;
+import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
@@ -21,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -33,7 +40,6 @@ public class AzkerListActivity extends NewsBaseActivity {
 	final static public String LIST_TYPE = "list type";
 	final static public String LIST_TITLE = "list title";
 
-
 	private int mListType = -1;
 	private String mTitle = null;
 
@@ -42,8 +48,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 
 	private LayoutInflater mInflater = null;
 
+	private List<RecommendedTopic> mRecommendList = null;
+	private List<NewsColumnist> mExpertList = null;
+	private List<SubscriptionTopic> mUserIssuesList = null;
+	private List<NewsNotice> mNoticeList = null;
+
 	private ArrayList<ListData> mListDatas = null;
-	
+
 	private BaseAdapter mAdapter = null;
 	private LoadTask mLoadTask = null;
 	private LoadBitmapTask mLoadBitmapTask = null;
@@ -64,10 +75,10 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mLoadTask.execute();
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-		
+
 		if (mLoadTask != null) {
 			mLoadTask.cancel(true);
 		}
@@ -113,8 +124,12 @@ public class AzkerListActivity extends NewsBaseActivity {
 				break;
 
 			case Utils.NOTIFY_LIST_TYPE:
+				rtn = getNoticeListData();
 				break;
+
 			case Utils.DAILY_REMINDER_TYPE:
+				rtn = getDailyReminderData();
+
 				break;
 			}
 			return rtn;
@@ -135,8 +150,9 @@ public class AzkerListActivity extends NewsBaseActivity {
 					break;
 
 				case Utils.NOTIFY_LIST_TYPE:
-					break;
 				case Utils.DAILY_REMINDER_TYPE:
+					mAdapter = new TextAdapter();
+					mListView.setAdapter(mAdapter);
 					break;
 				}
 
@@ -145,39 +161,40 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 
 	}
-	
-	private class LoadBitmapTask extends AsyncTask<Void, Void, Void>{
+
+	private class LoadBitmapTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			if (mListDatas != null) {
 				for (int i = 0; i < mListDatas.size(); i++) {
 					ListData data = mListDatas.get(i);
-					if (data.mIconUrl != null && 
-							(data.mBitmap == null || data.mBitmap.isRecycled())) {
+					if (data.mIconUrl != null
+							&& (data.mBitmap == null || data.mBitmap
+									.isRecycled())) {
 						data.mBitmap = Utils.getBitmapFromUrl(data.mIconUrl);
 						if (data.mBitmap != null) {
 							publishProgress();
 						}
 					}
 				}
-				
+
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onProgressUpdate(Void... values) {
 			mAdapter.notifyDataSetChanged();
 			super.onProgressUpdate(values);
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result) {
 			mLoadBitmapTask = null;
 			super.onPostExecute(result);
 		}
-		
+
 	}
 
 	private boolean getRecommendListData() {
@@ -190,13 +207,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 			RecommendedTopicList list = RecommendApi.getRecommendedTopicList(
 					this, userId);
 			if (list != null) {
-				List<RecommendedTopic> recommendList = list.getList();
-				if (recommendList != null && recommendList.size() > 0) {
+				mRecommendList = list.getList();
+				if (mRecommendList != null && mRecommendList.size() > 0) {
 					if (mListDatas == null) {
 						mListDatas = new ArrayList<ListData>();
 					}
-					for (int i = 0; i < recommendList.size(); i++) {
-						RecommendedTopic topic = recommendList.get(i);
+					for (int i = 0; i < mRecommendList.size(); i++) {
+						RecommendedTopic topic = mRecommendList.get(i);
 						mListDatas.add(new ListData(topic.getId(), topic
 								.getTitle(), topic.getIconUrl()));
 					}
@@ -206,7 +223,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 		return false;
 	}
-	
+
 	private boolean getExpertListData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
@@ -217,15 +234,16 @@ public class AzkerListActivity extends NewsBaseActivity {
 			NewsColumnistList list = NewsColumnistApi.getNewsColumnistList(
 					this, userId);
 			if (list != null) {
-				List<NewsColumnist> ExpertList = list.getList();
-				if (ExpertList != null && ExpertList.size() > 0) {
+				mExpertList = list.getList();
+				if (mExpertList != null && mExpertList.size() > 0) {
 					if (mListDatas == null) {
 						mListDatas = new ArrayList<ListData>();
 					}
-					for (int i = 0; i < ExpertList.size(); i++) {
-						NewsColumnist expert = ExpertList.get(i);
-						mListDatas.add(new ListData(expert.getId(), expert.getName(), 
-								expert.getIconUrl(), expert.getOutline(), expert.getSortOrder()));
+					for (int i = 0; i < mExpertList.size(); i++) {
+						NewsColumnist expert = mExpertList.get(i);
+						mListDatas.add(new ListData(expert.getId(), expert
+								.getName(), expert.getIconUrl(), expert
+								.getOutline(), expert.getSortOrder()));
 					}
 					return true;
 				}
@@ -233,7 +251,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 		return false;
 	}
-	
+
 	private boolean getUserIssuesData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
@@ -241,18 +259,18 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 		String userId = ((NewsApp) getApplication()).getCurrentUserId();
 		if (userId != null) {
-			SubscriptionTopicList list = SubscriptionApi.getSubscriptionTopicList(
-					this, userId);
+			SubscriptionTopicList list = SubscriptionApi
+					.getSubscriptionTopicList(this, userId);
 			if (list != null) {
-				List<SubscriptionTopic> userIssuesList = list.getList();
-				if (userIssuesList != null && userIssuesList.size() > 0) {
+				mUserIssuesList = list.getList();
+				if (mUserIssuesList != null && mUserIssuesList.size() > 0) {
 					if (mListDatas == null) {
 						mListDatas = new ArrayList<ListData>();
 					}
-					for (int i = 0; i < userIssuesList.size(); i++) {
-						SubscriptionTopic userIssue = userIssuesList.get(i);
-						mListDatas.add(new ListData(userIssue.getId(), userIssue.getTitle(), 
-								userIssue.getIconUrl()));
+					for (int i = 0; i < mUserIssuesList.size(); i++) {
+						SubscriptionTopic userIssue = mUserIssuesList.get(i);
+						mListDatas.add(new ListData(userIssue.getId(),
+								userIssue.getTitle(), userIssue.getIconUrl()));
 					}
 					return true;
 				}
@@ -260,7 +278,72 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 		return false;
 	}
-	
+
+	private boolean getNoticeListData() {
+		if (mListDatas != null) {
+			mListDatas.clear();
+			mListDatas = null;
+		}
+		String userId = ((NewsApp) getApplication()).getCurrentUserId();
+		if (userId != null) {
+			NewsNoticeList list = NewsNoticeApi.getNewsNoticeList(this, userId);
+			if (list != null) {
+				mNoticeList = list.getList();
+				if (mNoticeList != null && mNoticeList.size() > 0) {
+					if (mListDatas == null) {
+						mListDatas = new ArrayList<ListData>();
+					}
+					for (int i = 0; i < mNoticeList.size(); i++) {
+						NewsNotice notice = mNoticeList.get(i);
+						mListDatas.add(new ListData(notice.getId(), notice
+								.getTitle(), null, null, notice
+								.getPublishedTime(), null));
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private List<DailyReminder> mDailyReminderList = null;
+
+	private boolean getDailyReminderData() {
+		if (mListDatas != null) {
+			mListDatas.clear();
+			mListDatas = null;
+		}
+		String userId = ((NewsApp) getApplication()).getCurrentUserId();
+		if (userId != null) {
+			DailyReminderList list = DailyReminderApi.getDailyReminderList(
+					this, userId);
+			if (list != null) {
+				mDailyReminderList = list.getList();
+				if (mDailyReminderList != null && mDailyReminderList.size() > 0) {
+					if (mListDatas == null) {
+						mListDatas = new ArrayList<ListData>();
+					}
+					for (int i = 0; i < mDailyReminderList.size(); i++) {
+						DailyReminder dailyReminder = mDailyReminderList.get(i);
+						String id = dailyReminder.getTopicId();
+						String title=dailyReminder.getTitle(); 
+						String subtitle=dailyReminder
+								.getContent();
+						String data=dailyReminder.getPublishedTime();
+						String lastday=dailyReminder.getNumberOfDays();
+						
+						mListDatas.add(new ListData(id, title, null, 
+								subtitle, data, lastday));
+						
+//						String id, String title, String iconUrl,
+//						String subTitle, String date, String dateNum
+					}
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	private class IconTextAdapter extends BaseAdapter {
 
@@ -316,33 +399,126 @@ public class AzkerListActivity extends NewsBaseActivity {
 
 	}
 
+	private class TextAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mListDatas.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return mListDatas.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout layout = (LinearLayout) convertView;
+			if (layout == null) {
+				layout = (LinearLayout) mInflater.inflate(
+						R.layout.textdate_item, null);
+			}
+			ListData data = mListDatas.get(position);
+			if (data != null) {
+				TextView date = (TextView) layout.findViewById(R.id.date);
+				TextView lastDays = (TextView) layout
+						.findViewById(R.id.lastdays);
+				TextView title = (TextView) layout.findViewById(R.id.title);
+				final TextView subTitle = (TextView) layout
+						.findViewById(R.id.sub_title);
+				final ImageView expendBtn = (ImageView) layout
+						.findViewById(R.id.expend_btn);
+				expendBtn.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (subTitle.getVisibility() != View.VISIBLE) {
+							subTitle.setVisibility(View.VISIBLE);
+							expendBtn.setImageResource(R.drawable.angle_up);
+						} else {
+							subTitle.setVisibility(View.GONE);
+							expendBtn.setImageResource(R.drawable.angle_down);
+							
+						}
+					}
+				});
+
+				if (data.mDate != null) {
+					date.setText(data.mDate);
+				}
+				if (data.mDayNum != null) {
+					lastDays.setText(data.mDayNum);
+					lastDays.setVisibility(View.VISIBLE);
+				} else {
+					lastDays.setVisibility(View.GONE);
+				}
+				if (data.mTitle != null) {
+					title.setText(data.mTitle);
+				}
+				if (data.mSubTitle != null) {
+					subTitle.setText(data.mSubTitle);
+					expendBtn.setVisibility(View.VISIBLE);
+				} else {
+					subTitle.setVisibility(View.GONE);
+					expendBtn.setVisibility(View.GONE);
+				}
+
+				return layout;
+			} else {
+				return null;
+			}
+		}
+
+	}
+
 	private class ListData {
 		public ListData(String id, String title, String iconUrl) {
 			mId = id;
 			mTitle = title;
 			mIconUrl = iconUrl;
 		}
+
 		public ListData(String id, String title, String iconUrl, String subTitle) {
 			mId = id;
 			mTitle = title;
 			mIconUrl = iconUrl;
 			mSubTitle = subTitle;
 		}
-		
 
-		public ListData(String id, String title, String iconUrl, String subTitle, int sortNum) {
+		public ListData(String id, String title, String iconUrl,
+				String subTitle, int sortNum) {
 			mId = id;
 			mTitle = title;
 			mIconUrl = iconUrl;
 			mSubTitle = subTitle;
 			mSortNum = mSortNum;
 		}
-		
-		String mId = null;
+
+		public ListData(String id, String title, String iconUrl,
+				String subTitle, String date, String dateNum) {
+			mId = id;
+			mTitle = title;
+			mIconUrl = iconUrl;
+			mSubTitle = subTitle;
+			mDate = date;
+			mDayNum = dateNum;
+		}
+
+		String mId = null; // in DailyReminder is issue id
 		String mTitle = null;
 		String mIconUrl = null;;
 		String mSubTitle = null;
 		Bitmap mBitmap = null;
-		int mSortNum;
+		int mSortNum; // for expert list
+		String mDate = null; // for notify and DailyReminder
+		String mDayNum = null;// for DailyReminder
 	}
 }
