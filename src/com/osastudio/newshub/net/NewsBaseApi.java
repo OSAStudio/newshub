@@ -46,8 +46,10 @@ public class NewsBaseApi {
 
    protected static boolean DEBUG = true;
 
-   protected static final String WEB_SERVER = "";
-   protected static final String DEBUG_WEB_SERVER = "http://218.23.42.49:9010/azker/admin/";
+   protected static final String DEFAULT_WEB_SERVER = "";
+   protected static final String DEFAULT_DEBUG_WEB_SERVER = "218.23.42.49";
+   protected static String WEB_SERVER = DEFAULT_WEB_SERVER;
+   protected static String DEBUG_WEB_SERVER = DEFAULT_DEBUG_WEB_SERVER;
 
    protected static final HttpMethod DEFAULT_HTTP_METHOD = HttpMethod.HTTP_POST;
 
@@ -65,11 +67,23 @@ public class NewsBaseApi {
       if (TextUtils.isEmpty(id)) {
          id = Installation.id(context);
       }
-      
+
       if (NewsApp.IS_DEBUG) {
-    	  id = "667ebbbf9fcd9229344681aebf4ec67316645186";
+         id = "667ebbbf9fcd9229344681aebf4ec67316645186";
       }
       return id;
+   }
+
+   public static void enableDebug(boolean debug) {
+      DEBUG = debug;
+   }
+   
+   public static void setWebServer(String addr) {
+      if (DEBUG) {
+         DEBUG_WEB_SERVER = addr;
+      } else {
+         WEB_SERVER = addr;
+      }
    }
 
    protected static String getDeviceType() {
@@ -77,7 +91,8 @@ public class NewsBaseApi {
    }
 
    protected static String getWebServer() {
-      return DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER;
+      return "http://" + (DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER)
+            + ":9010/azker/admin/";
    }
 
    protected static String getAppPropertiesService() {

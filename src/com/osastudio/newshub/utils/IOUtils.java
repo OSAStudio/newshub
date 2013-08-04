@@ -5,11 +5,13 @@ import java.io.IOException;
 
 import android.os.Environment;
 import android.os.StatFs;
+import android.text.TextUtils;
 
 public final class IOUtils {
    
-	public static final String ROOT_DIRECTORY = ".NewsHub";
-	private static final String CACHE_DIRECTORY = "cache";
+	public static final String ROOT_DIR = ".NewsHub";
+	private static final String CACHE_DIR = "cache";
+	private static final String DOWNLOAD_DIR = "download";
    
 	public static final long RESERVED_STORAGE_SPACE = 1; //MB
 	
@@ -23,7 +25,7 @@ public final class IOUtils {
 	}
 
 	private static File getRootDir() throws IOException {
-		File dir = getExternalFile(ROOT_DIRECTORY);
+		File dir = getExternalFile(ROOT_DIR);
 		if (!dir.exists()) {
 			dir.mkdirs();
 			new File(dir, ".nomedia").createNewFile();
@@ -32,12 +34,28 @@ public final class IOUtils {
 	}
 
 	public static File getCacheDir() throws IOException {
-		File dir = new File(getRootDir(), CACHE_DIRECTORY);
+		File dir = new File(getRootDir(), CACHE_DIR);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
 		return dir;
 	}
+   
+	public static File getDownloadDir() throws IOException {
+		File dir = new File(getRootDir(), DOWNLOAD_DIR);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		return dir;
+	}
+   
+   public static String getFileNameFromUrl(String url) {
+      if (TextUtils.isEmpty(url)) {
+         return "";
+      }
+      
+      return url.substring(url.lastIndexOf('/') + 1);
+   }
    
    public static long gb2Bytes(int gb) {
       return (long) gb * 1024 * 1024 * 1024;

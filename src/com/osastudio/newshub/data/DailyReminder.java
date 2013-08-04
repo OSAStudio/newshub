@@ -52,10 +52,10 @@ public class DailyReminder extends NewsBaseTimestampContent {
                   JSON_KEY_PUBLISHED_TIME).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_TOPIC_ID)) {
-            result.setContent(jsonObject.getString(JSON_KEY_TOPIC_ID).trim());
+            result.setTopicId(jsonObject.getString(JSON_KEY_TOPIC_ID).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_NUMBER_OF_DAYS)) {
-            result.setContent(jsonObject.getString(JSON_KEY_NUMBER_OF_DAYS)
+            result.setNumberOfDays(jsonObject.getString(JSON_KEY_NUMBER_OF_DAYS)
                   .trim());
          }
       } catch (JSONException e) {
