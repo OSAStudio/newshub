@@ -7,7 +7,7 @@ import com.osastudio.newshub.data.base.NewsBaseTopicIntro;
 
 public class RecommendedTopicIntro extends NewsBaseTopicIntro {
 
-   public static final String JSON_KEY_CONTENT = "recommand_lssue_content";
+   public static final String JSON_KEY_CONTENT = "recommend_lssue_content";
    public static final String JSON_KEY_ARTICLE = "list";
 
    public RecommendedTopicIntro(JSONObject jsonObject) {

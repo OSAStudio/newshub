@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.data.DailyReminder;
 import com.osastudio.newshub.data.DailyReminderList;
 import com.osastudio.newshub.data.NewsColumnist;
@@ -22,6 +23,7 @@ import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +31,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +43,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 
 	final static public String LIST_TYPE = "list type";
 	final static public String LIST_TITLE = "list title";
-
+	
+	private NewsApp mApp = null;
 	private int mListType = -1;
 	private String mTitle = null;
 
@@ -64,6 +69,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
+		mApp = (NewsApp)getApplication();
 		mInflater = LayoutInflater.from(this);
 		Bundle extras = getIntent().getExtras();
 
@@ -104,7 +110,10 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mTitleView.setText(mTitle);
 		}
 		mListView = (ListView) findViewById(R.id.list);
+		mListView.setOnItemClickListener(new ItemClickListener());
 	}
+	
+	
 
 	private class LoadTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -212,11 +221,14 @@ public class AzkerListActivity extends NewsBaseActivity {
 					if (mListDatas == null) {
 						mListDatas = new ArrayList<ListData>();
 					}
+					ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
 					for (int i = 0; i < mRecommendList.size(); i++) {
 						RecommendedTopic topic = mRecommendList.get(i);
 						mListDatas.add(new ListData(topic.getId(), topic
 								.getTitle(), topic.getIconUrl()));
+						cacheList.add(new TempCacheData(topic.getId()));
 					}
+					mApp.setTempCache(cacheList);
 					return true;
 				}
 			}
@@ -239,12 +251,15 @@ public class AzkerListActivity extends NewsBaseActivity {
 					if (mListDatas == null) {
 						mListDatas = new ArrayList<ListData>();
 					}
+					ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
 					for (int i = 0; i < mExpertList.size(); i++) {
 						NewsColumnist expert = mExpertList.get(i);
 						mListDatas.add(new ListData(expert.getId(), expert
 								.getName(), expert.getIconUrl(), expert
 								.getOutline(), expert.getSortOrder()));
+						cacheList.add(new TempCacheData(expert.getId()));
 					}
+					mApp.setTempCache(cacheList);
 					return true;
 				}
 			}
@@ -293,12 +308,15 @@ public class AzkerListActivity extends NewsBaseActivity {
 					if (mListDatas == null) {
 						mListDatas = new ArrayList<ListData>();
 					}
+					ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
 					for (int i = 0; i < mNoticeList.size(); i++) {
 						NewsNotice notice = mNoticeList.get(i);
 						mListDatas.add(new ListData(notice.getId(), notice
 								.getTitle(), null, null, notice
 								.getPublishedTime(), null));
+						cacheList.add(new TempCacheData(notice.getId()));
 					}
+					mApp.setTempCache(cacheList);
 					return true;
 				}
 			}
@@ -326,17 +344,16 @@ public class AzkerListActivity extends NewsBaseActivity {
 					for (int i = 0; i < mDailyReminderList.size(); i++) {
 						DailyReminder dailyReminder = mDailyReminderList.get(i);
 						String id = dailyReminder.getTopicId();
-						String title=dailyReminder.getTitle(); 
-						String subtitle=dailyReminder
-								.getContent();
-						String data=dailyReminder.getPublishedTime();
-						String lastday=dailyReminder.getNumberOfDays();
-						
-						mListDatas.add(new ListData(id, title, null, 
-								subtitle, data, lastday));
-						
-//						String id, String title, String iconUrl,
-//						String subTitle, String date, String dateNum
+						String title = dailyReminder.getTitle();
+						String subtitle = dailyReminder.getContent();
+						String data = dailyReminder.getPublishedTime();
+						String lastday = dailyReminder.getNumberOfDays();
+
+						mListDatas.add(new ListData(id, title, null, subtitle,
+								data, lastday));
+
+						// String id, String title, String iconUrl,
+						// String subTitle, String date, String dateNum
 					}
 					return true;
 				}
@@ -420,7 +437,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			LinearLayout layout = (LinearLayout) convertView;
 			if (layout == null) {
 				layout = (LinearLayout) mInflater.inflate(
@@ -436,18 +454,21 @@ public class AzkerListActivity extends NewsBaseActivity {
 						.findViewById(R.id.sub_title);
 				final ImageView expendBtn = (ImageView) layout
 						.findViewById(R.id.expend_btn);
-				expendBtn.setOnClickListener(new OnClickListener() {
 
+				expendBtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (subTitle.getVisibility() != View.VISIBLE) {
-							subTitle.setVisibility(View.VISIBLE);
-							expendBtn.setImageResource(R.drawable.angle_up);
-						} else {
-							subTitle.setVisibility(View.GONE);
-							expendBtn.setImageResource(R.drawable.angle_down);
-							
-						}
+						ListData data = mListDatas.get(position);
+						data.mIsShowSubTitle = !data.mIsShowSubTitle;
+						// if (subTitle.getVisibility() != View.VISIBLE) {
+						// subTitle.setVisibility(View.VISIBLE);
+						// expendBtn.setImageResource(R.drawable.angle_up);
+						// } else {
+						// subTitle.setVisibility(View.GONE);
+						// expendBtn.setImageResource(R.drawable.angle_down);
+						//
+						// }
+						mAdapter.notifyDataSetChanged();
 					}
 				});
 
@@ -466,6 +487,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 				if (data.mSubTitle != null) {
 					subTitle.setText(data.mSubTitle);
 					expendBtn.setVisibility(View.VISIBLE);
+					if (data.mIsShowSubTitle) {
+						subTitle.setVisibility(View.VISIBLE);
+						expendBtn.setImageResource(R.drawable.angle_up);
+					} else {
+						subTitle.setVisibility(View.GONE);
+						expendBtn.setImageResource(R.drawable.angle_down);
+					}
 				} else {
 					subTitle.setVisibility(View.GONE);
 					expendBtn.setVisibility(View.GONE);
@@ -478,6 +506,36 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 
 	}
+	
+	private void startPageActivity(int position) {
+		Intent it = new Intent(this, PageActivity.class);
+		it.putExtra(PageActivity.PAGE_TYPE, mListType);
+		it.putExtra(PageActivity.START_INDEX, position);
+		it.putExtra(PageActivity.CATEGORY_TITLE, mTitle);
+		startActivity(it);
+	}
+	
+	private class  ItemClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			switch (mListType) {
+			case Utils.RECOMMEND_LIST_TYPE:
+			case Utils.EXPERT_LIST_TYPE:
+			case Utils.NOTIFY_LIST_TYPE:
+				startPageActivity(position);
+				break;
+			case Utils.USER_ISSUES_TYPE:
+			case Utils.DAILY_REMINDER_TYPE:
+
+				break;
+			}
+			
+		}
+		
+	}
+	
 
 	private class ListData {
 		public ListData(String id, String title, String iconUrl) {
@@ -520,5 +578,6 @@ public class AzkerListActivity extends NewsBaseActivity {
 		int mSortNum; // for expert list
 		String mDate = null; // for notify and DailyReminder
 		String mDayNum = null;// for DailyReminder
+		boolean mIsShowSubTitle = false;// for DailyReminder
 	}
 }

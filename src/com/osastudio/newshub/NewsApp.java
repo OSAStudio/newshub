@@ -1,5 +1,7 @@
 package com.osastudio.newshub;
 
+import java.util.ArrayList;
+
 import com.osastudio.newshub.cache.CacheManager;
 
 import android.app.Activity;
@@ -81,6 +83,25 @@ public class NewsApp extends Application {
 		   mCurrentUserId = "2";
 	   }
 	   return mCurrentUserId;
+   }
+   
+   
+   //////////////////pp add for cache
+   public static class TempCacheData {
+	   public TempCacheData(String id) {
+		   mId = id;
+	   }
+	   String mId;
+   }
+   
+   private ArrayList<TempCacheData> mTempCache = null;
+   
+   public void setTempCache(ArrayList<TempCacheData> cache) {
+	   mTempCache = cache;
+   }
+   
+   public ArrayList<TempCacheData> getTempCache() {
+	   return mTempCache;
    }
    
 }

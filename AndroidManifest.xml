@@ -44,6 +44,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" />
         <activity
+            android:name="com.osastudio.newshub.PageActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Light.NoTitleBar" />
+        <activity
             android:name="com.osastudio.newshub.UserInfosActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
