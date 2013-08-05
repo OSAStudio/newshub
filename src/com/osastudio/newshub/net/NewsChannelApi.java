@@ -15,10 +15,6 @@ public class NewsChannelApi extends NewsBaseApi {
 
    private static final String TAG = "NewsChannelApi";
 
-   public static NewsChannelList getNewsChannelList(Context context) {
-      return getNewsChannelList(context, "");
-   }
-   
    public static NewsChannelList getNewsChannelList(Context context, String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
