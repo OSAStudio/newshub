@@ -467,7 +467,7 @@ public class PageActivity extends NewsBaseActivity {
 				if (fileview == null) {
 					fileview = new FileView(PageActivity.this);
 				}
-				fileview.setData(mHtmlCotent);
+				fileview.setData(mHtmlCotent, 18);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {

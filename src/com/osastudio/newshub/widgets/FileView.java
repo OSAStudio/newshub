@@ -59,9 +59,18 @@ public class FileView extends LinearLayout {
 //		mWebView.getSettings().setBlockNetworkImage(true);
 	}
 	
-	public void setData(String html) {
+	public void setData(String html, int size) {
 		mHtml = html;
-		mWebView.loadDataWithBaseURL("about:blank", html, MIMETYPE, ENCODING, "");
+
+		mHtml= "<html> \n" +
+	              "<head> \n" +
+	              "<style type=\"text/css\"> \n" +
+	              "h2 {text-align:justify; font-size: "+(size+4)+"px; line-height: "+(size+10)+"px}\n" +
+	              "body {text-align:justify; font-size: "+size+"px; line-height: "+(size+6)+"px}\n" +
+	              "</style> \n" +
+	              "</head> \n" +
+	              "<body>"+html+"</body> \n </html>";
+		mWebView.loadDataWithBaseURL("about:blank", mHtml, MIMETYPE, ENCODING, "");
 	}
 	
 	public void displayTop() {

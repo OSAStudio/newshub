@@ -196,6 +196,8 @@ public class FileActivity extends NewsBaseActivity {
 			e.printStackTrace();
 		}
 		mHtmlCotent = xmlString + mHtmlCotent;
+		
+		
 	}
 
 	private class SwitchAssistent extends BaseAssistent {
@@ -231,7 +233,7 @@ public class FileActivity extends NewsBaseActivity {
 				if (fileview == null) {
 					fileview = new FileView(FileActivity.this);
 				}
-				fileview.setData(mHtmlCotent);
+				fileview.setData(mHtmlCotent, 18);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
