@@ -13,6 +13,7 @@ import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsArticle;
+import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsColumnistInfo;
 import com.osastudio.newshub.data.NewsNoticeArticle;
 import com.osastudio.newshub.data.RecommendedTopicIntro;
@@ -29,10 +30,15 @@ import com.osastudio.newshub.widgets.SummaryGrid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.util.Xml;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class PageActivity extends NewsBaseActivity {
 	public static final String PAGE_TYPE="page_type";
@@ -45,6 +51,7 @@ public class PageActivity extends NewsBaseActivity {
 	public int mCurrentShowId = -1;
 
 	private NewsApp mApp = null;
+	private LayoutInflater mInflater = null;
 	private ArrayList<TempCacheData> mCacheList = null;
 
 	private SlideSwitcher mSwitcher = null;
@@ -64,13 +71,14 @@ public class PageActivity extends NewsBaseActivity {
 
 	private LoadDataTask mTask = null;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
 		
 		mApp = (NewsApp)getApplication();
-		
+		mInflater = LayoutInflater.from(this);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mPageType = extras.getInt(PAGE_TYPE);
@@ -161,6 +169,29 @@ public class PageActivity extends NewsBaseActivity {
 		mSummary = expert.getSummary();
 		mResume = expert.getResume();
 		mIconUrl = expert.getIconUrl();
+		
+		boolean bGetIcon = false;
+		for (int i = 0; i <mIconList.size();i++) {
+			IconData data = mIconList.get(i);
+			if (data.mPage == page) {
+				if (data.mBmp == null || data.mBmp.isRecycled()) {
+					mIconList.remove(data);
+					mLoadBitmapTask = new LoadBitmapTask();
+					mLoadBitmapTask.execute(data);
+				
+				}
+				bGetIcon = true;
+				break;
+			}
+		}
+		if (!bGetIcon) {
+			IconData data = new IconData();
+			data.mPage = page;
+			data.mIconUrl = mIconUrl;
+
+			mLoadBitmapTask = new LoadBitmapTask();
+			mLoadBitmapTask.execute(data);
+		}
 	}
 
 	private class LoadDataTask extends AsyncTask<Integer, Void, Integer> {
@@ -190,14 +221,81 @@ public class PageActivity extends NewsBaseActivity {
 		protected void onPostExecute(Integer index) {
 			if (index >= 0) {
 				mCurrentShowId = index;
-				SwitchAssistent assistent = new SwitchAssistent();
-				mSwitcher.setAssistant(assistent);
 				Utils.log("LoadDataTask", "update switch");
+				
+				switch(mPageType) {
+				case Utils.NOTIFY_LIST_TYPE:
+				case Utils.RECOMMEND_LIST_TYPE:
+					SwitchAssistent assistent = new SwitchAssistent();
+					mSwitcher.setAssistant(assistent);
+					break;
+				case Utils.EXPERT_LIST_TYPE:
+					ExpertAssistent expertAssistent = new ExpertAssistent();
+					mSwitcher.setAssistant(expertAssistent);
+					break;
+				
+				}
+				
 			} else {
 
 			}
 			mTask = null;
 			super.onPostExecute(index);
+		}
+
+	}
+
+	final static private int MAX_DATA_SIZE = 5;
+	private ArrayList<IconData> mIconList = new ArrayList<IconData>();
+	private LoadBitmapTask mLoadBitmapTask = null;
+
+	private class IconData {
+		int mPage;
+		String mIconUrl = null;
+		Bitmap mBmp = null;
+	}
+
+	private class LoadBitmapTask extends AsyncTask<IconData, Void, Void> {
+
+		@Override
+		protected Void doInBackground(IconData... params) {
+			Utils.logd("LoadBitmapTask", "execute " + mCacheList.size());
+			IconData iconData = params[0];
+			if (iconData.mBmp== null || !iconData.mBmp.isRecycled()) {
+				iconData.mBmp = Utils.getBitmapFromUrl(iconData.mIconUrl);
+				mIconList.add(iconData);
+			}
+			
+			if (mIconList.size() > MAX_DATA_SIZE) {
+				int position = mSwitcher.getCurrentIndex();
+				for (int i = 0; i < mIconList.size(); i++) {
+					IconData temp = mIconList.get(i);
+					if (temp != null
+							&& Math.abs(temp.mPage - position) > MAX_DATA_SIZE / 2) {
+						if (temp.mBmp != null && !temp.mBmp.isRecycled()) {
+							temp.mBmp.recycle();
+						}
+						mIconList.remove(i);
+						i--;
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			ExpertAssistent assistent = new ExpertAssistent();
+			mSwitcher.setAssistant(assistent);
+
+			Utils.logd("LoadBitmapTask", "update icon ui");
+			super.onProgressUpdate(values);
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			mLoadBitmapTask = null;
+			super.onPostExecute(result);
 		}
 
 	}
@@ -231,6 +329,65 @@ public class PageActivity extends NewsBaseActivity {
 			e.printStackTrace();
 		}
 		mHtmlCotent = xmlString + mHtmlCotent;
+	}
+	
+	private class ExpertAssistent extends BaseAssistent {
+
+		@Override
+		public int getCount() {
+			return mCacheList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public View getView(int position, View convertView) {
+			mCurrentId = position;
+			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
+			if (mLastIndex == position && convertView != null) {
+				Utils.log("getView", " last data");
+				((ScrollView) convertView).scrollTo(((ScrollView) convertView).getScrollX(), 0);
+				return convertView;
+			}else if (mCurrentId == mCurrentShowId) {
+				ScrollView fileview = (ScrollView) convertView;
+				if (fileview == null) {
+					fileview = (ScrollView)mInflater.inflate(R.layout.expert_page_view, null);
+				}
+				ImageView iv = (ImageView)fileview.findViewById(R.id.image);
+				TextView summary = (TextView)fileview.findViewById(R.id.summary);
+				TextView resume = (TextView)fileview.findViewById(R.id.resume);
+				
+				for (int i = 0; i <mIconList.size();i++) {
+					IconData data = mIconList.get(i);
+					if (data.mPage == position) {
+						if (data.mBmp != null && !data.mBmp.isRecycled()) {
+							iv.setImageBitmap(data.mBmp);
+						}
+					}
+				}
+				
+				summary.setText(mSummary);
+				resume.setText(mResume);
+				Utils.log("getView", " real data");
+				return fileview;
+			} else {
+				if (mTask != null) {
+					mTask.cancel(true);
+					mTask = null;
+				}
+				mTask = new LoadDataTask();
+				mTask.execute(position);
+				Utils.log("getView", " no data");
+				return null;
+			}
+
+		}
+	
+		
 	}
 
 	private class SwitchAssistent extends BaseAssistent {

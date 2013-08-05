@@ -33,7 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SummaryActivity extends NewsBaseActivity {
+public class OldSummaryActivity extends NewsBaseActivity {
 	public static final String CHANNEL_ID = "Channel_id";
 	public static final String CHANNEL_TITLE = "Channel_title";
 	
@@ -165,7 +165,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		public View getView(int position, View convertView) {
 			SummaryGrid grid_layout = (SummaryGrid) convertView;
 			if (grid_layout == null) {
-				grid_layout = new SummaryGrid(SummaryActivity.this);
+				grid_layout = new SummaryGrid(OldSummaryActivity.this);
 			}
 			setupGridLayout(grid_layout, position);
 			grid_layout.setGridItemClickListener(new SummaryItemClickListener());
@@ -207,7 +207,7 @@ public class SummaryActivity extends NewsBaseActivity {
 			if (index < mSummaries.size()) {
 				View summary = convertView;
 				if (summary == null) {
-					LayoutInflater inflater = LayoutInflater.from(SummaryActivity.this);
+					LayoutInflater inflater = LayoutInflater.from(OldSummaryActivity.this);
 					summary = inflater.inflate(R.layout.summary_item, null);
 				}
 				NewsAbstract data = mSummaries.get(index);
