@@ -50,25 +50,13 @@ public class RecommendApi extends NewsBaseApi {
       }
       return result;
    }
-   
-   public static RecommendedTopicIntro getRecommendedTopicIntro(
-	         Context context, String userId, String id) {
-	      List<NameValuePair> params = new ArrayList<NameValuePair>();
-	      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-	      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-	      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-	      params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, id));
-	      JSONObject jsonObject = getJsonObject(getRecommendedTopicIntroService(),
-	            params);
-	      if (jsonObject == null) {
-	         return null;
-	      }
 
-	      RecommendedTopicIntro result = new RecommendedTopicIntro(jsonObject);
-//	      if (result != null) {
-//	         result.setNewsBaseTopic(newsTopic);
-//	      }
-	      return result;
-	   }
+   @Deprecated
+   public static RecommendedTopicIntro getRecommendedTopicIntro(
+         Context context, String userId, String topicId) {
+      RecommendedTopic topic = new RecommendedTopic();
+      topic.setId(topicId);
+      return getRecommendedTopicIntro(context, userId, topic);
+   }
 
 }

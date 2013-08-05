@@ -50,26 +50,13 @@ public class NewsColumnistApi extends NewsBaseApi {
       }
       return result;
    }
-   
+
+   @Deprecated
    public static NewsColumnistInfo getNewsColumnistInfo(Context context,
-	         String userId, String id) {
-	      List<NameValuePair> params = new ArrayList<NameValuePair>();
-	      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-	      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-	      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-	      params.add(new BasicNameValuePair(KEY_NEWS_COLUMNIST_ID, id));
-	      JSONObject jsonObject = getJsonObject(getNewsColumnistInfoService(),
-	            params);
-	      if (jsonObject == null) {
-	         return null;
-	      }
-
-	      NewsColumnistInfo result = new NewsColumnistInfo(jsonObject);
-//	      if (result != null) {
-//	         result.setColumnist(newsColumnist);
-//	      }
-	      return result;
-	   }
-
+         String userId, String columnistId) {
+      NewsColumnist columnist = new NewsColumnist();
+      columnist.setId(columnistId);
+      return getNewsColumnistInfo(context, userId, columnist);
+   }
 
 }
