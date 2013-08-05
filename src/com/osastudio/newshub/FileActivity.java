@@ -26,6 +26,7 @@ import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.TextView;
 
 public class FileActivity extends NewsBaseActivity {
 	public static final String START_INDEX = "Start_index";
@@ -61,6 +62,11 @@ public class FileActivity extends NewsBaseActivity {
 		if (extras != null) {
 			mCurrentId = extras.getInt(START_INDEX);
 			mCategoryTitle = extras.getString(CATEGORY_TITLE);
+		}
+		if (mCategoryTitle != null) {
+			TextView title = (TextView)findViewById(R.id.title_text);
+			title.setVisibility(View.VISIBLE);
+			title.setText(mCategoryTitle);
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);

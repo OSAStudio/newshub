@@ -92,6 +92,12 @@ public class PageActivity extends NewsBaseActivity {
 			mCategoryTitle = extras.getString(CATEGORY_TITLE);
 		}
 
+		if (mCategoryTitle != null) {
+			TextView title = (TextView)findViewById(R.id.title_text);
+			title.setVisibility(View.VISIBLE);
+			title.setText(mCategoryTitle);
+		}
+
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);

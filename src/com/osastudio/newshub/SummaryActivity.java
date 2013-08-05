@@ -5,12 +5,7 @@ import java.util.List;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.NewsAbstractList;
-import com.osastudio.newshub.data.NewsChannel;
-import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.data.SubscriptionAbstractList;
-import com.osastudio.newshub.data.SubscriptionTopic;
-import com.osastudio.newshub.data.base.NewsBaseAbstract;
-import com.osastudio.newshub.data.base.NewsItemList;
 import com.osastudio.newshub.data.base.NewsBaseAbstract;
 import com.osastudio.newshub.net.NewsAbstractApi;
 import com.osastudio.newshub.net.SubscriptionApi;
@@ -55,6 +50,12 @@ public class SummaryActivity extends NewsBaseActivity {
 			mChannelType = extras.getInt(CHANNEL_TYPE);
 			mChannelId = extras.getString(CHANNEL_ID);
 			mChannelTitle = extras.getString(CHANNEL_TITLE);
+		}
+
+		if (mChannelTitle != null) {
+			TextView title = (TextView)findViewById(R.id.title_text);
+			title.setVisibility(View.VISIBLE);
+			title.setText(mChannelTitle);
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
