@@ -188,7 +188,7 @@ public class PageActivity extends NewsBaseActivity {
 		mTitle = expert.getName();
 		mSummary = expert.getSummary();
 		mResume = expert.getResume();
-		mIconUrl = expert.getIconUrl();
+		mIconUrl = expert.getPortraitUrl();
 		
 		boolean bGetIcon = false;
 		for (int i = 0; i <mIconList.size();i++) {
@@ -314,17 +314,20 @@ public class PageActivity extends NewsBaseActivity {
 			return null;
 		}
 
-		@Override
-		protected void onProgressUpdate(Void... values) {
-			ExpertAssistent assistent = new ExpertAssistent();
-			mSwitcher.setAssistant(assistent);
-
-			Utils.logd("LoadBitmapTask", "update icon ui");
-			super.onProgressUpdate(values);
-		}
+//		@Override
+//		protected void onProgressUpdate(Void... values) {
+//			ExpertAssistent assistent = new ExpertAssistent();
+//			mSwitcher.setAssistant(assistent);
+//
+//			Utils.logd("LoadBitmapTask", "update icon ui");
+//			super.onProgressUpdate(values);
+//		}
 
 		@Override
 		protected void onPostExecute(Void result) {
+
+			ExpertAssistent assistent = new ExpertAssistent();
+			mSwitcher.setAssistant(assistent);
 			mLoadBitmapTask = null;
 			super.onPostExecute(result);
 		}
