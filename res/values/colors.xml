@@ -2,11 +2,15 @@
    <color name="transparent">#00000000</color>
    <color name="holo_blue">#ff33b5e5</color>
    <color name="translucent_black">#4c000000</color>
-   <color name="text_gray">#ff444444</color>
    <color name="gray">#ffdddddd</color>
-   <color name="bg_gray">#ff454545</color>
-   <color name="line_gray">#ffdddddd</color>
    <color name="bg_blue">#ff018cdd</color>
    <color name="confirm_btn_bg">#ffe8643e</color>
+   
+   <color name="title_blue">#ff42cdf6</color>
+   
    <drawable name="transparent_background">#00000000</drawable>
+   <color name="text_gray">#ff757575</color>
+   <color name="line_gray">#ffdddddd</color>
+   <color name="bg_gray">#ffdddddd</color>
+   <color name="bottom_dark">#ff403f51</color>
 </resources>
