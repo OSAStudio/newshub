@@ -52,7 +52,7 @@ public class UserApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_VALIDATE_CODE, ChecksumHelper
-            .toMD5(validateCode)));
+            .toMD5(validateCode).toUpperCase()));
       JSONObject jsonObject = getJsonObject(validateService(), params);
       return (jsonObject != null) ? new ValidateResult(jsonObject) : null;
    }
