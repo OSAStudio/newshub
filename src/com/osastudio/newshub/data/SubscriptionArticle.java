@@ -26,7 +26,7 @@ public class SubscriptionArticle extends NewsBaseTopicArticle {
             if (!articleObject.isNull(JSON_KEY_CONTENT)) {
                setContent(articleObject.getString(JSON_KEY_CONTENT).trim());
             }
-            setNewsBaseTopicAbstract(SubscriptionAbstract
+            setNewsBaseAbstract(SubscriptionAbstract
                   .parseJsonObject(articleObject));
          } catch (JSONException e) {
 

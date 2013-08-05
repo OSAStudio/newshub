@@ -9,10 +9,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.osastudio.newshub.data.NewsNotice;
-import com.osastudio.newshub.data.NewsNoticeArticle;
-import com.osastudio.newshub.data.NewsNoticeList;
-import com.osastudio.newshub.data.NoticeResult;
 import com.osastudio.newshub.data.SubscriptionAbstract;
 import com.osastudio.newshub.data.SubscriptionAbstractList;
 import com.osastudio.newshub.data.SubscriptionArticle;
@@ -46,22 +42,29 @@ public class SubscriptionApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, newsTopic.getId()));
       JSONObject jsonObject = getJsonObject(
             getSubscriptionAbstractListService(), params);
-      return (jsonObject != null) ? new SubscriptionAbstractList(jsonObject)
-            : null;
+      if (jsonObject == null) {
+         return null;
+      }
+
+      SubscriptionAbstractList result = new SubscriptionAbstractList(jsonObject);
+      if (result != null && result.getList().size() > 0) {
+         for (SubscriptionAbstract abs : result.getList()) {
+            if (abs != null) {
+               abs.setTopicId(newsTopic.getId());
+            }
+         }
+         getSubscriptionAbstractCache(context).setAbstracts(result);
+      }
+      return result;
    }
-   
+
+   @Deprecated
    public static SubscriptionAbstractList getSubscriptionAbstractList(
-	         Context context, String userId, String issueid) {
-	      List<NameValuePair> params = new ArrayList<NameValuePair>();
-	      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-	      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-	      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-	      params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, issueid));
-	      JSONObject jsonObject = getJsonObject(
-	            getSubscriptionAbstractListService(), params);
-	      return (jsonObject != null) ? new SubscriptionAbstractList(jsonObject)
-	            : null;
-	   }
+         Context context, String userId, String topicId) {
+      SubscriptionTopic topic = new SubscriptionTopic();
+      topic.setId(topicId);
+      return getSubscriptionAbstractList(context, userId, topic);
+   }
 
    public static SubscriptionArticle getSubscriptionArticle(Context context,
          String userId, SubscriptionAbstract newsAbstract) {
@@ -79,7 +82,7 @@ public class SubscriptionApi extends NewsBaseApi {
 
       SubscriptionArticle result = new SubscriptionArticle(jsonObject);
       if (result != null) {
-         result.setNewsBaseTopicAbstract(newsAbstract);
+         result.setNewsBaseAbstract(newsAbstract);
       }
       return result;
    }

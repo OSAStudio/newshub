@@ -46,7 +46,8 @@ public class RecommendApi extends NewsBaseApi {
 
       RecommendedTopicIntro result = new RecommendedTopicIntro(jsonObject);
       if (result != null) {
-         result.setNewsBaseTopic(newsTopic);
+//         result.setNewsBaseTopic(newsTopic);
+         result.setId(newsTopic.getId());
       }
       return result;
    }
