@@ -20,6 +20,7 @@ public class SubscriptionApi extends NewsBaseApi {
    private static final String TAG = "SubscribedNewsApi";
 
    private static final String KEY_NEWS_TOPIC_ID = "recommendLssueID";
+   private static final String KEY_NEWS_ARTICLE_ID = "expandLessonID";
 
    public static SubscriptionTopicList getSubscriptionTopicList(
          Context context, String userId) {
@@ -72,7 +73,7 @@ public class SubscriptionApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, newsAbstract
+      params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsAbstract
             .getTopicId()));
       JSONObject jsonObject = getJsonObject(getSubscriptionArticleService(),
             params);
