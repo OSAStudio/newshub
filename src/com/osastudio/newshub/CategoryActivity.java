@@ -12,9 +12,11 @@ import java.util.List;
 import javax.net.ssl.SSLEngineResult.Status;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsChannelApi;
@@ -685,6 +687,14 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (data.getTitleType() != null) {
 				int type = Integer.parseInt(data.getTitleType());
 				switch (type) {
+				case Utils.IMPORT_NOTIFY_TYPE:
+				case Utils.IMPORT_EXPERT_TYPE:
+					ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
+					cacheList.add(new TempCacheData(data.getChannelId()));
+					((NewsApp)getApplication()).setTempCache(cacheList);
+					
+					startPageActivity(type, data.getTitleName());
+					break;
 				case Utils.USER_ISSUES_TYPE:
 				case Utils.DAILY_REMINDER_TYPE:
 				case Utils.EXPERT_LIST_TYPE:
@@ -707,7 +717,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		Intent it = new Intent(this, SummaryActivity.class);
 		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		it.putExtra(SummaryActivity.CHANNEL_TYPE, Utils.LESSON_LIST_TYPE);
-		it.putExtra(SummaryActivity.CHANNEL_ID, data.getTitleId());
+		it.putExtra(SummaryActivity.CHANNEL_ID, data.getChannelId());
 		it.putExtra(SummaryActivity.CHANNEL_TITLE, data.getTitleName());
 		startActivityForResult(it, requestCode);
 	}
@@ -715,6 +725,14 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void startUserInfosActivity() {
 		Intent it = new Intent(this, UserInfosActivity.class);
 		startActivityForResult(it, REQUEST_USER_INFO);
+	}
+	
+	private void startPageActivity(int listType, String title) {
+		Intent it = new Intent(this, PageActivity.class);
+		it.putExtra(PageActivity.PAGE_TYPE, listType);
+		it.putExtra(PageActivity.START_INDEX, 0);
+		it.putExtra(PageActivity.CATEGORY_TITLE, title);
+		startActivity(it);
 	}
 
 	private void startListActivity(int listtype, String title) {
