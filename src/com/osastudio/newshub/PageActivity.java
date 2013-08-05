@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlSerializer;
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.cache.NewsAbstractCache;
+import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsArticle;
@@ -17,10 +18,13 @@ import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsColumnistInfo;
 import com.osastudio.newshub.data.NewsNoticeArticle;
 import com.osastudio.newshub.data.RecommendedTopicIntro;
+import com.osastudio.newshub.data.SubscriptionAbstract;
+import com.osastudio.newshub.data.SubscriptionArticle;
 import com.osastudio.newshub.net.NewsArticleApi;
 import com.osastudio.newshub.net.NewsColumnistApi;
 import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
+import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
@@ -52,6 +56,8 @@ public class PageActivity extends NewsBaseActivity {
 
 	private NewsApp mApp = null;
 	private LayoutInflater mInflater = null;
+
+	private List<SubscriptionAbstract> mUserIssueList = null;
 	private ArrayList<TempCacheData> mCacheList = null;
 
 	private SlideSwitcher mSwitcher = null;
@@ -94,7 +100,12 @@ public class PageActivity extends NewsBaseActivity {
 	}
 
 	private void setupData() {
-		mCacheList = mApp.getTempCache();
+		if (mPageType == Utils.USER_ISSUES_TYPE) {
+			SubscriptionAbstractCache cache = getSubscriptionAbstractCache();
+			mUserIssueList = cache.getAbstracts().getList();
+		} else {
+			mCacheList = mApp.getTempCache();
+		}
 
 		SwitchAssistent assistent = new SwitchAssistent();
 		mSwitcher.setAssistant(assistent, mCurrentId);
@@ -142,6 +153,15 @@ public class PageActivity extends NewsBaseActivity {
 		} else {
 			return super.dispatchTouchEvent(event);
 		}
+	}
+	
+	private void loadUserIssue(int page) {
+		SubscriptionArticle userIssue = SubscriptionApi.
+				getSubscriptionArticle(this, mApp.getCurrentUserId(), 
+						mUserIssueList.get(page));
+		mHtmlCotent = userIssue.getContent();
+		mTitle = userIssue.getTitle();
+		AddTitleToHtml();
 	}
 	
 	private void loadRecommendPage(int page) {
@@ -199,7 +219,11 @@ public class PageActivity extends NewsBaseActivity {
 		@Override
 		protected Integer doInBackground(Integer... params) {
 			int index = params[0];
-			if (index < 0 || index >= mCacheList.size()) {
+			if (mPageType == Utils.USER_ISSUES_TYPE) {
+				if (index < 0 || index >= mUserIssueList.size()) {
+					return -1;
+				}
+			}else if (index < 0 || index >= mCacheList.size()) {
 				return -1;
 			}
 			switch(mPageType) {
@@ -213,6 +237,9 @@ public class PageActivity extends NewsBaseActivity {
 				break;
 			case Utils.RECOMMEND_LIST_TYPE:
 				loadRecommendPage(index);
+				break;
+			case Utils.USER_ISSUES_TYPE:
+				loadUserIssue(index);
 				break;
 			
 			}
@@ -229,6 +256,7 @@ public class PageActivity extends NewsBaseActivity {
 				case Utils.NOTIFY_LIST_TYPE:
 				case Utils.RECOMMEND_LIST_TYPE:
 				case Utils.IMPORT_NOTIFY_TYPE:
+				case Utils.USER_ISSUES_TYPE:
 					SwitchAssistent assistent = new SwitchAssistent();
 					mSwitcher.setAssistant(assistent);
 					break;
@@ -263,7 +291,6 @@ public class PageActivity extends NewsBaseActivity {
 
 		@Override
 		protected Void doInBackground(IconData... params) {
-			Utils.logd("LoadBitmapTask", "execute " + mCacheList.size());
 			IconData iconData = params[0];
 			if (iconData.mBmp== null || !iconData.mBmp.isRecycled()) {
 				iconData.mBmp = Utils.getBitmapFromUrl(iconData.mIconUrl);
@@ -398,7 +425,11 @@ public class PageActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-			return mCacheList.size();
+			if (mPageType == Utils.USER_ISSUES_TYPE) {
+				return mUserIssueList.size();
+			} else {
+				return mCacheList.size();
+			}
 		}
 
 		@Override
