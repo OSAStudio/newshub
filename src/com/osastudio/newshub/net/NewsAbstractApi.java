@@ -38,6 +38,7 @@ public class NewsAbstractApi extends NewsBaseApi {
             }
          }
          getNewsAbstractCache(context).setNewsAbstractList(result);
+//         getNewsBaseAbstractCache(context).setList(result.getList());
       }
       return result;
    }

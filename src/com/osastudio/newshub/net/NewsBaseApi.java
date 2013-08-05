@@ -34,7 +34,9 @@ import android.text.TextUtils;
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
+import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
+import com.osastudio.newshub.data.base.NewsBaseAbstract;
 import com.osastudio.newshub.library.DeviceUuidFactory;
 import com.osastudio.newshub.library.Installation;
 import com.osastudio.newshub.utils.FileHelper;
@@ -532,6 +534,11 @@ public class NewsBaseApi {
 
    protected static CacheManager getCacheManager(Context context) {
       return ((NewsApp) context.getApplicationContext()).getCacheManager();
+   }
+
+   protected static NewsBaseAbstractCache getNewsBaseAbstractCache(
+         Context context) {
+      return getCacheManager(context).getNewsBaseAbstractCache();
    }
 
    protected static NewsAbstractCache getNewsAbstractCache(Context context) {
