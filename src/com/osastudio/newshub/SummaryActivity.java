@@ -144,11 +144,19 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 	private void startFileActivity(int index) {
-		Intent it = new Intent(this, FileActivity.class);
-		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		it.putExtra(FileActivity.START_INDEX, index);
-		it.putExtra(FileActivity.CATEGORY_TITLE, mChannelTitle);
-		startActivityForResult(it, 1);
+		if (mChannelType == Utils.USER_ISSUES_TYPE) {
+			Intent it = new Intent(this, PageActivity.class);
+			it.putExtra(PageActivity.PAGE_TYPE, mChannelType);
+			it.putExtra(PageActivity.START_INDEX, index);
+			it.putExtra(PageActivity.CATEGORY_TITLE, mChannelTitle);
+			startActivity(it);
+		} else {
+			Intent it = new Intent(this, FileActivity.class);
+			it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			it.putExtra(FileActivity.START_INDEX, index);
+			it.putExtra(FileActivity.CATEGORY_TITLE, mChannelTitle);
+			startActivityForResult(it, 1);
+		}
 	}
 
 	private class SummaryItemClickListener implements OnGridItemClickListener {
