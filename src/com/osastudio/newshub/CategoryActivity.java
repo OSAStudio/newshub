@@ -595,7 +595,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			int index = page * 8 + position;
 			if (index < mCategoryList.size()) {
 				NewsChannel data = mCategoryList.get(index);
-				if (data.getTitleType() != null) {
+				if (data.getTitleType() > 0) {
 					startNextActivity(index);
 				}
 			}
@@ -684,8 +684,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void startNextActivity(int index) {
 		if (index < mCategoryList.size()) {
 			NewsChannel data = mCategoryList.get(index);
-			if (data.getTitleType() != null) {
-				int type = Integer.parseInt(data.getTitleType());
+			if (data.getTitleType() > 0) {
+				int type = data.getTitleType();
 				switch (type) {
 				case Utils.IMPORT_NOTIFY_TYPE:
 				case Utils.IMPORT_EXPERT_TYPE:

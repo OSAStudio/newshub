@@ -25,7 +25,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    private int titleColor = DEFAULT_COLOR;
    private String titleId = "";
    private String titleName = "";
-   private String titleType = "";
+   private int titleType = 0;
 
    public NewsChannel() {
 
@@ -38,7 +38,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
       this.titleColor = src.readInt();
       this.titleId = src.readString().trim();
       this.titleName = src.readString().trim();
-      this.titleType = src.readString().trim();
+      this.titleType = src.readInt();
    }
 
    public String getChannelId() {
@@ -96,12 +96,12 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
       return this;
    }
 
-   public String getTitleType() {
+   public int getTitleType() {
       return this.titleType;
    }
 
-   public NewsChannel setTitleType(String titleType) {
-      this.titleType = (titleType != null) ? titleType : "";
+   public NewsChannel setTitleType(int titleType) {
+      this.titleType = titleType;
       return this;
    }
 
@@ -130,8 +130,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
                   .trim());
          }
          if (!jsonObject.isNull(JSON_KEY_TITLE_TYPE)) {
-            result.setTitleType(jsonObject.getString(JSON_KEY_TITLE_TYPE)
-                  .trim());
+            result.setTitleType(jsonObject.getInt(JSON_KEY_TITLE_TYPE));
          }
       } catch (JSONException e) {
 
@@ -152,7 +151,7 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
       dst.writeInt(this.titleColor);
       dst.writeString(this.titleId);
       dst.writeString(this.titleName);
-      dst.writeString(this.titleType);
+      dst.writeInt(this.titleType);
    }
 
    public static final Parcelable.Creator<NewsChannel> CREATOR = new Creator<NewsChannel>() {
