@@ -6,10 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.base.NewsItemList;
+import com.osastudio.newshub.data.base.NewsBaseAbstractList;
 
 public class SubscriptionAbstractList extends
-      NewsItemList<SubscriptionAbstract> {
+      NewsBaseAbstractList<SubscriptionAbstract> {
 
    public SubscriptionAbstractList(JSONObject jsonObject) {
       super(jsonObject);
