@@ -35,9 +35,9 @@ public class NewsNoticeApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, newsNotice
-            .getId()));
-      JSONObject jsonObject = getJsonObject(getNewsNoticeArticleService(), params);
+      params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, newsNotice.getId()));
+      JSONObject jsonObject = getJsonObject(getNewsNoticeArticleService(),
+            params);
       if (jsonObject == null) {
          return null;
       }
@@ -48,25 +48,13 @@ public class NewsNoticeApi extends NewsBaseApi {
       }
       return result;
    }
-   
-   public static NewsNoticeArticle getNewsNoticeArticle(Context context,
-	         String userId, String id) {
-	      List<NameValuePair> params = new ArrayList<NameValuePair>();
-	      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-	      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-	      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-	      params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, id));
-	      JSONObject jsonObject = getJsonObject(getNewsNoticeArticleService(), params);
-	      if (jsonObject == null) {
-	         return null;
-	      }
 
-	      NewsNoticeArticle result = new NewsNoticeArticle(jsonObject);
-//	      if (result != null) {
-//	         result.setNewsBaseTitle(newsNotice);
-//	      }
-	      return result;
-	   }
+   public static NewsNoticeArticle getNewsNoticeArticle(Context context,
+         String userId, String noticeId) {
+      NewsNotice notice = new NewsNotice();
+      notice.setId(noticeId);
+      return getNewsNoticeArticle(context, userId, notice);
+   }
 
    public static NoticeResult feedbackNotice(Context context, String noticeId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
