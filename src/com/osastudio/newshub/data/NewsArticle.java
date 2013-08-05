@@ -3,9 +3,9 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.base.NewsBaseArticle;
+import com.osastudio.newshub.data.base.NewsBaseTopicArticle;
 
-public class NewsArticle extends NewsBaseArticle {
+public class NewsArticle extends NewsBaseTopicArticle {
 
    public static final String JSON_KEY_CONTENT = "lesson_content";
 
@@ -26,10 +26,11 @@ public class NewsArticle extends NewsBaseArticle {
 
    public String getChannelId() {
       return (this.newsAbstract != null) ? ((NewsAbstract) this.newsAbstract)
-            .getChannelId() : null;
+            .getChannelId() : getTopicId();
    }
 
    public NewsArticle setChannelId(String channelId) {
+      setTopicId(channelId);
       if (this.newsAbstract == null) {
          this.newsAbstract = new NewsAbstract();
       }
