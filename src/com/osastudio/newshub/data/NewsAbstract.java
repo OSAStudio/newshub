@@ -3,12 +3,12 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.base.NewsBaseAbstract;
+import com.osastudio.newshub.data.base.NewsBaseTopicAbstract;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NewsAbstract extends NewsBaseAbstract implements Parcelable {
+public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
 
    public static final String JSON_KEY_ID = "lesson_id";
    public static final String JSON_KEY_COLOR = "lesson_colour";
@@ -16,23 +16,20 @@ public class NewsAbstract extends NewsBaseAbstract implements Parcelable {
    public static final String JSON_KEY_AUTHOR = "expert_name";
    public static final String JSON_KEY_TITLE = "lesson_title";
 
-   private String channelId = "";
-
    public NewsAbstract() {
       super();
    }
 
    public NewsAbstract(Parcel src) {
       super(src);
-      this.channelId = src.readString().trim();
    }
 
    public String getChannelId() {
-      return this.channelId;
+      return getTopicId();
    }
 
    public NewsAbstract setChannelId(String channelId) {
-      this.channelId = (channelId != null) ? channelId : "";
+      setTopicId(channelId);
       return this;
    }
 
@@ -70,7 +67,6 @@ public class NewsAbstract extends NewsBaseAbstract implements Parcelable {
    @Override
    public void writeToParcel(Parcel dst, int flags) {
       super.writeToParcel(dst, flags);
-      dst.writeString(this.channelId);
    }
 
    public static final Parcelable.Creator<NewsAbstract> CREATOR = new Creator<NewsAbstract>() {
