@@ -112,12 +112,13 @@ public class SummaryActivity extends NewsBaseActivity {
 				mSummaries = userIssueList.asNewsBaseAbstractList();
 				break;
 			case Utils.LESSON_LIST_TYPE:
+			case Utils.DAILY_REMINDER_TYPE:
 				summary_list = NewsAbstractApi.getNewsAbstractList(
 						getApplicationContext(), mChannelId);
 				mSummaries = summary_list.asNewsBaseAbstractList();
 				break;
-			case Utils.DAILY_REMINDER_TYPE:
-				break;
+//			case Utils.DAILY_REMINDER_TYPE:
+//				break;
 			}
 			return null;
 		}
@@ -127,11 +128,11 @@ public class SummaryActivity extends NewsBaseActivity {
 			switch (mChannelType) {
 			case Utils.USER_ISSUES_TYPE:
 			case Utils.LESSON_LIST_TYPE:
+			case Utils.DAILY_REMINDER_TYPE:
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);
 				break;
-			case Utils.DAILY_REMINDER_TYPE:
-				break;
+//				break;
 			}
 			super.onPostExecute(result);
 		}

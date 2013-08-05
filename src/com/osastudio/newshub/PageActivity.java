@@ -204,9 +204,11 @@ public class PageActivity extends NewsBaseActivity {
 			}
 			switch(mPageType) {
 			case Utils.NOTIFY_LIST_TYPE:
+			case Utils.IMPORT_NOTIFY_TYPE:
 				loadNoticePage(index);
 				break;
 			case Utils.EXPERT_LIST_TYPE:
+			case Utils.IMPORT_EXPERT_TYPE:
 				loadExpertPage(index);
 				break;
 			case Utils.RECOMMEND_LIST_TYPE:
@@ -226,10 +228,12 @@ public class PageActivity extends NewsBaseActivity {
 				switch(mPageType) {
 				case Utils.NOTIFY_LIST_TYPE:
 				case Utils.RECOMMEND_LIST_TYPE:
+				case Utils.IMPORT_NOTIFY_TYPE:
 					SwitchAssistent assistent = new SwitchAssistent();
 					mSwitcher.setAssistant(assistent);
 					break;
 				case Utils.EXPERT_LIST_TYPE:
+				case Utils.IMPORT_EXPERT_TYPE:
 					ExpertAssistent expertAssistent = new ExpertAssistent();
 					mSwitcher.setAssistant(expertAssistent);
 					break;
