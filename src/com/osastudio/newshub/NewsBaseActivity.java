@@ -2,6 +2,7 @@ package com.osastudio.newshub;
 
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
+import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -102,6 +103,10 @@ public class NewsBaseActivity extends Activity {
 
    protected NewsAbstractCache getNewsAbstractCache() {
       return getCacheManager().getNewsAbstractCache();
+   }
+
+   protected SubscriptionAbstractCache getSubscriptionAbstractCache() {
+      return getCacheManager().getSubscriptionAbstractCache();
    }
 
 }

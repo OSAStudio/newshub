@@ -6,23 +6,31 @@ import android.content.Context;
 
 public class NewsAbstractCache extends Cache {
 
-   private NewsAbstractList abstractList;
+   private NewsAbstractList abstracts;
    
    public NewsAbstractCache(Context context) {
       super(context);
    }
 
-   public NewsAbstractList getNewsAbstractList() {
-      return this.abstractList;
+   public NewsAbstractList getAbstracts() {
+      return this.abstracts;
    }
    
-   public void setNewsAbstractList(NewsAbstractList list) {
-      this.abstractList = list;
+   public void setAbstracts(NewsAbstractList abstracts) {
+      this.abstracts = abstracts;
+   }
+   
+   public NewsAbstractList getNewsAbstractList() {
+      return getAbstracts();
+   }
+   
+   public void setNewsAbstractList(NewsAbstractList abstracts) {
+      setAbstracts(abstracts);
    }
   
    @Override
    public void clean() {
-      this.abstractList = null;
+      this.abstracts = null;
    }
 
 }

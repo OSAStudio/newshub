@@ -34,6 +34,7 @@ import android.text.TextUtils;
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
+import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 import com.osastudio.newshub.library.DeviceUuidFactory;
 import com.osastudio.newshub.library.Installation;
 import com.osastudio.newshub.utils.FileHelper;
@@ -60,13 +61,13 @@ public class NewsBaseApi {
 
    protected static String getDeviceId(Context context) {
       String id = new DeviceUuidFactory(context).getDeviceId();
-//      UUID uuid = new DeviceUuidFactory(context).getDeviceUuid();
-//      if (uuid != null) {
-//         id = uuid.toString();
-//      }
-//      if (TextUtils.isEmpty(id)) {
-//         id = Installation.id(context);
-//      }
+      // UUID uuid = new DeviceUuidFactory(context).getDeviceUuid();
+      // if (uuid != null) {
+      // id = uuid.toString();
+      // }
+      // if (TextUtils.isEmpty(id)) {
+      // id = Installation.id(context);
+      // }
 
       if (NewsApp.IS_DEBUG) {
          id = "667ebbbf9fcd9229344681aebf4ec67316645186";
@@ -77,7 +78,7 @@ public class NewsBaseApi {
    public static void enableDebug(boolean debug) {
       DEBUG = debug;
    }
-   
+
    public static void setWebServer(String addr) {
       if (DEBUG) {
          DEBUG_WEB_SERVER = addr;
@@ -535,6 +536,11 @@ public class NewsBaseApi {
 
    protected static NewsAbstractCache getNewsAbstractCache(Context context) {
       return getCacheManager(context).getNewsAbstractCache();
+   }
+
+   protected static SubscriptionAbstractCache getSubscriptionAbstractCache(
+         Context context) {
+      return getCacheManager(context).getSubscriptionAbstractCache();
    }
 
 }

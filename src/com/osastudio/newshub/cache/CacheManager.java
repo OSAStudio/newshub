@@ -8,6 +8,7 @@ public class CacheManager {
    
    private Context mContext = null;
    private NewsAbstractCache mNewsAbstractCache;
+   private SubscriptionAbstractCache mSubscriptionAbstractCache;
    
 //   public static CacheManager getInstance(Context context) {
 //      if (sInstance == null) {
@@ -24,10 +25,15 @@ public class CacheManager {
       mContext = context;
       
       mNewsAbstractCache = new NewsAbstractCache(context);
+      mSubscriptionAbstractCache = new SubscriptionAbstractCache(context);
    }
    
    public NewsAbstractCache getNewsAbstractCache() {
       return this.mNewsAbstractCache;
+   }
+   
+   public SubscriptionAbstractCache getSubscriptionAbstractCache() {
+      return this.mSubscriptionAbstractCache;
    }
    
    public void cleanup() {
@@ -35,6 +41,12 @@ public class CacheManager {
          mNewsAbstractCache.clean();
          mNewsAbstractCache = null;
       }
+      
+      if (mSubscriptionAbstractCache != null) {
+         mSubscriptionAbstractCache.clean();
+         mSubscriptionAbstractCache = null;
+      }
+      
       
 //      sInstance = null;
    }

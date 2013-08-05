@@ -46,7 +46,8 @@ public class NewsColumnistApi extends NewsBaseApi {
 
       NewsColumnistInfo result = new NewsColumnistInfo(jsonObject);
       if (result != null) {
-         result.setColumnist(newsColumnist);
+//         result.setColumnist(newsColumnist);
+         result.setIconUrl(newsColumnist.getId());
       }
       return result;
    }
