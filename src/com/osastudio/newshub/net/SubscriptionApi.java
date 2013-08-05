@@ -49,6 +49,19 @@ public class SubscriptionApi extends NewsBaseApi {
       return (jsonObject != null) ? new SubscriptionAbstractList(jsonObject)
             : null;
    }
+   
+   public static SubscriptionAbstractList getSubscriptionAbstractList(
+	         Context context, String userId, String issueid) {
+	      List<NameValuePair> params = new ArrayList<NameValuePair>();
+	      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+	      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+	      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
+	      params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, issueid));
+	      JSONObject jsonObject = getJsonObject(
+	            getSubscriptionAbstractListService(), params);
+	      return (jsonObject != null) ? new SubscriptionAbstractList(jsonObject)
+	            : null;
+	   }
 
    public static SubscriptionArticle getSubscriptionArticle(Context context,
          String userId, SubscriptionAbstract newsAbstract) {
