@@ -34,4 +34,20 @@ public class SubscriptionArticle extends NewsBaseTopicArticle {
       }
    }
 
+   @Override
+   public String getTopicId() {
+      return (this.newsAbstract != null) ? ((SubscriptionAbstract) this.newsAbstract)
+            .getTopicId() : super.getTopicId();
+   }
+
+   @Override
+   public NewsBaseTopicArticle setTopicId(String id) {
+      super.setTopicId(id);
+      if (this.newsAbstract == null) {
+         this.newsAbstract = new SubscriptionAbstract();
+      }
+      ((SubscriptionAbstract) this.newsAbstract).setTopicId(id);
+      return this;
+   }
+
 }
