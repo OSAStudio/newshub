@@ -126,7 +126,6 @@ public class SummaryActivity extends NewsBaseActivity {
 		protected void onPostExecute(Void result) {
 			switch (mChannelType) {
 			case Utils.USER_ISSUES_TYPE:
-				break;
 			case Utils.LESSON_LIST_TYPE:
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);

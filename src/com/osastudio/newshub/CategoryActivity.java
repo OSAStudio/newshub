@@ -50,6 +50,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -138,6 +139,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
+		mSwitcher.setVisibility(View.INVISIBLE);
 
 		mActivateLayout = findViewById(R.id.activite);
 		mActivateLayout.setVisibility(View.INVISIBLE);
@@ -236,6 +238,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void hideCover() {
 		View cover = findViewById(R.id.cover_layout);
 		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
+			mSwitcher.setVisibility(View.VISIBLE);
 			Animation anim = AnimationUtils.loadAnimation(this,
 					R.anim.pull_out_to_top);
 			cover.setVisibility(View.GONE);
@@ -248,6 +251,26 @@ public class CategoryActivity extends NewsBaseActivity {
 		if (cover.getVisibility() != View.VISIBLE) {
 			Animation anim = AnimationUtils.loadAnimation(this,
 					R.anim.pull_in_from_top);
+			anim.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					mSwitcher.setVisibility(View.INVISIBLE);
+					
+				}
+			});
 			cover.setAnimation(anim);
 			cover.setVisibility(View.VISIBLE);
 		}
@@ -384,7 +407,8 @@ public class CategoryActivity extends NewsBaseActivity {
 			}
 
 			NewsChannelList channel_list = NewsChannelApi
-					.getNewsChannelList(getApplicationContext());
+					.getNewsChannelList(getApplicationContext(),
+							((NewsApp) getApplication()).getCurrentUserId());
 			if (channel_list != null) {
 				mCategoryList = (ArrayList<NewsChannel>) channel_list
 						.getChannelList();
@@ -682,6 +706,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		Intent it = new Intent(this, SummaryActivity.class);
 		it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		it.putExtra(SummaryActivity.CHANNEL_TYPE, Utils.LESSON_LIST_TYPE);
 		it.putExtra(SummaryActivity.CHANNEL_ID, data.getTitleId());
 		it.putExtra(SummaryActivity.CHANNEL_TITLE, data.getTitleName());
 		startActivityForResult(it, requestCode);

@@ -515,6 +515,14 @@ public class AzkerListActivity extends NewsBaseActivity {
 		startActivity(it);
 	}
 	
+	private void startSummaryActivity(int position) {
+		Intent it = new Intent(this, SummaryActivity.class);
+		it.putExtra(SummaryActivity.CHANNEL_TYPE, mListType);
+		it.putExtra(SummaryActivity.CHANNEL_TITLE, mTitle);
+		it.putExtra(SummaryActivity.CHANNEL_ID, mListDatas.get(position).mId);
+		startActivity(it);
+	}
+	
 	private class  ItemClickListener implements OnItemClickListener {
 
 		@Override
@@ -528,6 +536,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 				break;
 			case Utils.USER_ISSUES_TYPE:
 			case Utils.DAILY_REMINDER_TYPE:
+				startSummaryActivity(position);
 
 				break;
 			}

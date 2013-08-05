@@ -68,8 +68,7 @@
         android:layout_height="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
-        android:text="1/3" />
+        android:layout_marginLeft="20dp" />
 
     <RelativeLayout
         android:id="@+id/cover_layout"
