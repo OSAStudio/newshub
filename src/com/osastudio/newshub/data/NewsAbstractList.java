@@ -7,9 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.osastudio.newshub.data.base.NewsItemList;
+import com.osastudio.newshub.data.base.NewsBaseAbstractList;
 
-public class NewsAbstractList extends NewsItemList<NewsAbstract> {
+public class NewsAbstractList extends NewsBaseAbstractList<NewsAbstract> {
 
    public NewsAbstractList(JSONObject jsonObject) {
       super(jsonObject);

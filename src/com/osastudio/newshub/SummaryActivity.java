@@ -4,30 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.huadi.azker_phone.R;
-import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
-import com.osastudio.newshub.data.NewsChannel;
-import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.data.base.NewsBaseAbstract;
 import com.osastudio.newshub.net.NewsAbstractApi;
-import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 import com.osastudio.newshub.widgets.SummaryGrid;
 import com.osastudio.newshub.widgets.SummaryGrid.OnGridItemClickListener;
 
-import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SummaryActivity extends NewsBaseActivity {
@@ -39,12 +30,12 @@ public class SummaryActivity extends NewsBaseActivity {
 //	private NewsChannel mCategoryData = null;
 	private SlideSwitcher mSwitcher = null;
 //	private ArrayList<SummaryData> mSummaries = new ArrayList<SummaryData>();
-	private ArrayList<NewsAbstract> mSummaries = new ArrayList<NewsAbstract>();
+	private List<NewsBaseAbstract> mSummaries = new ArrayList<NewsBaseAbstract>();
 	private int mTouchSlop;
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
 	private boolean mbSwitchAble = true;
-
+   
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -105,7 +96,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		protected Void doInBackground(Void... params) {
 			
 			NewsAbstractList summary_list = NewsAbstractApi.getNewsAbstractList(getApplicationContext(), mChannelId);
-			mSummaries = (ArrayList<NewsAbstract>)summary_list.getAbstractList();
+			mSummaries = summary_list.asNewsBaseAbstractList();
 			return null;
 		}
 
@@ -209,7 +200,7 @@ public class SummaryActivity extends NewsBaseActivity {
 					LayoutInflater inflater = LayoutInflater.from(SummaryActivity.this);
 					summary = inflater.inflate(R.layout.summary_item, null);
 				}
-				NewsAbstract data = mSummaries.get(index);
+				NewsBaseAbstract data = mSummaries.get(index);
 //				View base = summary.findViewById(R.id.base);
 //				base.setBackgroundColor(data.title_color);
 				TextView tv = (TextView)summary.findViewById(R.id.title);
