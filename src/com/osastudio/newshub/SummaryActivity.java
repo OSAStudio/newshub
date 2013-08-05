@@ -15,8 +15,10 @@ import com.osastudio.newshub.widgets.SlideSwitcher;
 import com.osastudio.newshub.widgets.SummaryGrid;
 import com.osastudio.newshub.widgets.SummaryGrid.OnGridItemClickListener;
 
+import android.R.color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,6 +41,9 @@ public class SummaryActivity extends NewsBaseActivity {
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
 	private boolean mbSwitchAble = true;
+	
+	private LoadDataTask mLoadDataTask = null;
+	private ProgressDialog mDlg = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,22 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 	private void setupData() {
-		new LoadDataTask().execute();
+		mDlg = Utils.showProgressDlg(this, null);
+		mLoadDataTask = new LoadDataTask();
+		mLoadDataTask.execute();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		if (mDlg != null) {
+			Utils.closeProgressDlg(mDlg);
+			mDlg = null;
+		}
+		if (mLoadDataTask != null) {
+			mLoadDataTask.cancel(true);
+			mLoadDataTask = null;
+		}
+		super.onDestroy();
 	}
 
 	@Override
@@ -126,6 +146,11 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			mLoadDataTask = null;
 			switch (mChannelType) {
 			case Utils.USER_ISSUES_TYPE:
 			case Utils.LESSON_LIST_TYPE:
@@ -136,6 +161,16 @@ public class SummaryActivity extends NewsBaseActivity {
 //				break;
 			}
 			super.onPostExecute(result);
+		}
+		
+		@Override
+		protected void onCancelled() {
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			mLoadDataTask = null;
+			super.onCancelled();
 		}
 
 	}
@@ -252,7 +287,11 @@ public class SummaryActivity extends NewsBaseActivity {
 				TextView name = (TextView) summary
 						.findViewById(R.id.expert_name);
 				name.setText(data.getAuthor());
-				summary.setBackgroundColor(data.getColor());
+				if (position == 0) {
+					summary.setBackgroundColor(data.getColor());
+				} else {
+					summary.setBackgroundColor(color.transparent);
+				}
 				return summary;
 			} else {
 				return null;

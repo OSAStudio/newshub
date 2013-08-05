@@ -23,6 +23,7 @@ import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -64,6 +65,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 	private LoadTask mLoadTask = null;
 	private LoadBitmapTask mLoadBitmapTask = null;
 
+	private ProgressDialog mDlg = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -79,12 +82,16 @@ public class AzkerListActivity extends NewsBaseActivity {
 			findViews();
 			mLoadTask = new LoadTask();
 			mLoadTask.execute();
+			mDlg = Utils.showProgressDlg(this, null);
 		}
 	}
 
 	@Override
 	protected void onDestroy() {
-
+		if (mDlg != null) {
+			Utils.closeProgressDlg(mDlg);
+			mDlg = null;
+		}
 		if (mLoadTask != null) {
 			mLoadTask.cancel(true);
 		}
@@ -147,6 +154,10 @@ public class AzkerListActivity extends NewsBaseActivity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mLoadTask = null;
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
 			if (result) {
 				switch (mListType) {
 				case Utils.RECOMMEND_LIST_TYPE:
