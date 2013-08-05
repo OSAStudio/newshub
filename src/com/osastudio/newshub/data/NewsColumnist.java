@@ -92,8 +92,7 @@ public class NewsColumnist extends NewsBaseObject implements Parcelable {
             result.setName(jsonObject.getString(JSON_KEY_NAME).trim());
          }
          if (!jsonObject.isNull(JSON_KEY_SORT_ORDER)) {
-            result.setSortOrder(NewsColumnist.parseColorValue(jsonObject
-                  .getString(JSON_KEY_SORT_ORDER).trim()));
+            result.setSortOrder(jsonObject.getInt(JSON_KEY_SORT_ORDER));
          }
          if (!jsonObject.isNull(JSON_KEY_OUTLINE)) {
             result.setOutline(jsonObject.getString(JSON_KEY_OUTLINE).trim());

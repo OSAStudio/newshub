@@ -126,7 +126,7 @@ public class NewsColumnistInfo extends NewsBaseObject {
    }
 
    public NewsColumnistInfo setPortraitUrl(String url) {
-      this.summary = url;
+      this.portraitUrl = url;
       return this;
    }
 

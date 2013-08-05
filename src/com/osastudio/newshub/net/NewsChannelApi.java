@@ -10,16 +10,20 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.osastudio.newshub.data.NewsChannelList;
-import com.osastudio.newshub.utils.Utils;
 
 public class NewsChannelApi extends NewsBaseApi {
 
    private static final String TAG = "NewsChannelApi";
 
    public static NewsChannelList getNewsChannelList(Context context) {
+      return getNewsChannelList(context, "");
+   }
+   
+   public static NewsChannelList getNewsChannelList(Context context, String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       JSONObject jsonObject = getJsonObject(getNewsChannelListService(),
             params);
       return (jsonObject != null) ? new NewsChannelList(jsonObject) : null;
