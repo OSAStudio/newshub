@@ -13,9 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp" >
+        android:layout_marginRight="20dp" >
 
         <ImageView
             android:id="@+id/account_btn"
@@ -68,7 +66,10 @@
         android:layout_height="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="30dp" 
+        android:textSize="14dp"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical"/>
 
     <RelativeLayout
         android:id="@+id/cover_layout"
@@ -113,10 +114,5 @@
         </LinearLayout>
     </RelativeLayout>
 
-<!--     <com.osastudio.newshub.widgets.RegisterView -->
-<!--         android:id="@+id/register" -->
-<!--         android:layout_width="fill_parent" -->
-<!--         android:layout_height="fill_parent"  -->
-<!--         android:visibility="gone"/> -->
 
 </RelativeLayout>

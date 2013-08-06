@@ -41,7 +41,9 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -56,6 +58,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -89,6 +92,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private View mExpertlist_btn = null;
 	private View mFeedback_btn = null;
 	private View mSetting_btn = null;
+	private TextView mPage = null;
 
 	// private ArrayList<CategoryData> mCategories = new
 	// ArrayList<CategoryData>();
@@ -101,6 +105,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LayoutInflater mInflater = null;
 	private int mScreenWidth = 0;
 	private int mScreenHeight = 0;
+	private float mdp = 1;
 	private int mUserStatus = 3;
 	private boolean mIsSplashShow = true;
 
@@ -110,6 +115,26 @@ public class CategoryActivity extends NewsBaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		Rect frame = new Rect();  
+		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
+		int statusBarHeight = frame.top; 
+		
+
+
+		
+		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		
+		mScreenWidth = display.getWidth();
+		mScreenWidth = mScreenWidth > 0 ? mScreenWidth : 0;
+		mScreenHeight = display.getHeight();
+		mScreenHeight = mScreenHeight > 0 ? mScreenHeight : 0;
+
+		DisplayMetrics dm = new DisplayMetrics();
+		display.getMetrics(dm);
+		mdp = dm.density;
+
 		setContentView(R.layout.category_activity);
 		findViews();
 
@@ -118,17 +143,44 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		mInflater = LayoutInflater.from(this);
 
-		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		mScreenWidth = display.getWidth();
-		mScreenWidth = mScreenWidth > 0 ? mScreenWidth : 0;
-		mScreenHeight = display.getHeight();
-		mScreenHeight = mScreenHeight > 0 ? mScreenHeight : 0;
 		setupData();
 		mDlg = Utils.showProgressDlg(this, null);
 	}
+	
+	public static int getStatusHeight(Activity activity){
+        int statusHeight = 0;
+        Rect localRect = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
+        statusHeight = localRect.top;
+        if (0 == statusHeight){
+            Class<?> localClass;
+            try {
+                localClass = Class.forName("com.android.internal.R$dimen");
+                Object localObject = localClass.newInstance();
+                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
+                statusHeight = activity.getResources().getDimensionPixelSize(i5);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+        return statusHeight;
+    }
 
 	private void findViews() {
+		int top = getStatusHeight(this);
+		int margin = (int) ((mScreenHeight - mScreenWidth * 4 / 3 - top) / 2 - 5 * mdp);
 		mRoot = (RelativeLayout) findViewById(R.id.root);
 		Bitmap bg = getImageFromAssetsFile("1.jpg");
 		if (bg != null) {
@@ -160,6 +212,10 @@ public class CategoryActivity extends NewsBaseActivity {
 		});
 
 		mAccount_btn = findViewById(R.id.account_btn);
+		RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) mAccount_btn
+				.getLayoutParams();
+		rlp.topMargin = margin;
+		mAccount_btn.setLayoutParams(rlp);
 		mAccount_btn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -192,16 +248,36 @@ public class CategoryActivity extends NewsBaseActivity {
 				startFeedbackActivity();
 			}
 		});
-		
+
 		mSetting_btn = findViewById(R.id.settings);
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mSetting_btn
+				.getLayoutParams();
+		lp.bottomMargin = margin;
+		mSetting_btn.setLayoutParams(lp);
 		mSetting_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				startSettingActivity();
-				
+
 			}
 		});
+
+		mPage = (TextView) findViewById(R.id.page);
+		rlp = (RelativeLayout.LayoutParams)mPage.getLayoutParams();
+		rlp.height = margin;
+		mPage.setLayoutParams(rlp);
+	}
+
+	private void setPageText(int current) {
+		int total;
+		if (mCategoryList.size() % 8 == 0) {
+			total = mCategoryList.size() / 8;
+		} else {
+			total = mCategoryList.size() / 8 + 1;
+		}
+		String page = String.valueOf(current + 1) + "/" + String.valueOf(total);
+		mPage.setText(page);
 	}
 
 	@Override
@@ -264,23 +340,23 @@ public class CategoryActivity extends NewsBaseActivity {
 			Animation anim = AnimationUtils.loadAnimation(this,
 					R.anim.pull_in_from_top);
 			anim.setAnimationListener(new AnimationListener() {
-				
+
 				@Override
 				public void onAnimationStart(Animation animation) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void onAnimationRepeat(Animation animation) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					mSwitcher.setVisibility(View.INVISIBLE);
-					
+
 				}
 			});
 			cover.setAnimation(anim);
@@ -331,6 +407,8 @@ public class CategoryActivity extends NewsBaseActivity {
 						mDirection = 0;
 					}
 					mSwitcher.SwitcherOnScroll(mDirection);
+					setPageText(mSwitcher.getCurrentIndex());
+
 					break;
 				}
 			}
@@ -418,9 +496,9 @@ public class CategoryActivity extends NewsBaseActivity {
 				publishProgress(2);
 			}
 
-			NewsChannelList channel_list = NewsChannelApi
-					.getNewsChannelList(getApplicationContext(),
-							((NewsApp) getApplication()).getCurrentUserId());
+			NewsChannelList channel_list = NewsChannelApi.getNewsChannelList(
+					getApplicationContext(),
+					((NewsApp) getApplication()).getCurrentUserId());
 			if (channel_list != null) {
 				mCategoryList = (ArrayList<NewsChannel>) channel_list
 						.getChannelList();
@@ -476,6 +554,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);
 				
+				setPageText(mSwitcher.getCurrentIndex());
 
 				mLoadBitmapTask = new LoadBitmapTask();
 				mLoadBitmapTask.execute();
@@ -522,7 +601,8 @@ public class CategoryActivity extends NewsBaseActivity {
 					}
 				}
 				if (bNeedDecode) {
-					Bitmap bmp = Utils.getBitmapFromUrl(channel.getIconUrl());
+					Bitmap bmp = Utils.getBitmapFromUrl(channel.getIconUrl(),
+							mScreenWidth / 8);
 
 					Utils.logd("LoadBitmapTask",
 							"decode icon " + channel.getIconUrl() + " " + bmp);
@@ -588,6 +668,13 @@ public class CategoryActivity extends NewsBaseActivity {
 			}
 			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView
 					.findViewById(R.id.grid);
+			android.view.ViewGroup.LayoutParams lp = grid_layout
+					.getLayoutParams();
+			if (lp != null) {
+				lp.width = (int) (mScreenWidth * 2 / 3 + 10 * mdp);
+				lp.height = lp.width * 2;
+				grid_layout.setLayoutParams(lp);
+			}
 
 			setupGridLayout(grid_layout, position);
 
@@ -702,8 +789,8 @@ public class CategoryActivity extends NewsBaseActivity {
 				case Utils.IMPORT_EXPERT_TYPE:
 					ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
 					cacheList.add(new TempCacheData(data.getChannelId()));
-					((NewsApp)getApplication()).setTempCache(cacheList);
-					
+					((NewsApp) getApplication()).setTempCache(cacheList);
+
 					startPageActivity(type, data.getTitleName());
 					break;
 				case Utils.USER_ISSUES_TYPE:
@@ -737,7 +824,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		Intent it = new Intent(this, UserInfosActivity.class);
 		startActivityForResult(it, REQUEST_USER_INFO);
 	}
-	
+
 	private void startPageActivity(int listType, String title) {
 		Intent it = new Intent(this, PageActivity.class);
 		it.putExtra(PageActivity.PAGE_TYPE, listType);
@@ -780,7 +867,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		Intent it = new Intent(this, FeedbackActivity.class);
 		startActivity(it);
 	}
-	
+
 	private void startSettingActivity() {
 
 		Intent it = new Intent(this, SettingActivity.class);
