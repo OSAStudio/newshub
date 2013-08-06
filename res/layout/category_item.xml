@@ -8,7 +8,7 @@
         android:id="@+id/base"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_margin="6dp"
         android:orientation="vertical" 
         android:gravity="center">
 
@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="center"
-            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:layout_margin="15dp"
             android:src="@android:drawable/ic_menu_gallery" />
         <TextView 
             android:id="@+id/name"
