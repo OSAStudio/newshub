@@ -46,4 +46,27 @@
    <string name="recommend">增值推荐</string>
    <string name="expertlist">专栏列表</string>
    <string name="user_issues_list">扩展包</string>
+   
+    <!-- settings  -->
+    <string name="setting">设置</string>
+    <string name="account_manager">账号管理</string>
+    <string name="account_manager_sub">管理下属账号的服务期限</string>
+    <string name="add_account">添加子账号</string>
+    <string name="add_account_sub">可以定制多个子女</string>
+    <string name="text_size">文章字体大小</string>
+    <string name="text_size_sub">当前字体大小为%s号</string>
+    <string name="download_concrol">流量控制</string>
+    <string name="download_concrol_sub">仅在wifi下加载图片，节省流量</string>
+    <string name="help">帮助说明</string>
+    <string name="help_sub">了解程序基本操作功能</string>
+    <string name="check_update">检查版本</string>
+    <string name="check_update_sub">显示当前版本编号</string>
+    <string name="about">关于我们</string>
+    <string name="about_sub">AZKER的介绍和联系方式</string>
+    <string name="big">大</string>
+    <string name="normal">中</string>
+    <string name="small">小</string>
+    <string name="open">开</string>
+    <string name="close">关</string>
+    
 </resources>

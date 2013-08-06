@@ -88,6 +88,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private View mRecommend_btn = null;
 	private View mExpertlist_btn = null;
 	private View mFeedback_btn = null;
+	private View mSetting_btn = null;
 
 	// private ArrayList<CategoryData> mCategories = new
 	// ArrayList<CategoryData>();
@@ -191,7 +192,16 @@ public class CategoryActivity extends NewsBaseActivity {
 				startFeedbackActivity();
 			}
 		});
-
+		
+		mSetting_btn = findViewById(R.id.settings);
+		mSetting_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startSettingActivity();
+				
+			}
+		});
 	}
 
 	@Override
@@ -465,10 +475,12 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (mCategoryList != null && mCategoryList.size() > 0) {
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);
+				
+
+				mLoadBitmapTask = new LoadBitmapTask();
+				mLoadBitmapTask.execute();
 			}
 			mTask = null;
-			mLoadBitmapTask = new LoadBitmapTask();
-			mLoadBitmapTask.execute();
 			super.onPostExecute(result);
 		}
 
@@ -496,7 +508,6 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			Utils.logd("LoadBitmapTask", "execute " + mCategoryList.size());
 			if (mIconList == null) {
 				mIconList = new ArrayList<IconData>();
 			}
@@ -595,7 +606,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			int index = page * 8 + position;
 			if (index < mCategoryList.size()) {
 				NewsChannel data = mCategoryList.get(index);
-				if (data.getTitleType() != null) {
+				if (data.getTitleType() > 0) {
 					startNextActivity(index);
 				}
 			}
@@ -684,8 +695,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void startNextActivity(int index) {
 		if (index < mCategoryList.size()) {
 			NewsChannel data = mCategoryList.get(index);
-			if (data.getTitleType() != null) {
-				int type = Integer.parseInt(data.getTitleType());
+			if (data.getTitleType() > 0) {
+				int type = data.getTitleType();
 				switch (type) {
 				case Utils.IMPORT_NOTIFY_TYPE:
 				case Utils.IMPORT_EXPERT_TYPE:
@@ -767,6 +778,12 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void startFeedbackActivity() {
 
 		Intent it = new Intent(this, FeedbackActivity.class);
+		startActivity(it);
+	}
+	
+	private void startSettingActivity() {
+
+		Intent it = new Intent(this, SettingActivity.class);
 		startActivity(it);
 	}
 
