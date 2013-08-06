@@ -9,7 +9,7 @@ import android.app.Application;
 import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
-   final public static boolean IS_DEBUG = false;
+   final public static boolean IS_DEBUG = true;
    private ActivityStack mActivityStack;
    private CacheManager mCacheManager;
    private String mCurrentUserId = null;
