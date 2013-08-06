@@ -2,47 +2,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray" 
-    android:padding="30dp"
+    android:background="@color/bg_gray"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="@string/feedback_title" 
-        android:layout_marginBottom="20dp"/>
-    
-    <TextView style="@style/text_black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/feedback_type"/>
-    <Spinner 
-        android:id="@+id/type_spinner"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="30dp" 
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/feedback_title"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback_type" 
+            android:textColor="@color/text_gray"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"/>
+
+        <Spinner
+            android:id="@+id/type_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/spinner_bg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback_content"
+            android:textColor="@color/text_gray"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp" />
+
+        <EditText
+            android:id="@+id/content_edit"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/spinner_bg"
+            android:gravity="top|left" 
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_btn"
+            android:gravity="center"
+            android:text="@string/feedback_confirm" 
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"/>
-    
-    <TextView style="@style/text_black"
+        android:background="@color/bottom_dark" 
+        android:gravity="right">
+        <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/feedback_content"/>
-    
-    <EditText 
-        android:id="@+id/content_edit"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:layout_marginBottom="20dp"
-        android:background="@android:drawable/editbox_background_normal"
-        android:gravity="top|left"/>
-    
-   <TextView style="@style/text_black"
-       android:id="@+id/btn"
-       
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_blue"
-        android:gravity="center_horizontal"
-        android:text="@string/feedback_confirm"/></LinearLayout>
+        android:layout_height="wrap_content" 
+        android:layout_marginRight="30dp"
+        android:src="@drawable/logo"/>
+    </LinearLayout>
+
+</LinearLayout>
