@@ -36,7 +36,7 @@ public class NewsBaseActivity extends Activity {
 
       if (getActivityStack() == null) {
          ((NewsApp) getApplication()).prepareEnvironment();
-         startNewsService();
+//         startNewsService();
       }
 
       getActivityStack().push(this);
