@@ -55,6 +55,7 @@ public class SubscriptionApi extends NewsBaseApi {
             }
          }
          getSubscriptionAbstractCache(context).setAbstracts(result);
+//         getNewsBaseAbstractCache(context).setList(result.getList());
       }
       return result;
    }
