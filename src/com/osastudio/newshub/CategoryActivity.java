@@ -66,6 +66,9 @@ import android.widget.TextView;
 @SuppressLint("NewApi")
 public class CategoryActivity extends NewsBaseActivity {
 	private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
+	
+	
+	private static final float DEFAULT_WH_RATE = 5.0f/8.0f;
 
 	public static final String TYPE_NOTIFY_LIST = "1";
 	public static final String TYPE_EXPERT_LIST = "3";
@@ -105,6 +108,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LayoutInflater mInflater = null;
 	private int mScreenWidth = 0;
 	private int mScreenHeight = 0;
+	private int mXMargin=0;
+	private int mYMargin = 0;
 	private float mdp = 1;
 	private int mUserStatus = 3;
 	private boolean mIsSplashShow = true;
@@ -134,6 +139,20 @@ public class CategoryActivity extends NewsBaseActivity {
 		DisplayMetrics dm = new DisplayMetrics();
 		display.getMetrics(dm);
 		mdp = dm.density;
+		
+		int top = getStatusHeight(this);
+		mScreenHeight = (int) (mScreenHeight - top - 60*mdp);
+		if (mScreenWidth > 0 && mScreenHeight > 0) {
+			if ((float)mScreenWidth / (float)mScreenHeight > DEFAULT_WH_RATE) {
+				mScreenWidth = (int) (mScreenHeight * DEFAULT_WH_RATE+0.5f);
+				mXMargin = (int) ((display.getWidth() - mScreenWidth)/2);
+				mYMargin = (int) (30*mdp);
+			} else {
+				mScreenHeight = (int) (mScreenWidth / DEFAULT_WH_RATE+0.5f);
+				mYMargin = (int) ((display.getHeight() - mScreenHeight)/2);
+			}
+		}
+
 
 		setContentView(R.layout.category_activity);
 		findViews();
@@ -180,12 +199,22 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void findViews() {
 		int top = getStatusHeight(this);
-		int margin = (int) ((mScreenHeight - mScreenWidth * 4 / 3 - top) / 2 - 5 * mdp);
+		int margin = mYMargin;//(int) ((mScreenHeight - mScreenWidth * 4 / 3 - top) / 2 - 5 * mdp);
+
 		mRoot = (RelativeLayout) findViewById(R.id.root);
 		Bitmap bg = getImageFromAssetsFile("1.jpg");
 		if (bg != null) {
 			mRoot.setBackgroundDrawable(new BitmapDrawable(bg));
 		}
+		
+		if (mXMargin < 20 *mdp ) {
+			View toolbar = findViewById(R.id.tool_bar);
+			RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) toolbar
+					.getLayoutParams();
+			rlp.rightMargin = mXMargin;
+			toolbar.setLayoutParams(rlp);
+		}
+		
 		mCover = (ImageView) findViewById(R.id.cover);
 
 		mCoverBmp = getImageFromAssetsFile("0.jpg");
@@ -602,7 +631,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				}
 				if (bNeedDecode) {
 					Bitmap bmp = Utils.getBitmapFromUrl(channel.getIconUrl(),
-							mScreenWidth / 8);
+							mScreenHeight / 12);
 
 					Utils.logd("LoadBitmapTask",
 							"decode icon " + channel.getIconUrl() + " " + bmp);
@@ -659,20 +688,19 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			// AzkerGridLayout grid_layout = (AzkerGridLayout) convertView;
-			// if (grid_layout == null) {
-			// grid_layout = new AzkerGridLayout(CategoryActivity.this);
-			// }
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.category_view, null);
 			}
 			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView
 					.findViewById(R.id.grid);
-			android.view.ViewGroup.LayoutParams lp = grid_layout
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)grid_layout
 					.getLayoutParams();
 			if (lp != null) {
-				lp.width = (int) (mScreenWidth * 2 / 3 + 10 * mdp);
-				lp.height = lp.width * 2;
+				lp.leftMargin = mXMargin;
+				lp.height = mScreenHeight;
+				lp.width = mScreenHeight / 2;
+//				lp.width = (int) (mScreenWidth * 2 / 3 + 10 * mdp);
+//				lp.height = lp.width * 2;
 				grid_layout.setLayoutParams(lp);
 			}
 

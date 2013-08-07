@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:layout_margin="15dp"
             android:src="@android:drawable/ic_menu_gallery" />
         <TextView 

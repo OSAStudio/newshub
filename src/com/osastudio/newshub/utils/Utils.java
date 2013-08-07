@@ -217,7 +217,7 @@ public class Utils {
 				e.printStackTrace();
 			}
 		}
-		if (bmp != null ) {
+		if (bmp != null && (bmp.getWidth() > largeSize || bmp.getHeight()>largeSize)) {
 			int ow = bmp.getWidth();
 			int oh = bmp.getHeight();
 
