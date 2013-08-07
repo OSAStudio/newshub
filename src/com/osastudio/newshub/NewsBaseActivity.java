@@ -5,6 +5,7 @@ import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 import com.osastudio.newshub.data.base.NewsBaseAbstract;
+import com.osastudio.newshub.library.PreferenceManager;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -99,6 +100,10 @@ public class NewsBaseActivity extends Activity {
       return ((NewsApp) getApplication()).getActivityStack();
    }
 
+   protected PreferenceManager getPrefsManager() {
+      return ((NewsApp) getApplication()).getPrefsManager();
+   }
+   
    protected CacheManager getCacheManager() {
       return ((NewsApp) getApplication()).getCacheManager();
    }

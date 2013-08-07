@@ -3,14 +3,18 @@ package com.osastudio.newshub;
 import java.util.ArrayList;
 
 import com.osastudio.newshub.cache.CacheManager;
+import com.osastudio.newshub.library.PreferenceManager;
 
 import android.app.Activity;
 import android.app.Application;
 import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
+   
    final public static boolean IS_DEBUG = true;
+   
    private ActivityStack mActivityStack;
+   private PreferenceManager mPrefsManager;
    private CacheManager mCacheManager;
    private String mCurrentUserId = null;
    
@@ -20,16 +24,33 @@ public class NewsApp extends Application {
    }
    
    public ActivityStack getActivityStack() {
+      if (mActivityStack == null) {
+         mActivityStack = new ActivityStack();
+      }
       return mActivityStack;
    }
    
+   public PreferenceManager getPrefsManager() {
+      if (mPrefsManager == null) {
+         mPrefsManager = new PreferenceManager(this);
+      }
+      return mPrefsManager;
+   }
+   
    public CacheManager getCacheManager() {
+      if (mCacheManager == null) {
+         mCacheManager = new CacheManager(this);
+      }
       return mCacheManager;
    }
    
    public void prepareEnvironment() {
       if (mActivityStack == null) {
          mActivityStack = new ActivityStack();
+      }
+      
+      if (mPrefsManager == null) {
+         mPrefsManager = new PreferenceManager(this);
       }
       
       if (mCacheManager == null) {
@@ -41,6 +62,11 @@ public class NewsApp extends Application {
       if (mActivityStack != null) {
          mActivityStack.cleanup();
          mActivityStack = null;
+      }
+      
+      if (mPrefsManager != null) {
+         mPrefsManager.cleanup();
+         mPrefsManager = null;
       }
       
       if (mCacheManager != null) {

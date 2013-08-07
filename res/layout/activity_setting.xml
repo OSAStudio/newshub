@@ -142,43 +142,45 @@
                         android:text="@string/text_size" />
 
                     <TextView
+                        android:id="@+id/font_size_prompt"
                         style="@style/text_small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/text_size_sub" />
+                        android:text="" />
                 </LinearLayout>
 
                 <LinearLayout 
+                    android:id="@+id/font_size_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                    <TextView 
+                    <Button 
                         android:id="@+id/big_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:padding="10dp"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:text="@string/big"
-                        android:background="@android:color/darker_gray"/>
-                    <TextView 
+                        android:background="@drawable/switch_btn_bg"/>
+                    <Button 
                         android:id="@+id/normal_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:padding="10dp"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:text="@string/normal"
-                        android:background="@color/holo_blue"/>"
-                    <TextView 
+                        android:background="@drawable/switch_btn_bg"/>"
+                    <Button 
                         android:id="@+id/small_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:padding="10dp"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:text="@string/small"
-                        android:background="@android:color/darker_gray"/>
+                        android:background="@drawable/switch_btn_bg"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -219,27 +221,29 @@
                 </LinearLayout>
 
                 <LinearLayout 
+                    android:id="@+id/auto_download_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                    <TextView 
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+                    <Button 
                         android:id="@+id/close_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:padding="10dp"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:text="@string/close"
-                        android:background="@android:color/darker_gray"/>
-                    <TextView 
+                        android:background="@drawable/switch_btn_bg"/>
+                    <Button 
                         android:id="@+id/open_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
-                        android:padding="10dp"
+                        android:gravity="center"
                         android:textColor="@android:color/white"
                         android:text="@string/open"
-                        android:background="@color/holo_blue"/>
+                        android:background="@drawable/switch_btn_bg"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
