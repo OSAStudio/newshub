@@ -105,9 +105,9 @@ public class NewsApp extends Application {
    }
    
    public String getCurrentUserId() {
-	   if (IS_DEBUG) {
-		   mCurrentUserId = "2";
-	   }
+//	   if (IS_DEBUG) {
+//		   mCurrentUserId = "2";
+//	   }
 	   return mCurrentUserId;
    }
    

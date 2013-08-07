@@ -18,6 +18,8 @@ import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.user.ValidateResult;
+import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
+import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.net.UserApi;
@@ -39,6 +41,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -67,9 +70,8 @@ import android.widget.TextView;
 @SuppressLint("NewApi")
 public class CategoryActivity extends NewsBaseActivity {
 	private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
-	
-	
-	private static final float DEFAULT_WH_RATE = 5.0f/8.0f;
+
+	private static final float DEFAULT_WH_RATE = 5.0f / 8.0f;
 
 	public static final String TYPE_NOTIFY_LIST = "1";
 	public static final String TYPE_EXPERT_LIST = "3";
@@ -109,7 +111,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LayoutInflater mInflater = null;
 	private int mScreenWidth = 0;
 	private int mScreenHeight = 0;
-	private int mXMargin=0;
+	private int mXMargin = 0;
 	private int mYMargin = 0;
 	private float mdp = 1;
 	private int mUserStatus = 3;
@@ -117,21 +119,18 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
-
+	private NewsApp mApp = null; 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mApp = (NewsApp) getApplication();
+		Rect frame = new Rect();
+		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+		int statusBarHeight = frame.top;
 
-		Rect frame = new Rect();  
-		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
-		int statusBarHeight = frame.top; 
-		
-
-
-		
 		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
-		
+
 		mScreenWidth = display.getWidth();
 		mScreenWidth = mScreenWidth > 0 ? mScreenWidth : 0;
 		mScreenHeight = display.getHeight();
@@ -140,20 +139,19 @@ public class CategoryActivity extends NewsBaseActivity {
 		DisplayMetrics dm = new DisplayMetrics();
 		display.getMetrics(dm);
 		mdp = dm.density;
-		
+
 		int top = getStatusHeight(this);
-		mScreenHeight = (int) (mScreenHeight - top - 60*mdp);
+		mScreenHeight = (int) (mScreenHeight - top - 60 * mdp);
 		if (mScreenWidth > 0 && mScreenHeight > 0) {
-			if ((float)mScreenWidth / (float)mScreenHeight > DEFAULT_WH_RATE) {
-				mScreenWidth = (int) (mScreenHeight * DEFAULT_WH_RATE+0.5f);
-				mXMargin = (int) ((display.getWidth() - mScreenWidth)/2);
-				mYMargin = (int) (30*mdp);
+			if ((float) mScreenWidth / (float) mScreenHeight > DEFAULT_WH_RATE) {
+				mScreenWidth = (int) (mScreenHeight * DEFAULT_WH_RATE + 0.5f);
+				mXMargin = (int) ((display.getWidth() - mScreenWidth) / 2);
+				mYMargin = (int) (30 * mdp);
 			} else {
-				mScreenHeight = (int) (mScreenWidth / DEFAULT_WH_RATE+0.5f);
-				mYMargin = (int) ((display.getHeight() - mScreenHeight)/2);
+				mScreenHeight = (int) (mScreenWidth / DEFAULT_WH_RATE + 0.5f);
+				mYMargin = (int) ((display.getHeight() - mScreenHeight) / 2);
 			}
 		}
-
 
 		setContentView(R.layout.category_activity);
 		findViews();
@@ -166,56 +164,61 @@ public class CategoryActivity extends NewsBaseActivity {
 		setupData();
 		mDlg = Utils.showProgressDlg(this, null);
 	}
-	
-	public static int getStatusHeight(Activity activity){
-        int statusHeight = 0;
-        Rect localRect = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
-        statusHeight = localRect.top;
-        if (0 == statusHeight){
-            Class<?> localClass;
-            try {
-                localClass = Class.forName("com.android.internal.R$dimen");
-                Object localObject = localClass.newInstance();
-                int i5 = Integer.parseInt(localClass.getField("status_bar_height").get(localObject).toString());
-                statusHeight = activity.getResources().getDimensionPixelSize(i5);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-        }
-        return statusHeight;
-    }
+
+	public static int getStatusHeight(Activity activity) {
+		int statusHeight = 0;
+		Rect localRect = new Rect();
+		activity.getWindow().getDecorView()
+				.getWindowVisibleDisplayFrame(localRect);
+		statusHeight = localRect.top;
+		if (0 == statusHeight) {
+			Class<?> localClass;
+			try {
+				localClass = Class.forName("com.android.internal.R$dimen");
+				Object localObject = localClass.newInstance();
+				int i5 = Integer.parseInt(localClass
+						.getField("status_bar_height").get(localObject)
+						.toString());
+				statusHeight = activity.getResources()
+						.getDimensionPixelSize(i5);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			}
+		}
+		return statusHeight;
+	}
 
 	private void findViews() {
 		int top = getStatusHeight(this);
-		int margin = mYMargin;//(int) ((mScreenHeight - mScreenWidth * 4 / 3 - top) / 2 - 5 * mdp);
+		int margin = mYMargin;// (int) ((mScreenHeight - mScreenWidth * 4 / 3 -
+								// top) / 2 - 5 * mdp);
 
 		mRoot = (RelativeLayout) findViewById(R.id.root);
 		Bitmap bg = getImageFromAssetsFile("1.jpg");
 		if (bg != null) {
 			mRoot.setBackgroundDrawable(new BitmapDrawable(bg));
 		}
-		
-		if (mXMargin < 20 *mdp ) {
+
+		if (mXMargin < 20 * mdp) {
 			View toolbar = findViewById(R.id.tool_bar);
 			RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) toolbar
 					.getLayoutParams();
 			rlp.rightMargin = mXMargin;
 			toolbar.setLayoutParams(rlp);
 		}
-		
+
 		mCover = (ImageView) findViewById(R.id.cover);
 
 		mCoverBmp = getImageFromAssetsFile("0.jpg");
@@ -294,7 +297,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		});
 
 		mPage = (TextView) findViewById(R.id.page);
-		rlp = (RelativeLayout.LayoutParams)mPage.getLayoutParams();
+		rlp = (RelativeLayout.LayoutParams) mPage.getLayoutParams();
 		rlp.height = margin;
 		mPage.setLayoutParams(rlp);
 	}
@@ -399,14 +402,23 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void showRegisterView() {
 		RegisterView registerDlg = new RegisterView(this,
-				R.style.Theme_PageDialog, mScreenWidth,
-				mScreenHeight, USER_TYPE.REGISTER);
+				R.style.Theme_PageDialog, mScreenWidth, mScreenHeight,
+				USER_TYPE.REGISTER);
 		registerDlg.show();
 	}
 
 	private void setupData() {
+		SharedPreferences prefs = getSharedPreferences(
+				PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
+		if (prefs != null) {
+			String userId = prefs.getString(PreferenceItems.USER_ID,
+					null);
+			if (userId != null) {
+				mApp.setCurrentUserId(userId);
+			}
+		}
 		mTask = new LoadDataTask();
-		mTask.execute();
+		mTask.execute(0);
 	}
 
 	public boolean dispatchTouchEvent(MotionEvent event) {
@@ -506,29 +518,39 @@ public class CategoryActivity extends NewsBaseActivity {
 	//
 	// }
 
-	private class LoadDataTask extends AsyncTask<Void, Integer, Void> {
+	private class LoadDataTask extends AsyncTask<Integer, Integer, Void> {
 
 		@Override
-		protected Void doInBackground(Void... params) {
-			mAppProperties = AppPropertiesApi
-					.getAppProperties(CategoryActivity.this);
-			Utils.logd("LoadDataTask", "mAppProperties=" + mAppProperties);
-			if (mAppProperties != null) {
-				publishProgress(1);
-				mReceiveBmp = Utils.getBitmapFromUrl(mAppProperties
-						.getSplashImageUrl());
+		protected Void doInBackground(Integer... params) {
+			int startFlag = params[0];
 
-				Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
-						+ mAppProperties.getSplashImageUrl());
-				publishProgress(2);
-			}
+			switch (startFlag) {
+			case 0:
+				mAppProperties = AppPropertiesApi
+						.getAppProperties(CategoryActivity.this);
+				Utils.logd("LoadDataTask", "mAppProperties=" + mAppProperties);
+				if (mAppProperties != null) {
+					publishProgress(1);
 
-			NewsChannelList channel_list = NewsChannelApi.getNewsChannelList(
-					getApplicationContext(),
-					((NewsApp) getApplication()).getCurrentUserId());
-			if (channel_list != null) {
-				mCategoryList = (ArrayList<NewsChannel>) channel_list
-						.getChannelList();
+				}
+			case 1:
+				if (mAppProperties != null) {
+					mReceiveBmp = Utils.getBitmapFromUrl(mAppProperties
+							.getSplashImageUrl());
+	
+					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
+							+ mAppProperties.getSplashImageUrl());
+					publishProgress(2);
+				}
+			case 2:
+				NewsChannelList channel_list = NewsChannelApi
+						.getNewsChannelList(getApplicationContext(),
+								mApp.getCurrentUserId());
+				if (channel_list != null) {
+					mCategoryList = (ArrayList<NewsChannel>) channel_list
+							.getChannelList();
+				}
+
 			}
 
 			return null;
@@ -548,10 +570,31 @@ public class CategoryActivity extends NewsBaseActivity {
 						showRegisterView();
 					} else if (mUserStatus == 3) {
 						List<String> userIds = mAppProperties.getUserIds();
+						
+						String curId = mApp.getCurrentUserId();
+						int idIndex = -1;
 						if (userIds != null && userIds.size() > 0) {
-							((NewsApp) getApplication())
-									.setCurrentUserId(userIds.get(0));
-						}
+							if (curId!= null) {
+								for (int i = 0; i < userIds.size(); i++) {
+									if (curId.equals(userIds.get(i))) {
+										idIndex = i;
+									}
+								}
+							}
+							if(idIndex < 0)  {
+								mApp.setCurrentUserId(userIds.get(0));
+								SharedPreferences prefs = CategoryActivity.this
+										.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
+												Context.MODE_PRIVATE);
+								if (prefs != null) {
+									prefs.edit().putString(
+										PreferenceItems.USER_ID,
+										userIds.get(0)).commit();
+
+								}
+							} 
+						} 
+						
 					}
 				}
 				break;
@@ -580,7 +623,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (mCategoryList != null && mCategoryList.size() > 0) {
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);
-				
+
 				setPageText(mSwitcher.getCurrentIndex());
 
 				mLoadBitmapTask = new LoadBitmapTask();
@@ -691,14 +734,14 @@ public class CategoryActivity extends NewsBaseActivity {
 			}
 			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView
 					.findViewById(R.id.grid);
-			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)grid_layout
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) grid_layout
 					.getLayoutParams();
 			if (lp != null) {
 				lp.leftMargin = mXMargin;
 				lp.height = mScreenHeight;
 				lp.width = mScreenHeight / 2;
-//				lp.width = (int) (mScreenWidth * 2 / 3 + 10 * mdp);
-//				lp.height = lp.width * 2;
+				// lp.width = (int) (mScreenWidth * 2 / 3 + 10 * mdp);
+				// lp.height = lp.width * 2;
 				grid_layout.setLayoutParams(lp);
 			}
 
@@ -815,7 +858,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				case Utils.IMPORT_EXPERT_TYPE:
 					ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
 					cacheList.add(new TempCacheData(data.getChannelId()));
-					((NewsApp) getApplication()).setTempCache(cacheList);
+					mApp.setTempCache(cacheList);
 
 					startPageActivity(type, data.getTitleName());
 					break;
@@ -899,12 +942,27 @@ public class CategoryActivity extends NewsBaseActivity {
 		Intent it = new Intent(this, SettingActivity.class);
 		startActivity(it);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
-			switch(requestCode) {
+			switch (requestCode) {
 			case REQUEST_USER_INFO:
+				SharedPreferences prefs = getSharedPreferences(
+						PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
+				if (prefs != null) {
+					String userId = prefs.getString(PreferenceItems.USER_ID,
+							null);
+					
+					if (userId != null) {
+						if (!userId.equals(mApp.getCurrentUserId())) {
+							mApp.setCurrentUserId(userId);
+							mDlg = Utils.showProgressDlg(this, null);
+							mTask = new LoadDataTask();
+							mTask.execute(2);
+						}
+					}
+				}
 				break;
 			}
 		}

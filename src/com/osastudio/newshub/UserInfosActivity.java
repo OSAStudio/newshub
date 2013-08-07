@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.user.User;
 import com.osastudio.newshub.data.user.UserList;
+import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
+import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.UserApi;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.UserInfoView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -63,28 +68,50 @@ public class UserInfosActivity extends NewsBaseActivity {
 		mUser0.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setUserInfo(0);
-				
+
 			}
 		});
 		mUser1 = (TextView) findViewById(R.id.user1);
 		mUser1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setUserInfo(1);
-				
+
 			}
 		});
 		mUser2 = (TextView) findViewById(R.id.user2);
 		mUser2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setUserInfo(2);
-				
+
 			}
 		});
 		mUser3 = (TextView) findViewById(R.id.user3);
 		mUser3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setUserInfo(3);
-				
+
+			}
+		});
+
+		mConfirmBtn = findViewById(R.id.confirm_btn);
+		mConfirmBtn.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				if (mCurrentUserIndex >= 4 || mCurrentUserIndex < 0) {
+					mCurrentUserIndex = 0;
+				}
+				SharedPreferences prefs = UserInfosActivity.this
+						.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
+								Context.MODE_PRIVATE);
+				if (prefs != null) {
+					prefs.edit().putString(
+						PreferenceItems.USER_ID,
+						mUserList.get(mCurrentUserIndex)
+								.getUserId()).commit();
+
+				}
+				UserInfosActivity.this.setResult(RESULT_OK);
+				UserInfosActivity.this.finish();
 			}
 		});
 	}
@@ -99,7 +126,8 @@ public class UserInfosActivity extends NewsBaseActivity {
 			if (user.getUserId() != null && user.getUserId().equals(userId)) {
 				mCurrentUserIndex = i;
 			}
-			((TextView)findViewById(USER_VIEW_ID[i])).setText(user.getUserName());
+			((TextView) findViewById(USER_VIEW_ID[i])).setText(user
+					.getUserName());
 		}
 		setUserInfo(mCurrentUserIndex);
 	}

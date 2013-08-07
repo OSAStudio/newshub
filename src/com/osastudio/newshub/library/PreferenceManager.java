@@ -19,6 +19,7 @@ public class PreferenceManager implements AppSettings {
       public static final String FIRST_RUN = "first_run";
       public static final String FONT_SIZE = "font_size";
       public static final String AUTO_LOADING_PICTURE = "auto_loading_picture";
+      public static final String USER_ID = "user_id";
    }
 
    public PreferenceManager(Context context) {

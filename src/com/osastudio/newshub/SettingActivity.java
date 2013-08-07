@@ -182,9 +182,9 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
 	private class CheckTask extends AsyncTask<Void, Void, Boolean> {
 
 		protected Boolean doInBackground(Void... params) {
-//			ValidateResult result = UserApi.getValidateStatus(SettingActivity.this);
-//			return result.isSuccess();
-			return true; // for test
+			ValidateResult result = UserApi.getValidateStatus(SettingActivity.this);
+			return result.isSuccess();
+			
 		}
 
 		@Override
