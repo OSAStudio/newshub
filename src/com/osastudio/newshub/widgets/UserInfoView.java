@@ -48,14 +48,14 @@ public class UserInfoView extends LinearLayout {
 	public void setUserInfo(String name, String sex, String birth,
 			String school, String grade, String clas, String expirty_date) {
 		mName.setText(name);
-		mSex.setText(name);
-		mBirth.setText(name);
-		mSchool.setText(name);
-		mGrade.setText(name);
-		mClass.setText(name);
+		mSex.setText(sex);
+		mBirth.setText(birth);
+		mSchool.setText(school);
+		mGrade.setText(grade);
+		mClass.setText(clas);
 		if (expirty_date != null) {
 			mExpirydate_layout.setVisibility(View.VISIBLE);
-			mExpirydate.setText(name);
+			mExpirydate.setText(expirty_date);
 		} else {
 			mExpirydate_layout.setVisibility(View.GONE);
 		}
