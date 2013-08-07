@@ -1,6 +1,8 @@
 package com.osastudio.newshub.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -19,6 +21,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.os.Environment;
 import android.util.Log;
 
 public class Utils {
@@ -35,6 +38,12 @@ public class Utils {
 	final static public int LESSON_LIST_TYPE = 6;
 	final static public int DAILY_REMINDER_TYPE = 7;
 	final static public int RECOMMEND_LIST_TYPE = 8;
+
+	public static final String ROOT = Environment.getExternalStorageDirectory()
+			.toString();
+	public static final String TEMP_FOLDER = ROOT
+			+ "/Android/data/com.huadi.azker_phone/";
+	public static final String TEMP_CACHE_FOLDER = TEMP_FOLDER + "cache/";
 
 	public synchronized static Bitmap loadBitmap(String pathName, int outputW,
 			int outputH, int rotate) {
@@ -172,6 +181,7 @@ public class Utils {
 
 	}
 
+	
 	public static Bitmap getBitmapFromUrl(String url) {
 		Bitmap bmp = null;
 		if (url != null) {
@@ -196,7 +206,64 @@ public class Utils {
 		return bmp;
 
 	}
+	
+	private static String getCachePathFromUrl(String url) {
+		 int firstIndex = url.lastIndexOf('/');
+		 String temp = url.subSequence(firstIndex+1,url.length()).toString();
+		 return TEMP_CACHE_FOLDER+temp;
+	}
 
+	public static Bitmap getBitmapFromUrl(String url, boolean bNeedCache) {
+		Bitmap bmp = null;
+		if (!bNeedCache) {
+			bmp = getBitmapFromUrl(url);
+		}else if (url != null) {
+			String cachePath = getCachePathFromUrl(url);
+			if (new File(cachePath).exists()) {
+				bmp = loadBitmap(cachePath, 0, 0, 0);
+				
+			} else {
+				bmp = getBitmapFromUrl(url);
+				if (bmp != null) {
+					if (cachePath.toLowerCase().endsWith(".png")) {
+						writeToCachePNG(bmp, cachePath, 100);
+					} else {
+						writeToCacheJPEG(bmp, cachePath, 100);
+					}
+				}
+			}
+		}
+
+		return bmp;
+
+	}
+
+	public static Bitmap getBitmapFromUrl(String url, int largeSize, boolean bNeedCache) {
+		Bitmap bmp = null;
+		if (!bNeedCache) {
+			bmp = getBitmapFromUrl(url, largeSize);
+		}else if (url != null) {
+			String cachePath = getCachePathFromUrl(url);
+			if (new File(cachePath).exists()) {
+				bmp = loadBitmap(cachePath, largeSize, largeSize, 0);
+				
+			} else {
+				bmp = getBitmapFromUrl(url, largeSize);
+				if (bmp != null) {
+					if (cachePath.toLowerCase().endsWith(".png")) {
+						writeToCachePNG(bmp, cachePath, 100);
+					} else {
+						writeToCacheJPEG(bmp, cachePath, 100);
+					}
+				}
+			}
+		}
+
+		return bmp;
+
+	}
+
+	
 	public static Bitmap getBitmapFromUrl(String url, int largeSize) {
 		Bitmap bmp = null;
 		if (url != null) {
@@ -217,7 +284,8 @@ public class Utils {
 				e.printStackTrace();
 			}
 		}
-		if (bmp != null && (bmp.getWidth() > largeSize || bmp.getHeight()>largeSize)) {
+		if (bmp != null
+				&& (bmp.getWidth() > largeSize || bmp.getHeight() > largeSize)) {
 			int ow = bmp.getWidth();
 			int oh = bmp.getHeight();
 
@@ -263,6 +331,47 @@ public class Utils {
 		title = title.replace("]", "%5d");
 		return title;
 	}
+	
+	 /**
+     * writeToCache : write bitmap to path as JPG file
+     */
+    public static void writeToCacheJPEG(Bitmap bitmap, String path, int quality) {
+        if (bitmap != null && path != null) {
+            try {
+                File file = new File(path);
+                file.createNewFile();
+                final FileOutputStream fos = new FileOutputStream(file);
+                final BufferedOutputStream bos = new BufferedOutputStream(fos, 16384);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+                bos.flush();
+                bos.close();
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * writeToCache : write bitmap to path as png file
+     */
+    public static void writeToCachePNG(Bitmap bitmap, String path, int quality) {
+        if (bitmap != null && path != null) {
+            try {
+                File file = new File(path);
+                file.createNewFile();
+                final FileOutputStream fos = new FileOutputStream(file);
+                final BufferedOutputStream bos = new BufferedOutputStream(fos, 16384);
+                bitmap.compress(Bitmap.CompressFormat.PNG, quality, bos);
+                bos.flush();
+                bos.close();
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 	public static ProgressDialog showProgressDlg(Context context, String msg) {
 		ProgressDialog dlg = null;
@@ -348,6 +457,36 @@ public class Utils {
 		}
 		return msg;
 	}
+	
+	
+	/**
+     * create the folder with selected path.
+     * @param path
+     */
+    public static void createLocalDiskPath(String path) {
+        File folder = new File(path);
+        try {
+            if (!folder.exists()) {
+
+                boolean rtn = folder.mkdirs();
+            }
+        } catch (Exception e) {
+        }
+    }
+    
+    /**
+     * create the file with selected path.
+     * @param path
+     */
+    public static void createLocalFile(String path) {
+        File f = new File(path);
+        try {
+            if (!f.exists())
+                f.createNewFile();
+        } catch (Exception e) {
+            
+        }
+    }
 
 	public static void log(String tag, String info) {
 		logi(tag, info);
