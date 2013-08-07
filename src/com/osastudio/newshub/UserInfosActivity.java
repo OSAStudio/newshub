@@ -92,6 +92,9 @@ public class UserInfosActivity extends NewsBaseActivity {
 	private void setupViews() {
 		String userId = ((NewsApp) getApplication()).getCurrentUserId();
 		for (int i = 0; i < mUserList.size(); i++) {
+			if (i >= 4) {
+				break;
+			}
 			User user = mUserList.get(i);
 			if (user.getUserId() != null && user.getUserId().equals(userId)) {
 				mCurrentUserIndex = i;

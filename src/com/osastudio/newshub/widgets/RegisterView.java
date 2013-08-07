@@ -58,13 +58,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RegisterView extends Dialog {
+	public enum USER_TYPE {
+		REGISTER, ADD
+	}
 
-	public RegisterView(Context context, int theme, int width, int height) {
+	public RegisterView(Context context, int theme, int width, int height,
+			USER_TYPE type) {
 		super(context, theme);
 		// TODO Auto-generated constructor stub
 		mContext = context;
 		mWidth = width;
 		mHeight = height;
+		mUserType = type;
 	}
 
 	enum LIST_TYPE {
@@ -73,6 +78,7 @@ public class RegisterView extends Dialog {
 
 	Context mContext = null;
 	int mWidth, mHeight;
+	private USER_TYPE mUserType = USER_TYPE.REGISTER;
 	ArrayList<Data> mDispList = null;
 	LIST_TYPE mCurrentType;
 	private LayoutInflater mInflater = null;
@@ -102,10 +108,11 @@ public class RegisterView extends Dialog {
 	private View mName = null;
 	private View mSex = null;
 	private View mBirth = null;
-	private View nEdu = null;
+	private View mEdu = null;
 	private View mConfirm = null;
 	private View mListLayout = null;
 	private ListView mListView = null;
+	private EditText mNameEdit = null;
 
 	private String mCityId = null;
 
@@ -136,6 +143,7 @@ public class RegisterView extends Dialog {
 			base.setLayoutParams(lp);
 		}
 		mSchool = findViewById(R.id.school);
+		mSchool.requestFocus();
 		// mSchool.setOnClickListener(this);
 		mSchool.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -171,6 +179,7 @@ public class RegisterView extends Dialog {
 			}
 		});
 		mName = findViewById(R.id.name);
+		mNameEdit = (EditText) findViewById(R.id.name_text);
 		mSex = findViewById(R.id.sex);
 		mSex.setOnClickListener(new View.OnClickListener() {
 
@@ -211,8 +220,8 @@ public class RegisterView extends Dialog {
 
 		});
 
-		nEdu = findViewById(R.id.education);
-		nEdu.setOnClickListener(new View.OnClickListener() {
+		mEdu = findViewById(R.id.education);
+		mEdu.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				// if (mLoadTask == null) {
@@ -222,6 +231,12 @@ public class RegisterView extends Dialog {
 				startLoadTask(LIST_TYPE.EDU);
 			}
 		});
+		if (!mUserType.equals(USER_TYPE.REGISTER)) {
+			mEdu.setVisibility(View.GONE);
+		} else {
+			mEdu.setVisibility(View.VISIBLE);
+		}
+
 		mListLayout = findViewById(R.id.list_layout);
 		mListView = (ListView) findViewById(R.id.list);
 		mConfirm = findViewById(R.id.confirm_btn);
@@ -232,31 +247,35 @@ public class RegisterView extends Dialog {
 				String userName = ((EditText) findViewById(R.id.name_text))
 						.getEditableText().toString();
 				if (mDateStr == null || mClassId == null || mSexStr == null
-						|| mEduStr == null || mSchoolId == null
-						|| userName == null || mGradeId == null) {
+						|| (mUserType.equals(USER_TYPE.REGISTER) &&mEduStr == null) 
+						|| mSchoolId == null || userName == null || mGradeId == null) {
 					Utils.ShowConfirmDialog(mContext,
 							mContext.getString(R.string.empty_alert), null);
 				} else {
-
-					RegisterParameters params = new RegisterParameters();
-					params.birthday = mDateStr;
-					params.classId = mClassId;
-					params.gender = mSexStr;
-					params.qualification = mEduStr;
-					params.schoolId = mSchoolId;
-					params.userName = userName;
-					params.yearId = mGradeId;
-					if (mRegistTask == null) {
-						mRegistTask = new RegistTask();
-						mRegistTask.execute(params);
-						if (mDlg == null) {
-							mDlg = Utils.showProgressDlg(mContext, null);
-						}
-					}
+					regist(userName);
 				}
 
 			}
 		});
+	}
+
+	private void regist(String userName) {
+		RegisterParameters params = new RegisterParameters();
+		params.birthday = mDateStr;
+		params.classId = mClassId;
+		params.gender = mSexStr;
+		params.qualification = mEduStr;
+		params.schoolId = mSchoolId;
+		params.userName = userName;
+		params.yearId = mGradeId;
+		if (mRegistTask == null) {
+			mRegistTask = new RegistTask();
+			mRegistTask.execute(params);
+			if (mDlg == null) {
+				mDlg = Utils.showProgressDlg(mContext, null);
+			}
+		}
+
 	}
 
 	// private List<PairedStringFieldsObject> mCityList = null;
@@ -391,38 +410,63 @@ public class RegisterView extends Dialog {
 	}
 
 	private class RegistTask extends
-			AsyncTask<RegisterParameters, Void, RegisterResult> {
+			AsyncTask<RegisterParameters, Void, NewsResult> {
 
 		@Override
-		protected RegisterResult doInBackground(RegisterParameters... params) {
+		protected NewsResult doInBackground(RegisterParameters... params) {
 			RegisterParameters param = params[0];
-			RegisterResult result = UserApi.registerUser(mContext, param);
+			NewsResult result;
+			if (mUserType.equals(USER_TYPE.REGISTER)) {
+				result = UserApi.registerUser(mContext, param);
+			} else {
+				result = UserApi.addUser(mContext, param);
+			}
 			return result;
 		}
 
 		@Override
-		protected void onPostExecute(RegisterResult result) {
-			if (result == null || result.getUserId() == null) {
+		protected void onPostExecute(NewsResult result) {
+			mRegistTask = null;
+			if (mDlg != null) {
+				Utils.closeProgressDlg(mDlg);
+				mDlg = null;
+			}
+			if (result == null || result.isFailure()) {
+				int msgId = 0;
+				if (mUserType.equals(USER_TYPE.REGISTER)) {
+					msgId = R.string.msg_register_error;
+				} else {
+					msgId = R.string.msg_add_account_error;
+				}
+				String msg = mContext.getString(msgId);
+				if (msg != null) {
+					Utils.ShowConfirmDialog(mContext, msg, null);
+				}
+
+			} else if ((result instanceof RegisterResult)
+					&& ((RegisterResult) result).getUserId() == null) {
 				String msg = mContext.getString(R.string.msg_register_error);
 				if (msg != null) {
 					Utils.ShowConfirmDialog(mContext, msg, null);
 				}
 			} else {
-				String userid = result.getUserId();
-				((NewsApp)((Activity)mContext).getApplication()).setCurrentUserId(userid);
+				int msgId;
+				if (mUserType.equals(USER_TYPE.REGISTER)) {
+					String userid = ((RegisterResult) result).getUserId();
+					((NewsApp) ((Activity) mContext).getApplication())
+							.setCurrentUserId(userid);
+					msgId=R.string.regist_success_msg;
+				} else {
+					msgId=R.string.adduser_success_msg;
+				}
 				Utils.ShowConfirmDialog(mContext,
-						mContext.getString(R.string.regist_success_msg),
+						mContext.getString(msgId),
 						new DialogConfirmCallback() {
 							public void onConfirm(DialogInterface dialog) {
 								RegisterView.this.dismiss();
 
 							}
 						});
-			}
-			mRegistTask = null;
-			if (mDlg != null) {
-				Utils.closeProgressDlg(mDlg);
-				mDlg = null;
 			}
 			super.onPostExecute(result);
 		}

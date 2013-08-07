@@ -27,6 +27,7 @@ import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.RegisterView;
+import com.osastudio.newshub.widgets.RegisterView.USER_TYPE;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 
 import android.media.AudioManager;
@@ -397,12 +398,9 @@ public class CategoryActivity extends NewsBaseActivity {
 	private RegisterView mRegisterView = null;
 
 	private void showRegisterView() {
-		// mSwitcher.setVisibility(View.GONE);
-
-		// mRegisterView = (RegisterView)findViewById(R.id.register);
-		// mRegisterView.setVisibility(View.VISIBLE);
 		RegisterView registerDlg = new RegisterView(this,
-				R.style.Theme_PageDialog, mScreenWidth, mScreenHeight);
+				R.style.Theme_PageDialog, mScreenWidth,
+				mScreenHeight, USER_TYPE.REGISTER);
 		registerDlg.show();
 	}
 
@@ -900,6 +898,17 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		Intent it = new Intent(this, SettingActivity.class);
 		startActivity(it);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			switch(requestCode) {
+			case REQUEST_USER_INFO:
+				break;
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

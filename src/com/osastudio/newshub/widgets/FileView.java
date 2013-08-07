@@ -48,8 +48,6 @@ public class FileView extends LinearLayout {
 		mWebView.setBackgroundColor(0);
 		mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.getSettings().setDefaultFontSize(20);
-//		mWebView.cancelLongPress();
 		mWebView.setOnLongClickListener(new WebView.OnLongClickListener() {
             
             public boolean onLongClick(View v) {

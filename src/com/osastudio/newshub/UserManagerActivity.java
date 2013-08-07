@@ -58,6 +58,8 @@ public class UserManagerActivity extends Activity {
 
 		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		llp.topMargin = 10;
+		llp.bottomMargin = 10;
 		
 		for (int i = 0; i < mUserInfos.size(); i++) {
 			UserInfo user = mUserInfos.get(i);

@@ -26,6 +26,7 @@
 	<string name="expiry_date">服务截止日期</string>
 	
    <string name="regist_success_msg">注册成功！</string>
+   <string name="adduser_success_msg">添加帐号成功！</string>
 	
 	<string name="feedback_title">使用反馈</string>
 	<string name="feedback_type">反馈类型</string>
@@ -69,5 +70,7 @@
     <string name="small">小</string>
     <string name="open">开</string>
     <string name="close">关</string>
+    
+    <string name="cant_add_user_msg">您没有未激活的订制记录</string>
     
 </resources>
