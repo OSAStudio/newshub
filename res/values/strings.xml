@@ -44,6 +44,8 @@
     <string name="msg_feedback_error">问题反馈失败。</string><!--110-->
     <string name="msg_no_authority">设备无权限或已过有效期。</string><!--111-->
     <string name="msg_accout_full">子账号数量超过限制。</string><!--112-->
+    
+    <string name="msg_without_regist">未注册完成，即将退出。</string>
   
    <string name="recommend">增值推荐</string>
    <string name="expertlist">专栏列表</string>

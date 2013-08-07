@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -27,8 +28,44 @@ public class NetworkHelper {
       if (connManager != null) {
          NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
          if (networkInfo != null) {
-            return networkInfo.isAvailable();
+             return networkInfo.isAvailable() && networkInfo.isConnected();
          }
+      }
+      return false;
+   }
+   
+   public static int getAvailableNetworkType(Context context) {
+      ConnectivityManager connManager = (ConnectivityManager) context
+            .getSystemService(Context.CONNECTIVITY_SERVICE);
+      if (connManager != null) {
+         NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+         if (networkInfo != null && networkInfo.isAvailable()) {
+             return networkInfo.getType();
+         }
+      }
+      return -1;
+   }
+
+   public static boolean isWifiNetworkAvailable(Context context) {
+      ConnectivityManager connManager = (ConnectivityManager) context
+            .getSystemService(Context.CONNECTIVITY_SERVICE);
+      if (connManager != null) {
+         NetworkInfo networkInfo = connManager
+               .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+         if (networkInfo != null) {
+            return networkInfo.isAvailable() && networkInfo.isConnected();
+         }
+      }
+      return false;
+   }
+
+   public static boolean isMobileNetworkAvailable(Context context) {
+      ConnectivityManager connManager = (ConnectivityManager) context
+            .getSystemService(Context.CONNECTIVITY_SERVICE);
+      if (connManager != null) {
+         NetworkInfo networkInfo = connManager
+               .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            return networkInfo.isAvailable() && networkInfo.isConnected();
       }
       return false;
    }

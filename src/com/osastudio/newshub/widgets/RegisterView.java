@@ -124,13 +124,35 @@ public class RegisterView extends Dialog {
 		mFemale = mContext.getResources().getString(R.string.female_name);
 		setContentView(R.layout.register_view);
 		findViews();
-		setCancelable(false);
+		setCancelable(true);
+		setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				if (mUserType.equals(USER_TYPE.REGISTER)) {
+					Utils.ShowConfirmDialog(mContext,
+							mContext.getString(R.string.msg_without_regist),
+							new DialogConfirmCallback() {
+								
+								@Override
+								public void onConfirm(DialogInterface dialog) {
+									RegisterView.this.dismiss();
+									((Activity)mContext).finish();
+									
+								}
+							});
+				}
+
+			}
+		});
 	}
 
 	@Override
 	public void onBackPressed() {
 		if (mListLayout.getVisibility() == View.VISIBLE) {
 			mListLayout.setVisibility(View.GONE);
+		} else {
+			super.onBackPressed();
 		}
 	}
 
@@ -246,9 +268,12 @@ public class RegisterView extends Dialog {
 			public void onClick(View v) {
 				String userName = ((EditText) findViewById(R.id.name_text))
 						.getEditableText().toString();
-				if (mDateStr == null || mClassId == null || mSexStr == null
-						|| (mUserType.equals(USER_TYPE.REGISTER) &&mEduStr == null) 
-						|| mSchoolId == null || userName == null || mGradeId == null) {
+				if (mDateStr == null
+						|| mClassId == null
+						|| mSexStr == null
+						|| (mUserType.equals(USER_TYPE.REGISTER) && mEduStr == null)
+						|| mSchoolId == null || userName == null
+						|| mGradeId == null) {
 					Utils.ShowConfirmDialog(mContext,
 							mContext.getString(R.string.empty_alert), null);
 				} else {
@@ -455,12 +480,11 @@ public class RegisterView extends Dialog {
 					String userid = ((RegisterResult) result).getUserId();
 					((NewsApp) ((Activity) mContext).getApplication())
 							.setCurrentUserId(userid);
-					msgId=R.string.regist_success_msg;
+					msgId = R.string.regist_success_msg;
 				} else {
-					msgId=R.string.adduser_success_msg;
+					msgId = R.string.adduser_success_msg;
 				}
-				Utils.ShowConfirmDialog(mContext,
-						mContext.getString(msgId),
+				Utils.ShowConfirmDialog(mContext, mContext.getString(msgId),
 						new DialogConfirmCallback() {
 							public void onConfirm(DialogInterface dialog) {
 								RegisterView.this.dismiss();
