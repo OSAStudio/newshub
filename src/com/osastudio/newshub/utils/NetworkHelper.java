@@ -34,12 +34,12 @@ public class NetworkHelper {
       return false;
    }
    
-   public static int getNetworkType(Context context) {
+   public static int getAvailableNetworkType(Context context) {
       ConnectivityManager connManager = (ConnectivityManager) context
             .getSystemService(Context.CONNECTIVITY_SERVICE);
       if (connManager != null) {
          NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
-         if (networkInfo != null) {
+         if (networkInfo != null && networkInfo.isAvailable()) {
              return networkInfo.getType();
          }
       }
