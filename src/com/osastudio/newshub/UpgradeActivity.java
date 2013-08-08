@@ -62,7 +62,7 @@ public class UpgradeActivity extends NewsBaseActivity {
             .setMessage(sb.toString());
 
       if (neccessary) {
-         builder.setPositiveButton(R.string.download,
+         builder.setPositiveButton(R.string.upgrade_now,
                new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
                      ((NewsApp) getApplication()).getActivityStack()
@@ -77,13 +77,13 @@ public class UpgradeActivity extends NewsBaseActivity {
                   }
                });
       } else {
-         builder.setPositiveButton(R.string.download,
+         builder.setPositiveButton(R.string.upgrade_now,
                new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
                      finish();
                      downloadApk(mAppProperties.getApkUrl());
                   }
-               }).setNegativeButton(R.string.cancel,
+               }).setNegativeButton(R.string.upgrade_later,
                new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
                      finish();

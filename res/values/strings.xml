@@ -79,6 +79,8 @@
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="download">下载</string>
+    <string name="upgrade_now">马上更新</string>
+    <string name="upgrade_later">以后再说</string>
     <string name="exit">退出程序</string>
     <string name="upgrade_prompt">检测到新版本：%s</string>
     <string name="upgrade_neccessary">温馨提示：请务必升级您的应用程序，否则将无法继续使用。</string>
