@@ -7,10 +7,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.pm.PackageInfo;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.data.user.UserStatus;
 
-public class AppProperties extends NewsBaseObject implements UserStatus {
+public class AppProperties extends NewsBaseObject implements Parcelable,
+      UserStatus {
+   
+   public static final String EXTRA_APP_PROPERTIES = "app_properties";
+   
    public static final String JSON_KEY_LOGIN_INFO = "list";
    public static final String JSON_KEY_APK_URL = "android_url";
    public static final String JSON_KEY_MIN_VERSION_CODE = "min_version_code";
@@ -22,17 +30,29 @@ public class AppProperties extends NewsBaseObject implements UserStatus {
    public static final String JSON_KEY_VERSION_NAME = "version_id";
    public static final String JSON_KEY_PROPERTIES = "list";
 
-   private String apkUrl;
-   private int minVersionCode;
-   private String releaseNotes;
-   private String splashImageUrl;
-   private List<String> userIds;
-   private int userStatus;
-   private int versionCode;
-   private String versionName;
+   private String apkUrl = "";
+   private int minVersionCode = 0;
+   private String releaseNotes = "";
+   private String splashImageUrl = "";
+   private List<String> userIds = new ArrayList<String>();
+   private int userStatus = 0;
+   private int versionCode = 0;
+   private String versionName = "";
 
    public AppProperties() {
 
+   }
+
+   public AppProperties(Parcel src) {
+      this.apkUrl = src.readString();
+      this.minVersionCode = src.readInt();
+      this.releaseNotes = src.readString();
+      this.splashImageUrl = src.readString();
+      src.readStringList(this.userIds);
+      ;
+      this.userStatus = src.readInt();
+      this.versionCode = src.readInt();
+      this.versionName = src.readString();
    }
 
    public AppProperties(JSONObject jsonObject) {
@@ -89,7 +109,6 @@ public class AppProperties extends NewsBaseObject implements UserStatus {
          }
       }
    }
-   
 
    public String getApkUrl() {
       return this.apkUrl;
@@ -162,5 +181,42 @@ public class AppProperties extends NewsBaseObject implements UserStatus {
       this.versionName = versionName;
       return this;
    }
+
+   public boolean isUpgradeAvailable(PackageInfo pkgInfo) {
+       return pkgInfo.versionCode < this.versionCode;
+   }
+
+   public boolean isUpgradeNecessary(PackageInfo pkgInfo) {
+       return pkgInfo.versionCode < this.minVersionCode;
+   }
+
+   @Override
+   public int describeContents() {
+      return 0;
+   }
+
+   @Override
+   public void writeToParcel(Parcel dst, int flags) {
+      dst.writeString(this.apkUrl);
+      dst.writeInt(this.minVersionCode);
+      dst.writeString(this.releaseNotes);
+      dst.writeString(this.splashImageUrl);
+      dst.writeStringList(this.userIds);
+      dst.writeInt(this.userStatus);
+      dst.writeInt(this.versionCode);
+      dst.writeString(this.versionName);
+   }
+
+   public static final Parcelable.Creator<AppProperties> CREATOR = new Creator<AppProperties>() {
+      @Override
+      public AppProperties createFromParcel(Parcel src) {
+         return new AppProperties(src);
+      }
+
+      @Override
+      public AppProperties[] newArray(int size) {
+         return new AppProperties[size];
+      }
+   };
 
 }

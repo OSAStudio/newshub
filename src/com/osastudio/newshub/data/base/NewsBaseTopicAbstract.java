@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class NewsBaseTopicAbstract extends NewsBaseAbstract implements NewsId,
       Parcelable {
 
-   protected String topicId;
+   protected String topicId = "";
 
    public NewsBaseTopicAbstract() {
       super();

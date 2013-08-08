@@ -34,7 +34,7 @@ public class UpgradeManager {
 
    private Context mContext;
    private Handler mHandler;
-   private boolean mUpgrading = false;
+   private boolean mDownloading = false;
    private FileDownloadListener mDownloadListener = new FileDownloadListener() {
       @Override
       public void onPreDownload(String url) {
@@ -60,23 +60,18 @@ public class UpgradeManager {
       mHandler = handler;
    }
 
-   public boolean isUpgrading() {
-      return mUpgrading;
-   }
-
-   public void upgrade(String url) {
-      Utils.logi(TAG, "_______________upgrade");
-      mUpgrading = true;
-      download(url);
+   public boolean isDownloading() {
+      return mDownloading;
    }
 
    public void download(String url) {
-      Utils.logi(TAG, "_______________download");
+      Utils.logi(TAG, "_______________upgrade");
+      mDownloading = true;
       new UpgradeTask().execute(url);
    }
 
    public void install(String path) {
-      mUpgrading = false;
+      mDownloading = false;
       Utils.logi(TAG, "_______________install");
    }
 
@@ -163,6 +158,7 @@ public class UpgradeManager {
                mHandler, mDownloadListener, 1, this);
       }
 
+      @Override
       protected void onPostExecute(String result) {
          if (!TextUtils.isEmpty(result)) {
             install(result);

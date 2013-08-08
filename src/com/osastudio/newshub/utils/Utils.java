@@ -13,6 +13,9 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -348,7 +351,25 @@ public class Utils {
 		}
 		return msg;
 	}
+   
+	public static PackageInfo getPackageInfo(Context context) {
+	   try {
+         PackageManager pm = context.getPackageManager();
+         return pm.getPackageInfo(context.getPackageName(), 0);
+      } catch (NameNotFoundException e) {
+//         e.printStackTrace();
+      }
+      return null;
+	}
 
+	public static int getVersionCode(Context context) {
+      return getPackageInfo(context).versionCode;
+	}
+   
+	public static String getVersionName(Context context) {
+      return getPackageInfo(context).versionName;
+	}
+   
 	public static void log(String tag, String info) {
 		logi(tag, info);
 	}

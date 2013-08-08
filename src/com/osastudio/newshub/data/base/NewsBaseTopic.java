@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class NewsBaseTopic extends NewsBaseTitle implements NewsId, Parcelable {
 
-   protected String iconUrl;
+   protected String iconUrl = "";
 
    public NewsBaseTopic() {
       super();

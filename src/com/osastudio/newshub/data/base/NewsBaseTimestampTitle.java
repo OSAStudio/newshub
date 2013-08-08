@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class NewsBaseTimestampTitle extends NewsBaseTitle implements NewsId,
       Parcelable {
 
-   protected String publishedTime;
+   protected String publishedTime = "";
 
    public NewsBaseTimestampTitle() {
       super();

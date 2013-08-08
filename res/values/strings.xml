@@ -64,7 +64,7 @@
     <string name="help">帮助说明</string>
     <string name="help_sub">了解程序基本操作功能</string>
     <string name="check_update">检查版本</string>
-    <string name="check_update_sub">显示当前版本编号</string>
+    <string name="check_update_sub">当前版本%s</string>
     <string name="about">关于我们</string>
     <string name="about_sub">AZKER的介绍和联系方式</string>
     <string name="big">大</string>
@@ -74,5 +74,14 @@
     <string name="close">关</string>
     
     <string name="cant_add_user_msg">您没有未激活的订制记录</string>
+    
+    <string name="upgrade">版本更新</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="download">下载</string>
+    <string name="exit">退出程序</string>
+    <string name="upgrade_prompt">检测到新版本：%s</string>
+    <string name="upgrade_neccessary">温馨提示：请务必升级您的应用程序，否则将无法继续使用。</string>
+    <string name="no_new_version">没有新版本</string>
     
 </resources>

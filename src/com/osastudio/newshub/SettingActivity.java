@@ -14,10 +14,13 @@ import com.osastudio.newshub.widgets.RegisterView;
 import com.osastudio.newshub.widgets.RegisterView.USER_TYPE;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Display;
 import android.view.TextureView;
 import android.view.View;
@@ -36,16 +39,32 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
    private Button mDownloadClose = null;
    private Button mDownloadOpen = null;
    private View mHelp = null;
-   private View mCheckUpdate = null;
+   private ViewGroup mCheckUpdate = null;
    private View mAbout = null;
    private ViewGroup mFontSizeGroup, mAutoDownloadGroup;
    private TextView mFontSizePrompt;
-	private ProgressDialog mPDlg = null;
-	private CheckTask mCheckTask = null;
+   private ProgressDialog mPDlg = null;
+   private CheckTask mCheckTask = null;
+   private TextView mVersionName;
+
+   protected ServiceConnection mNewsServiceConn = new ServiceConnection() {
+      @Override
+      public void onServiceDisconnected(ComponentName name) {
+
+      }
+
+      @Override
+      public void onServiceConnected(ComponentName name, IBinder service) {
+         setNewsService(((NewsService.NewsBinder) service).getService());
+      }
+   };
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      bindNewsService(mNewsServiceConn);
+
       setContentView(R.layout.activity_setting);
       findViews();
       initViews();
@@ -61,10 +80,11 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       mDownloadClose = (Button) findViewById(R.id.close_btn);
       mDownloadOpen = (Button) findViewById(R.id.open_btn);
       mHelp = findViewById(R.id.help);
-      mCheckUpdate = findViewById(R.id.check_update);
+      mCheckUpdate = (ViewGroup) findViewById(R.id.check_update);
       mAbout = findViewById(R.id.about);
       mFontSizeGroup = (ViewGroup) findViewById(R.id.font_size_group);
       mAutoDownloadGroup = (ViewGroup) findViewById(R.id.auto_download_group);
+      mVersionName = (TextView) findViewById(R.id.version_name);
    }
 
    private void initViews() {
@@ -153,65 +173,82 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       }
       mDownloadOpen.setOnClickListener(listener);
       mDownloadClose.setOnClickListener(listener);
-      
-		mAccountManager.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Intent it = new Intent(SettingActivity.this, UserManagerActivity.class);
-				startActivity(it);
-			}
-		});
-		
-		mAddAcountManager.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				mPDlg = Utils.showProgressDlg(SettingActivity.this, null);
-				mCheckTask = new CheckTask();
-				mCheckTask.execute();
-			}
-		});
+
+      mAccountManager.setOnClickListener(new OnClickListener() {
+         public void onClick(View v) {
+            Intent it = new Intent(SettingActivity.this,
+                  UserManagerActivity.class);
+            startActivity(it);
+         }
+      });
+
+      mAddAcountManager.setOnClickListener(new OnClickListener() {
+
+         public void onClick(View v) {
+            mPDlg = Utils.showProgressDlg(SettingActivity.this, null);
+            mCheckTask = new CheckTask();
+            mCheckTask.execute();
+         }
+      });
+
+      mCheckUpdate.setOnClickListener(new OnClickListener() {
+         public void onClick(View v) {
+            if (getNewsService() != null) {
+               getNewsService().checkNewVersion();
+            }
+         }
+      });
+      mVersionName.setText(getString(R.string.check_update_sub,
+            Utils.getVersionName(this)));
    }
-   
+
+   @Override
+   protected void onDestroy() {
+      super.onDestroy();
+
+      unbindNewService(mNewsServiceConn);
+   }
+
    private void showRegisterView(int w, int h) {
-		RegisterView registerDlg = new RegisterView(this,
-				R.style.Theme_PageDialog, w,
-				h, USER_TYPE.ADD);
-		registerDlg.show();
-	}
-	
-   
-	private class CheckTask extends AsyncTask<Void, Void, Boolean> {
+      RegisterView registerDlg = new RegisterView(this,
+            R.style.Theme_PageDialog, w, h, USER_TYPE.ADD);
+      registerDlg.show();
+   }
 
-		protected Boolean doInBackground(Void... params) {
-			ValidateResult result = UserApi.getValidateStatus(SettingActivity.this);
-			return result.isSuccess();
-			
-		}
+   private class CheckTask extends AsyncTask<Void, Void, Boolean> {
 
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (mPDlg != null) {
-				Utils.closeProgressDlg(mPDlg);
-				mPDlg = null;
-			}
-			
-			if (result) {
-				WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-				Display display = wm.getDefaultDisplay();
-				
-				int screenWidth = display.getWidth();
-				screenWidth = screenWidth > 0 ? screenWidth : 0;
-				int screenHeight = display.getHeight();
-				screenHeight = screenHeight > 0 ? screenHeight : 0;
-				showRegisterView(screenWidth, screenHeight);
-			} else {
-				Utils.ShowConfirmDialog(SettingActivity.this, 
-						SettingActivity.this.getString(R.string.cant_add_user_msg), null);
-			}
-			
+      protected Boolean doInBackground(Void... params) {
+         ValidateResult result = UserApi
+               .getValidateStatus(SettingActivity.this);
+         return result.isSuccess();
 
-			super.onPostExecute(result);
-		}
+      }
 
-	}
+      @Override
+      protected void onPostExecute(Boolean result) {
+         if (mPDlg != null) {
+            Utils.closeProgressDlg(mPDlg);
+            mPDlg = null;
+         }
+
+         if (result) {
+            WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+
+            int screenWidth = display.getWidth();
+            screenWidth = screenWidth > 0 ? screenWidth : 0;
+            int screenHeight = display.getHeight();
+            screenHeight = screenHeight > 0 ? screenHeight : 0;
+            showRegisterView(screenWidth, screenHeight);
+         } else {
+            Utils.ShowConfirmDialog(SettingActivity.this,
+                  SettingActivity.this.getString(R.string.cant_add_user_msg),
+                  null);
+         }
+
+         super.onPostExecute(result);
+      }
+
+   }
 
 }

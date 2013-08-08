@@ -1,29 +1,21 @@
 package com.osastudio.newshub;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.SSLEngineResult.Status;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
-import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.net.UserApi;
-import com.osastudio.newshub.utils.InputStreamHelper;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
@@ -32,15 +24,16 @@ import com.osastudio.newshub.widgets.RegisterView;
 import com.osastudio.newshub.widgets.RegisterView.USER_TYPE;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 
-import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.IBinder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -48,10 +41,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,7 +55,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 @SuppressLint("NewApi")
@@ -120,9 +110,25 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
 	private NewsApp mApp = null; 
+   
+   protected ServiceConnection mNewsServiceConn = new ServiceConnection() {
+      @Override
+      public void onServiceDisconnected(ComponentName name) {
+
+      }
+
+      @Override
+      public void onServiceConnected(ComponentName name, IBinder service) {
+         setNewsService(((NewsService.NewsBinder) service).getService());
+      }
+   };
+   
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+      
+		bindNewsService(mNewsServiceConn);
+      
 		mApp = (NewsApp) getApplication();
 		Rect frame = new Rect();
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
@@ -315,8 +321,10 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
+      
+      unbindNewService(mNewsServiceConn);
+      
 		if (mTask != null
 				&& !mTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
 			mTask.cancel(true);
@@ -616,6 +624,10 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+         if (mAppProperties != null && getNewsService() != null) {
+            getNewsService().checkNewVersion(mAppProperties);
+         }
+         
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
