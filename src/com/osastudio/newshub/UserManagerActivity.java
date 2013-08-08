@@ -18,15 +18,14 @@ import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
-public class UserManagerActivity extends Activity {
+public class UserManagerActivity extends NewsBaseActivity {
 	private LinearLayout mLayout = null;
 
 	private ArrayList<UserInfo> mUserInfos = null;
 	private ProgressDialog mPDlg = null;
 	private LoadTask mTask = null;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_usermanager);
 		findViews();

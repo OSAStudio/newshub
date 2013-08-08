@@ -6,6 +6,7 @@ import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.utils.UIUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -13,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+
 
 public class NewsBaseActivity extends Activity {
 
@@ -32,11 +34,13 @@ public class NewsBaseActivity extends Activity {
 
    protected void onPause() {
       super.onPause();
+      MobclickAgent.onPause(this);
    }
 
    @Override
    protected void onResume() {
       super.onResume();
+      MobclickAgent.onResume(this);
    }
 
    @Override
