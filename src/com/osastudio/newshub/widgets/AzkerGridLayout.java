@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-public class AzkerGridLayout extends LinearLayout implements View.OnClickListener {
+public class AzkerGridLayout extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
 	private final static int RAW_ID[] = { R.id.row0, R.id.row1, R.id.row2,
 			R.id.row3 };
 	private final static int CONTINER_ID[] = { R.id.container0,
@@ -43,6 +43,7 @@ public class AzkerGridLayout extends LinearLayout implements View.OnClickListene
 		for (int i = 0; i < CONTINER_ID.length; i++) {
 			RelativeLayout continer = (RelativeLayout) findViewById(CONTINER_ID[i]);
 			continer.setOnClickListener(this);
+			continer.setOnLongClickListener(this);
 			mContiners.add(continer);
 		}
 	}
@@ -97,6 +98,12 @@ public class AzkerGridLayout extends LinearLayout implements View.OnClickListene
 
 	public interface OnGridItemClickListener {
 		void onClick(int position, View v);
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

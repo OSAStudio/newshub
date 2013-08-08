@@ -61,7 +61,7 @@ import android.widget.TextView;
 public class CategoryActivity extends NewsBaseActivity {
 	private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
 
-	private static final float DEFAULT_WH_RATE = 5.0f / 8.0f;
+	private static final float DEFAULT_WH_RATE = 5.0f / 8.2f;
 
 	public static final String TYPE_NOTIFY_LIST = "1";
 	public static final String TYPE_EXPERT_LIST = "3";
@@ -103,6 +103,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private int mScreenHeight = 0;
 	private int mXMargin = 0;
 	private int mYMargin = 0;
+	private Display mDisplay;
 	private float mdp = 1;
 	private int mUserStatus = 3;
 	private boolean mIsSplashShow = true;
@@ -135,27 +136,27 @@ public class CategoryActivity extends NewsBaseActivity {
 		int statusBarHeight = frame.top;
 
 		WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
+		mDisplay = wm.getDefaultDisplay();
 
-		mScreenWidth = display.getWidth();
+		mScreenWidth = mDisplay.getWidth();
 		mScreenWidth = mScreenWidth > 0 ? mScreenWidth : 0;
-		mScreenHeight = display.getHeight();
+		mScreenHeight = mDisplay.getHeight();
 		mScreenHeight = mScreenHeight > 0 ? mScreenHeight : 0;
 
 		DisplayMetrics dm = new DisplayMetrics();
-		display.getMetrics(dm);
+		mDisplay.getMetrics(dm);
 		mdp = dm.density;
 
 		int top = getStatusHeight(this);
-		mScreenHeight = (int) (mScreenHeight - top - 60 * mdp);
+		mScreenHeight = (int) (mScreenHeight - top - 70 * mdp);
 		if (mScreenWidth > 0 && mScreenHeight > 0) {
 			if ((float) mScreenWidth / (float) mScreenHeight > DEFAULT_WH_RATE) {
 				mScreenWidth = (int) (mScreenHeight * DEFAULT_WH_RATE + 0.5f);
-				mXMargin = (int) ((display.getWidth() - mScreenWidth) / 2);
-				mYMargin = (int) (30 * mdp);
+				mXMargin = (int) ((mDisplay.getWidth() - mScreenWidth) / 2);
+				mYMargin = (int) (35 * mdp);
 			} else {
 				mScreenHeight = (int) (mScreenWidth / DEFAULT_WH_RATE + 0.5f);
-				mYMargin = (int) ((display.getHeight() - mScreenHeight) / 2);
+				mYMargin = (int) ((mDisplay.getHeight() - mScreenHeight) / 2);
 			}
 		}
 
@@ -169,6 +170,11 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		setupData();
 		mDlg = Utils.showProgressDlg(this, null);
+		
+
+		Utils.createLocalDiskPath(Utils.TEMP_FOLDER);
+		Utils.createLocalDiskPath(Utils.TEMP_CACHE_FOLDER);
+        Utils.createLocalFile(Utils.TEMP_FOLDER+".nomedia");
 	}
 
 	public static int getStatusHeight(Activity activity) {
@@ -410,8 +416,8 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void showRegisterView() {
 		RegisterView registerDlg = new RegisterView(this,
-				R.style.Theme_PageDialog, mScreenWidth, mScreenHeight,
-				USER_TYPE.REGISTER);
+				R.style.Theme_PageDialog, mDisplay.getWidth(), 
+				mDisplay.getHeight(), USER_TYPE.REGISTER);
 		registerDlg.show();
 	}
 
@@ -544,7 +550,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			case 1:
 				if (mAppProperties != null) {
 					mReceiveBmp = Utils.getBitmapFromUrl(mAppProperties
-							.getSplashImageUrl());
+							.getSplashImageUrl(), true);
 	
 					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
 							+ mAppProperties.getSplashImageUrl());
@@ -684,7 +690,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				}
 				if (bNeedDecode) {
 					Bitmap bmp = Utils.getBitmapFromUrl(channel.getIconUrl(),
-							mScreenHeight / 12);
+							mScreenHeight / 12, true);
 
 					Utils.logd("LoadBitmapTask",
 							"decode icon " + channel.getIconUrl() + " " + bmp);

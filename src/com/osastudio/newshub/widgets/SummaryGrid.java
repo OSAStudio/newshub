@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 public class SummaryGrid extends LinearLayout implements
-		View.OnClickListener {
+		View.OnClickListener, View.OnLongClickListener {
 	private final static int CONTINER_ID[] = { R.id.container0,
 			R.id.container1, R.id.container2, R.id.container3, R.id.container4,
 			R.id.container5 };
@@ -41,6 +41,7 @@ public class SummaryGrid extends LinearLayout implements
 		for (int i = 0; i < CONTINER_ID.length; i++) {
 			RelativeLayout continer = (RelativeLayout) findViewById(CONTINER_ID[i]);
 			continer.setOnClickListener(this);
+			continer.setOnLongClickListener(this);
 			mContiners.add(continer);
 		}
 	}
@@ -95,6 +96,12 @@ public class SummaryGrid extends LinearLayout implements
 
 	public interface OnGridItemClickListener {
 		void onClick(int position, View v);
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
