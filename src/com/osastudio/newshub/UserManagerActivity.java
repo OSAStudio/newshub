@@ -76,8 +76,9 @@ public class UserManagerActivity extends NewsBaseActivity {
 		protected Void doInBackground(Void... params) {
 			UserInfoList list = UserApi
 					.getUserInfoList(UserManagerActivity.this);
-
-			mUserInfos = (ArrayList<UserInfo>) list.getList();
+			if (list != null) {
+				mUserInfos = (ArrayList<UserInfo>) list.getList();
+			}
 			return null;
 		}
 
@@ -87,7 +88,9 @@ public class UserManagerActivity extends NewsBaseActivity {
 				Utils.closeProgressDlg(mPDlg);
 				mPDlg = null;
 			}
-			setupViews();
+			if (mUserInfos != null && mUserInfos.size()>0) {
+				setupViews();
+			}
 
 			super.onPostExecute(result);
 		}

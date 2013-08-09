@@ -97,26 +97,33 @@ public class UserInfosActivity extends NewsBaseActivity {
 		mConfirmBtn.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (mCurrentUserIndex >= 4 || mCurrentUserIndex < 0) {
-					mCurrentUserIndex = 0;
-				}
-				SharedPreferences prefs = UserInfosActivity.this
-						.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
-								Context.MODE_PRIVATE);
-				if (prefs != null) {
-					prefs.edit().putString(
-						PreferenceItems.USER_ID,
-						mUserList.get(mCurrentUserIndex)
-								.getUserId()).commit();
+				if (mUserList != null && mUserList.size() > 0) {
+					if (mCurrentUserIndex >= 4 || mCurrentUserIndex < 0) {
+						mCurrentUserIndex = 0;
+					}
+					SharedPreferences prefs = UserInfosActivity.this
+							.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
+									Context.MODE_PRIVATE);
+					if (prefs != null) {
+						prefs.edit()
+								.putString(
+										PreferenceItems.USER_ID,
+										mUserList.get(mCurrentUserIndex)
+												.getUserId()).commit();
 
+					}
+
+					UserInfosActivity.this.setResult(RESULT_OK);
 				}
-				UserInfosActivity.this.setResult(RESULT_OK);
 				UserInfosActivity.this.finish();
 			}
 		});
 	}
 
 	private void setupViews() {
+		if (mUserList == null || mUserList.size() <= 0) {
+			return;
+		}
 		String userId = ((NewsApp) getApplication()).getCurrentUserId();
 		for (int i = 0; i < mUserList.size(); i++) {
 			if (i >= 4) {
@@ -133,7 +140,8 @@ public class UserInfosActivity extends NewsBaseActivity {
 	}
 
 	private void setUserInfo(int index) {
-		if (index >= mUserList.size()) {
+		if (mUserList == null || mUserList.size() <= 0
+				|| index >= mUserList.size()) {
 			return;
 		}
 		mCurrentUserIndex = index;
@@ -160,7 +168,9 @@ public class UserInfosActivity extends NewsBaseActivity {
 
 		protected Void doInBackground(Void... params) {
 			UserList userList = UserApi.getUserList(UserInfosActivity.this);
-			mUserList = (ArrayList<User>) userList.getList();
+			if (userList != null) {
+				mUserList = (ArrayList<User>) userList.getList();
+			}
 			return null;
 		}
 

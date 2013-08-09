@@ -317,6 +317,9 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void setPageText(int current) {
 		int total;
+		if (mCategoryList == null || mCategoryList.size() == 0) {
+			return;
+		}
 		if (mCategoryList.size() % 8 == 0) {
 			total = mCategoryList.size() / 8;
 		} else {

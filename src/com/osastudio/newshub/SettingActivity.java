@@ -220,8 +220,11 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       protected Boolean doInBackground(Void... params) {
          ValidateResult result = UserApi
                .getValidateStatus(SettingActivity.this);
-         return result.isSuccess();
-
+         if (result != null) {
+        	 return result.isSuccess();
+         } else {
+        	 return false;
+         }
       }
 
       @Override
