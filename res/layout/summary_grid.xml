@@ -3,17 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <TextView 
+
+    <TextView
         android:id="@+id/title_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/summary_title_bg"
-        android:singleLine="true"/>
-     <ImageView
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="3px"
         android:background="@drawable/line_bg" />
@@ -22,7 +24,7 @@
         android:id="@+id/container0"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <ImageView
         android:layout_width="fill_parent"
@@ -92,16 +94,32 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1" />
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bottom_dark" 
-        android:gravity="right">
+        android:background="@color/bottom_dark"
+        android:gravity="right" >
+
+        <TextView
+            android:id="@+id/page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:gravity="center_vertical"
+            android:text="1/1"
+            android:textColor="@android:color/white"
+            android:textSize="14dp" />
+
         <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_marginRight="30dp"
-        android:src="@drawable/logo"/>
-    </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/logo" />
+    </RelativeLayout>
 
 </LinearLayout>
