@@ -1,19 +1,16 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/title_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#ff33b5e5"
-        android:gravity="center"
-        android:padding="15dp"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+     <TextView
+            android:id="@+id/title_text"
+            style="@style/text_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/title_blue" />
     
     <ListView 
         android:id="@+id/list"

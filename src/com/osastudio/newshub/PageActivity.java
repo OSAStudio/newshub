@@ -70,6 +70,7 @@ public class PageActivity extends NewsBaseActivity {
 	private String mHtmlCotent = null;
 	private String mTitle = null;
 	private boolean mNeedFeedback; // for notice
+	private String mNoticeId = null;
 
 	private String mSummary = null;  //simple//for expert
 	private String mResume = null; //for expert
@@ -77,6 +78,7 @@ public class PageActivity extends NewsBaseActivity {
 
 	private LoadDataTask mTask = null;
 
+	private int mTextSize = 18;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,17 +94,17 @@ public class PageActivity extends NewsBaseActivity {
 			mCategoryTitle = extras.getString(CATEGORY_TITLE);
 		}
 
-		if (mCategoryTitle != null) {
-			TextView title = (TextView)findViewById(R.id.title_text);
-			title.setVisibility(View.VISIBLE);
-			title.setText(mCategoryTitle);
-		}
-
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
+	}
+	
+	@Override
+	protected void onResume() {
+		mTextSize = getPrefsManager().getFontSize();
+		super.onResume();
 	}
 
 	private void setupData() {
@@ -184,6 +186,9 @@ public class PageActivity extends NewsBaseActivity {
 		mHtmlCotent = notice.getContent();
 		mTitle = notice.getTitle();
 		mNeedFeedback = notice.isFeedbackRequired();
+		if (mNeedFeedback) {
+			mNoticeId = notice.getId();
+		}
 		AddTitleToHtml();
 	}
 	
@@ -467,7 +472,11 @@ public class PageActivity extends NewsBaseActivity {
 				if (fileview == null) {
 					fileview = new FileView(PageActivity.this);
 				}
-				fileview.setData(mHtmlCotent, 18);
+				TextView title = (TextView)fileview.findViewById(R.id.title);
+				if (title != null && mCategoryTitle != null) {
+					title.setText(mCategoryTitle);
+				}
+				fileview.setData(mPageType, mHtmlCotent, mTextSize, null);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {

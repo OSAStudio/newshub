@@ -101,7 +101,7 @@ public class SummaryGrid extends LinearLayout implements
 	@Override
 	public boolean onLongClick(View v) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

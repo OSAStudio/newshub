@@ -57,12 +57,6 @@ public class SummaryActivity extends NewsBaseActivity {
 			mChannelTitle = extras.getString(CHANNEL_TITLE);
 		}
 
-		if (mChannelTitle != null) {
-			TextView title = (TextView)findViewById(R.id.title_text);
-			title.setVisibility(View.VISIBLE);
-			title.setText(mChannelTitle);
-		}
-
 		ViewConfiguration configuration = ViewConfiguration.get(this);
 		mTouchSlop = configuration.getScaledTouchSlop();
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);

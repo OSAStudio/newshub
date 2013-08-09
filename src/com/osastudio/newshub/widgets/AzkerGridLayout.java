@@ -103,7 +103,7 @@ public class AzkerGridLayout extends LinearLayout implements View.OnClickListene
 	@Override
 	public boolean onLongClick(View v) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

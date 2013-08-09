@@ -86,4 +86,8 @@
     <string name="upgrade_neccessary">温馨提示：请务必升级您的应用程序，否则将无法继续使用。</string>
     <string name="no_new_version">没有新版本</string>
     
+    <string name="praise">赞！</string>
+    <string name="notice_feedback">报名</string>
+    <string name="notice_already_feedback">已报名</string>
+    
 </resources>

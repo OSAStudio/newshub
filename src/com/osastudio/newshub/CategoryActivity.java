@@ -56,6 +56,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("NewApi")
 public class CategoryActivity extends NewsBaseActivity {

@@ -13,4 +13,5 @@
    <color name="line_gray">#ffdddddd</color>
    <color name="bg_gray">#ffdddddd</color>
    <color name="bottom_dark">#ff403f51</color>
+   <color name="file_title_bg">#fffca733</color>
 </resources>
