@@ -86,7 +86,7 @@ public class NewsBaseApi {
       return "android";
    }
 
-   protected static String getWebServer() {
+   public static String getWebServer() {
       return "http://" + (DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER)
             + ":9010/azker/admin/";
    }

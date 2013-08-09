@@ -14,8 +14,11 @@ import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.AppPropertiesApi;
+import com.osastudio.newshub.net.Net;
+import com.osastudio.newshub.net.NewsBaseApi;
 import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.net.UserApi;
+import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
@@ -27,7 +30,9 @@ import com.osastudio.newshub.widgets.SlideSwitcher;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -113,26 +118,49 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
-	private NewsApp mApp = null; 
-   
-   protected ServiceConnection mNewsServiceConn = new ServiceConnection() {
-      @Override
-      public void onServiceDisconnected(ComponentName name) {
+	private NewsApp mApp = null;
 
-      }
+	private Handler mHandler = new Handler() {
 
-      @Override
-      public void onServiceConnected(ComponentName name, IBinder service) {
-         setNewsService(((NewsService.NewsBinder) service).getService());
-      }
-   };
-   
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case Net.NetIsOK:
+				Utils.logd("NetIsOK", "setupData");
+				setupData();
+				break;
+			case Net.NetTipMessage_show:
+				Utils.ShowConfirmDialog(CategoryActivity.this,
+						CategoryActivity.this.getResources().getString(R.string.net_isonline_tip_msg),
+						new DialogConfirmCallback() {
+							public void onConfirm(DialogInterface dialog) {
+								CategoryActivity.this.finish();
+								
+							}
+						});
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+
+	protected ServiceConnection mNewsServiceConn = new ServiceConnection() {
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+
+		}
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			setNewsService(((NewsService.NewsBinder) service).getService());
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-      
+
 		bindNewsService(mNewsServiceConn);
-      
+
 		mApp = (NewsApp) getApplication();
 		Rect frame = new Rect();
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
@@ -171,13 +199,33 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		mInflater = LayoutInflater.from(this);
 
-		setupData();
-		
-		
+		// setupData();
+
+		checkNetWork();
 
 		Utils.createLocalDiskPath(Utils.TEMP_FOLDER);
 		Utils.createLocalDiskPath(Utils.TEMP_CACHE_FOLDER);
-        Utils.createLocalFile(Utils.TEMP_FOLDER+".nomedia");
+		Utils.createLocalFile(Utils.TEMP_FOLDER + ".nomedia");
+	}
+
+	private Net mNet = null;
+
+	private void checkNetWork() {
+		mNet = new Net(this, mHandler);
+		if (mNet.PhoneIsOnLine()) {
+
+			mDlg = Utils.showProgressDlg(this, null);
+			mNet.ExecutNetTask(NewsBaseApi.getWebServer());
+		} else {
+			Utils.ShowConfirmDialog(this,
+					getString(R.string.phone_isonline_tip_msg),
+					new DialogConfirmCallback() {
+						public void onConfirm(DialogInterface dialog) {
+							CategoryActivity.this.finish();
+
+						}
+					});
+		}
 	}
 
 	public static int getStatusHeight(Activity activity) {
@@ -242,7 +290,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
-//		mSwitcher.setVisibility(View.INVISIBLE);
+		 mSwitcher.setVisibility(View.INVISIBLE);
 
 		mActivateLayout = findViewById(R.id.activite);
 		mActivateLayout.setVisibility(View.INVISIBLE);
@@ -334,9 +382,9 @@ public class CategoryActivity extends NewsBaseActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-      
-      unbindNewService(mNewsServiceConn);
-      
+
+		unbindNewService(mNewsServiceConn);
+
 		if (mTask != null
 				&& !mTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
 			mTask.cancel(true);
@@ -379,7 +427,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void hideCover() {
 		View cover = findViewById(R.id.cover_layout);
 		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
-//			mSwitcher.setVisibility(View.VISIBLE);
+			 mSwitcher.setVisibility(View.VISIBLE);
 			Animation anim = AnimationUtils.loadAnimation(this,
 					R.anim.pull_out_to_top);
 			cover.setVisibility(View.GONE);
@@ -408,7 +456,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
 				@Override
 				public void onAnimationEnd(Animation animation) {
-//					mSwitcher.setVisibility(View.INVISIBLE);
+					 mSwitcher.setVisibility(View.INVISIBLE);
 
 				}
 			});
@@ -422,7 +470,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void showRegisterView() {
 		RegisterView registerDlg = new RegisterView(this,
-				R.style.Theme_PageDialog, mDisplay.getWidth(), 
+				R.style.Theme_PageDialog, mDisplay.getWidth(),
 				mDisplay.getHeight(), USER_TYPE.REGISTER);
 		registerDlg.setDialogConfirmCallback(mRegisterCallback);
 		registerDlg.show();
@@ -432,13 +480,12 @@ public class CategoryActivity extends NewsBaseActivity {
 		SharedPreferences prefs = getSharedPreferences(
 				PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
 		if (prefs != null) {
-			String userId = prefs.getString(PreferenceItems.USER_ID,
-					null);
+			String userId = prefs.getString(PreferenceItems.USER_ID, null);
 			if (userId != null) {
 				mApp.setCurrentUserId(userId);
 			}
 		}
-		mDlg = Utils.showProgressDlg(this, null);
+
 		mTask = new LoadDataTask();
 		mTask.execute(0);
 	}
@@ -555,33 +602,32 @@ public class CategoryActivity extends NewsBaseActivity {
 					mUserStatus = mAppProperties.getUserStatus();
 					if (mUserStatus == 3) {
 						List<String> userIds = mAppProperties.getUserIds();
-						
+
 						String curId = mApp.getCurrentUserId();
 						int idIndex = -1;
 						if (userIds != null && userIds.size() > 0) {
-							if (curId!= null) {
+							if (curId != null) {
 								for (int i = 0; i < userIds.size(); i++) {
 									if (curId.equals(userIds.get(i))) {
 										idIndex = i;
 									}
 								}
 							}
-							if(idIndex < 0)  {
+							if (idIndex < 0) {
 								mApp.setCurrentUserId(userIds.get(0));
 								SharedPreferences prefs = CategoryActivity.this
-										.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
+										.getSharedPreferences(
+												PreferenceFiles.APP_SETTINGS,
 												Context.MODE_PRIVATE);
 								if (prefs != null) {
-									prefs.edit().putString(
-										PreferenceItems.USER_ID,
-										userIds.get(0)).commit();
+									prefs.edit()
+											.putString(PreferenceItems.USER_ID,
+													userIds.get(0)).commit();
 
 								}
-							} 
-						} 
-						
-					
-						
+							}
+						}
+
 					} else {
 						mApp.setCurrentUserId(null);
 					}
@@ -590,11 +636,11 @@ public class CategoryActivity extends NewsBaseActivity {
 				}
 			case 1:
 				if (mAppProperties != null) {
-					mReceiveBmp = Utils.getBitmapFromUrl(mAppProperties
-							.getSplashImageUrl(), true);
-	
-					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
-							+ mAppProperties.getSplashImageUrl());
+					mReceiveBmp = Utils.getBitmapFromUrl(
+							mAppProperties.getSplashImageUrl(), true);
+
+					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp
+							+ "// " + mAppProperties.getSplashImageUrl());
 					publishProgress(2);
 				}
 			case 2:
@@ -624,7 +670,8 @@ public class CategoryActivity extends NewsBaseActivity {
 					mActivateLayout.setVisibility(View.INVISIBLE);
 					if (mUserStatus == 2) {
 						showRegisterView();
-					} else if (mUserStatus == 3) {}
+					} else if (mUserStatus == 3) {
+					}
 				}
 				break;
 			case 2:
@@ -645,10 +692,10 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-         if (mAppProperties != null && getNewsService() != null) {
-            getNewsService().checkNewVersion(mAppProperties);
-         }
-         
+			if (mAppProperties != null && getNewsService() != null) {
+				getNewsService().checkNewVersion(mAppProperties);
+			}
+
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
@@ -986,7 +1033,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				if (prefs != null) {
 					String userId = prefs.getString(PreferenceItems.USER_ID,
 							null);
-					
+
 					if (userId != null) {
 						if (!userId.equals(mApp.getCurrentUserId())) {
 							mApp.setCurrentUserId(userId);
@@ -1001,7 +1048,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	private DialogConfirmCallback mRegisterCallback = new DialogConfirmCallback() {
 
 		@Override
@@ -1009,9 +1056,9 @@ public class CategoryActivity extends NewsBaseActivity {
 			mDlg = Utils.showProgressDlg(CategoryActivity.this, null);
 			mTask = new LoadDataTask();
 			mTask.execute(0);
-			
+
 		}
-		
+
 	};
 
 }
