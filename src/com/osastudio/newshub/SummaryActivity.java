@@ -170,6 +170,8 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 	private void setupGridLayout(SummaryGrid grid_layout, int page) {
+		TextView title = (TextView)grid_layout.findViewById(R.id.title_text);
+		title.setText(mChannelTitle);
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
 	}
 

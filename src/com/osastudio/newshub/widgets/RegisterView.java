@@ -115,6 +115,8 @@ public class RegisterView extends Dialog {
 	private EditText mNameEdit = null;
 
 	private String mCityId = null;
+	
+	private DialogConfirmCallback mCallback = null;
 
 	// @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -170,10 +172,6 @@ public class RegisterView extends Dialog {
 		mSchool.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Utils.logd("pp", "mSchool onClick");
-				// if (mLoadTask == null) {
-				// mLoadTask = new LoadTask();
-				// mLoadTask.execute(LIST_TYPE.CITY);
-				// }
 				startLoadTask(LIST_TYPE.CITY);
 			}
 		});
@@ -181,10 +179,6 @@ public class RegisterView extends Dialog {
 		mGrade.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				// if (mLoadTask == null) {
-				// mLoadTask = new LoadTask();
-				// mLoadTask.execute(LIST_TYPE.GRADE);
-				// }
 				startLoadTask(LIST_TYPE.GRADE);
 			}
 		});
@@ -227,10 +221,7 @@ public class RegisterView extends Dialog {
 								mYear = year;
 								mMonth = monthOfYear;
 								mDay = dayOfMonth;
-								if (year > 1900) {
-									mYear = year - 1900;
-								}
-								Date date = new Date(mYear, mMonth, mDay);
+								Date date = new Date(year - 1900, mMonth, mDay);
 								mDateStr = new SimpleDateFormat("yyyy-MM-dd")
 										.format(date);
 								TextView birth = (TextView) findViewById(R.id.birth_text);
@@ -264,7 +255,6 @@ public class RegisterView extends Dialog {
 		mConfirm = findViewById(R.id.confirm_btn);
 		mConfirm.setOnClickListener(new View.OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				String userName = ((EditText) findViewById(R.id.name_text))
 						.getEditableText().toString();
@@ -488,8 +478,10 @@ public class RegisterView extends Dialog {
 						new DialogConfirmCallback() {
 							public void onConfirm(DialogInterface dialog) {
 								RegisterView.this.dismiss();
-
-							}
+								if (mCallback != null) {
+									mCallback.onConfirm(dialog);
+								}
+							} 
 						});
 			}
 			super.onPostExecute(result);
@@ -668,17 +660,11 @@ public class RegisterView extends Dialog {
 		}
 
 	}
-
-	public void onClick(View v) {
-		Utils.logd("RegisterView", "onClick");
-		int id = v.getId();
-		switch (id) {
-		case R.id.school:
-			LoadTask task = new LoadTask();
-			task.execute(LIST_TYPE.CITY);
-			break;
-		}
-
+	
+	public void setDialogConfirmCallback(DialogConfirmCallback callback) {
+		mCallback = callback;
 	}
+
+	
 
 }

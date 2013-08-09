@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/base"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="@android:color/darker_gray" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -9,234 +10,394 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/title_text"
+            style="@style/text_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/register"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:background="@color/title_blue"
+            android:text="@string/register" />
 
-        <LinearLayout
-            android:id="@+id/regist_layout"
+        <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@android:color/darker_gray"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" >
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:text="@string/register_msg"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+            android:layout_weight="1" >
 
             <LinearLayout
+                android:id="@+id/regist_layout"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@android:drawable/editbox_background_normal"
-                android:orientation="vertical" >
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" >
 
-                <LinearLayout
-                    android:id="@+id/school"
+                <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    android:orientation="horizontal" >
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/register_msg"
+                    android:textColor="@color/text_gray"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" >
+
+                    <LinearLayout
+                        android:id="@+id/school"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/school_c" />
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="5dp" >
 
-                    <TextView
-                        style="@style/text_black"
-                        android:id="@+id/school_text"
-                        android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/school_c" />
+
+                            <TextView
+                                style="@style/text_small"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="SCHOOL" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/school_text"
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/grade"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="3px"
+                            android:background="@drawable/line_bg" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    style="@style/text_normal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/grade_c" />
+
+                                <TextView
+                                    style="@style/text_small"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="GRADE" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/grade_text"
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/clas"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="3px"
+                            android:background="@drawable/line_bg" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    style="@style/text_normal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/class_c" />
+
+                                <TextView
+                                    style="@style/text_small"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="CLASS" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/class_text"
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/grade"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:visibility="gone" >
+                    android:layout_marginTop="10dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:orientation="vertical" >
 
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/name"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/grade_c" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="5dp" >
 
-                    <TextView
-                        style="@style/text_black"
-                        android:id="@+id/grade_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3" />
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/clas"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:visibility="gone" >
+                            <TextView
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/name" />
 
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
+                            <TextView
+                                style="@style/text_small"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="NAME" />
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/name_text"
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="3"
+                            android:background="@drawable/textfield_default_holo_light" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/sex"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/class_c" />
+                        android:orientation="vertical" >
 
-                    <TextView
-                        style="@style/text_black"
-                        android:id="@+id/class_text"
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="3px"
+                            android:background="@drawable/line_bg" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    style="@style/text_normal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/sex" />
+
+                                <TextView
+                                    style="@style/text_small"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="SEX" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/sex_text"
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/birth"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3" />
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="3px"
+                            android:background="@drawable/line_bg" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    style="@style/text_normal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/birth" />
+
+                                <TextView
+                                    style="@style/text_small"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="BIRTHDAY" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/birth_text"
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/education"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="3px"
+                            android:background="@drawable/line_bg" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="5dp" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical" >
+
+                                <TextView
+                                    style="@style/text_normal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/education" />
+
+                                <TextView
+                                    style="@style/text_small"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="EDUCATION" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/education_text"
+                                style="@style/text_normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@android:drawable/editbox_background_normal"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:id="@+id/name"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/name" />
-
-                    <EditText
-                        android:id="@+id/name_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="3"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/sex"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/sex" />
-
-                    <TextView
-                        style="@style/text_black"
-                        android:id="@+id/sex_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/birth"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/birth" />
-
-                    <TextView
-                        style="@style/text_black"
-                        android:id="@+id/birth_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/education"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        style="@style/text_black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/education" />
-
-                    <TextView
-                        style="@style/text_black"
-                        android:id="@+id/education_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
 
         <TextView
-            style="@style/text_black"
             android:id="@+id/confirm_btn"
+            style="@style/text_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
-            android:gravity="center"
-            android:text="@android:string/ok" />
+            android:layout_marginTop="10dp"
+            android:background="@color/bottom_dark"
+            android:text="@string/confirm" />
     </LinearLayout>
-   <LinearLayout 
+
+    <LinearLayout
         android:id="@+id/list_layout"
-        android:visibility="gone" 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@android:color/darker_gray"
+        android:paddingBottom="30dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="30dp"
-        android:paddingBottom="30dp">
-	    <ListView
-	        android:id="@+id/list"
-	        android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
-	        android:background="@android:drawable/editbox_background_normal"/>
-</LinearLayout>
+        android:visibility="gone" >
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:drawable/editbox_background_normal" />
+    </LinearLayout>
+
 </RelativeLayout>

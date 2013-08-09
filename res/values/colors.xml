@@ -9,9 +9,9 @@
    <color name="title_blue">#ff42cdf6</color>
    
    <drawable name="transparent_background">#00000000</drawable>
-   <color name="text_gray">#ff757575</color>
+   <color name="text_gray">#ff3f3f51</color>
    <color name="line_gray">#ffdddddd</color>
-   <color name="bg_gray">#ffdddddd</color>
+   <color name="bg_gray">#ffdcdddd</color>
    <color name="bottom_dark">#ff403f51</color>
    <color name="file_title_bg">#fffca733</color>
 </resources>

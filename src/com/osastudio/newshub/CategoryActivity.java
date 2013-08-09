@@ -17,6 +17,7 @@ import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.net.UserApi;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
 import com.osastudio.newshub.widgets.BaseAssistent;
@@ -32,6 +33,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -170,7 +172,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		mInflater = LayoutInflater.from(this);
 
 		setupData();
-		mDlg = Utils.showProgressDlg(this, null);
+		
 		
 
 		Utils.createLocalDiskPath(Utils.TEMP_FOLDER);
@@ -240,7 +242,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
-		mSwitcher.setVisibility(View.INVISIBLE);
+//		mSwitcher.setVisibility(View.INVISIBLE);
 
 		mActivateLayout = findViewById(R.id.activite);
 		mActivateLayout.setVisibility(View.INVISIBLE);
@@ -377,7 +379,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void hideCover() {
 		View cover = findViewById(R.id.cover_layout);
 		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
-			mSwitcher.setVisibility(View.VISIBLE);
+//			mSwitcher.setVisibility(View.VISIBLE);
 			Animation anim = AnimationUtils.loadAnimation(this,
 					R.anim.pull_out_to_top);
 			cover.setVisibility(View.GONE);
@@ -406,7 +408,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					mSwitcher.setVisibility(View.INVISIBLE);
+//					mSwitcher.setVisibility(View.INVISIBLE);
 
 				}
 			});
@@ -422,6 +424,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		RegisterView registerDlg = new RegisterView(this,
 				R.style.Theme_PageDialog, mDisplay.getWidth(), 
 				mDisplay.getHeight(), USER_TYPE.REGISTER);
+		registerDlg.setDialogConfirmCallback(mRegisterCallback);
 		registerDlg.show();
 	}
 
@@ -435,6 +438,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				mApp.setCurrentUserId(userId);
 			}
 		}
+		mDlg = Utils.showProgressDlg(this, null);
 		mTask = new LoadDataTask();
 		mTask.execute(0);
 	}
@@ -548,45 +552,8 @@ public class CategoryActivity extends NewsBaseActivity {
 						.getAppProperties(CategoryActivity.this);
 				Utils.logd("LoadDataTask", "mAppProperties=" + mAppProperties);
 				if (mAppProperties != null) {
-					publishProgress(1);
-
-				}
-			case 1:
-				if (mAppProperties != null) {
-					mReceiveBmp = Utils.getBitmapFromUrl(mAppProperties
-							.getSplashImageUrl(), true);
-	
-					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
-							+ mAppProperties.getSplashImageUrl());
-					publishProgress(2);
-				}
-			case 2:
-				NewsChannelList channel_list = NewsChannelApi
-						.getNewsChannelList(getApplicationContext(),
-								mApp.getCurrentUserId());
-				if (channel_list != null) {
-					mCategoryList = (ArrayList<NewsChannel>) channel_list
-							.getChannelList();
-				}
-
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			int status = values[0];
-			switch (status) {
-			case 1:
-				mUserStatus = mAppProperties.getUserStatus();
-				if (mUserStatus == 1) {
-					mActivateLayout.setVisibility(View.VISIBLE);
-				} else {
-					mActivateLayout.setVisibility(View.INVISIBLE);
-					if (mUserStatus == 2) {
-						showRegisterView();
-					} else if (mUserStatus == 3) {
+					mUserStatus = mAppProperties.getUserStatus();
+					if (mUserStatus == 3) {
 						List<String> userIds = mAppProperties.getUserIds();
 						
 						String curId = mApp.getCurrentUserId();
@@ -613,7 +580,51 @@ public class CategoryActivity extends NewsBaseActivity {
 							} 
 						} 
 						
+					
+						
+					} else {
+						mApp.setCurrentUserId(null);
 					}
+					publishProgress(1);
+
+				}
+			case 1:
+				if (mAppProperties != null) {
+					mReceiveBmp = Utils.getBitmapFromUrl(mAppProperties
+							.getSplashImageUrl(), true);
+	
+					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
+							+ mAppProperties.getSplashImageUrl());
+					publishProgress(2);
+				}
+			case 2:
+				if (mApp.getCurrentUserId() != null) {
+					NewsChannelList channel_list = NewsChannelApi
+							.getNewsChannelList(getApplicationContext(),
+									mApp.getCurrentUserId());
+					if (channel_list != null) {
+						mCategoryList = (ArrayList<NewsChannel>) channel_list
+								.getChannelList();
+					}
+				}
+
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			int status = values[0];
+			switch (status) {
+			case 1:
+				if (mUserStatus == 1) {
+					mActivateLayout.setVisibility(View.VISIBLE);
+				} else {
+					mActivateLayout.setVisibility(View.INVISIBLE);
+					if (mUserStatus == 2) {
+						showRegisterView();
+					} else if (mUserStatus == 3) {}
 				}
 				break;
 			case 2:
@@ -990,5 +1001,17 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+	
+	private DialogConfirmCallback mRegisterCallback = new DialogConfirmCallback() {
+
+		@Override
+		public void onConfirm(DialogInterface dialog) {
+			mDlg = Utils.showProgressDlg(CategoryActivity.this, null);
+			mTask = new LoadDataTask();
+			mTask.execute(0);
+			
+		}
+		
+	};
 
 }
