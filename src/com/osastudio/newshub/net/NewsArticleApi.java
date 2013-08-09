@@ -41,7 +41,7 @@ public class NewsArticleApi extends NewsBaseApi {
    public static NewsResult likeArticle(Context context, String articleId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-      params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, articleId));
+      params.add(new BasicNameValuePair("lessonID", articleId));
       JSONObject jsonObject = getJsonObject(likeArticleService(), params);
       return (jsonObject != null) ? new NewsResult(jsonObject) : null;
    }
