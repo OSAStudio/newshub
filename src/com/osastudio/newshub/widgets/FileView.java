@@ -169,7 +169,7 @@ public class FileView extends LinearLayout {
 					msgId = R.string.praise;
 				}
 				if (msgId > 0) {
-					Toast.makeText(mContext, msgId, Toast.LENGTH_LONG).show();
+					Toast.makeText(mContext, msgId, Toast.LENGTH_SHORT).show();
 				}
 			}
 		}

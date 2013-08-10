@@ -45,7 +45,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class PageActivity extends NewsBaseActivity {
-	public static final String PAGE_TYPE="page_type";
+	public static final String PAGE_TYPE = "page_type";
 	public static final String START_INDEX = "Start_index";
 	public static final String CATEGORY_TITLE = "Category_title";
 
@@ -72,9 +72,9 @@ public class PageActivity extends NewsBaseActivity {
 	private boolean mNeedFeedback; // for notice
 	private String mNoticeId = null;
 
-	private String mSummary = null;  //simple//for expert
-	private String mResume = null; //for expert
-	private String mIconUrl = null; //for expert
+	private String mSummary = null; // simple//for expert
+	private String mResume = null; // for expert
+	private String mIconUrl = null; // for expert
 
 	private LoadDataTask mTask = null;
 
@@ -84,8 +84,8 @@ public class PageActivity extends NewsBaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
-		
-		mApp = (NewsApp)getApplication();
+
+		mApp = (NewsApp) getApplication();
 		mInflater = LayoutInflater.from(this);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -100,7 +100,7 @@ public class PageActivity extends NewsBaseActivity {
 
 		setupData();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		mTextSize = getPrefsManager().getFontSize();
@@ -151,37 +151,37 @@ public class PageActivity extends NewsBaseActivity {
 			}
 			break;
 		case MotionEvent.ACTION_UP:
-			
+
 			break;
 		}
 		mBaseX = x;
 		mBaseY = y;
 		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-			return true;//super.dispatchTouchEvent(event);
+			return true;// super.dispatchTouchEvent(event);
 		} else {
 			return super.dispatchTouchEvent(event);
 		}
 	}
-	
+
 	private void loadUserIssue(int page) {
-		SubscriptionArticle userIssue = SubscriptionApi.
-				getSubscriptionArticle(this, mApp.getCurrentUserId(), 
-						mUserIssueList.get(page));
+		SubscriptionArticle userIssue = SubscriptionApi.getSubscriptionArticle(
+				this, mApp.getCurrentUserId(), mUserIssueList.get(page));
 		mHtmlCotent = userIssue.getContent();
 		mTitle = userIssue.getTitle();
 		AddTitleToHtml();
 	}
-	
+
 	private void loadRecommendPage(int page) {
-		RecommendedTopicIntro recommend = RecommendApi.getRecommendedTopicIntro(this, mApp.getCurrentUserId(),
-				mCacheList.get(page).mId);
+		RecommendedTopicIntro recommend = RecommendApi
+				.getRecommendedTopicIntro(this, mApp.getCurrentUserId(),
+						mCacheList.get(page).mId);
 		mHtmlCotent = recommend.getContent();
 		mTitle = recommend.getTitle();
 		AddTitleToHtml();
 	}
-	
+
 	private void loadNoticePage(int page) {
-		NewsNoticeArticle notice = NewsNoticeApi.getNewsNoticeArticle(this, 
+		NewsNoticeArticle notice = NewsNoticeApi.getNewsNoticeArticle(this,
 				mApp.getCurrentUserId(), mCacheList.get(page).mId);
 		mHtmlCotent = notice.getContent();
 		mTitle = notice.getTitle();
@@ -191,25 +191,24 @@ public class PageActivity extends NewsBaseActivity {
 		}
 		AddTitleToHtml();
 	}
-	
-	
+
 	private void loadExpertPage(int page) {
-		NewsColumnistInfo expert = NewsColumnistApi.getNewsColumnistInfo(this, 
+		NewsColumnistInfo expert = NewsColumnistApi.getNewsColumnistInfo(this,
 				mApp.getCurrentUserId(), mCacheList.get(page).mId);
 		mTitle = expert.getName();
 		mSummary = expert.getSummary();
 		mResume = expert.getResume();
 		mIconUrl = expert.getPortraitUrl();
-		
+
 		boolean bGetIcon = false;
-		for (int i = 0; i <mIconList.size();i++) {
+		for (int i = 0; i < mIconList.size(); i++) {
 			IconData data = mIconList.get(i);
 			if (data.mPage == page) {
 				if (data.mBmp == null || data.mBmp.isRecycled()) {
 					mIconList.remove(data);
 					mLoadBitmapTask = new LoadBitmapTask();
 					mLoadBitmapTask.execute(data);
-				
+
 				}
 				bGetIcon = true;
 				break;
@@ -234,10 +233,10 @@ public class PageActivity extends NewsBaseActivity {
 				if (index < 0 || index >= mUserIssueList.size()) {
 					return -1;
 				}
-			}else if (index < 0 || index >= mCacheList.size()) {
+			} else if (index < 0 || index >= mCacheList.size()) {
 				return -1;
 			}
-			switch(mPageType) {
+			switch (mPageType) {
 			case Utils.NOTIFY_LIST_TYPE:
 			case Utils.IMPORT_NOTIFY_TYPE:
 				loadNoticePage(index);
@@ -252,7 +251,7 @@ public class PageActivity extends NewsBaseActivity {
 			case Utils.USER_ISSUES_TYPE:
 				loadUserIssue(index);
 				break;
-			
+
 			}
 			return index;
 		}
@@ -262,8 +261,8 @@ public class PageActivity extends NewsBaseActivity {
 			if (index >= 0) {
 				mCurrentShowId = index;
 				Utils.log("LoadDataTask", "update switch");
-				
-				switch(mPageType) {
+
+				switch (mPageType) {
 				case Utils.NOTIFY_LIST_TYPE:
 				case Utils.RECOMMEND_LIST_TYPE:
 				case Utils.IMPORT_NOTIFY_TYPE:
@@ -276,9 +275,9 @@ public class PageActivity extends NewsBaseActivity {
 					ExpertAssistent expertAssistent = new ExpertAssistent();
 					mSwitcher.setAssistant(expertAssistent);
 					break;
-				
+
 				}
-				
+
 			} else {
 
 			}
@@ -303,11 +302,11 @@ public class PageActivity extends NewsBaseActivity {
 		@Override
 		protected Void doInBackground(IconData... params) {
 			IconData iconData = params[0];
-			if (iconData.mBmp== null || !iconData.mBmp.isRecycled()) {
+			if (iconData.mBmp == null || !iconData.mBmp.isRecycled()) {
 				iconData.mBmp = Utils.getBitmapFromUrl(iconData.mIconUrl);
 				mIconList.add(iconData);
 			}
-			
+
 			if (mIconList.size() > MAX_DATA_SIZE) {
 				int position = mSwitcher.getCurrentIndex();
 				for (int i = 0; i < mIconList.size(); i++) {
@@ -325,14 +324,14 @@ public class PageActivity extends NewsBaseActivity {
 			return null;
 		}
 
-//		@Override
-//		protected void onProgressUpdate(Void... values) {
-//			ExpertAssistent assistent = new ExpertAssistent();
-//			mSwitcher.setAssistant(assistent);
-//
-//			Utils.logd("LoadBitmapTask", "update icon ui");
-//			super.onProgressUpdate(values);
-//		}
+		// @Override
+		// protected void onProgressUpdate(Void... values) {
+		// ExpertAssistent assistent = new ExpertAssistent();
+		// mSwitcher.setAssistant(assistent);
+		//
+		// Utils.logd("LoadBitmapTask", "update icon ui");
+		// super.onProgressUpdate(values);
+		// }
 
 		@Override
 		protected void onPostExecute(Void result) {
@@ -375,7 +374,7 @@ public class PageActivity extends NewsBaseActivity {
 		}
 		mHtmlCotent = xmlString + mHtmlCotent;
 	}
-	
+
 	private class ExpertAssistent extends BaseAssistent {
 
 		@Override
@@ -392,21 +391,31 @@ public class PageActivity extends NewsBaseActivity {
 		@Override
 		public View getView(int position, View convertView) {
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
+			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
+					+ position + " convertView=" + convertView);
 			if (mLastIndex == position && convertView != null) {
 				Utils.log("getView", " last data");
-				((ScrollView) convertView).scrollTo(((ScrollView) convertView).getScrollX(), 0);
+				ScrollView scrollview = (ScrollView) convertView
+						.findViewById(R.id.scroll_layout);
+				scrollview.scrollTo(scrollview.getScrollX(), 0);
 				return convertView;
-			}else if (mCurrentId == mCurrentShowId) {
-				ScrollView fileview = (ScrollView) convertView;
+			} else if (mCurrentId == mCurrentShowId) {
+				View fileview = convertView;
 				if (fileview == null) {
-					fileview = (ScrollView)mInflater.inflate(R.layout.expert_page_view, null);
+					fileview = mInflater.inflate(R.layout.expert_page_view,
+							null);
 				}
-				ImageView iv = (ImageView)fileview.findViewById(R.id.image);
-				TextView summary = (TextView)fileview.findViewById(R.id.summary);
-				TextView resume = (TextView)fileview.findViewById(R.id.resume);
-				
-				for (int i = 0; i <mIconList.size();i++) {
+				TextView title = (TextView) fileview.findViewById(R.id.title);
+				ImageView iv = (ImageView) fileview.findViewById(R.id.image);
+				TextView summary = (TextView) fileview
+						.findViewById(R.id.summary);
+				summary.setTextSize(mTextSize);
+				summary.setLineSpacing(0, 1.8f);
+				TextView resume = (TextView) fileview.findViewById(R.id.resume);
+				resume.setTextSize(mTextSize);
+				resume.setLineSpacing(0, 1.8f);
+
+				for (int i = 0; i < mIconList.size(); i++) {
 					IconData data = mIconList.get(i);
 					if (data.mPage == position) {
 						if (data.mBmp != null && !data.mBmp.isRecycled()) {
@@ -414,7 +423,12 @@ public class PageActivity extends NewsBaseActivity {
 						}
 					}
 				}
-				
+				if (mCategoryTitle != null) {
+					title.setVisibility(View.VISIBLE);
+					title.setText(mCategoryTitle);
+				} else {
+					title.setVisibility(View.GONE);
+				}
 				summary.setText(mSummary);
 				resume.setText(mResume);
 				Utils.log("getView", " real data");
@@ -431,8 +445,7 @@ public class PageActivity extends NewsBaseActivity {
 			}
 
 		}
-	
-		
+
 	}
 
 	private class SwitchAssistent extends BaseAssistent {
@@ -454,25 +467,26 @@ public class PageActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-//			FileView fileview = (FileView) convertView;
-//			if (fileview == null) {
-//				fileview = new FileView(FileActivity.this);
-//			}
-//			fileview.setData(mHtmlCotent);
-//			return fileview;
-			
+			// FileView fileview = (FileView) convertView;
+			// if (fileview == null) {
+			// fileview = new FileView(FileActivity.this);
+			// }
+			// fileview.setData(mHtmlCotent);
+			// return fileview;
+
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
+			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
+					+ position + " convertView=" + convertView);
 			if (mLastIndex == position && convertView != null) {
 				Utils.log("getView", " last data");
 				((FileView) convertView).displayTop();
 				return convertView;
-			}else if (mCurrentId == mCurrentShowId) {
+			} else if (mCurrentId == mCurrentShowId) {
 				FileView fileview = (FileView) convertView;
 				if (fileview == null) {
 					fileview = new FileView(PageActivity.this);
 				}
-				TextView title = (TextView)fileview.findViewById(R.id.title);
+				TextView title = (TextView) fileview.findViewById(R.id.title);
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);
 				}
@@ -492,7 +506,7 @@ public class PageActivity extends NewsBaseActivity {
 
 		}
 	}
-	
+
 	private int mLastIndex = -1;
 
 }

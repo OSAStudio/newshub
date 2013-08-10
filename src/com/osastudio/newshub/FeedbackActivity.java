@@ -47,23 +47,27 @@ public class FeedbackActivity extends NewsBaseActivity {
 		mTypeSpinner = (Spinner) findViewById(R.id.type_spinner);
 		mEdit = (EditText) findViewById(R.id.content_edit);
 		mButton = findViewById(R.id.btn);
-		
+
 		mButton.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				String type = null;
 				if (mTypeList != null && mTypeList.size() > mTypePosition) {
 					type = mTypeList.get(mTypePosition).getName();
 				}
 				String cotent = mEdit.getEditableText().toString();
-				if (cotent == null || cotent.equals("") || 
-						type == null || type.equals("")) {
-					Utils.ShowConfirmDialog(FeedbackActivity.this, 
-							FeedbackActivity.this.getString(R.string.empty_alert), null);
+				if (cotent == null || cotent.equals("") || type == null
+						|| type.equals("")) {
+					Utils.ShowConfirmDialog(FeedbackActivity.this,
+							FeedbackActivity.this
+									.getString(R.string.empty_alert), null);
 				} else {
-					new CommitTask().execute(mTypeList.get(mTypePosition).getId(), cotent);
+					if (mTypeList != null && mTypeList.size() > mTypePosition) {
+						new CommitTask().execute(mTypeList.get(mTypePosition)
+								.getId(), cotent);
+					}
 				}
-				
+
 			}
 		});
 	}
@@ -126,7 +130,9 @@ public class FeedbackActivity extends NewsBaseActivity {
 		protected Void doInBackground(Void... params) {
 			FeedbackTypeList list = FeedbackApi
 					.getFeedbackTypeList(getApplicationContext());
-			mTypeList = (ArrayList<FeedbackType>) list.getList();
+			if (list != null) {
+				mTypeList = (ArrayList<FeedbackType>) list.getList();
+			}
 			return null;
 		}
 
@@ -143,6 +149,7 @@ public class FeedbackActivity extends NewsBaseActivity {
 
 	private class CommitTask extends AsyncTask<String, Void, Boolean> {
 		NewsResult mResult = null;
+
 		@Override
 		protected Boolean doInBackground(String... params) {
 			String feedbackTypeId = params[0];
@@ -156,18 +163,21 @@ public class FeedbackActivity extends NewsBaseActivity {
 		protected void onPostExecute(Boolean bSuccess) {
 			if (!bSuccess) {
 				int code = mResult.getResultCode();
-				String msg = Utils.getErrorResultMsg(FeedbackActivity.this, code);
+				String msg = Utils.getErrorResultMsg(FeedbackActivity.this,
+						code);
 				if (msg != null) {
 					Utils.ShowConfirmDialog(FeedbackActivity.this, msg, null);
 				}
 			} else {
-				Utils.ShowConfirmDialog(FeedbackActivity.this, 
-						FeedbackActivity.this.getString(R.string.feedback_success), 
-						new DialogConfirmCallback(){
+				Utils.ShowConfirmDialog(FeedbackActivity.this,
+						FeedbackActivity.this
+								.getString(R.string.feedback_success),
+						new DialogConfirmCallback() {
 							public void onConfirm(DialogInterface dialog) {
 								FeedbackActivity.this.finish();
-								
-							}});
+
+							}
+						});
 			}
 			super.onPostExecute(bSuccess);
 		}

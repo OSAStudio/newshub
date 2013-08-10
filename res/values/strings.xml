@@ -90,4 +90,10 @@
     <string name="notice_feedback">报名</string>
     <string name="notice_already_feedback">已报名</string>
     
+    <string name="tip">提示</string>
+    <string name="tip_message">检测网络中......</string>
+    <string name="net_isonline_tip_msg">服务器网络服务异常!</string>
+    <string name="phone_isonline_tip_msg">手机未开启网络服务!</string>
+  
+    
 </resources>

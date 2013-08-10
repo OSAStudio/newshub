@@ -37,6 +37,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	private String mChannelTitle = null;
 	private SlideSwitcher mSwitcher = null;
 	private List<NewsBaseAbstract> mSummaries = new ArrayList<NewsBaseAbstract>();
+	private int mTotalPage = 0;
 	private int mTouchSlop;
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
@@ -124,13 +125,18 @@ public class SummaryActivity extends NewsBaseActivity {
 				SubscriptionAbstractList userIssueList = SubscriptionApi
 						.getSubscriptionAbstractList(getApplicationContext(),
 								mApp.getCurrentUserId(), mChannelId);
-				mSummaries = userIssueList.asNewsBaseAbstractList();
+				if (userIssueList != null) {
+					mSummaries = userIssueList.asNewsBaseAbstractList();
+					
+				}
 				break;
 			case Utils.LESSON_LIST_TYPE:
 			case Utils.DAILY_REMINDER_TYPE:
 				summary_list = NewsAbstractApi.getNewsAbstractList(
 						getApplicationContext(), mChannelId);
-				mSummaries = summary_list.asNewsBaseAbstractList();
+				if (summary_list != null) {
+					mSummaries = summary_list.asNewsBaseAbstractList();
+				}
 				break;
 //			case Utils.DAILY_REMINDER_TYPE:
 //				break;
@@ -143,6 +149,13 @@ public class SummaryActivity extends NewsBaseActivity {
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
+			}
+			if (mSummaries != null && mSummaries.size() > 0) {
+				if (mSummaries.size() % 6 == 0) {
+					mTotalPage = mSummaries.size() / 6;
+				} else {
+					mTotalPage = mSummaries.size() / 6 + 1;
+				}
 			}
 			mLoadDataTask = null;
 			switch (mChannelType) {
@@ -170,6 +183,11 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 	private void setupGridLayout(SummaryGrid grid_layout, int page) {
+		TextView title = (TextView)grid_layout.findViewById(R.id.title_text);
+		title.setText(mChannelTitle);
+
+		TextView pageTv = (TextView)grid_layout.findViewById(R.id.title_text);
+		pageTv.setText(String.valueOf(page+1)+"/"+String.valueOf(mTotalPage));
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
 	}
 
@@ -206,11 +224,12 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-			if (mSummaries.size() % 6 == 0) {
-				return mSummaries.size() / 6;
-			} else {
-				return mSummaries.size() / 6 + 1;
-			}
+//			if (mSummaries.size() % 6 == 0) {
+//				return mSummaries.size() / 6;
+//			} else {
+//				return mSummaries.size() / 6 + 1;
+//			}
+			return mTotalPage;
 		}
 
 		@Override
