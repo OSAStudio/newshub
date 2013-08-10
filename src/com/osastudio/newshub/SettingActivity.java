@@ -154,22 +154,22 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
          public void onClick(View v) {
             PreferenceManager prefsManager = getPrefsManager();
             if (v.getId() == R.id.open_btn) {
-               prefsManager.enableAutoLoadingPicture(true);
+               prefsManager.enableAutoLoadingPicture(false);
                mDownloadOpen.setSelected(true);
                mDownloadClose.setSelected(false);
             } else if (v.getId() == R.id.close_btn) {
-               prefsManager.enableAutoLoadingPicture(false);
+               prefsManager.enableAutoLoadingPicture(true);
                mDownloadOpen.setSelected(false);
                mDownloadClose.setSelected(true);
             }
          }
       };
       if (autoLoading) {
-         mDownloadOpen.setSelected(true);
-         mDownloadClose.setSelected(false);
-      } else {
          mDownloadOpen.setSelected(false);
          mDownloadClose.setSelected(true);
+      } else {
+         mDownloadOpen.setSelected(true);
+         mDownloadClose.setSelected(false);
       }
       mDownloadOpen.setOnClickListener(listener);
       mDownloadClose.setOnClickListener(listener);

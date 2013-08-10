@@ -1,6 +1,7 @@
 package com.osastudio.newshub.widgets;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.NoticeResult;
 import com.osastudio.newshub.net.NewsArticleApi;
@@ -21,6 +22,29 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class FileView extends LinearLayout {
+   
+	final String jsLoadImageMethods = "<script type='text/javascript'>"
+			+ "imageSrc = new Array();"
+         + ""
+			+ "function getRemoteImage(index)"
+			+ "{"
+			+ "var images = document.getElementsByTagName('img');"
+			+ "images[index].src = imageSrc[index];"
+			+ "images[index].onclick = undefined;"
+			+ "}"
+			+ ""
+			+ "function useDefaultImage()"
+			+ "{"
+			+ "var images = document.getElementsByTagName('img');"
+			+ "for (var i = 0; i < images.length; i++) {"
+			+ "imageSrc.push(images[i].src);"
+			+ "images[i].src = 'file:///android_asset/web_default_image.png';"
+			+ "images[i].onclick = new Function('getRemoteImage(' + i + ')')"
+			+ "}"
+			+ "}"
+			+ ""
+			+ "window.onload = useDefaultImage;"
+			+ "</script>"; 
 
 	final String MIMETYPE = "text/html";
 
@@ -87,8 +111,15 @@ public class FileView extends LinearLayout {
 			findViewById(R.id.praise_layout).setVisibility(View.GONE);
 
 		}
+      
+		boolean enable = ((NewsApp) mContext.getApplicationContext())
+		      .getPrefsManager().isAutoLoadingPictureEnabled();
 
-		mHtml = "<html> \n" + "<head> \n" + "<style type=\"text/css\"> \n"
+		mHtml = "<html> \n" + "<head> \n";
+      if (!enable) {
+         mHtml += jsLoadImageMethods;
+      }
+		mHtml = mHtml + "<style type=\"text/css\"> \n"
 				+ "h2 {text-align:justify; font-size: " + (size + 4)
 				+ "px; line-height: " + (size + 10) + "px}\n"
 				+ "body {text-align:justify; font-size: " + size
