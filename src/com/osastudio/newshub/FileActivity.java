@@ -13,6 +13,7 @@ import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsArticle;
 import com.osastudio.newshub.net.NewsArticleApi;
+import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
@@ -55,12 +56,13 @@ public class FileActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	
 	private int mTextSize = 18;
+	private boolean mIsWIFI = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
-
+		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mCurrentId = extras.getInt(START_INDEX);
@@ -72,11 +74,13 @@ public class FileActivity extends NewsBaseActivity {
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
+		
 	}
 	
 	@Override
 	protected void onResume() {
 		mTextSize = getPrefsManager().getFontSize();
+		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		super.onResume();
 	}
 
@@ -242,7 +246,7 @@ public class FileActivity extends NewsBaseActivity {
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);
 				}
-				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent, mTextSize, mArticleId);
+				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent, mTextSize, mArticleId, mIsWIFI);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
@@ -257,6 +261,10 @@ public class FileActivity extends NewsBaseActivity {
 			}
 
 		}
+	}
+	
+	private View createPogress() {
+		
 	}
 	
 	private int mLastIndex = -1;

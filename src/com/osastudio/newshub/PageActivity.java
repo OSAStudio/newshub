@@ -25,6 +25,7 @@ import com.osastudio.newshub.net.NewsColumnistApi;
 import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
+import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
@@ -79,12 +80,14 @@ public class PageActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 
 	private int mTextSize = 18;
+	private boolean mIsWIFI = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
 
+		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		mApp = (NewsApp) getApplication();
 		mInflater = LayoutInflater.from(this);
 		Bundle extras = getIntent().getExtras();
@@ -104,6 +107,7 @@ public class PageActivity extends NewsBaseActivity {
 	@Override
 	protected void onResume() {
 		mTextSize = getPrefsManager().getFontSize();
+		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		super.onResume();
 	}
 
@@ -490,7 +494,7 @@ public class PageActivity extends NewsBaseActivity {
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);
 				}
-				fileview.setData(mPageType, mHtmlCotent, mTextSize, null);
+				fileview.setData(mPageType, mHtmlCotent, mTextSize, null, mIsWIFI);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {

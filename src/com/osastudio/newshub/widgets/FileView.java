@@ -99,7 +99,7 @@ public class FileView extends LinearLayout {
 		// mWebView.getSettings().setBlockNetworkImage(true);
 	}
 
-	public void setData(int fileType, String html, int size, String articleId) {
+	public void setData(int fileType, String html, int size, String articleId, boolean bWIFI) {
 		mFileType = fileType;
 		mHtml = html;
 		mAarticleId = articleId;
@@ -116,7 +116,7 @@ public class FileView extends LinearLayout {
 		      .getPrefsManager().isAutoLoadingPictureEnabled();
 
 		mHtml = "<html> \n" + "<head> \n";
-      if (!enable) {
+      if (!enable && !bWIFI) {
          mHtml += jsLoadImageMethods;
       }
 		mHtml = mHtml + "<style type=\"text/css\"> \n"
