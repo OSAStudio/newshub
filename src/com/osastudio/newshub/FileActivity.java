@@ -263,9 +263,9 @@ public class FileActivity extends NewsBaseActivity {
 		}
 	}
 	
-	private View createPogress() {
-		
-	}
+//	private View createPogress() {
+//		
+//	}
 	
 	private int mLastIndex = -1;
 

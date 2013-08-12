@@ -200,6 +200,14 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       });
       mVersionName.setText(getString(R.string.check_update_sub,
             Utils.getVersionName(this)));
+      
+      mAbout.setOnClickListener(new OnClickListener() {
+         public void onClick(View v) {
+            Intent intent = new Intent();
+            intent.setClass(SettingActivity.this, AboutActivity.class);
+            startActivity(intent);
+         }
+      });
    }
 
    @Override
