@@ -27,6 +27,7 @@ import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class FileActivity extends NewsBaseActivity {
@@ -224,13 +225,9 @@ public class FileActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-//			FileView fileview = (FileView) convertView;
-//			if (fileview == null) {
-//				fileview = new FileView(FileActivity.this);
-//			}
-//			fileview.setData(mHtmlCotent);
-//			return fileview;
-			
+			if (convertView instanceof ProgressBar) {
+				convertView = null;
+			}
 			mCurrentId = position;
 			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
 			if (mLastIndex == position && convertView != null) {
@@ -257,13 +254,18 @@ public class FileActivity extends NewsBaseActivity {
 				mTask = new LoadDataTask();
 				mTask.execute(position);
 				Utils.log("getView", " no data");
-				return null;
+				return createPogress();
 			}
 
 		}
 	}
 	
 	private View createPogress() {
+		ProgressBar bar= new ProgressBar(this);
+		bar.setMax(100);
+		bar.setProgress(50);
+		
+		return bar;
 		
 	}
 	

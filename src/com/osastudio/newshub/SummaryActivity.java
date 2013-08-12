@@ -41,6 +41,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	private int mTouchSlop;
 	private int mDirection = -1; // 0 is preview; 1 is next;
 	private int mInitX, mInitY;
+	private int mBaseX, mBaseY;
 	private boolean mbSwitchAble = true;
 	
 	private LoadDataTask mLoadDataTask = null;
@@ -96,24 +97,36 @@ public class SummaryActivity extends NewsBaseActivity {
 			mbSwitchAble = true;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			break;
-		case MotionEvent.ACTION_UP:
 			if (mbSwitchAble) {
-				if (Math.abs(mInitX - x) > mTouchSlop
-						&& Math.abs(mInitX - x) > Math.abs(mInitY - y)) {
+				if (Math.abs(mBaseX - x) > mTouchSlop
+						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
 					if (mInitX > x) {
 						mDirection = 1;
 					} else {
 						mDirection = 0;
 					}
+
+					int lastIndex = mSwitcher.getCurrentIndex();
 					mSwitcher.SwitcherOnScroll(mDirection);
+					Utils.logd("FileActivity", "switch scroll " + mDirection);
+					mbSwitchAble = false;
 					break;
 				}
 			}
 			break;
+		case MotionEvent.ACTION_UP:
+			
+			break;
 		}
-		return super.dispatchTouchEvent(event);
+		mBaseX = x;
+		mBaseY = y;
+		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+			return true;//super.dispatchTouchEvent(event);
+		} else {
+			return super.dispatchTouchEvent(event);
+		}
 	}
+
 
 	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
 
@@ -186,7 +199,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		TextView title = (TextView)grid_layout.findViewById(R.id.title_text);
 		title.setText(mChannelTitle);
 
-		TextView pageTv = (TextView)grid_layout.findViewById(R.id.title_text);
+		TextView pageTv = (TextView)grid_layout.findViewById(R.id.page);
 		pageTv.setText(String.valueOf(page+1)+"/"+String.valueOf(mTotalPage));
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
 	}

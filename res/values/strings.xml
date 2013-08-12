@@ -33,6 +33,9 @@
 	<string name="feedback_content">反馈内容</string>
    <string name="feedback_confirm">提交反馈</string>
    <string name="feedback_success">提交反馈成功</string>
+   <string name="feedback_length_hint">字数在10-500之间</string>
+   <string name="feedback_content_too_few">您提交的反馈内容太少了。</string>
+   <string name="feedback_content_too_many">您提交的反馈内容太多了。</string>
    
     <!-- alert msg  -->
     <string name="msg_key_error">激活码无效</string><!--102, 104, 105-->
@@ -94,6 +97,6 @@
     <string name="tip_message">检测网络中......</string>
     <string name="net_isonline_tip_msg">服务器网络服务异常!</string>
     <string name="phone_isonline_tip_msg">手机未开启网络服务!</string>
-  
+    <string name="category_msg">上滑可进入首页</string>
     
 </resources>
