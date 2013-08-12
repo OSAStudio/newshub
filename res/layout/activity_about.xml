@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_gray">
+
+    <TextView
+        android:id="@+id/about_title"
+        style="@style/text_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/title_blue"
+        android:text="@string/about" />
+    
+    <LinearLayout
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent"
+       android:padding="20dp"
+       android:orientation="vertical">
+       
+       <TextView
+           android:id="@+id/about_company"
+           style="@style/about_text_content"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:text="@string/about_company" />
+   
+       <TextView
+           android:id="@+id/contact_us"
+           style="@style/about_text_title"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="40dp"
+           android:text="@string/contact_us" />
+   
+       <TextView
+           android:id="@+id/contact_info"
+           style="@style/about_text_content"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"
+           android:text="@string/contact_info" />
+       
+       <TextView
+           android:id="@+id/business"
+           style="@style/about_text_title"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="40dp"
+           android:text="@string/business" />
+       
+       <TextView
+           android:id="@+id/business_tel"
+           style="@style/about_text_content"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"
+           android:text="@string/business_tel" />
+    </LinearLayout>
+    
+</LinearLayout>

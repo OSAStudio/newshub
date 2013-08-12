@@ -268,6 +268,7 @@ public class FileActivity extends NewsBaseActivity {
 		return bar;
 		
 	}
+
 	
 	private int mLastIndex = -1;
 

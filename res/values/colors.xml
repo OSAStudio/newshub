@@ -14,4 +14,5 @@
    <color name="bg_gray">#ffdcdddd</color>
    <color name="bottom_dark">#ff403f51</color>
    <color name="file_title_bg">#fffca733</color>
+   <color name="about_text_color">#ff333333</color>
 </resources>
