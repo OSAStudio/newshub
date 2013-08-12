@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class AppDealine {
+public class AppDeadline {
 
    public static boolean isExpired() {
       try {
