@@ -25,11 +25,6 @@ public class NewsBaseActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       
-      if (AppDealine.isExpired()) {
-         finish();
-         return;
-      }
-
       if (getActivityStack() == null) {
          ((NewsApp) getApplication()).prepareEnvironment();
          startNewsService();
