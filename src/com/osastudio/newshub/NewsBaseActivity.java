@@ -4,6 +4,7 @@ import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
+import com.osastudio.newshub.data.AppDealine;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.utils.UIUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -23,6 +24,11 @@ public class NewsBaseActivity extends Activity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      
+      if (AppDealine.isExpired()) {
+         finish();
+         return;
+      }
 
       if (getActivityStack() == null) {
          ((NewsApp) getApplication()).prepareEnvironment();
