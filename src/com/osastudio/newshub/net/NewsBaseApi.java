@@ -20,6 +20,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -246,9 +247,18 @@ public class NewsBaseApi {
             "expert!getExpertContentByMobile.do").toString();
    }
 
+   protected static String getAppDeadlineService() {
+      return "http://m.weather.com.cn/data/101220101.html";
+   }
+
    protected static JSONObject getJsonObject(String service,
          List<NameValuePair> params) {
-      String jsonString = getString(service, params);
+      return getJsonObject(service, params, DEFAULT_HTTP_METHOD);
+   }
+
+   protected static JSONObject getJsonObject(String service,
+         List<NameValuePair> params, HttpMethod method) {
+      String jsonString = getString(service, params, method);
       if (TextUtils.isEmpty(jsonString)) {
          return null;
       }
@@ -256,7 +266,7 @@ public class NewsBaseApi {
       try {
          jsonObject = new JSONObject(jsonString);
       } catch (JSONException e) {
-         // e.printStackTrace();
+         e.printStackTrace();
          return null;
       }
       if (jsonObject.length() <= 0) {
@@ -280,6 +290,13 @@ public class NewsBaseApi {
 
    protected static String getStringByHttpGet(String service,
          List<NameValuePair> params) {
+      try {
+         Utils.logi(TAG, "getString() [SERVICE] " + service);
+         return getString(new HttpGet(service));
+      } catch (IllegalArgumentException e) {
+         e.printStackTrace();
+      }
+
       return null;
    }
 
@@ -296,23 +313,37 @@ public class NewsBaseApi {
                         + EntityUtils.toString(httpRequest.getEntity(),
                               HTTP.UTF_8));
          }
+         return getString(httpRequest);
+      } catch (IllegalArgumentException e) {
+         e.printStackTrace();
+      } catch (IOException e) {
+         e.printStackTrace();
+      } catch (ParseException e) {
+         e.printStackTrace();
+      }
 
+      return null;
+   }
+
+   protected static String getString(HttpUriRequest httpRequest) {
+      try {
          HttpResponse httpResponse = new DefaultHttpClient()
                .execute(httpRequest);
-         if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+         int status = httpResponse.getStatusLine().getStatusCode();
+         if (status == HttpStatus.SC_OK) {
             String responseString = EntityUtils.toString(
                   httpResponse.getEntity(), HTTP.UTF_8);
             Utils.logi(TAG, "getString() [RESPONSE] " + responseString);
             return responseString;
+         } else {
+            // Error
          }
       } catch (ClientProtocolException e) {
-         // e.printStackTrace();
-      } catch (IllegalArgumentException e) {
-         // e.printStackTrace();
+         e.printStackTrace();
       } catch (IOException e) {
-         // e.printStackTrace();
+         e.printStackTrace();
       } catch (ParseException e) {
-         // e.printStackTrace();
+         e.printStackTrace();
       }
 
       return null;

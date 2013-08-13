@@ -129,14 +129,11 @@ public class FileView extends LinearLayout {
 		// mWebView.getSettings().setBlockNetworkImage(true);
 	}
    
-	private String processContent(String content, int size) {
-		boolean enable = ((NewsApp) mContext.getApplicationContext())
-		      .getPrefsManager().isAutoLoadingPictureEnabled();
-
+	private String processContent(String content, int size, boolean autoLoad) {
 	   Document document = null;
 	   document = Jsoup.parse(content);
       if (document != null) {
-         if (!enable) {
+         if (!autoLoad) {
             Elements elements = document.getElementsByTag("img");
             if (elements != null && elements.size() > 0) {
                for (Element element : elements) {
@@ -162,7 +159,7 @@ public class FileView extends LinearLayout {
       return content;
 	}
 
-	public void setData(int fileType, String html, int size, String articleId) {
+	public void setData(int fileType, String html, int size, String articleId, boolean bWIFI) {
 		mFileType = fileType;
 		mHtml = html;
 		mAarticleId = articleId;
@@ -175,7 +172,10 @@ public class FileView extends LinearLayout {
 
 		}
       
-      mHtml = processContent(html, size);
+		boolean autoLoad = bWIFI || ((NewsApp) mContext.getApplicationContext())
+		      .getPrefsManager().isAutoLoadingPictureEnabled();
+
+      mHtml = processContent(html, size, autoLoad);
 		mWebView.loadDataWithBaseURL("about:blank", mHtml, MIMETYPE, ENCODING,
 				"");
 	}

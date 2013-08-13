@@ -33,6 +33,9 @@
 	<string name="feedback_content">反馈内容</string>
    <string name="feedback_confirm">提交反馈</string>
    <string name="feedback_success">提交反馈成功</string>
+   <string name="feedback_length_hint">字数在10-500之间</string>
+   <string name="feedback_content_too_few">您提交的反馈内容太少了。</string>
+   <string name="feedback_content_too_many">您提交的反馈内容太多了。</string>
    
     <!-- alert msg  -->
     <string name="msg_key_error">激活码无效</string><!--102, 104, 105-->
@@ -72,6 +75,17 @@
     <string name="small">小</string>
     <string name="open">开</string>
     <string name="close">关</string>
+    <string name="about_title">关于AZKER&#160;&#160;&#160;v%s</string>
+    <string name="about_company">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+        AZKER是由合肥华迪信息技术有限公司开发运营的平台，
+        平台内容是由专家团队多年工作、教育、教学、咨询等经验的积累，
+        针对不同阶段学生的特点定制化、标准化服务的平台。</string>
+    <string name="contact_us">联系我们</string>
+    <string name="contact_info">官方网站：http://www.azker.com
+        \n电子邮箱：jinkun@huadi.com.cn
+        \n联系电话：0551-65210156</string>
+    <string name="business">商务合作</string>
+    <string name="business_tel">联系电话：18956050522</string>
     
     <string name="cant_add_user_msg">您没有未激活的订制记录</string>
     
@@ -94,6 +108,8 @@
     <string name="tip_message">检测网络中......</string>
     <string name="net_isonline_tip_msg">服务器网络服务异常!</string>
     <string name="phone_isonline_tip_msg">手机未开启网络服务!</string>
-  
+    <string name="category_msg">上滑可进入首页</string>
+    
+    <string name="exit_msg">再按一次退出Azker</string>
     
 </resources>

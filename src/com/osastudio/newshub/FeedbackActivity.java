@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class FeedbackActivity extends NewsBaseActivity {
+	final static private int MIN_LENGTH = 10;
+	final static private int MAX_LENGTH = 500;
+	
 	private Spinner mTypeSpinner = null;
 	private EditText mEdit = null;
 	private View mButton = null;
@@ -62,7 +65,15 @@ public class FeedbackActivity extends NewsBaseActivity {
 							FeedbackActivity.this
 									.getString(R.string.empty_alert), null);
 				} else {
-					if (mTypeList != null && mTypeList.size() > mTypePosition) {
+					if (cotent.length() < MIN_LENGTH) {
+						Utils.ShowConfirmDialog(FeedbackActivity.this,
+								FeedbackActivity.this
+										.getString(R.string.feedback_content_too_few), null);
+					}else if (cotent.length() > MAX_LENGTH) {
+						Utils.ShowConfirmDialog(FeedbackActivity.this,
+								FeedbackActivity.this
+										.getString(R.string.feedback_content_too_many), null);
+					} else if (mTypeList != null && mTypeList.size() > mTypePosition) {
 						new CommitTask().execute(mTypeList.get(mTypePosition)
 								.getId(), cotent);
 					}

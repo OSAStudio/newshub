@@ -24,6 +24,7 @@ import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
 import com.osastudio.newshub.widgets.AzkerGridLayout.OnGridItemClickListener;
 import com.osastudio.newshub.widgets.BaseAssistent;
+import com.osastudio.newshub.widgets.DivisionEditText;
 import com.osastudio.newshub.widgets.RegisterView;
 import com.osastudio.newshub.widgets.RegisterView.USER_TYPE;
 import com.osastudio.newshub.widgets.SlideSwitcher;
@@ -63,6 +64,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("NewApi")
@@ -89,7 +92,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private ImageView mCover = null;
 	private SlideSwitcher mSwitcher = null;
 	private View mActivateLayout = null;
-	private EditText mActivateEdit = null;
+	private DivisionEditText mActivateEdit = null;
 	private View mActivateBtn = null;
 	private View mAccount_btn = null;
 	private View mRecommend_btn = null;
@@ -207,6 +210,30 @@ public class CategoryActivity extends NewsBaseActivity {
 		Utils.createLocalDiskPath(Utils.TEMP_CACHE_FOLDER);
 		Utils.createLocalFile(Utils.TEMP_FOLDER + ".nomedia");
 	}
+	
+	private boolean mIsExit = false;
+	private Toast mExitToast = null;
+	@Override
+	public void onBackPressed() {
+		if (mIsExit) {
+			if (mExitToast != null) {
+				mExitToast.cancel();
+			}
+		super.onBackPressed();
+		} else {
+			mIsExit = true;
+			mExitToast = Toast.makeText(this, R.string.exit_msg, Toast.LENGTH_SHORT);
+			mExitToast.show();
+			mHandler.postDelayed(new Runnable() {
+				public void run() {
+					mIsExit = false;
+					if (mExitToast != null) {
+						mExitToast.cancel();
+					}
+				}
+			}, 2000);
+		}
+	}
 
 	private Net mNet = null;
 
@@ -294,12 +321,11 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		mActivateLayout = findViewById(R.id.activite);
 		mActivateLayout.setVisibility(View.INVISIBLE);
-		mActivateEdit = (EditText) findViewById(R.id.activite_edit);
+		mActivateEdit = (DivisionEditText) findViewById(R.id.activite_edit);
 		mActivateBtn = findViewById(R.id.activite_btn);
 		mActivateBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String activate_str = mActivateEdit.getEditableText()
-						.toString();
+				String activate_str = mActivateEdit.getResult();
 				if (activate_str != null && !activate_str.equals("")) {
 					new ActivateTask().execute(activate_str);
 				}
@@ -425,6 +451,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	}
 
 	private void hideCover() {
+		hideSlideMsg();
 		View cover = findViewById(R.id.cover_layout);
 		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
 			 mSwitcher.setVisibility(View.VISIBLE);
@@ -475,7 +502,21 @@ public class CategoryActivity extends NewsBaseActivity {
 		registerDlg.setDialogConfirmCallback(mRegisterCallback);
 		registerDlg.show();
 	}
-
+	
+	private void showSlideMsg() {
+		View view = findViewById(R.id.msg_text);
+		if (view.getVisibility() != View.VISIBLE) {
+			view.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void hideSlideMsg() {
+		View view = findViewById(R.id.msg_text);
+		if (view.getVisibility() == View.VISIBLE) {
+			view.setVisibility(View.GONE);
+		}
+	}
+ 
 	private void setupData() {
 		SharedPreferences prefs = getSharedPreferences(
 				PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
@@ -498,25 +539,22 @@ public class CategoryActivity extends NewsBaseActivity {
 		case MotionEvent.ACTION_DOWN:
 			mInitX = x;
 			mInitY = y;
-			mBaseX = x;
-			mBaseY = y;
 			mDirection = -1;
 			mbSwitchAble = true;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			break;
-		case MotionEvent.ACTION_UP:
 			if (mbSwitchAble) {
-				if (Math.abs(mInitX - x) > mTouchSlop
-						&& Math.abs(mInitX - x) > Math.abs(mInitY - y)) {
+				if (Math.abs(mBaseX - x) > mTouchSlop
+						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
 					if (mInitX > x) {
 						mDirection = 1;
 					} else {
 						mDirection = 0;
 					}
-					mSwitcher.SwitcherOnScroll(mDirection);
-					setPageText(mSwitcher.getCurrentIndex());
 
+					mSwitcher.SwitcherOnScroll(mDirection);
+					Utils.logd("FileActivity", "switch scroll " + mDirection);
+					mbSwitchAble = false;
 					break;
 				}
 			}
@@ -528,9 +566,19 @@ public class CategoryActivity extends NewsBaseActivity {
 				hideCover();
 			}
 			break;
+		case MotionEvent.ACTION_UP:
+			
+			break;
 		}
-		return super.dispatchTouchEvent(event);
+		mBaseX = x;
+		mBaseY = y;
+		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+			return true;//super.dispatchTouchEvent(event);
+		} else {
+			return super.dispatchTouchEvent(event);
+		}
 	}
+
 
 	private class ActivateTask extends AsyncTask<String, Void, Boolean> {
 
@@ -547,7 +595,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				mActivateLayout.setVisibility(View.INVISIBLE);
 				showRegisterView();
 			} else {
-				mActivateEdit.setText(null);
+				mActivateEdit.init();
 			}
 			super.onPostExecute(result);
 		}
@@ -671,6 +719,7 @@ public class CategoryActivity extends NewsBaseActivity {
 					if (mUserStatus == 2) {
 						showRegisterView();
 					} else if (mUserStatus == 3) {
+						showSlideMsg();
 					}
 				}
 				break;

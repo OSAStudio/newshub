@@ -7,6 +7,7 @@ import com.huadi.azker_phone.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ViewSwitcher;
 
@@ -147,7 +148,13 @@ public class SlideSwitcher extends ViewSwitcher implements ViewSwitcher.ViewFact
 			layout.removeAllViews();
 		}
 		if (view != null) {
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+			RelativeLayout.LayoutParams lp = null;
+			if (view instanceof ProgressBar) {
+				lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+				lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+			} else {
+				lp = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+			}
 			layout.addView(view, lp);
 			layout.invalidate();
 		}

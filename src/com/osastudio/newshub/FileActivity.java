@@ -13,6 +13,7 @@ import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsArticle;
 import com.osastudio.newshub.net.NewsArticleApi;
+import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
@@ -26,6 +27,7 @@ import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class FileActivity extends NewsBaseActivity {
@@ -55,12 +57,13 @@ public class FileActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	
 	private int mTextSize = 18;
+	private boolean mIsWIFI = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
-
+		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mCurrentId = extras.getInt(START_INDEX);
@@ -72,11 +75,13 @@ public class FileActivity extends NewsBaseActivity {
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
+		
 	}
 	
 	@Override
 	protected void onResume() {
 		mTextSize = getPrefsManager().getFontSize();
+		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		super.onResume();
 	}
 
@@ -220,13 +225,9 @@ public class FileActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-//			FileView fileview = (FileView) convertView;
-//			if (fileview == null) {
-//				fileview = new FileView(FileActivity.this);
-//			}
-//			fileview.setData(mHtmlCotent);
-//			return fileview;
-			
+			if (convertView instanceof ProgressBar) {
+				convertView = null;
+			}
 			mCurrentId = position;
 			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
 			if (mLastIndex == position && convertView != null) {
@@ -242,7 +243,7 @@ public class FileActivity extends NewsBaseActivity {
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);
 				}
-				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent, mTextSize, mArticleId);
+				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent, mTextSize, mArticleId, mIsWIFI);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
@@ -253,11 +254,21 @@ public class FileActivity extends NewsBaseActivity {
 				mTask = new LoadDataTask();
 				mTask.execute(position);
 				Utils.log("getView", " no data");
-				return null;
+				return createPogress();
 			}
 
 		}
 	}
+	
+	private View createPogress() {
+		ProgressBar bar= new ProgressBar(this);
+		bar.setMax(100);
+		bar.setProgress(50);
+		
+		return bar;
+		
+	}
+
 	
 	private int mLastIndex = -1;
 
