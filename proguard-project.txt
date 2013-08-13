@@ -20,5 +20,8 @@
 }
 
 -libraryjars libs/org.json.jar
+-libraryjars libs/org.jsoup-1.7.2.jar
 
 -keep public class org.json.** { *; }
+
+-keep public class org.jsoup.** { *; }
