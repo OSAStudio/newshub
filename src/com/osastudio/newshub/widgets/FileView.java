@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp;
+import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.NoticeResult;
 import com.osastudio.newshub.net.NewsArticleApi;
@@ -130,18 +131,24 @@ public class FileView extends LinearLayout {
 	}
    
 	private String processContent(String content, int size, boolean autoLoad) {
+      AppDeadline deadline = ((NewsApp) mContext.getApplicationContext())
+            .getAppDeadline();
+      boolean hasExpired = (deadline != null) ? deadline.hasExpired()
+            : new AppDeadline().hasExpired();
 	   Document document = null;
 	   document = Jsoup.parse(content);
       if (document != null) {
-         if (!autoLoad) {
+         if (hasExpired || !autoLoad) {
             Elements elements = document.getElementsByTag("img");
             if (elements != null && elements.size() > 0) {
                for (Element element : elements) {
                   String imgUrl = element.attr("src");
                   element.attr("src", "file:///android_asset/web_default_image.png");
                   element.attr("orisrc", imgUrl);
+                  if (!hasExpired) {
                   element.attr("onclick", "window.js2java.getRemoteImage('"
                         + imgUrl + "')");
+                  }
                }
             }
          }
@@ -172,8 +179,8 @@ public class FileView extends LinearLayout {
 
 		}
       
-		boolean autoLoad = bWIFI || ((NewsApp) mContext.getApplicationContext())
-		      .getPrefsManager().isAutoLoadingPictureEnabled();
+		boolean autoLoad = (bWIFI || ((NewsApp) mContext.getApplicationContext())
+		      .getPrefsManager().isAutoLoadingPictureEnabled());
 
       mHtml = processContent(html, size, autoLoad);
 		mWebView.loadDataWithBaseURL("about:blank", mHtml, MIMETYPE, ENCODING,
