@@ -1,8 +1,10 @@
 package com.osastudio.newshub;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.library.UpgradeManager;
+import com.osastudio.newshub.net.AppDeadlineApi;
 import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.utils.Utils;
 
@@ -24,6 +26,7 @@ public class NewsService extends Service {
    private Handler mHandler = new Handler();
    private UpgradeManager mUpgradeManager;
    private boolean mCheckingNewVersion = false;
+   private AppDeadline mAppDeadline;
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
@@ -114,6 +117,30 @@ public class NewsService extends Service {
          }
       }
 
+   }
+
+   public boolean hasExpired() {
+      return (mAppDeadline != null) ? mAppDeadline.hasExpired()
+            : new AppDeadline().hasExpired();
+   }
+
+   public void checkAppDeadline() {
+      new AppDeadlineTask().execute(this);
+   }
+
+   private class AppDeadlineTask extends
+         AsyncTask<Context, Integer, AppDeadline> {
+
+      @Override
+      protected AppDeadline doInBackground(Context... params) {
+         return AppDeadlineApi.getAppDeadline(params[0]);
+      }
+
+      @Override
+      protected void onPostExecute(AppDeadline result) {
+         mAppDeadline = result;
+         Utils.logi("", "____________hasExpired: " + result.hasExpired());
+      }
    }
 
    public class NewsBinder extends Binder {
