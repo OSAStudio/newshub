@@ -64,6 +64,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("NewApi")
@@ -208,6 +210,30 @@ public class CategoryActivity extends NewsBaseActivity {
 		Utils.createLocalDiskPath(Utils.TEMP_CACHE_FOLDER);
 		Utils.createLocalFile(Utils.TEMP_FOLDER + ".nomedia");
 	}
+	
+	private boolean mIsExit = false;
+	private Toast mExitToast = null;
+	@Override
+	public void onBackPressed() {
+		if (mIsExit) {
+			if (mExitToast != null) {
+				mExitToast.cancel();
+			}
+		super.onBackPressed();
+		} else {
+			mIsExit = true;
+			mExitToast = Toast.makeText(this, R.string.exit_msg, Toast.LENGTH_SHORT);
+			mExitToast.show();
+			mHandler.postDelayed(new Runnable() {
+				public void run() {
+					mIsExit = false;
+					if (mExitToast != null) {
+						mExitToast.cancel();
+					}
+				}
+			}, 2000);
+		}
+	}
 
 	private Net mNet = null;
 
@@ -299,9 +325,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		mActivateBtn = findViewById(R.id.activite_btn);
 		mActivateBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String activate_str = mActivateEdit.getEditableText()
-						.toString();
-				activate_str = mActivateEdit.getResult();
+				String activate_str = mActivateEdit.getResult();
 				if (activate_str != null && !activate_str.equals("")) {
 					new ActivateTask().execute(activate_str);
 				}
@@ -571,7 +595,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				mActivateLayout.setVisibility(View.INVISIBLE);
 				showRegisterView();
 			} else {
-				mActivateEdit.setText(null);
+				mActivateEdit.init();
 			}
 			super.onPostExecute(result);
 		}

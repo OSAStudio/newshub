@@ -110,4 +110,6 @@
     <string name="phone_isonline_tip_msg">手机未开启网络服务!</string>
     <string name="category_msg">上滑可进入首页</string>
     
+    <string name="exit_msg">再按一次退出Azker</string>
+    
 </resources>
