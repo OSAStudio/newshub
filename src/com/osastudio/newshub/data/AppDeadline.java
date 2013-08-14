@@ -13,7 +13,7 @@ import android.text.TextUtils;
 
 public class AppDeadline {
 
-   private static String EXPIRED_TIME = "11,31,2013";
+   private static String EXPIRED_TIME = "11,30,2013";
    private Date currentTime;
 
    public AppDeadline() {
