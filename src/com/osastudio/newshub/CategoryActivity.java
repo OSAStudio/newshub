@@ -54,12 +54,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -90,7 +94,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private Bitmap mCoverBmp = null;
 	private RelativeLayout mRoot = null;
 	private ImageView mCover = null;
-	private SlideSwitcher mSwitcher = null;
+//	private SlideSwitcher mSwitcher = null;
+	private Gallery mSwitcher = null;
 	private View mActivateLayout = null;
 	private DivisionEditText mActivateEdit = null;
 	private View mActivateBtn = null;
@@ -122,6 +127,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
 	private NewsApp mApp = null;
+	
+	private GalleryAdapter mGalleryAdapter = null;
 
 	private Handler mHandler = new Handler() {
 
@@ -316,7 +323,8 @@ public class CategoryActivity extends NewsBaseActivity {
 			mCover.setImageBitmap(mCoverBmp);
 		}
 
-		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
+//		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
+		mSwitcher = (Gallery)findViewById(R.id.switcher);
 		 mSwitcher.setVisibility(View.INVISIBLE);
 
 		mActivateLayout = findViewById(R.id.activite);
@@ -531,53 +539,54 @@ public class CategoryActivity extends NewsBaseActivity {
 		mTask.execute(0);
 	}
 
-	public boolean dispatchTouchEvent(MotionEvent event) {
-		// mGd.onTouchEvent(event);
-		int y = (int) event.getRawY();
-		int x = (int) event.getRawX();
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			mInitX = x;
-			mInitY = y;
-			mDirection = -1;
-			mbSwitchAble = true;
-			break;
-		case MotionEvent.ACTION_MOVE:
-			if (mbSwitchAble) {
-				if (Math.abs(mBaseX - x) > mTouchSlop
-						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-					if (mInitX > x) {
-						mDirection = 1;
-					} else {
-						mDirection = 0;
-					}
-
-					mSwitcher.SwitcherOnScroll(mDirection);
-					Utils.logd("FileActivity", "switch scroll " + mDirection);
-					mbSwitchAble = false;
-					break;
-				}
-			}
-			if (y - mInitY > mTouchSlop
-					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
-				showCover();
-			} else if (mInitY - y > mTouchSlop
-					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
-				hideCover();
-			}
-			break;
-		case MotionEvent.ACTION_UP:
-			
-			break;
-		}
-		mBaseX = x;
-		mBaseY = y;
-		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-			return true;//super.dispatchTouchEvent(event);
-		} else {
-			return super.dispatchTouchEvent(event);
-		}
-	}
+//	public boolean dispatchTouchEvent(MotionEvent event) {
+//		// mGd.onTouchEvent(event);
+//		int y = (int) event.getRawY();
+//		int x = (int) event.getRawX();
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_DOWN:
+//			mInitX = x;
+//			mInitY = y;
+//			mDirection = -1;
+//			mbSwitchAble = true;
+//			break;
+//		case MotionEvent.ACTION_MOVE:
+////			if (mbSwitchAble) {
+////				if (Math.abs(mBaseX - x) > mTouchSlop
+////						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+////					if (mInitX > x) {
+////						mDirection = 1;
+////					} else {
+////						mDirection = 0;
+////					}
+////
+////					mSwitcher.SwitcherOnScroll(mDirection);
+////					Utils.logd("FileActivity", "switch scroll " + mDirection);
+////					mbSwitchAble = false;
+////					break;
+////				}
+////			}
+//			if (y - mInitY > mTouchSlop
+//					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+//				showCover();
+//			} else if (mInitY - y > mTouchSlop
+//					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+//				hideCover();
+//			}
+//			break;
+//		case MotionEvent.ACTION_UP:
+//			
+//			break;
+//		}
+//		mBaseX = x;
+//		mBaseY = y;
+////		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+////			return true;//super.dispatchTouchEvent(event);
+////		} else {
+////			return super.dispatchTouchEvent(event);
+////		}
+//		return false;
+//	}
 
 
 	private class ActivateTask extends AsyncTask<String, Void, Boolean> {
@@ -750,10 +759,18 @@ public class CategoryActivity extends NewsBaseActivity {
 				mDlg = null;
 			}
 			if (mCategoryList != null && mCategoryList.size() > 0) {
-				SwitchAssistent assistent = new SwitchAssistent();
-				mSwitcher.setAssistant(assistent);
+//				SwitchAssistent assistent = new SwitchAssistent();
+//				mSwitcher.setAssistant(assistent);
+//				setPageText(mSwitcher.getCurrentIndex());
+				if (mGalleryAdapter == null) {
+					mGalleryAdapter = new GalleryAdapter();
 
-				setPageText(mSwitcher.getCurrentIndex());
+					mSwitcher.setAdapter(mGalleryAdapter);
+				} else {
+					mGalleryAdapter.notifyDataSetChanged();
+				}
+				hideCover();
+				setPageText(mSwitcher.getSelectedItemPosition());
 
 				mLoadBitmapTask = new LoadBitmapTask();
 				mLoadBitmapTask.execute();
@@ -820,8 +837,15 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected void onProgressUpdate(Void... values) {
-			SwitchAssistent assistent = new SwitchAssistent();
-			mSwitcher.setAssistant(assistent);
+//			SwitchAssistent assistent = new SwitchAssistent();
+//			mSwitcher.setAssistant(assistent);
+			if (mGalleryAdapter == null) {
+				mGalleryAdapter = new GalleryAdapter();
+
+				mSwitcher.setAdapter(mGalleryAdapter);
+			} else {
+				mGalleryAdapter.notifyDataSetChanged();
+			}
 
 			Utils.logd("LoadBitmapTask", "update icon ui");
 			super.onProgressUpdate(values);
@@ -837,6 +861,58 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void setupGridLayout(AzkerGridLayout grid_layout, int page) {
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
+	}
+	
+	private class GalleryAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			if (mCategoryList.size() % 8 == 0) {
+				return mCategoryList.size() / 8;
+			} else {
+				return mCategoryList.size() / 8 + 1;
+			}
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.category_view, null);
+				Gallery.LayoutParams glp = new Gallery.LayoutParams(
+		                ViewGroup.LayoutParams.FILL_PARENT,
+		                ViewGroup.LayoutParams.FILL_PARENT);
+				convertView.setLayoutParams(glp);
+			}
+			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView
+					.findViewById(R.id.grid);
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) grid_layout
+					.getLayoutParams();
+			if (lp != null) {
+				lp.leftMargin = mXMargin;
+				lp.height = mScreenHeight;
+				lp.width = mScreenHeight / 2;
+				grid_layout.setLayoutParams(lp);
+			}
+
+			setupGridLayout(grid_layout, position);
+
+			grid_layout.setGridItemClickListener(new GridItemClickListener());
+			return convertView;
+
+		}
+		
 	}
 
 	private class SwitchAssistent extends BaseAssistent {
@@ -887,7 +963,8 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public void onClick(int position, View v) {
-			int page = mSwitcher.getCurrentIndex();
+//			int page = mSwitcher.getCurrentIndex();
+			int page = mSwitcher.getSelectedItemPosition();
 			int index = page * 8 + position;
 			if (index < mCategoryList.size()) {
 				NewsChannel data = mCategoryList.get(index);
