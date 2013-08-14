@@ -84,10 +84,10 @@ public class FileView extends LinearLayout {
 		setupWebView();
 	}
 
-	public class Js2JavaInterface {
+	public class JSInterface {
       
       private WebView webView;
-	   public Js2JavaInterface(WebView webView) {
+	   public JSInterface(WebView webView) {
 	      this.webView = webView;
 	   }
 
@@ -109,8 +109,8 @@ public class FileView extends LinearLayout {
 
 	private void setupWebView() {
 		mWebView = (WebView) findViewById(R.id.web_view);
-		 mWebView.addJavascriptInterface(new Js2JavaInterface(mWebView),
-		 "js2java");
+		 mWebView.addJavascriptInterface(new JSInterface(mWebView),
+		 "jsif");
 		WebSettings ws = mWebView.getSettings();
 
 		TextSize size = ws.getTextSize();
@@ -146,7 +146,7 @@ public class FileView extends LinearLayout {
                   element.attr("src", "file:///android_asset/web_default_image.png");
                   element.attr("orisrc", imgUrl);
                   if (!hasExpired) {
-                  element.attr("onclick", "window.js2java.getRemoteImage('"
+                  element.attr("onclick", "window.jsif.getRemoteImage('"
                         + imgUrl + "')");
                   }
                }
