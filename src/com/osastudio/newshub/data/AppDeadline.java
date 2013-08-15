@@ -13,7 +13,7 @@ import android.text.TextUtils;
 
 public class AppDeadline {
 
-   private static final String EXPIRED_TIME = "2013-11-31";
+   private static String EXPIRED_TIME = "11,30,2013";
    private Date currentTime;
 
    public AppDeadline() {
@@ -38,17 +38,17 @@ public class AppDeadline {
       } catch (ParseException e) {
          // e.printStackTrace();
       }
-      Utils.logi("", "_________DATE: " + this.currentTime.toString());
    }
 
    public boolean hasExpired() {
+      boolean expired = false;
       try {
-         return this.currentTime.after(new SimpleDateFormat("yyyy-MM-dd")
+         expired = this.currentTime.after(new SimpleDateFormat("MM,dd,yyyy")
                .parse(EXPIRED_TIME));
       } catch (ParseException e) {
          // e.printStackTrace();
       }
-      return false;
+      return expired;
    }
 
 }

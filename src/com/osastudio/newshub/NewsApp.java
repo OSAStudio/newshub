@@ -3,6 +3,7 @@ package com.osastudio.newshub;
 import java.util.ArrayList;
 
 import com.osastudio.newshub.cache.CacheManager;
+import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.library.PreferenceManager;
 
 import android.app.Activity;
@@ -17,6 +18,7 @@ public class NewsApp extends Application {
    private PreferenceManager mPrefsManager;
    private CacheManager mCacheManager;
    private String mCurrentUserId = null;
+   private AppDeadline mAppDeadline;
    
    @Override
    public void onCreate() {
@@ -75,6 +77,14 @@ public class NewsApp extends Application {
       }
    }
 
+   public AppDeadline getAppDeadline() {
+      return mAppDeadline;
+   }
+   
+   public void setAppDeadline(AppDeadline deadline) {
+      mAppDeadline = deadline;
+   }
+   
    @Override
    public void onTerminate() {
       

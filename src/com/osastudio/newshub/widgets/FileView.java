@@ -1,7 +1,13 @@
 package com.osastudio.newshub.widgets;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp;
+import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.NoticeResult;
 import com.osastudio.newshub.net.NewsArticleApi;
@@ -24,13 +30,14 @@ import android.widget.Toast;
 public class FileView extends LinearLayout {
    
 	final String jsLoadImageMethods = "<script type='text/javascript'>"
-			+ "imageSrc = new Array();"
-         + ""
 			+ "function getRemoteImage(index)"
 			+ "{"
 			+ "var images = document.getElementsByTagName('img');"
 			+ "images[index].src = imageSrc[index];"
 			+ "images[index].onclick = undefined;"
+//			+ "var orisrc = imagex[index].getAttribute(\"orisrc\");"
+//         + "images[index].setAttribute(\"src\",orisrc);"
+//         + "images[index].setAttribute(\"onclick\", undefined);"
 			+ "}"
 			+ ""
 			+ "function useDefaultImage()"
@@ -39,7 +46,7 @@ public class FileView extends LinearLayout {
 			+ "for (var i = 0; i < images.length; i++) {"
 			+ "imageSrc.push(images[i].src);"
 			+ "images[i].src = 'file:///android_asset/web_default_image.png';"
-			+ "images[i].onclick = new Function('getRemoteImage(' + i + ')')"
+			+ "images[i].onclick = new Function('getRemoteImage(' + i + ')');"
 			+ "}"
 			+ "}"
 			+ ""
@@ -77,10 +84,33 @@ public class FileView extends LinearLayout {
 		setupWebView();
 	}
 
+	public class JSInterface {
+      
+      private WebView webView;
+	   public JSInterface(WebView webView) {
+	      this.webView = webView;
+	   }
+
+		public void getRemoteImage(String imgUrl) {
+         Utils.logi("", "______________________getRemoteImage: " + imgUrl);
+			this.webView.loadUrl("javascript:(function(){"
+					+ "var objs = document.getElementsByTagName(\"img\"); "
+					+ "for(var i=0;i<objs.length;i++)  "
+					+ "{"
+					+ "    var imgOriSrc = objs[i].getAttribute(\"orisrc\"); "
+					+ " if(imgOriSrc == \"" + imgUrl + "\"){ "
+					+ "    objs[i].setAttribute(\"src\",imgOriSrc);"
+					+ "    objs[i].setAttribute(\"onclick\", undefined);}" 
+					+ "}"
+					+ "})()");
+		}
+
+	}
+
 	private void setupWebView() {
 		mWebView = (WebView) findViewById(R.id.web_view);
-		// mWebView.addJavascriptInterface(new Js2JavaInterface(),
-		// HtmlParser.Js2JavaInterfaceName);
+		 mWebView.addJavascriptInterface(new JSInterface(mWebView),
+		 "jsif");
 		WebSettings ws = mWebView.getSettings();
 
 		TextSize size = ws.getTextSize();
@@ -96,7 +126,44 @@ public class FileView extends LinearLayout {
 				return true;
 			}
 		});
+      mWebView.setLongClickable(false);
 		// mWebView.getSettings().setBlockNetworkImage(true);
+	}
+   
+	private String processContent(String content, int size, boolean autoLoad) {
+      AppDeadline deadline = ((NewsApp) mContext.getApplicationContext())
+            .getAppDeadline();
+      boolean hasExpired = (deadline != null) ? deadline.hasExpired()
+            : new AppDeadline().hasExpired();
+	   Document document = null;
+	   document = Jsoup.parse(content);
+      if (document != null) {
+         if (hasExpired || !autoLoad) {
+            Elements elements = document.getElementsByTag("img");
+            if (elements != null && elements.size() > 0) {
+               for (Element element : elements) {
+                  String imgUrl = element.attr("src");
+                  element.attr("src", "file:///android_asset/web_default_image.png");
+                  element.attr("orisrc", imgUrl);
+                  if (!hasExpired) {
+                  element.attr("onclick", "window.jsif.getRemoteImage('"
+                        + imgUrl + "')");
+                  }
+               }
+            }
+         }
+         
+	      String style = "<style type=\"text/css\"> \n"
+			+ "h2 {text-align:justify; font-size: " + (size + 4)
+			+ "px; line-height: " + (size + 10) + "px}\n"
+			+ "body {text-align:justify; font-size: " + size
+			+ "px; line-height: " + (size + size) + "px}\n" + "</style> \n";
+         document.head().append(style).toString();
+         
+//         Utils.logi("", "___________processContent: " + document.toString());
+         return document.toString();
+      }
+      return content;
 	}
 
 	public void setData(int fileType, String html, int size, String articleId, boolean bWIFI) {
@@ -112,19 +179,10 @@ public class FileView extends LinearLayout {
 
 		}
       
-		boolean enable = ((NewsApp) mContext.getApplicationContext())
-		      .getPrefsManager().isAutoLoadingPictureEnabled();
+		boolean autoLoad = (bWIFI || ((NewsApp) mContext.getApplicationContext())
+		      .getPrefsManager().isAutoLoadingPictureEnabled());
 
-		mHtml = "<html> \n" + "<head> \n";
-      if (!enable && !bWIFI) {
-         mHtml += jsLoadImageMethods;
-      }
-		mHtml = mHtml + "<style type=\"text/css\"> \n"
-				+ "h2 {text-align:justify; font-size: " + (size + 4)
-				+ "px; line-height: " + (size + 10) + "px}\n"
-				+ "body {text-align:justify; font-size: " + size
-				+ "px; line-height: " + (size + size) + "px}\n" + "</style> \n"
-				+ "</head> \n" + "<body>" + html + "</body> \n </html>";
+      mHtml = processContent(html, size, autoLoad);
 		mWebView.loadDataWithBaseURL("about:blank", mHtml, MIMETYPE, ENCODING,
 				"");
 	}

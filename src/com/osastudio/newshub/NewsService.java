@@ -130,16 +130,19 @@ public class NewsService extends Service {
 
    private class AppDeadlineTask extends
          AsyncTask<Context, Integer, AppDeadline> {
+      
+      private Context context;
 
       @Override
       protected AppDeadline doInBackground(Context... params) {
+         this.context = params[0];
          return AppDeadlineApi.getAppDeadline(params[0]);
       }
 
       @Override
       protected void onPostExecute(AppDeadline result) {
          mAppDeadline = result;
-         Utils.logi("", "____________hasExpired: " + result.hasExpired());
+         ((NewsApp) this.context.getApplicationContext()).setAppDeadline(result);
       }
    }
 
