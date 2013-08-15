@@ -75,7 +75,8 @@
         android:layout_height="fill_parent"
         android:padding="5dp"
         android:text="sub_title"
-        android:textColor="@color/text_gray"
+        android:textColor="@android:color/white"
+        android:background="@color/bg_gray"
         android:textSize="18sp"
         android:visibility="gone" />
 
