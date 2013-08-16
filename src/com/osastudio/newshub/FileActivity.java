@@ -31,11 +31,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class FileActivity extends NewsBaseActivity {
+	public static final String DIRECT_ENTER="direct_enter";
 	public static final String START_INDEX = "Start_index";
 	public static final String CATEGORY_TITLE = "Category_title";
+	public static final String PAGE_ID="page_id";
 
 	public int mCurrentId = 0;
 	public String mCategoryTitle = null;
+	public String mPageId = null;
 	public int mCurrentShowId = -1;
 
 	private NewsAbstract mSummary_data = null;
@@ -58,6 +61,7 @@ public class FileActivity extends NewsBaseActivity {
 	
 	private int mTextSize = 18;
 	private boolean mIsWIFI = true;
+	private boolean mDirectEnter = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,15 @@ public class FileActivity extends NewsBaseActivity {
 		if (extras != null) {
 			mCurrentId = extras.getInt(START_INDEX);
 			mCategoryTitle = extras.getString(CATEGORY_TITLE);
+			if (mCategoryTitle == null ) {
+				mCategoryTitle = getString(R.string.default_file_title);
+			}
+			if (mCurrentId < 0) {
+				mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
+				mPageId = extras.getString(PAGE_ID);
+				//RuJin Add to set NewsAbstractCache, only have 1 item
+				mCurrentId = 0;
+			}
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
@@ -76,6 +89,15 @@ public class FileActivity extends NewsBaseActivity {
 
 		setupData();
 		
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mDirectEnter) {
+			Utils.backToCategory(this);
+		} else {
+			super.onBackPressed();
+		}
 	}
 	
 	@Override

@@ -42,6 +42,7 @@ import android.widget.TextView;
 
 public class AzkerListActivity extends NewsBaseActivity {
 
+	public static final String DIRECT_ENTER="direct_enter";
 	final static public String LIST_TYPE = "list type";
 	final static public String LIST_TITLE = "list title";
 	
@@ -66,6 +67,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 	private LoadBitmapTask mLoadBitmapTask = null;
 
 	private ProgressDialog mDlg = null;
+	private boolean mDirectEnter = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,12 +79,22 @@ public class AzkerListActivity extends NewsBaseActivity {
 		Bundle extras = getIntent().getExtras();
 
 		if (extras != null) {
+			mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
 			mListType = extras.getInt(LIST_TYPE);
 			mTitle = extras.getString(LIST_TITLE);
 			findViews();
 			mLoadTask = new LoadTask();
 			mLoadTask.execute();
 			mDlg = Utils.showProgressDlg(this, null);
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mDirectEnter) {
+			Utils.backToCategory(this);
+		} else {
+			super.onBackPressed();
 		}
 	}
 

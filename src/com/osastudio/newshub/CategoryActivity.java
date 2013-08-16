@@ -90,6 +90,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	public static final int REQUEST_USETLSSUES_MOBILE = 5;
 	public static final int REQUEST_LESSON_LIST = 6;
 	public static final int REQUEST_USER_INFO = 7;
+	
+	public static final String LAUNCHER = "launcher";
 
 	private AppProperties mAppProperties = null;
 	private Bitmap mReceiveBmp = null;
@@ -130,8 +132,10 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
 	private NewsApp mApp = null;
+	private boolean mIsLoadFinish = false;
 	
 	private GalleryAdapter mGalleryAdapter = null;
+	private boolean mIsLauncher = true;
 
 	private Handler mHandler = new Handler() {
 
@@ -139,7 +143,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			switch (msg.what) {
 			case Net.NetIsOK:
 				Utils.logd("NetIsOK", "setupData");
-				setupData();
+				setupData(0);
 				break;
 			case Net.NetTipMessage_show:
 				Utils.ShowConfirmDialog(CategoryActivity.this,
@@ -175,6 +179,12 @@ public class CategoryActivity extends NewsBaseActivity {
 		bindNewsService(mNewsServiceConn);
 
 		mApp = (NewsApp) getApplication();
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			mIsLauncher = extras.getBoolean(LAUNCHER);
+		}
+		
 		Rect frame = new Rect();
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
 		int statusBarHeight = frame.top;
@@ -212,9 +222,13 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		mInflater = LayoutInflater.from(this);
 
-		// setupData();
+		if (mIsLauncher) {
+			checkNetWork();
+		} else {
+			setupData(1);
+			mCover.setVisibility(View.GONE);
+		}
 
-		checkNetWork();
 
 		Utils.createLocalDiskPath(Utils.TEMP_FOLDER);
 		Utils.createLocalDiskPath(Utils.TEMP_CACHE_FOLDER);
@@ -549,7 +563,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 	}
  
-	private void setupData() {
+	private void setupData(int stage) {
 		SharedPreferences prefs = getSharedPreferences(
 				PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
 		if (prefs != null) {
@@ -560,7 +574,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 		mTask = new LoadDataTask();
-		mTask.execute(0);
+		mTask.execute(stage);
 	}
 
 	public boolean dispatchTouchEvent(MotionEvent event) {

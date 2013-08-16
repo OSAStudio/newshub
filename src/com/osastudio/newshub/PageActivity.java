@@ -46,14 +46,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class PageActivity extends NewsBaseActivity {
+	public static final String DIRECT_ENTER="direct_enter";
 	public static final String PAGE_TYPE = "page_type";
 	public static final String START_INDEX = "Start_index";
 	public static final String CATEGORY_TITLE = "Category_title";
+	public static final String PAGE_ID = "page_id";
 
 	public int mPageType;
 	public int mCurrentId = 0;
 	public String mCategoryTitle = null;
 	public int mCurrentShowId = -1;
+	public String mPageId = null;
 
 	private NewsApp mApp = null;
 	private LayoutInflater mInflater = null;
@@ -81,6 +84,7 @@ public class PageActivity extends NewsBaseActivity {
 
 	private int mTextSize = 18;
 	private boolean mIsWIFI = true;
+	private boolean mDirectEnter = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,15 @@ public class PageActivity extends NewsBaseActivity {
 			mPageType = extras.getInt(PAGE_TYPE);
 			mCurrentId = extras.getInt(START_INDEX);
 			mCategoryTitle = extras.getString(CATEGORY_TITLE);
+			if (mCurrentId < 0) {
+				mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
+				mPageId = extras.getString(PAGE_ID);
+				ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
+				cacheList.add(new TempCacheData(mPageId));
+				mApp.setTempCache(cacheList);
+				mCurrentId = 0;
+
+			}
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
@@ -102,6 +115,15 @@ public class PageActivity extends NewsBaseActivity {
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mDirectEnter) {
+			Utils.backToCategory(this);
+		} else {
+			super.onBackPressed();
+		}
 	}
 
 	@Override
@@ -117,6 +139,9 @@ public class PageActivity extends NewsBaseActivity {
 			mUserIssueList = cache.getAbstracts().getList();
 		} else {
 			mCacheList = mApp.getTempCache();
+			if (mPageType == Utils.IMPORT_NOTIFY_TYPE) {
+				mCategoryTitle = getString(R.string.default_notice_title);
+			}
 		}
 
 		SwitchAssistent assistent = new SwitchAssistent();
