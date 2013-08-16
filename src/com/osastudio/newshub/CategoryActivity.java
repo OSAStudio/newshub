@@ -27,6 +27,7 @@ import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.DivisionEditText;
 import com.osastudio.newshub.widgets.RegisterView;
 import com.osastudio.newshub.widgets.RegisterView.USER_TYPE;
+import com.osastudio.newshub.widgets.SlidePager;
 import com.osastudio.newshub.widgets.SlideSwitcher;
 
 import android.os.AsyncTask;
@@ -48,18 +49,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -90,7 +96,9 @@ public class CategoryActivity extends NewsBaseActivity {
 	private Bitmap mCoverBmp = null;
 	private RelativeLayout mRoot = null;
 	private ImageView mCover = null;
-	private SlideSwitcher mSwitcher = null;
+//	private SlideSwitcher mSwitcher = null;
+//	private Gallery mSwitcher = null;
+	private SlidePager mSwitcher = null;
 	private View mActivateLayout = null;
 	private DivisionEditText mActivateEdit = null;
 	private View mActivateBtn = null;
@@ -122,6 +130,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
 	private NewsApp mApp = null;
+	
+	private GalleryAdapter mGalleryAdapter = null;
 
 	private Handler mHandler = new Handler() {
 
@@ -316,8 +326,30 @@ public class CategoryActivity extends NewsBaseActivity {
 			mCover.setImageBitmap(mCoverBmp);
 		}
 
-		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
+//		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
+//		mSwitcher = (Gallery)findViewById(R.id.switcher);
+		mSwitcher = (SlidePager)findViewById(R.id.switcher);
 		 mSwitcher.setVisibility(View.INVISIBLE);
+		 mSwitcher.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				setPageText(arg0);
+				
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		mActivateLayout = findViewById(R.id.activite);
 		mActivateLayout.setVisibility(View.INVISIBLE);
@@ -543,27 +575,14 @@ public class CategoryActivity extends NewsBaseActivity {
 			mbSwitchAble = true;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			if (mbSwitchAble) {
-				if (Math.abs(mBaseX - x) > mTouchSlop
-						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-					if (mInitX > x) {
-						mDirection = 1;
-					} else {
-						mDirection = 0;
-					}
-
-					mSwitcher.SwitcherOnScroll(mDirection);
-					Utils.logd("FileActivity", "switch scroll " + mDirection);
-					mbSwitchAble = false;
-					break;
-				}
-			}
 			if (y - mInitY > mTouchSlop
 					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
 				showCover();
+				mbSwitchAble = false;
 			} else if (mInitY - y > mTouchSlop
 					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
 				hideCover();
+				mbSwitchAble = false;
 			}
 			break;
 		case MotionEvent.ACTION_UP:
@@ -572,8 +591,8 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 		mBaseX = x;
 		mBaseY = y;
-		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-			return true;//super.dispatchTouchEvent(event);
+		if (!mbSwitchAble) {
+			return true;
 		} else {
 			return super.dispatchTouchEvent(event);
 		}
@@ -752,9 +771,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (mCategoryList != null && mCategoryList.size() > 0) {
 				SwitchAssistent assistent = new SwitchAssistent();
 				mSwitcher.setAssistant(assistent);
-
-				setPageText(mSwitcher.getCurrentIndex());
-
+				setPageText(mSwitcher.getCurrentItem());
 				mLoadBitmapTask = new LoadBitmapTask();
 				mLoadBitmapTask.execute();
 			}
@@ -822,6 +839,15 @@ public class CategoryActivity extends NewsBaseActivity {
 		protected void onProgressUpdate(Void... values) {
 			SwitchAssistent assistent = new SwitchAssistent();
 			mSwitcher.setAssistant(assistent);
+//			if (mGalleryAdapter == null) {
+//				mGalleryAdapter = new GalleryAdapter();
+//
+//				mSwitcher.setAdapter(mGalleryAdapter);
+//			} else {
+//				mGalleryAdapter.notifyDataSetChanged();
+//			}
+			
+			
 
 			Utils.logd("LoadBitmapTask", "update icon ui");
 			super.onProgressUpdate(values);
@@ -837,6 +863,58 @@ public class CategoryActivity extends NewsBaseActivity {
 
 	private void setupGridLayout(AzkerGridLayout grid_layout, int page) {
 		grid_layout.setAssistant(new GridLayoutAssistent(page));
+	}
+	
+	private class GalleryAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			if (mCategoryList.size() % 8 == 0) {
+				return mCategoryList.size() / 8;
+			} else {
+				return mCategoryList.size() / 8 + 1;
+			}
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.category_view, null);
+				Gallery.LayoutParams glp = new Gallery.LayoutParams(
+		                ViewGroup.LayoutParams.FILL_PARENT,
+		                ViewGroup.LayoutParams.FILL_PARENT);
+				convertView.setLayoutParams(glp);
+			}
+			AzkerGridLayout grid_layout = (AzkerGridLayout) convertView
+					.findViewById(R.id.grid);
+			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) grid_layout
+					.getLayoutParams();
+			if (lp != null) {
+				lp.leftMargin = mXMargin;
+				lp.height = mScreenHeight;
+				lp.width = mScreenHeight / 2;
+				grid_layout.setLayoutParams(lp);
+			}
+
+			setupGridLayout(grid_layout, position);
+
+			grid_layout.setGridItemClickListener(new GridItemClickListener());
+			return convertView;
+
+		}
+		
 	}
 
 	private class SwitchAssistent extends BaseAssistent {
@@ -887,7 +965,9 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public void onClick(int position, View v) {
-			int page = mSwitcher.getCurrentIndex();
+//			int page = mSwitcher.getCurrentIndex();
+//			int page = mSwitcher.getSelectedItemPosition();
+			int page = mSwitcher.getCurrentItem();
 			int index = page * 8 + position;
 			if (index < mCategoryList.size()) {
 				NewsChannel data = mCategoryList.get(index);
@@ -954,6 +1034,7 @@ public class CategoryActivity extends NewsBaseActivity {
 				View base = category.findViewById(R.id.base);
 				ImageView iv = (ImageView) category.findViewById(R.id.image);
 				TextView tv = (TextView) category.findViewById(R.id.name);
+				tv.setEnabled(false);
 
 				NewsChannel data = mCategoryList.get(index);
 				base.setBackgroundColor(data.getTitleColor());

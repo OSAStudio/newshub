@@ -5,7 +5,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <com.osastudio.newshub.widgets.SlideSwitcher
+    <!-- <com.osastudio.newshub.widgets.SlideSwitcher -->
+    <!-- android:id="@+id/switcher" -->
+    <!-- android:layout_width="fill_parent" -->
+    <!-- android:layout_height="fill_parent" /> -->
+
+    <com.osastudio.newshub.widgets.SlidePager
         android:id="@+id/switcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
@@ -131,6 +136,10 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="80dp"
+        android:shadowColor="@color/text_gray"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
         android:text="@string/category_msg"
         android:textColor="@android:color/white"
         android:textSize="16sp"
