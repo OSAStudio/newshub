@@ -247,8 +247,6 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void checkNetWork() {
 		mNet = new Net(this, mHandler);
 		if (mNet.PhoneIsOnLine()) {
-
-			mDlg = Utils.showProgressDlg(this, null);
 			mNet.ExecutNetTask(NewsBaseApi.getWebServer());
 		} else {
 			Utils.ShowConfirmDialog(this,
@@ -538,55 +536,44 @@ public class CategoryActivity extends NewsBaseActivity {
 		mTask = new LoadDataTask();
 		mTask.execute(0);
 	}
+	
 
-//	public boolean dispatchTouchEvent(MotionEvent event) {
-//		// mGd.onTouchEvent(event);
-//		int y = (int) event.getRawY();
-//		int x = (int) event.getRawX();
-//		switch (event.getAction()) {
-//		case MotionEvent.ACTION_DOWN:
-//			mInitX = x;
-//			mInitY = y;
-//			mDirection = -1;
-//			mbSwitchAble = true;
-//			break;
-//		case MotionEvent.ACTION_MOVE:
-////			if (mbSwitchAble) {
-////				if (Math.abs(mBaseX - x) > mTouchSlop
-////						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-////					if (mInitX > x) {
-////						mDirection = 1;
-////					} else {
-////						mDirection = 0;
-////					}
-////
-////					mSwitcher.SwitcherOnScroll(mDirection);
-////					Utils.logd("FileActivity", "switch scroll " + mDirection);
-////					mbSwitchAble = false;
-////					break;
-////				}
-////			}
-//			if (y - mInitY > mTouchSlop
-//					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
-//				showCover();
-//			} else if (mInitY - y > mTouchSlop
-//					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
-//				hideCover();
-//			}
-//			break;
-//		case MotionEvent.ACTION_UP:
-//			
-//			break;
-//		}
-//		mBaseX = x;
-//		mBaseY = y;
-////		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-////			return true;//super.dispatchTouchEvent(event);
-////		} else {
-////			return super.dispatchTouchEvent(event);
-////		}
-//		return false;
-//	}
+
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		Utils.logd("CategoryActivity", "dispatchTouchEvent");
+		int y = (int) event.getRawY();
+		int x = (int) event.getRawX();
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			mInitX = x;
+			mInitY = y;
+			mDirection = -1;
+			mbSwitchAble = true;
+			break;
+		case MotionEvent.ACTION_MOVE:
+			if (y - mInitY > mTouchSlop
+					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+				showCover();
+				mbSwitchAble = false;
+			} else if (mInitY - y > mTouchSlop
+					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+				hideCover();
+            mbSwitchAble = false;
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+			
+			break;
+		}
+		mBaseX = x;
+		mBaseY = y;
+		
+		if (mbSwitchAble) {
+		   return super.dispatchTouchEvent(event);
+		} else {
+		   return true;
+		}
+	}
 
 
 	private class ActivateTask extends AsyncTask<String, Void, Boolean> {
@@ -769,7 +756,6 @@ public class CategoryActivity extends NewsBaseActivity {
 				} else {
 					mGalleryAdapter.notifyDataSetChanged();
 				}
-				hideCover();
 				setPageText(mSwitcher.getSelectedItemPosition());
 
 				mLoadBitmapTask = new LoadBitmapTask();

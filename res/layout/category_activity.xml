@@ -10,7 +10,7 @@
     <!-- android:layout_width="fill_parent" -->
     <!-- android:layout_height="fill_parent" /> -->
 
-    <Gallery
+    <com.osastudio.newshub.widgets.GalleryNew
         android:id="@+id/switcher"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>
@@ -139,6 +139,10 @@
         android:text="@string/category_msg"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:shadowColor="@color/text_gray"
+        android:shadowRadius="2"
+        android:shadowDx="2"
+        android:shadowDy="2" />
 
 </RelativeLayout>
