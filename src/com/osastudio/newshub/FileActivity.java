@@ -28,13 +28,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class FileActivity extends NewsBaseActivity {
-	public static final String DIRECT_ENTER="direct_enter";
+	public static final String DIRECT_ENTER = "direct_enter";
 	public static final String START_INDEX = "Start_index";
 	public static final String CATEGORY_TITLE = "Category_title";
-	public static final String PAGE_ID="page_id";
+	public static final String PAGE_ID = "page_id";
 
 	public int mCurrentId = 0;
 	public String mCategoryTitle = null;
@@ -58,10 +59,11 @@ public class FileActivity extends NewsBaseActivity {
 	private String mArticleId = null;
 
 	private LoadDataTask mTask = null;
-	
+
 	private int mTextSize = 18;
 	private boolean mIsWIFI = true;
 	private boolean mDirectEnter = false;
+	private boolean mIsDisplayTop = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,13 +74,13 @@ public class FileActivity extends NewsBaseActivity {
 		if (extras != null) {
 			mCurrentId = extras.getInt(START_INDEX);
 			mCategoryTitle = extras.getString(CATEGORY_TITLE);
-			if (mCategoryTitle == null ) {
+			if (mCategoryTitle == null) {
 				mCategoryTitle = getString(R.string.default_file_title);
 			}
 			if (mCurrentId < 0) {
 				mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
 				mPageId = extras.getString(PAGE_ID);
-				//RuJin Add to set NewsAbstractCache, only have 1 item
+				// RuJin Add to set NewsAbstractCache, only have 1 item
 				mCurrentId = 0;
 			}
 		}
@@ -88,9 +90,9 @@ public class FileActivity extends NewsBaseActivity {
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
-		
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (mDirectEnter) {
@@ -99,7 +101,7 @@ public class FileActivity extends NewsBaseActivity {
 			super.onBackPressed();
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		mTextSize = getPrefsManager().getFontSize();
@@ -127,6 +129,16 @@ public class FileActivity extends NewsBaseActivity {
 			mInitY = y;
 			mDirection = -1;
 			mbSwitchAble = true;
+			mIsDisplayTop = false;
+			View content = mSwitcher.getCurrentView();
+			if (content != null && content instanceof RelativeLayout
+					&& ((RelativeLayout) content).getChildCount() > 0) {
+				View child = ((RelativeLayout) mSwitcher.getCurrentView())
+						.getChildAt(0);
+				if (child instanceof FileView) {
+					mIsDisplayTop = ((FileView)child).isDisplayTop();
+				}
+			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (mbSwitchAble) {
@@ -146,15 +158,20 @@ public class FileActivity extends NewsBaseActivity {
 					break;
 				}
 			}
+			if (mIsDisplayTop && y - mBaseY > mTouchSlop
+					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+				onBackPressed();
+				mbSwitchAble = false;
+			}
 			break;
 		case MotionEvent.ACTION_UP:
-			
+
 			break;
 		}
 		mBaseX = x;
 		mBaseY = y;
 		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
-			return true;//super.dispatchTouchEvent(event);
+			return true;// super.dispatchTouchEvent(event);
 		} else {
 			return super.dispatchTouchEvent(event);
 		}
@@ -228,8 +245,7 @@ public class FileActivity extends NewsBaseActivity {
 			e.printStackTrace();
 		}
 		mHtmlCotent = xmlString + mHtmlCotent;
-		
-		
+
 	}
 
 	private class SwitchAssistent extends BaseAssistent {
@@ -251,21 +267,23 @@ public class FileActivity extends NewsBaseActivity {
 				convertView = null;
 			}
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex="+mLastIndex+" mCurrentId="+position+" convertView="+convertView);
+			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
+					+ position + " convertView=" + convertView);
 			if (mLastIndex == position && convertView != null) {
 				Utils.log("getView", " last data");
 				((FileView) convertView).displayTop();
 				return convertView;
-			}else if (mCurrentId == mCurrentShowId) {
+			} else if (mCurrentId == mCurrentShowId) {
 				FileView fileview = (FileView) convertView;
 				if (fileview == null) {
 					fileview = new FileView(FileActivity.this);
 				}
-				TextView title = (TextView)fileview.findViewById(R.id.title);
+				TextView title = (TextView) fileview.findViewById(R.id.title);
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);
 				}
-				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent, mTextSize, mArticleId, mIsWIFI);
+				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent,
+						mTextSize, mArticleId, mIsWIFI);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
@@ -281,17 +299,16 @@ public class FileActivity extends NewsBaseActivity {
 
 		}
 	}
-	
+
 	private View createPogress() {
-		ProgressBar bar= new ProgressBar(this);
+		ProgressBar bar = new ProgressBar(this);
 		bar.setMax(100);
 		bar.setProgress(50);
-		
+
 		return bar;
-		
+
 	}
 
-	
 	private int mLastIndex = -1;
 
 }

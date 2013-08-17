@@ -42,6 +42,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -85,6 +86,7 @@ public class PageActivity extends NewsBaseActivity {
 	private int mTextSize = 18;
 	private boolean mIsWIFI = true;
 	private boolean mDirectEnter = false;
+	private boolean mIsDisplayTop = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -149,7 +151,7 @@ public class PageActivity extends NewsBaseActivity {
 	}
 
 	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
+	public boolean dispatchTouchEvent(MotionEvent event){
 		// mGd.onTouchEvent(event);
 		int y = (int) event.getRawY();
 		int x = (int) event.getRawX();
@@ -159,6 +161,23 @@ public class PageActivity extends NewsBaseActivity {
 			mInitY = y;
 			mDirection = -1;
 			mbSwitchAble = true;
+			mIsDisplayTop = false;
+			View content = mSwitcher.getCurrentView();
+			if (content != null && content instanceof RelativeLayout
+					&& ((RelativeLayout) content).getChildCount() > 0) {
+				View child = ((RelativeLayout) mSwitcher.getCurrentView())
+						.getChildAt(0);
+				if (child instanceof FileView) {
+					mIsDisplayTop = ((FileView)child).isDisplayTop();
+				} else {
+					ScrollView scroll = (ScrollView)child.findViewById(R.id.scroll_layout);
+					if (scroll != null) {
+						if (scroll.getScrollY() <= 0) {
+							mIsDisplayTop = true;
+						}
+					}
+				}
+			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (mbSwitchAble) {
@@ -178,6 +197,11 @@ public class PageActivity extends NewsBaseActivity {
 					break;
 				}
 			}
+			if (mIsDisplayTop && y - mBaseY > mTouchSlop
+					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+				onBackPressed();
+				mbSwitchAble = false;
+			}
 			break;
 		case MotionEvent.ACTION_UP:
 
@@ -190,7 +214,51 @@ public class PageActivity extends NewsBaseActivity {
 		} else {
 			return super.dispatchTouchEvent(event);
 		}
+	
+		
 	}
+//	public boolean dispatchTouchEvent(MotionEvent event) {
+//		// mGd.onTouchEvent(event);
+//		int y = (int) event.getRawY();
+//		int x = (int) event.getRawX();
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_DOWN:
+//			mInitX = x;
+//			mInitY = y;
+//			mDirection = -1;
+//			mbSwitchAble = true;
+//			break;
+//		case MotionEvent.ACTION_MOVE:
+//			if (mbSwitchAble) {
+//				if (Math.abs(mBaseX - x) > mTouchSlop
+//						&& Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+//					if (mInitX > x) {
+//						mDirection = 1;
+//					} else {
+//						mDirection = 0;
+//					}
+//
+//					int lastIndex = mSwitcher.getCurrentIndex();
+//					mSwitcher.SwitcherOnScroll(mDirection);
+//					mLastIndex = lastIndex;
+//					Utils.logd("FileActivity", "switch scroll " + mDirection);
+//					mbSwitchAble = false;
+//					break;
+//				}
+//			}
+//			break;
+//		case MotionEvent.ACTION_UP:
+//
+//			break;
+//		}
+//		mBaseX = x;
+//		mBaseY = y;
+//		if (!mbSwitchAble || Math.abs(mBaseX - x) > Math.abs(mBaseY - y)) {
+//			return true;// super.dispatchTouchEvent(event);
+//		} else {
+//			return super.dispatchTouchEvent(event);
+//		}
+//	}
 
 	private void loadUserIssue(int page) {
 		SubscriptionArticle userIssue = SubscriptionApi.getSubscriptionArticle(

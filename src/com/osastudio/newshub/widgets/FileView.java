@@ -191,6 +191,14 @@ public class FileView extends LinearLayout {
 
 		mWebView.scrollTo(getScrollX(), 0);
 	}
+	
+	public boolean isDisplayTop () {
+		if (mWebView.getScrollY() <= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private class PraiseTask extends AsyncTask<Void, Void, NewsResult> {
 
