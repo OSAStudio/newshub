@@ -123,6 +123,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LayoutInflater mInflater = null;
 	private int mScreenWidth = 0;
 	private int mScreenHeight = 0;
+	private int mImageHeight = 0;
 	private int mXMargin = 0;
 	private int mYMargin = 0;
 	private Display mDisplay;
@@ -214,6 +215,8 @@ public class CategoryActivity extends NewsBaseActivity {
 				mYMargin = (int) ((mDisplay.getHeight() - mScreenHeight) / 2);
 			}
 		}
+		
+		mImageHeight = mScreenHeight /6;
 
 		setContentView(R.layout.category_activity);
 		findViews();
@@ -504,7 +507,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	}
 
 	private void hideCover() {
-		hideSlideMsg();
+//		hideSlideMsg();
 		View cover = findViewById(R.id.cover_layout);
 		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
 			 mSwitcher.setVisibility(View.VISIBLE);
@@ -562,9 +565,9 @@ public class CategoryActivity extends NewsBaseActivity {
 		if (view.getVisibility() != View.VISIBLE) {
 			view.setVisibility(View.VISIBLE);
 			
-			mAlphaAnim = new AlphaAnimation(1.0f, 0);  
+			mAlphaAnim = new AlphaAnimation(0, 1.0f);  
 			mAlphaAnim.setDuration(2000);  
-			mAlphaAnim.setRepeatCount(8);  
+			mAlphaAnim.setRepeatCount(Animation.INFINITE);  
 			mAlphaAnim.setRepeatMode(Animation.REVERSE);  
 			view.setAnimation(mAlphaAnim);  
 			mAlphaAnim.start();  
@@ -578,14 +581,6 @@ public class CategoryActivity extends NewsBaseActivity {
 				mAlphaAnim.cancel();
 			}
 			view.setVisibility(View.GONE);
-			mHandler.postDelayed(new Runnable() {
-				
-				@Override
-				public void run() {
-					findViewById(R.id.msg_text).setVisibility(View.GONE);
-					
-				}
-			}, 2000);
 			
 		}
 	}

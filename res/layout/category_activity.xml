@@ -127,7 +127,7 @@
                 android:text="@string/activite_btn"
                 android:textColor="@android:color/white" />
         </LinearLayout>
-    </RelativeLayout>
+        
 
     <TextView
         android:id="@+id/msg_text"
@@ -144,5 +144,6 @@
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:visibility="gone" />
+    </RelativeLayout>
 
 </RelativeLayout>

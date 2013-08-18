@@ -333,6 +333,8 @@ public class PageActivity extends NewsBaseActivity {
 			} else if (index < 0 || index >= mCacheList.size()) {
 				return -1;
 			}
+			mNeedFeedback = false;
+			mNoticeId = null;
 			switch (mPageType) {
 			case Utils.NOTIFY_LIST_TYPE:
 			case Utils.IMPORT_NOTIFY_TYPE:
@@ -587,8 +589,9 @@ public class PageActivity extends NewsBaseActivity {
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);
 				}
-				fileview.setData(mPageType, mHtmlCotent, mTextSize, null, mIsWIFI);
+				fileview.setData(mPageType, mHtmlCotent, mTextSize, mNoticeId, mIsWIFI);
 				Utils.log("getView", " real data");
+				
 				return fileview;
 			} else {
 				if (mTask != null) {
