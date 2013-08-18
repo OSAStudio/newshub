@@ -1072,6 +1072,12 @@ public class CategoryActivity extends NewsBaseActivity {
 
 				View base = category.findViewById(R.id.base);
 				ImageView iv = (ImageView) category.findViewById(R.id.image);
+				LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams)iv.getLayoutParams();
+				if (llp != null) {
+					llp.height = mImageHeight;
+					iv.setLayoutParams(llp);
+				}
+				
 				TextView tv = (TextView) category.findViewById(R.id.name);
 				tv.setEnabled(false);
 				tv.setClickable(false);
