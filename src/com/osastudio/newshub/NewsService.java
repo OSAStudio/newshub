@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -22,7 +21,6 @@ public class NewsService extends Service {
 
    private static final String TAG = "NewsService";
 
-   private final IBinder mBinder = new NewsBinder();
    private Handler mHandler = new Handler();
    private UpgradeManager mUpgradeManager;
    private boolean mCheckingNewVersion = false;
@@ -31,13 +29,20 @@ public class NewsService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Utils.logi(TAG, "____________onStartCommand");
-      return super.onStartCommand(intent, flags, startId);
+      return START_STICKY;
    }
 
    @Override
    public void onCreate() {
       super.onCreate();
       Utils.logi(TAG, "____________onCreate");
+      mHandler.postDelayed(new Runnable() {
+         public void run() {
+            mHandler.postDelayed(this, 10000);
+            Utils.logi(TAG,
+                  "______________I am alive..." + System.currentTimeMillis());
+         }
+      }, 10000);
    }
 
    @Override
@@ -56,50 +61,75 @@ public class NewsService extends Service {
    public void onDestroy() {
       super.onDestroy();
       Utils.logi(TAG, "____________onDestroy");
+      Intent selfIntent = new Intent();
+      selfIntent.setClass(this, NewsService.class);
+      startService(selfIntent);
    }
 
-   public boolean isDownloading() {
-      return (mUpgradeManager != null) ? mUpgradeManager.isDownloading()
-            : false;
-   }
+   private final INewsService.Stub mBinder = new INewsService.Stub() {
 
-   public void downloadApk(String apkUrl) {
-      if (mUpgradeManager == null) {
-         mUpgradeManager = new UpgradeManager(this);
-         mUpgradeManager.setHanlder(mHandler);
+      @Override
+      public boolean isDownloadingApk() {
+         return (mUpgradeManager != null) ? mUpgradeManager.isDownloading()
+               : false;
       }
-      mUpgradeManager.download(apkUrl);
-   }
 
-   public void checkNewVersion() {
-      if (!mCheckingNewVersion) {
-         mCheckingNewVersion = true;
-         new AppPropertiesTask().execute(this);
+      @Override
+      public void downloadApk(String apkUrl) {
+         if (mUpgradeManager == null) {
+            mUpgradeManager = new UpgradeManager(NewsService.this);
+            mUpgradeManager.setHanlder(mHandler);
+         }
+         mUpgradeManager.download(apkUrl);
       }
-   }
 
-   public void checkNewVersion(AppProperties properties,
-         boolean alertIfNoNewVersion) {
-      PackageInfo pkgInfo = Utils.getPackageInfo(this);
-      if (properties.isUpgradeAvailable(pkgInfo)
-            || properties.isUpgradeNecessary(pkgInfo)) {
-         Intent intent = new Intent();
-         intent.setClass(this, UpgradeActivity.class);
-         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-               | Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-         intent.putExtra(AppProperties.EXTRA_APP_PROPERTIES, properties);
-         startActivity(intent);
-      } else {
-         if (alertIfNoNewVersion) {
-            Toast.makeText(this, getString(R.string.no_new_version),
-                  Toast.LENGTH_LONG).show();
+      public boolean isCheckingNewVersion() {
+         return mCheckingNewVersion;
+      }
+
+      @Override
+      public void checkNewVersion() {
+         if (!mCheckingNewVersion) {
+            mCheckingNewVersion = true;
+            new AppPropertiesTask().execute(NewsService.this);
          }
       }
-   }
 
-   public void checkNewVersion(AppProperties properties) {
-      checkNewVersion(properties, false);
-   }
+      @Override
+      public boolean hasNewVersion(AppProperties properties,
+            boolean notifyIfNoNewVersion) {
+         PackageInfo pkgInfo = Utils.getPackageInfo(NewsService.this);
+         if (properties.isUpgradeAvailable(pkgInfo)
+               || properties.isUpgradeNecessary(pkgInfo)) {
+            Intent intent = new Intent();
+            intent.setClass(NewsService.this, UpgradeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                  | Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+            intent.putExtra(AppProperties.EXTRA_APP_PROPERTIES, properties);
+            startActivity(intent);
+            return true;
+         } else {
+            if (notifyIfNoNewVersion) {
+               Toast.makeText(NewsService.this,
+                     getString(R.string.no_new_version), Toast.LENGTH_LONG)
+                     .show();
+            }
+            return false;
+         }
+      }
+
+      @Override
+      public boolean hasExpired() {
+         return (mAppDeadline != null) ? mAppDeadline.hasExpired()
+               : new AppDeadline().hasExpired();
+      }
+
+      @Override
+      public void checkAppDeadline() {
+         new AppDeadlineTask().execute(NewsService.this);
+      }
+
+   };
 
    private class AppPropertiesTask extends
          AsyncTask<Context, Integer, AppProperties> {
@@ -113,24 +143,19 @@ public class NewsService extends Service {
       protected void onPostExecute(AppProperties result) {
          mCheckingNewVersion = false;
          if (result != null) {
-            checkNewVersion(result, true);
+            try {
+               mBinder.hasNewVersion(result, true);
+            } catch (Exception e) {
+               // e.printStackTrace();
+            }
          }
       }
 
    }
 
-   public boolean hasExpired() {
-      return (mAppDeadline != null) ? mAppDeadline.hasExpired()
-            : new AppDeadline().hasExpired();
-   }
-
-   public void checkAppDeadline() {
-      new AppDeadlineTask().execute(this);
-   }
-
    private class AppDeadlineTask extends
          AsyncTask<Context, Integer, AppDeadline> {
-      
+
       private Context context;
 
       @Override
@@ -142,16 +167,9 @@ public class NewsService extends Service {
       @Override
       protected void onPostExecute(AppDeadline result) {
          mAppDeadline = result;
-         ((NewsApp) this.context.getApplicationContext()).setAppDeadline(result);
+         ((NewsApp) this.context.getApplicationContext())
+               .setAppDeadline(result);
       }
-   }
-
-   public class NewsBinder extends Binder {
-
-      public NewsService getService() {
-         return NewsService.this;
-      }
-
    }
 
 }

@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -164,7 +165,12 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			setNewsService(((NewsService.NewsBinder) service).getService());
+			setNewsService(INewsService.Stub.asInterface(service));
+         try {
+            getNewsService().checkAppDeadline();
+         } catch (Exception e) {
+//            e.printStackTrace();
+         }
 		}
 	};
 
@@ -760,8 +766,12 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if (mAppProperties != null && getNewsService() != null) {
-				getNewsService().checkNewVersion(mAppProperties);
+			if (mAppProperties != null) {
+				try {
+               getNewsService().hasNewVersion(mAppProperties, false);
+            } catch (Exception e) {
+//               e.printStackTrace();
+            }
 			}
 
 			if (mDlg != null) {

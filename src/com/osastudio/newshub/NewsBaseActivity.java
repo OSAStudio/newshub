@@ -16,15 +16,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 
-
 public class NewsBaseActivity extends Activity {
 
-   protected NewsService mNewsService;
+   protected INewsService mNewsService;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
+
       if (getActivityStack() == null) {
          ((NewsApp) getApplication()).prepareEnvironment();
          startNewsService();
@@ -55,11 +54,11 @@ public class NewsBaseActivity extends Activity {
       }
    }
 
-   protected NewsService getNewsService() {
+   protected INewsService getNewsService() {
       return mNewsService;
    }
 
-   protected NewsService setNewsService(NewsService service) {
+   protected INewsService setNewsService(INewsService service) {
       mNewsService = service;
       return service;
    }

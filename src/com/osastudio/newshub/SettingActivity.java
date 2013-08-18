@@ -21,6 +21,7 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.Display;
 import android.view.TextureView;
 import android.view.View;
@@ -55,7 +56,7 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
 
       @Override
       public void onServiceConnected(ComponentName name, IBinder service) {
-         setNewsService(((NewsService.NewsBinder) service).getService());
+         setNewsService(INewsService.Stub.asInterface(service));
       }
    };
 
@@ -193,8 +194,10 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
 
       mCheckUpdate.setOnClickListener(new OnClickListener() {
          public void onClick(View v) {
-            if (getNewsService() != null) {
+            try {
                getNewsService().checkNewVersion();
+            } catch (Exception e) {
+//               e.printStackTrace();
             }
          }
       });

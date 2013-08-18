@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name="com.osastudio.newshub.NewsApp"
@@ -75,8 +76,8 @@
             android:theme="@android:style/Theme.Light.NoTitleBar" />
         <activity
             android:name="com.osastudio.newshub.UpgradeActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
             android:name="com.osastudio.newshub.AboutActivity"
@@ -84,7 +85,24 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" />
 
-        <service android:name="com.osastudio.newshub.NewsService" />
+        <service
+            android:name="com.osastudio.newshub.NewsService"
+            android:process=":daemon" />
+
+        <receiver
+            android:name="com.osastudio.newshub.BootReceiver"
+            android:process=":launch" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.osastudio.newshub.UserUnlockReceiver"
+            android:process=":launch" >
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="UMENG_APPKEY"
