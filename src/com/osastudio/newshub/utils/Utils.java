@@ -10,11 +10,15 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.CategoryActivity;
+import com.osastudio.newshub.PageActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -507,6 +511,14 @@ public class Utils {
 	public static String getVersionName(Context context) {
       return getPackageInfo(context).versionName;
 	}
+	
+	public static void backToCategory(Activity activity) {
+		Intent it = new Intent(activity, CategoryActivity.class);
+		it.putExtra(CategoryActivity.LAUNCHER, false);
+		it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		activity.startActivity(it);
+	}
+	
    
 	public static void log(String tag, String info) {
 		logi(tag, info);

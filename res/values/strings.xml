@@ -111,5 +111,9 @@
     <string name="category_msg">上滑可进入首页</string>
     
     <string name="exit_msg">再按一次退出Azker</string>
+    <string name="default_file_title">课程</string>
+    <string name="default_notice_title">我的通知</string>
+    
+    <string name="expert_label">专家：%s</string>
     
 </resources>

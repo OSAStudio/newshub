@@ -113,6 +113,11 @@ public class SummaryActivity extends NewsBaseActivity {
 					break;
 				}
 			}
+			if (y - mBaseY > mTouchSlop
+					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+				onBackPressed();
+				mbSwitchAble = false;
+			}
 			break;
 		case MotionEvent.ACTION_UP:
 			

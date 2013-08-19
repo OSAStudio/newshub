@@ -24,6 +24,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.TextSize;
 import android.webkit.WebView;
 import android.webkit.WebSettings.LayoutAlgorithm;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -173,7 +174,16 @@ public class FileView extends LinearLayout {
 		if (mAarticleId != null
 				&& (fileType == Utils.LESSON_LIST_TYPE
 						|| fileType == Utils.IMPORT_NOTIFY_TYPE || fileType == Utils.NOTIFY_LIST_TYPE)) {
+			if (fileType != Utils.LESSON_LIST_TYPE) {
+				ImageView image = (ImageView)findViewById(R.id.praise_btn);
+				if (image != null) {
+					image.setImageResource(R.drawable.need_back);
+				} else {
+					image.setImageResource(R.drawable.praise);
+				}
+			}
 			findViewById(R.id.praise_layout).setVisibility(View.VISIBLE);
+			
 		} else {
 			findViewById(R.id.praise_layout).setVisibility(View.GONE);
 
@@ -190,6 +200,14 @@ public class FileView extends LinearLayout {
 	public void displayTop() {
 
 		mWebView.scrollTo(getScrollX(), 0);
+	}
+	
+	public boolean isDisplayTop () {
+		if (mWebView.getScrollY() <= 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private class PraiseTask extends AsyncTask<Void, Void, NewsResult> {

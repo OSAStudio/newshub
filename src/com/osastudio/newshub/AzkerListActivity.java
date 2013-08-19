@@ -22,6 +22,7 @@ import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.widgets.FileView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,7 +30,9 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,10 +41,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class AzkerListActivity extends NewsBaseActivity {
 
+	public static final String DIRECT_ENTER="direct_enter";
 	final static public String LIST_TYPE = "list type";
 	final static public String LIST_TITLE = "list title";
 	
@@ -66,6 +71,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 	private LoadBitmapTask mLoadBitmapTask = null;
 
 	private ProgressDialog mDlg = null;
+	private boolean mDirectEnter = false;
+
+	private int mTouchSlop;
+	private int mInitX, mInitY;
+	private int mBaseX, mBaseY;
+	private boolean mIsDisplayTop = false;
+	private boolean mIsScrollable = true;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,12 +89,26 @@ public class AzkerListActivity extends NewsBaseActivity {
 		Bundle extras = getIntent().getExtras();
 
 		if (extras != null) {
+			mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
 			mListType = extras.getInt(LIST_TYPE);
 			mTitle = extras.getString(LIST_TITLE);
 			findViews();
 			mLoadTask = new LoadTask();
 			mLoadTask.execute();
 			mDlg = Utils.showProgressDlg(this, null);
+		}
+		
+
+		ViewConfiguration configuration = ViewConfiguration.get(this);
+		mTouchSlop = configuration.getScaledTouchSlop();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mDirectEnter) {
+			Utils.backToCategory(this);
+		} else {
+			super.onBackPressed();
 		}
 	}
 
@@ -120,6 +146,43 @@ public class AzkerListActivity extends NewsBaseActivity {
 		mListView.setOnItemClickListener(new ItemClickListener());
 	}
 	
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		if (mListView == null) {
+			return super.dispatchTouchEvent(event);
+		}
+		// mGd.onTouchEvent(event);
+		int y = (int) event.getRawY();
+		int x = (int) event.getRawX();
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			mInitX = x;
+			mInitY = y;
+			mIsDisplayTop = false;
+			if (mListView.getFirstVisiblePosition() <= 0) {
+				mIsDisplayTop = true;
+			}
+			break;
+		case MotionEvent.ACTION_MOVE:
+			if (mIsDisplayTop && y - mBaseY > mTouchSlop
+					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
+				onBackPressed();
+				mIsScrollable = false;
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+
+			break;
+		}
+		mBaseX = x;
+		mBaseY = y;
+		if (!mIsScrollable) {
+			return true;// super.dispatchTouchEvent(event);
+		} else {
+			return super.dispatchTouchEvent(event);
+		}
+	}
 	
 
 	private class LoadTask extends AsyncTask<Void, Void, Boolean> {

@@ -61,6 +61,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -91,6 +92,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	public static final int REQUEST_USETLSSUES_MOBILE = 5;
 	public static final int REQUEST_LESSON_LIST = 6;
 	public static final int REQUEST_USER_INFO = 7;
+	
+	public static final String LAUNCHER = "launcher";
 
 	private AppProperties mAppProperties = null;
 	private Bitmap mReceiveBmp = null;
@@ -121,6 +124,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LayoutInflater mInflater = null;
 	private int mScreenWidth = 0;
 	private int mScreenHeight = 0;
+	private int mImageHeight = 0;
 	private int mXMargin = 0;
 	private int mYMargin = 0;
 	private Display mDisplay;
@@ -131,8 +135,10 @@ public class CategoryActivity extends NewsBaseActivity {
 	private LoadDataTask mTask = null;
 	private ProgressDialog mDlg = null;
 	private NewsApp mApp = null;
+	private boolean mIsLoadFinish = false;
 	
 	private GalleryAdapter mGalleryAdapter = null;
+	private boolean mIsLauncher = true;
 
 	private Handler mHandler = new Handler() {
 
@@ -140,7 +146,7 @@ public class CategoryActivity extends NewsBaseActivity {
 			switch (msg.what) {
 			case Net.NetIsOK:
 				Utils.logd("NetIsOK", "setupData");
-				setupData();
+				setupData(0);
 				break;
 			case Net.NetTipMessage_show:
 				Utils.ShowConfirmDialog(CategoryActivity.this,
@@ -181,6 +187,12 @@ public class CategoryActivity extends NewsBaseActivity {
 		bindNewsService(mNewsServiceConn);
 
 		mApp = (NewsApp) getApplication();
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			mIsLauncher = extras.getBoolean(LAUNCHER);
+		}
+		
 		Rect frame = new Rect();
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
 		int statusBarHeight = frame.top;
@@ -209,6 +221,8 @@ public class CategoryActivity extends NewsBaseActivity {
 				mYMargin = (int) ((mDisplay.getHeight() - mScreenHeight) / 2);
 			}
 		}
+		
+		mImageHeight = mScreenHeight /6;
 
 		setContentView(R.layout.category_activity);
 		findViews();
@@ -218,9 +232,13 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		mInflater = LayoutInflater.from(this);
 
-		// setupData();
+		if (mIsLauncher) {
+			checkNetWork();
+		} else {
+			setupData(1);
+			mCover.setVisibility(View.GONE);
+		}
 
-		checkNetWork();
 
 		Utils.createLocalDiskPath(Utils.TEMP_FOLDER);
 		Utils.createLocalDiskPath(Utils.TEMP_CACHE_FOLDER);
@@ -231,7 +249,13 @@ public class CategoryActivity extends NewsBaseActivity {
 	private Toast mExitToast = null;
 	@Override
 	public void onBackPressed() {
-		if (mIsExit) {
+		if (!mIsLoadFinish) {
+			return;
+		}
+		View cover = findViewById(R.id.cover_layout);
+		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
+			hideCover();
+		} else if (mIsExit) {
 			if (mExitToast != null) {
 				mExitToast.cancel();
 			}
@@ -256,8 +280,8 @@ public class CategoryActivity extends NewsBaseActivity {
 	private void checkNetWork() {
 		mNet = new Net(this, mHandler);
 		if (mNet.PhoneIsOnLine()) {
-
-			mDlg = Utils.showProgressDlg(this, null);
+			mIsLoadFinish = false;
+//			mDlg = Utils.showProgressDlg(this, null);
 			mNet.ExecutNetTask(NewsBaseApi.getWebServer());
 		} else {
 			Utils.ShowConfirmDialog(this,
@@ -489,7 +513,7 @@ public class CategoryActivity extends NewsBaseActivity {
 	}
 
 	private void hideCover() {
-		hideSlideMsg();
+//		hideSlideMsg();
 		View cover = findViewById(R.id.cover_layout);
 		if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
 			 mSwitcher.setVisibility(View.VISIBLE);
@@ -541,21 +565,33 @@ public class CategoryActivity extends NewsBaseActivity {
 		registerDlg.show();
 	}
 	
+	private AlphaAnimation mAlphaAnim = null;
 	private void showSlideMsg() {
-		View view = findViewById(R.id.msg_text);
+		final View view = findViewById(R.id.msg_text);
 		if (view.getVisibility() != View.VISIBLE) {
 			view.setVisibility(View.VISIBLE);
+			
+			mAlphaAnim = new AlphaAnimation(0, 1.0f);  
+			mAlphaAnim.setDuration(2000);  
+			mAlphaAnim.setRepeatCount(Animation.INFINITE);  
+			mAlphaAnim.setRepeatMode(Animation.REVERSE);  
+			view.setAnimation(mAlphaAnim);  
+			mAlphaAnim.start();  
 		}
 	}
 	
 	private void hideSlideMsg() {
-		View view = findViewById(R.id.msg_text);
+		final View view = findViewById(R.id.msg_text);
 		if (view.getVisibility() == View.VISIBLE) {
+			if (mAlphaAnim != null) {
+				mAlphaAnim.cancel();
+			}
 			view.setVisibility(View.GONE);
+			
 		}
 	}
  
-	private void setupData() {
+	private void setupData(int stage) {
 		SharedPreferences prefs = getSharedPreferences(
 				PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
 		if (prefs != null) {
@@ -566,10 +602,13 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 		mTask = new LoadDataTask();
-		mTask.execute(0);
+		mTask.execute(stage);
 	}
 
 	public boolean dispatchTouchEvent(MotionEvent event) {
+		if (!mIsLoadFinish) {
+			return true;
+		}
 		// mGd.onTouchEvent(event);
 		int y = (int) event.getRawY();
 		int x = (int) event.getRawX();
@@ -581,11 +620,11 @@ public class CategoryActivity extends NewsBaseActivity {
 			mbSwitchAble = true;
 			break;
 		case MotionEvent.ACTION_MOVE:
-			if (y - mInitY > mTouchSlop
+			if (y - mBaseY > mTouchSlop
 					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
 				showCover();
 				mbSwitchAble = false;
-			} else if (mInitY - y > mTouchSlop
+			} else if (mBaseY - y > mTouchSlop
 					&& Math.abs(mInitX - x) < Math.abs(mInitY - y)) {
 				hideCover();
 				mbSwitchAble = false;
@@ -773,7 +812,7 @@ public class CategoryActivity extends NewsBaseActivity {
 //               e.printStackTrace();
             }
 			}
-
+			mIsLoadFinish = true;
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
@@ -1043,8 +1082,18 @@ public class CategoryActivity extends NewsBaseActivity {
 
 				View base = category.findViewById(R.id.base);
 				ImageView iv = (ImageView) category.findViewById(R.id.image);
+				LinearLayout.LayoutParams llp = (LinearLayout.LayoutParams)iv.getLayoutParams();
+				if (llp != null) {
+					llp.height = mImageHeight;
+					iv.setLayoutParams(llp);
+				}
+				
 				TextView tv = (TextView) category.findViewById(R.id.name);
 				tv.setEnabled(false);
+				tv.setClickable(false);
+				tv.setFocusable(false);
+				tv.setFocusableInTouchMode(false);
+				
 
 				NewsChannel data = mCategoryList.get(index);
 				base.setBackgroundColor(data.getTitleColor());
