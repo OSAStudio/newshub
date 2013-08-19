@@ -48,9 +48,9 @@ public class NewsBaseApi {
 
    private static final String TAG = "NewsBaseApi";
 
-   protected static boolean DEBUG = true;
+   protected static boolean DEBUG = false;
 
-   protected static final String DEFAULT_WEB_SERVER = "";
+   protected static final String DEFAULT_WEB_SERVER = "www.azker.com";
    protected static final String DEFAULT_DEBUG_WEB_SERVER = "218.23.42.49";
    protected static String WEB_SERVER = DEFAULT_WEB_SERVER;
    protected static String DEBUG_WEB_SERVER = DEFAULT_DEBUG_WEB_SERVER;
@@ -245,6 +245,16 @@ public class NewsBaseApi {
    protected static String getNewsColumnistInfoService() {
       return new StringBuilder(getWebServer()).append(
             "expert!getExpertContentByMobile.do").toString();
+   }
+
+   protected static String getNewsMessageSchedulerService() {
+      return new StringBuilder(getWebServer()).append(
+            "message!getMessageSendTimeByMobile.do").toString();
+   }
+
+   protected static String getNewsMessageListService() {
+      return new StringBuilder(getWebServer()).append(
+            "lesson!getMessagesByMobile.do").toString();
    }
 
    protected static String getAppDeadlineService() {

@@ -3,14 +3,20 @@ package com.osastudio.newshub;
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.data.AppProperties;
+import com.osastudio.newshub.data.NewsMessageList;
+import com.osastudio.newshub.data.NewsMessageScheduler;
+import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.UpgradeManager;
 import com.osastudio.newshub.net.AppDeadlineApi;
 import com.osastudio.newshub.net.AppPropertiesApi;
+import com.osastudio.newshub.net.NewsMessageApi;
 import com.osastudio.newshub.utils.Utils;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -21,10 +27,13 @@ public class NewsService extends Service {
 
    private static final String TAG = "NewsService";
 
+   private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
+
    private Handler mHandler = new Handler();
    private UpgradeManager mUpgradeManager;
    private boolean mCheckingNewVersion = false;
    private AppDeadline mAppDeadline;
+   private NewsReceiver mNewsReceiver;
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
@@ -36,6 +45,9 @@ public class NewsService extends Service {
    public void onCreate() {
       super.onCreate();
       Utils.logi(TAG, "____________onCreate");
+
+      registerNewsReceiver();
+
       mHandler.postDelayed(new Runnable() {
          public void run() {
             mHandler.postDelayed(this, 10000);
@@ -61,6 +73,9 @@ public class NewsService extends Service {
    public void onDestroy() {
       super.onDestroy();
       Utils.logi(TAG, "____________onDestroy");
+
+      unregisterNewsReceiver();
+
       Intent selfIntent = new Intent();
       selfIntent.setClass(this, NewsService.class);
       startService(selfIntent);
@@ -129,7 +144,65 @@ public class NewsService extends Service {
          new AppDeadlineTask().execute(NewsService.this);
       }
 
+      void checkNewsMessageScheduler(String userId) {
+         String str = ((NewsApp) NewsService.this.getApplication())
+               .getPrefsManager().getMessageSchedulerString();
+         NewsMessageScheduler scheduler = NewsMessageScheduler
+               .parseFormattedString(str);
+         if (scheduler != null) {
+            if (scheduler.isToday() && scheduler.isPullingAllowed()) {
+               int count = scheduler.getCount();
+               if (count == 0) {
+                  
+               } else if (count == 1) {
+                  
+               } else if (count == 3) {
+                  
+               }
+            }
+         } else {
+            requestNewsMessageScheduler(userId);
+         }
+      }
+      
+      void requestNewsMessageScheduler(String userId) {
+         new NewsMessageSchedulerTask(userId).execute(NewsService.this);
+      }
+
+      void requestNewsMessageList(String userId) {
+         new NewsMessageListTask(userId).execute(NewsService.this);
+      }
+
    };
+
+   private class NewsReceiver extends BroadcastReceiver {
+
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         String action = intent.getAction();
+         Utils.logi(TAG, "_______________onReceive: " + action);
+         if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
+
+         }
+      }
+
+   };
+
+   private void registerNewsReceiver() {
+      if (mNewsReceiver == null) {
+         mNewsReceiver = new NewsReceiver();
+      }
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(ACTION_PULL_NEWS_MESSAGE);
+      registerReceiver(mNewsReceiver, filter);
+   }
+
+   private void unregisterNewsReceiver() {
+      if (mNewsReceiver != null) {
+         unregisterReceiver(mNewsReceiver);
+         mNewsReceiver = null;
+      }
+   }
 
    private class AppPropertiesTask extends
          AsyncTask<Context, Integer, AppProperties> {
@@ -169,6 +242,52 @@ public class NewsService extends Service {
          mAppDeadline = result;
          ((NewsApp) this.context.getApplicationContext())
                .setAppDeadline(result);
+      }
+   }
+
+   private class NewsMessageSchedulerTask extends
+         AsyncTask<Context, Integer, NewsMessageScheduler> {
+
+      private Context context;
+      private String userId;
+
+      public NewsMessageSchedulerTask(String userId) {
+         this.userId = userId;
+      }
+
+      @Override
+      protected NewsMessageScheduler doInBackground(Context... params) {
+         this.context = params[0];
+         return NewsMessageApi.getNewsMessageScheduler(params[0], this.userId);
+      }
+
+      @Override
+      protected void onPostExecute(NewsMessageScheduler result) {
+         if (result != null) {
+
+         }
+      }
+   }
+
+   private class NewsMessageListTask extends
+         AsyncTask<Context, Integer, NewsMessageList> {
+
+      private Context context;
+      private String userId;
+
+      public NewsMessageListTask(String userId) {
+         this.userId = userId;
+      }
+
+      @Override
+      protected NewsMessageList doInBackground(Context... params) {
+         this.context = params[0];
+         return NewsMessageApi.getNewsMessageList(params[0], this.userId);
+      }
+
+      @Override
+      protected void onPostExecute(NewsMessageList result) {
+
       }
    }
 

@@ -20,6 +20,7 @@ public class PreferenceManager implements AppSettings {
       public static final String FONT_SIZE = "font_size";
       public static final String AUTO_LOADING_PICTURE = "auto_loading_picture";
       public static final String USER_ID = "user_id";
+      public static final String MESSAGE_SCHEDULER = "message_scheduler";
    }
 
    public PreferenceManager(Context context) {
@@ -102,6 +103,23 @@ public class PreferenceManager implements AppSettings {
          return prefs.edit()
                .putBoolean(PreferenceItems.AUTO_LOADING_PICTURE, enable)
                .commit();
+      }
+      return false;
+   }
+
+   public String getMessageSchedulerString() {
+      SharedPreferences prefs = getAppSettingsPrefs();
+      if (prefs != null) {
+         return prefs.getString(PreferenceItems.MESSAGE_SCHEDULER, "");
+      }
+      return "";
+   }
+
+   public boolean setMessageSchedulerString(String value) {
+      SharedPreferences prefs = getAppSettingsPrefs();
+      if (prefs != null) {
+         return prefs.edit()
+               .putString(PreferenceItems.MESSAGE_SCHEDULER, value).commit();
       }
       return false;
    }

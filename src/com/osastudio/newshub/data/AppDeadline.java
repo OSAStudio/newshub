@@ -6,9 +6,6 @@ import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.osastudio.newshub.utils.Utils;
-
 import android.text.TextUtils;
 
 public class AppDeadline {
