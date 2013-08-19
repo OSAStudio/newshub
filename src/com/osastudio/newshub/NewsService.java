@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ public class NewsService extends Service {
    private static final String ACTION_PULL_NEWS_MESSAGE_SCHEDULE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE_SCHEDULE";
    private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
    private static final long RETRY_DELAYED_MILLIS = 10 * 60 * 1000;
-   private static final int NEWS_MESSAGE_NOTIFICATION = 1331;
+   private static final int NEWS_MESSAGE_NOTIFICATION = 1300;
 
    private Handler mHandler = new Handler();
    private UpgradeManager mUpgradeManager;
@@ -238,23 +239,38 @@ public class NewsService extends Service {
    }
 
    private void notifyNewsMessage(NewsMessageList messages) {
-      if (mNewsMessageBitmap == null) {
-         mNewsMessageBitmap = BitmapFactory.decodeResource(getResources(),
-               R.drawable.icon);
-      }
-      for (NewsMessage msg : messages.getList()) {
-         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(),
+//      if (mNewsMessageBitmap == null) {
+//         mNewsMessageBitmap = BitmapFactory.decodeResource(getResources(),
+//               R.drawable.icon);
+//      }
+      for (int i = 0; i < messages.getList().size(); i++) {
+         NewsMessage msg = messages.getList().get(i);
+         PendingIntent pi = PendingIntent.getActivity(this, 0,
+               getNewsMessageLaunchIntent(msg),
                PendingIntent.FLAG_UPDATE_CURRENT);
-         Notification notification = new Notification.Builder(this)
-               .setContentTitle(getString(R.string.news_message_prompt_title))
-               .setContentText(getString(R.string.news_message_prompt_content))
-               .setSmallIcon(R.drawable.icon).setLargeIcon(mNewsMessageBitmap)
-               .setContentIntent(pi).build();
+//         Notification notification = new Notification.Builder(this)
+//               .setContentTitle(getTitleByMessageType(msg))
+//               .setContentText(getContentByMessageType(msg))
+//               .setSmallIcon(R.drawable.icon).setLargeIcon(mNewsMessageBitmap)
+//               .setContentIntent(pi).build();
+         Notification notification = new Notification(R.drawable.icon, 
+               getTitleByMessageType(msg), System.currentTimeMillis());
+         notification.setLatestEventInfo(this, getContentByMessageType(msg), "", pi);
          notification.flags |= Notification.FLAG_AUTO_CANCEL;
          NotificationManager manager = (NotificationManager) getApplicationContext()
                .getSystemService(Context.NOTIFICATION_SERVICE);
-         manager.notify(NEWS_MESSAGE_NOTIFICATION, notification);
+         manager.notify(NEWS_MESSAGE_NOTIFICATION + i, notification);
       }
+   }
+
+   private Intent getNewsMessageLaunchIntent(NewsMessage msg) {
+      Intent intent = new Intent();
+      intent.setClass(this, CategoryActivity.class);
+      Bundle extras = new Bundle();
+      extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
+      extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
+      intent.putExtras(extras);
+      return intent;
    }
 
    private String getTitleByMessageType(NewsMessage msg) {
