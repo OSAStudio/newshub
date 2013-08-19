@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <TextView
+    <!-- <TextView
         android:id="@+id/title"
         style="@style/text_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/file_title_bg" />
+        android:background="@color/file_title_bg" /> -->
 
     <ScrollView
         android:id="@+id/scroll_layout"

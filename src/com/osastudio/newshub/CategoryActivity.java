@@ -92,8 +92,11 @@ public class CategoryActivity extends NewsBaseActivity {
 	public static final int REQUEST_USETLSSUES_MOBILE = 5;
 	public static final int REQUEST_LESSON_LIST = 6;
 	public static final int REQUEST_USER_INFO = 7;
+	public static final int REQUEST_MESSAGE_JUMP = 100;
 	
 	public static final String LAUNCHER = "launcher";
+	public static final String MESSAGE_SEND_TYPE="message_send_type";
+	public static final String MESSAGE_SERVICE_ID = "service_id";
 
 	private AppProperties mAppProperties = null;
 	private Bitmap mReceiveBmp = null;
@@ -138,7 +141,11 @@ public class CategoryActivity extends NewsBaseActivity {
 	private boolean mIsLoadFinish = false;
 	
 	private GalleryAdapter mGalleryAdapter = null;
-	private boolean mIsLauncher = true;
+//	private boolean mIsLauncher = true;
+	
+	private int mMessageType = -1;
+	private String mServiceID = null;
+	private boolean mNeedJump = false;
 
 	private Handler mHandler = new Handler() {
 
@@ -190,7 +197,12 @@ public class CategoryActivity extends NewsBaseActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			mIsLauncher = extras.getBoolean(LAUNCHER);
+//			mIsLauncher = extras.getBoolean(LAUNCHER);
+		   mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
+		   mServiceID =extras.getString(MESSAGE_SERVICE_ID, null);
+		   if (mMessageType >= 0 && mServiceID != null) {
+		      mNeedJump = true;
+		   }
 		}
 		
 		Rect frame = new Rect();
@@ -232,12 +244,13 @@ public class CategoryActivity extends NewsBaseActivity {
 
 		mInflater = LayoutInflater.from(this);
 
-		if (mIsLauncher) {
-			checkNetWork();
-		} else {
-			setupData(1);
-			mCover.setVisibility(View.GONE);
-		}
+		checkNetWork();
+//		if (mIsLauncher) {
+//			checkNetWork();
+//		} else {
+//			setupData(1);
+//			mCover.setVisibility(View.GONE);
+//		}
 
 
 		Utils.createLocalDiskPath(Utils.TEMP_FOLDER);
@@ -727,35 +740,26 @@ public class CategoryActivity extends NewsBaseActivity {
 							}
 							if (idIndex < 0) {
 								mApp.setCurrentUserId(userIds.get(0));
-								SharedPreferences prefs = CategoryActivity.this
-										.getSharedPreferences(
-												PreferenceFiles.APP_SETTINGS,
-												Context.MODE_PRIVATE);
-								if (prefs != null) {
-									prefs.edit()
-											.putString(PreferenceItems.USER_ID,
-													userIds.get(0)).commit();
-
-								}
+//								SharedPreferences prefs = CategoryActivity.this
+//										.getSharedPreferences(
+//												PreferenceFiles.APP_SETTINGS,
+//												Context.MODE_PRIVATE);
+//								if (prefs != null) {
+//									prefs.edit()
+//											.putString(PreferenceItems.USER_ID,
+//													userIds.get(0)).commit();
+//
+//								}
 							}
 						}
 
 					} else {
 						mApp.setCurrentUserId(null);
 					}
-					publishProgress(1);
+					publishProgress(0);
 
 				}
 			case 1:
-				if (mAppProperties != null) {
-					mReceiveBmp = Utils.getBitmapFromUrl(
-							mAppProperties.getSplashImageUrl(), true);
-
-					Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp
-							+ "// " + mAppProperties.getSplashImageUrl());
-					publishProgress(2);
-				}
-			case 2:
 				if (mApp.getCurrentUserId() != null) {
 					NewsChannelList channel_list = NewsChannelApi
 							.getNewsChannelList(getApplicationContext(),
@@ -766,6 +770,16 @@ public class CategoryActivity extends NewsBaseActivity {
 					}
 				}
 
+         case 2:
+            if (mAppProperties != null) {
+               mReceiveBmp = Utils.getBitmapFromUrl(
+                     mAppProperties.getSplashImageUrl(), true);
+
+               Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp
+                     + "// " + mAppProperties.getSplashImageUrl());
+               publishProgress(2);
+            }
+
 			}
 
 			return null;
@@ -775,7 +789,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		protected void onProgressUpdate(Integer... values) {
 			int status = values[0];
 			switch (status) {
-			case 1:
+			case 0:
 				if (mUserStatus == 1) {
 					mActivateLayout.setVisibility(View.VISIBLE);
 				} else {
@@ -787,6 +801,8 @@ public class CategoryActivity extends NewsBaseActivity {
 					}
 				}
 				break;
+			case 1:
+			   break;
 			case 2:
 				if (mCover != null && mReceiveBmp != null) {
 					mCover.setImageBitmap(mReceiveBmp);
@@ -795,8 +811,6 @@ public class CategoryActivity extends NewsBaseActivity {
 					}
 					mCoverBmp = mReceiveBmp;
 				}
-				break;
-			case 3:
 				break;
 			}
 
@@ -1155,7 +1169,7 @@ public class CategoryActivity extends NewsBaseActivity {
 		it.putExtra(SummaryActivity.CHANNEL_TYPE, Utils.LESSON_LIST_TYPE);
 		it.putExtra(SummaryActivity.CHANNEL_ID, data.getChannelId());
 		it.putExtra(SummaryActivity.CHANNEL_TITLE, data.getTitleName());
-		startActivityForResult(it, requestCode);
+		startActivity(it);
 	}
 
 	private void startUserInfosActivity() {
@@ -1184,10 +1198,11 @@ public class CategoryActivity extends NewsBaseActivity {
 			case Utils.USER_ISSUES_TYPE:
 				title_resid = R.string.user_issues_list;
 				break;
-
 			case Utils.NOTIFY_LIST_TYPE:
+			   title_resid = R.string.default_notice_title;
 				break;
 			case Utils.DAILY_REMINDER_TYPE:
+			   title_resid = R.string.default_daily_reminder_title;
 				break;
 			}
 			if (title_resid > 0) {
@@ -1228,7 +1243,7 @@ public class CategoryActivity extends NewsBaseActivity {
 							mApp.setCurrentUserId(userId);
 							mDlg = Utils.showProgressDlg(this, null);
 							mTask = new LoadDataTask();
-							mTask.execute(2);
+							mTask.execute(1);
 						}
 					}
 				}
@@ -1249,5 +1264,29 @@ public class CategoryActivity extends NewsBaseActivity {
 		}
 
 	};
+	
+	
+	
+	private void JumpToMessageTarget() {
+
+      Intent it = new Intent();
+	   switch(mMessageType) {
+      case Utils.MESSAGE_SEND_TYPE_DAILY_REMINDER:
+         it.setClass(this, AzkerListActivity.class);
+         it.putExtra(AzkerListActivity.LIST_TYPE, Utils.DAILY_REMINDER_TYPE);
+         it.putExtra(AzkerListActivity.LIST_TITLE, getString(R.string.default_daily_reminder_title));
+         break;
+      case Utils.MESSAGE_SEND_TYPE_NOTIFY:
+         break;
+      case Utils.MESSAGE_SEND_TYPE_EXPERT:
+         break;
+      case Utils.MESSAGE_SEND_TYPE_LESSON:
+         break;
+      
+	   
+	   }
+	   startActivityForResult(it, REQUEST_MESSAGE_JUMP);
+	   
+	}
 
 }
