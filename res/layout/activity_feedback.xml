@@ -61,7 +61,7 @@
             android:background="@drawable/blue_btn"
             android:gravity="center"
             android:text="@string/feedback_confirm" 
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:layout_marginBottom="10dp"/>
     </LinearLayout>
 

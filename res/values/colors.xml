@@ -1,5 +1,4 @@
 <resources>
-   <color name="transparent">#00000000</color>
    <color name="holo_blue">#ff33b5e5</color>
    <color name="translucent_black">#4c000000</color>
    <color name="gray">#ffdddddd</color>
@@ -15,4 +14,7 @@
    <color name="bottom_dark">#ff403f51</color>
    <color name="file_title_bg">#fffca733</color>
    <color name="about_text_color">#ff333333</color>
+   <color name="white">#ffffffff</color>
+   <color name="black">#ff000000</color>
+   <color name="transparent">#00000000</color>
 </resources>

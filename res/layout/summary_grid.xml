@@ -12,7 +12,7 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/summary_title_bg"
         android:singleLine="true"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:textSize="18sp" />
 
     <ImageView
@@ -110,7 +110,7 @@
             android:layout_marginLeft="30dp"
             android:gravity="center_vertical"
             android:text="1/1"
-            android:textColor="@android:color/white"
+            android:textColor="@color/white"
             android:textSize="14dp" />
 
         <ImageView

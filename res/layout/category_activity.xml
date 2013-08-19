@@ -75,7 +75,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="30dp"
         android:gravity="center_vertical"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:textSize="14dp" />
 
     <RelativeLayout
@@ -125,7 +125,7 @@
                 android:background="@drawable/blue_btn"
                 android:gravity="center"
                 android:text="@string/activite_btn"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/white" />
         </LinearLayout>
         
 
@@ -141,7 +141,7 @@
         android:shadowDy="2"
         android:shadowRadius="2"
         android:text="@string/category_msg"
-        android:textColor="@android:color/white"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone" />
     </RelativeLayout>

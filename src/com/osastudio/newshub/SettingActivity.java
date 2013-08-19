@@ -34,11 +34,11 @@ import android.widget.TextView;
 public class SettingActivity extends NewsBaseActivity implements AppSettings {
    private View mAccountManager = null;
    private View mAddAcountManager = null;
-   private Button mTextBig = null;
-   private Button mTextNormal = null;
-   private Button mTextSmall = null;
-   private Button mDownloadClose = null;
-   private Button mDownloadOpen = null;
+   private View mTextBig = null;
+   private View mTextNormal = null;
+   private View mTextSmall = null;
+   private View mDownloadClose = null;
+   private View mDownloadOpen = null;
    private View mHelp = null;
    private ViewGroup mCheckUpdate = null;
    private View mAbout = null;
@@ -74,12 +74,12 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
    private void findViews() {
       mAccountManager = findViewById(R.id.account_manager);
       mAddAcountManager = findViewById(R.id.add_account);
-      mTextBig = (Button) findViewById(R.id.big_btn);
-      mTextNormal = (Button) findViewById(R.id.normal_btn);
-      mTextSmall = (Button) findViewById(R.id.small_btn);
+      mTextBig = findViewById(R.id.big_btn);
+      mTextNormal = findViewById(R.id.normal_btn);
+      mTextSmall = findViewById(R.id.small_btn);
       mFontSizePrompt = (TextView) findViewById(R.id.font_size_prompt);
-      mDownloadClose = (Button) findViewById(R.id.close_btn);
-      mDownloadOpen = (Button) findViewById(R.id.open_btn);
+      mDownloadClose = findViewById(R.id.close_btn);
+      mDownloadOpen = findViewById(R.id.open_btn);
       mHelp = findViewById(R.id.help);
       mCheckUpdate = (ViewGroup) findViewById(R.id.check_update);
       mAbout = findViewById(R.id.about);

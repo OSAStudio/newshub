@@ -154,31 +154,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                    <Button 
+                    <TextView 
                         android:id="@+id/big_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:gravity="center"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:text="@string/big"
                         android:background="@drawable/switch_btn_bg"/>
-                    <Button 
+                    <TextView 
                         android:id="@+id/normal_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:gravity="center"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:text="@string/normal"
                         android:background="@drawable/switch_btn_bg"/>"
-                    <Button 
+                    <TextView 
                         android:id="@+id/small_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:gravity="center"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:text="@string/small"
                         android:background="@drawable/switch_btn_bg"/>
                 </LinearLayout>
@@ -226,22 +226,22 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:visibility="visible">
-                    <Button 
+                    <TextView 
                         android:id="@+id/close_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:gravity="center"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:text="@string/close"
                         android:background="@drawable/switch_btn_bg"/>
-                    <Button 
+                    <TextView 
                         android:id="@+id/open_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:gravity="center"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:text="@string/open"
                         android:background="@drawable/switch_btn_bg"/>
                 </LinearLayout>
