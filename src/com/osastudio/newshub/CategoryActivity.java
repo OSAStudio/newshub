@@ -11,7 +11,6 @@ import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.data.user.ValidateResult;
-import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.AppPropertiesApi;
@@ -52,7 +51,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -811,10 +809,6 @@ public class CategoryActivity extends NewsBaseActivity {
 			if (mAppProperties != null) {
 				try {
                getNewsService().hasNewVersion(mAppProperties, false);
-               String userId = ((NewsApp) CategoryActivity.this.getApplication()).getCurrentUserId();
-               if (!TextUtils.isEmpty(userId)) {
-                  getNewsService().checkNewsMessage(userId);
-               }
             } catch (Exception e) {
 //               e.printStackTrace();
             }
