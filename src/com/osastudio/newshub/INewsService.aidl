@@ -4,18 +4,20 @@ import com.osastudio.newshub.data.AppProperties;
 
 interface INewsService {
 
+   void downloadApk(in String apkUrl);
+   
    boolean isDownloadingApk();
    
-   void downloadApk(String apkUrl);
+   void checkNewVersion();
    
    boolean isCheckingNewVersion();
-      
-   void checkNewVersion();
    
    boolean hasNewVersion(in AppProperties properties, in boolean notifyIfNoNewVersion);
    
    void checkAppDeadline();
-   
-   boolean hasExpired();
 
+   boolean hasExpired();
+   
+   void checkNewsMessage(in String userId);
+      
 }

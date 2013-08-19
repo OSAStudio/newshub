@@ -3,8 +3,9 @@ package com.osastudio.newshub;
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.data.AppProperties;
+import com.osastudio.newshub.data.NewsMessage;
 import com.osastudio.newshub.data.NewsMessageList;
-import com.osastudio.newshub.data.NewsMessageScheduler;
+import com.osastudio.newshub.data.NewsMessageSchedule;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.UpgradeManager;
 import com.osastudio.newshub.net.AppDeadlineApi;
@@ -12,12 +13,19 @@ import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsMessageApi;
 import com.osastudio.newshub.utils.Utils;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
@@ -27,13 +35,18 @@ public class NewsService extends Service {
 
    private static final String TAG = "NewsService";
 
+   private static final String ACTION_PULL_NEWS_MESSAGE_SCHEDULE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE_SCHEDULE";
    private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
+   private static final long RETRY_DELAYED_MILLIS = 10 * 60 * 1000;
+   private static final int NEWS_MESSAGE_NOTIFICATION = 1331;
 
    private Handler mHandler = new Handler();
    private UpgradeManager mUpgradeManager;
    private boolean mCheckingNewVersion = false;
    private AppDeadline mAppDeadline;
-   private NewsReceiver mNewsReceiver;
+   private INewsServiceBinder mBinder = new INewsServiceBinder();
+   private NewsReceiver mNewsReceiver = new NewsReceiver();
+   private Bitmap mNewsMessageBitmap;
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
@@ -81,13 +94,7 @@ public class NewsService extends Service {
       startService(selfIntent);
    }
 
-   private final INewsService.Stub mBinder = new INewsService.Stub() {
-
-      @Override
-      public boolean isDownloadingApk() {
-         return (mUpgradeManager != null) ? mUpgradeManager.isDownloading()
-               : false;
-      }
+   private class INewsServiceBinder extends INewsService.Stub {
 
       @Override
       public void downloadApk(String apkUrl) {
@@ -98,8 +105,10 @@ public class NewsService extends Service {
          mUpgradeManager.download(apkUrl);
       }
 
-      public boolean isCheckingNewVersion() {
-         return mCheckingNewVersion;
+      @Override
+      public boolean isDownloadingApk() {
+         return (mUpgradeManager != null) ? mUpgradeManager.isDownloading()
+               : false;
       }
 
       @Override
@@ -108,6 +117,10 @@ public class NewsService extends Service {
             mCheckingNewVersion = true;
             new AppPropertiesTask().execute(NewsService.this);
          }
+      }
+
+      public boolean isCheckingNewVersion() {
+         return mCheckingNewVersion;
       }
 
       @Override
@@ -144,69 +157,189 @@ public class NewsService extends Service {
          new AppDeadlineTask().execute(NewsService.this);
       }
 
-      void checkNewsMessageScheduler(String userId) {
+      @Override
+      public void checkNewsMessage(String userId) {
          String str = ((NewsApp) NewsService.this.getApplication())
-               .getPrefsManager().getMessageSchedulerString();
-         NewsMessageScheduler scheduler = NewsMessageScheduler
+               .getPrefsManager().getMessageScheduleString();
+         NewsMessageSchedule schedule = NewsMessageSchedule
                .parseFormattedString(str);
-         if (scheduler != null) {
-            if (scheduler.isToday() && scheduler.isPullingAllowed()) {
-               int count = scheduler.getCount();
-               if (count == 0) {
-                  
-               } else if (count == 1) {
-                  
-               } else if (count == 3) {
-                  
-               }
-            }
+         if (schedule != null) {
+            analyzeNewsMessage(userId, schedule);
          } else {
-            requestNewsMessageScheduler(userId);
+            requestNewsMessageSchedule(userId);
          }
-      }
-      
-      void requestNewsMessageScheduler(String userId) {
-         new NewsMessageSchedulerTask(userId).execute(NewsService.this);
-      }
-
-      void requestNewsMessageList(String userId) {
-         new NewsMessageListTask(userId).execute(NewsService.this);
       }
 
    };
 
-   private class NewsReceiver extends BroadcastReceiver {
+   private void analyzeNewsMessage(String userId, NewsMessageSchedule schedule) {
+      if (schedule.isPullingAllowed() && schedule.isToday()) {
+         int count = schedule.getCount();
+         if (count == 0) {
+            if (schedule.pullNow()) {
+               requestNewsMessageList(userId, count + 1, true,
+                     RETRY_DELAYED_MILLIS);
+            } else {
+               schedulePullingNewsMessage(userId, schedule.getScheduleMillis(),
+                     count + 1);
+            }
+         } else if (count == 1) {
+            requestNewsMessageList(userId, count + 1, true, 0);
+         } else if (count == 2) {
+            requestNewsMessageList(userId, count + 1);
+         }
+      }
+   }
 
+   private void requestNewsMessageSchedule(String userId) {
+      new NewsMessagescheduleTask(userId).execute(NewsService.this);
+   }
+
+   private void schedulePullingNewsMessageSchedule(String userId) {
+      AlarmManager alarmManager = (AlarmManager) NewsService.this
+            .getSystemService(Context.ALARM_SERVICE);
+      Intent intent = new Intent();
+      intent.setAction(ACTION_PULL_NEWS_MESSAGE_SCHEDULE);
+      intent.setClass(NewsService.this, NewsService.class);
+      intent.setData(Uri.parse("userId:" + userId));
+      intent.putExtra("userId", userId);
+      PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
+            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis(), 60 * 1000, pi);
+   }
+
+   private void requestNewsMessageList(String userId, int count,
+         boolean retryIfFailed, long retryDelayedMillis) {
+      NewsMessageListTask task = new NewsMessageListTask(userId);
+      task.setCount(count);
+      task.setRetryIfFailed(retryIfFailed);
+      task.setRetryDelayedMillis(retryDelayedMillis);
+      task.execute(NewsService.this);
+   }
+
+   private void requestNewsMessageList(String userId, int count) {
+      requestNewsMessageList(userId, count, false, 0);
+   }
+
+   private void schedulePullingNewsMessage(String userId, long scheduleMillis,
+         int count) {
+      AlarmManager alarmManager = (AlarmManager) NewsService.this
+            .getSystemService(Context.ALARM_SERVICE);
+      Intent intent = new Intent();
+      intent.setAction(ACTION_PULL_NEWS_MESSAGE);
+      intent.setClass(NewsService.this, NewsService.class);
+      intent.setData(Uri.parse("userId:" + userId));
+      intent.putExtra("userId", userId);
+      intent.putExtra("count", count);
+      PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
+            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pi);
+   }
+
+   private void notifyNewsMessage(NewsMessageList messages) {
+      if (mNewsMessageBitmap == null) {
+         mNewsMessageBitmap = BitmapFactory.decodeResource(getResources(),
+               R.drawable.icon);
+      }
+      for (NewsMessage msg : messages.getList()) {
+         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(),
+               PendingIntent.FLAG_UPDATE_CURRENT);
+         Notification notification = new Notification.Builder(this)
+               .setContentTitle(getString(R.string.news_message_prompt_title))
+               .setContentText(getString(R.string.news_message_prompt_content))
+               .setSmallIcon(R.drawable.icon).setLargeIcon(mNewsMessageBitmap)
+               .setContentIntent(pi).build();
+         notification.flags |= Notification.FLAG_AUTO_CANCEL;
+         NotificationManager manager = (NotificationManager) getApplicationContext()
+               .getSystemService(Context.NOTIFICATION_SERVICE);
+         manager.notify(NEWS_MESSAGE_NOTIFICATION, notification);
+      }
+   }
+
+   private String getTitleByMessageType(NewsMessage msg) {
+      switch (msg.getType()) {
+      case NewsMessage.MSG_TYPE_NOTICE:
+         return getString(R.string.msg_prompt_title_notice);
+
+      case NewsMessage.MSG_TYPE_NOTICE_FEEDBACK:
+         return getString(R.string.msg_prompt_title_notice);
+
+      case NewsMessage.MSG_TYPE_DAILY_REMINDER:
+         return getString(R.string.msg_prompt_title_daily_reminder);
+
+      case NewsMessage.MSG_TYPE_COLUMNIST:
+         return getString(R.string.msg_prompt_title_colomnist);
+
+      case NewsMessage.MSG_TYPE_RECOMMEND:
+         return getString(R.string.msg_prompt_title_recommend);
+
+      default:
+         return "";
+      }
+   }
+
+   private String getContentByMessageType(NewsMessage msg) {
+      switch (msg.getType()) {
+      case NewsMessage.MSG_TYPE_NOTICE:
+         return getString(R.string.msg_prompt_content_notice);
+
+      case NewsMessage.MSG_TYPE_NOTICE_FEEDBACK:
+         return msg.getContent();
+
+      case NewsMessage.MSG_TYPE_DAILY_REMINDER:
+         return getString(R.string.msg_prompt_content_daily_reminder);
+
+      case NewsMessage.MSG_TYPE_COLUMNIST:
+         return getString(R.string.msg_prompt_content_colomnist);
+
+      case NewsMessage.MSG_TYPE_RECOMMEND:
+         return getString(R.string.msg_prompt_content_recommend);
+
+      default:
+         return "";
+      }
+   }
+
+   private void clearNewsMessageNotification() {
+      NotificationManager manager = (NotificationManager) getApplicationContext()
+            .getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancel(NEWS_MESSAGE_NOTIFICATION);
+   }
+
+   private class NewsReceiver extends BroadcastReceiver {
       @Override
       public void onReceive(Context context, Intent intent) {
          String action = intent.getAction();
          Utils.logi(TAG, "_______________onReceive: " + action);
-         if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
-
+         if (ACTION_PULL_NEWS_MESSAGE_SCHEDULE.equals(action)) {
+            String userId = intent.getStringExtra("userId");
+            requestNewsMessageSchedule(userId);
+         } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
+            Uri data = intent.getData();
+            String userId = intent.getStringExtra("userId");
+            int count = intent.getIntExtra("count", 0);
+            if (count == 0) {
+               requestNewsMessageList(userId, count, true, RETRY_DELAYED_MILLIS);
+            } else {
+               requestNewsMessageList(userId, count);
+            }
          }
       }
-
    };
 
    private void registerNewsReceiver() {
-      if (mNewsReceiver == null) {
-         mNewsReceiver = new NewsReceiver();
-      }
       IntentFilter filter = new IntentFilter();
       filter.addAction(ACTION_PULL_NEWS_MESSAGE);
       registerReceiver(mNewsReceiver, filter);
    }
 
    private void unregisterNewsReceiver() {
-      if (mNewsReceiver != null) {
-         unregisterReceiver(mNewsReceiver);
-         mNewsReceiver = null;
-      }
+      unregisterReceiver(mNewsReceiver);
    }
 
    private class AppPropertiesTask extends
          AsyncTask<Context, Integer, AppProperties> {
-
       @Override
       protected AppProperties doInBackground(Context... params) {
          return AppPropertiesApi.getAppProperties(params[0]);
@@ -223,12 +356,10 @@ public class NewsService extends Service {
             }
          }
       }
-
    }
 
    private class AppDeadlineTask extends
          AsyncTask<Context, Integer, AppDeadline> {
-
       private Context context;
 
       @Override
@@ -245,38 +376,56 @@ public class NewsService extends Service {
       }
    }
 
-   private class NewsMessageSchedulerTask extends
-         AsyncTask<Context, Integer, NewsMessageScheduler> {
-
+   private class NewsMessagescheduleTask extends
+         AsyncTask<Context, Integer, NewsMessageSchedule> {
       private Context context;
       private String userId;
 
-      public NewsMessageSchedulerTask(String userId) {
+      public NewsMessagescheduleTask(String userId) {
          this.userId = userId;
       }
 
       @Override
-      protected NewsMessageScheduler doInBackground(Context... params) {
+      protected NewsMessageSchedule doInBackground(Context... params) {
          this.context = params[0];
-         return NewsMessageApi.getNewsMessageScheduler(params[0], this.userId);
+         return NewsMessageApi.getNewsMessageSchedule(params[0], this.userId);
       }
 
       @Override
-      protected void onPostExecute(NewsMessageScheduler result) {
+      protected void onPostExecute(NewsMessageSchedule result) {
          if (result != null) {
-
+            PreferenceManager prefsManager = ((NewsApp) NewsService.this
+                  .getApplication()).getPrefsManager();
+            result.setBaseMillis(System.currentTimeMillis());
+            result.setCount(0);
+            prefsManager.setMessageScheduleString(result.toString());
+            analyzeNewsMessage(this.userId, result);
          }
       }
    }
 
    private class NewsMessageListTask extends
          AsyncTask<Context, Integer, NewsMessageList> {
-
       private Context context;
       private String userId;
+      private int count = 0;
+      private boolean retryIfFailed = false;
+      private long retryDelayedMillis = 0;
 
       public NewsMessageListTask(String userId) {
          this.userId = userId;
+      }
+
+      public void setCount(int count) {
+         this.count = count;
+      }
+
+      public void setRetryIfFailed(boolean retry) {
+         this.retryIfFailed = retry;
+      }
+
+      public void setRetryDelayedMillis(long millis) {
+         this.retryDelayedMillis = millis;
       }
 
       @Override
@@ -287,7 +436,30 @@ public class NewsService extends Service {
 
       @Override
       protected void onPostExecute(NewsMessageList result) {
-
+         PreferenceManager prefsManager = ((NewsApp) NewsService.this
+               .getApplication()).getPrefsManager();
+         NewsMessageSchedule schedule = NewsMessageSchedule
+               .parseFormattedString(prefsManager.getMessageScheduleString());
+         if (result != null && result.isSuccess()) {
+            if (schedule != null) {
+               schedule.setCount(3);
+               prefsManager.setMessageScheduleString(schedule.toString());
+            }
+            notifyNewsMessage(result);
+         } else {
+            if (schedule != null) {
+               schedule.setCount(this.count);
+               prefsManager.setMessageScheduleString(schedule.toString());
+            }
+            if (this.retryIfFailed) {
+               if (this.retryDelayedMillis > 0) {
+                  schedulePullingNewsMessage(this.userId,
+                        this.retryDelayedMillis, this.count + 1);
+               } else {
+                  requestNewsMessageList(this.userId, this.count + 1);
+               }
+            }
+         }
       }
    }
 

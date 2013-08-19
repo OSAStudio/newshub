@@ -20,7 +20,7 @@ public class PreferenceManager implements AppSettings {
       public static final String FONT_SIZE = "font_size";
       public static final String AUTO_LOADING_PICTURE = "auto_loading_picture";
       public static final String USER_ID = "user_id";
-      public static final String MESSAGE_SCHEDULER = "message_scheduler";
+      public static final String MESSAGE_SCHEDULE = "message_scheduler";
    }
 
    public PreferenceManager(Context context) {
@@ -107,19 +107,36 @@ public class PreferenceManager implements AppSettings {
       return false;
    }
 
-   public String getMessageSchedulerString() {
+   public String getUserId() {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
-         return prefs.getString(PreferenceItems.MESSAGE_SCHEDULER, "");
+         return prefs.getString(PreferenceItems.USER_ID, "");
       }
       return "";
    }
 
-   public boolean setMessageSchedulerString(String value) {
+   public boolean setUserId(String value) {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
          return prefs.edit()
-               .putString(PreferenceItems.MESSAGE_SCHEDULER, value).commit();
+               .putString(PreferenceItems.USER_ID, value).commit();
+      }
+      return false;
+   }
+
+   public String getMessageScheduleString() {
+      SharedPreferences prefs = getAppSettingsPrefs();
+      if (prefs != null) {
+         return prefs.getString(PreferenceItems.MESSAGE_SCHEDULE, "");
+      }
+      return "";
+   }
+
+   public boolean setMessageScheduleString(String value) {
+      SharedPreferences prefs = getAppSettingsPrefs();
+      if (prefs != null) {
+         return prefs.edit()
+               .putString(PreferenceItems.MESSAGE_SCHEDULE, value).commit();
       }
       return false;
    }

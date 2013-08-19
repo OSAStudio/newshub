@@ -14,6 +14,12 @@ public class NewsMessage extends NewsBaseObject implements NewsId, Parcelable {
    private static final String JSON_KEY_CONTENT = "message_content";
    private static final String JSON_KEY_ID = "service_id";
    private static final String JSON_KEY_TYPE = "message_class";
+   
+   public static final int MSG_TYPE_NOTICE = 1;
+   public static final int MSG_TYPE_NOTICE_FEEDBACK = 2;
+   public static final int MSG_TYPE_DAILY_REMINDER = 3;
+   public static final int MSG_TYPE_COLUMNIST = 4;
+   public static final int MSG_TYPE_RECOMMEND = 5;
 
    private String content = "";
    private String id = "";
