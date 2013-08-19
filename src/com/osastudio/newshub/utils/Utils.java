@@ -28,6 +28,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
@@ -45,6 +46,12 @@ public class Utils {
 	final static public int LESSON_LIST_TYPE = 6;
 	final static public int DAILY_REMINDER_TYPE = 7;
 	final static public int RECOMMEND_LIST_TYPE = 8;
+	
+	final static public int MESSAGE_SEND_TYPE_NOTIFY = 1;
+   final static public int MESSAGE_SEND_TYPE_DAILY_REMINDER = 2;
+   final static public int MESSAGE_SEND_TYPE_EXPERT = 3;
+   final static public int MESSAGE_SEND_TYPE_LESSON = 4;
+	
 
 	public static final String ROOT = Environment.getExternalStorageDirectory()
 			.toString();
@@ -518,6 +525,7 @@ public class Utils {
 		it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		activity.startActivity(it);
 	}
+	
 	
    
 	public static void log(String tag, String info) {

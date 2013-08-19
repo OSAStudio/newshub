@@ -504,15 +504,15 @@ public class PageActivity extends NewsBaseActivity {
 					fileview = mInflater.inflate(R.layout.expert_page_view,
 							null);
 				}
-				TextView title = (TextView) fileview.findViewById(R.id.title);
+//				TextView title = (TextView) fileview.findViewById(R.id.title);
 				ImageView iv = (ImageView) fileview.findViewById(R.id.image);
 				TextView summary = (TextView) fileview
 						.findViewById(R.id.summary);
-				summary.setTextSize(mTextSize);
-				summary.setLineSpacing(0, 1.8f);
+				summary.setTextSize(mTextSize-2);
+				summary.setLineSpacing(0, 1.6f);
 				TextView resume = (TextView) fileview.findViewById(R.id.resume);
 				resume.setTextSize(mTextSize);
-				resume.setLineSpacing(0, 1.8f);
+				resume.setLineSpacing(0, 1.6f);
 
 				for (int i = 0; i < mIconList.size(); i++) {
 					IconData data = mIconList.get(i);
@@ -522,12 +522,12 @@ public class PageActivity extends NewsBaseActivity {
 						}
 					}
 				}
-				if (mCategoryTitle != null) {
-					title.setVisibility(View.VISIBLE);
-					title.setText(mCategoryTitle);
-				} else {
-					title.setVisibility(View.GONE);
-				}
+//				if (mCategoryTitle != null) {
+//					title.setVisibility(View.VISIBLE);
+//					title.setText(mCategoryTitle);
+//				} else {
+//					title.setVisibility(View.GONE);
+//				}
 				summary.setText(mSummary);
 				resume.setText(mResume);
 				Utils.log("getView", " real data");
