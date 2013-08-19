@@ -10,7 +10,10 @@ import org.json.JSONObject;
 import com.osastudio.newshub.data.base.NewsBaseAbstractList;
 
 public class NewsAbstractList extends NewsBaseAbstractList<NewsAbstract> {
-
+   public NewsAbstractList() {
+      super();
+   }
+   
    public NewsAbstractList(JSONObject jsonObject) {
       super(jsonObject);
 

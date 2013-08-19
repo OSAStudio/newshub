@@ -57,7 +57,7 @@ public class SlidePager extends android.support.v4.view.ViewPager {
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			Utils.logd("SlidePager destroyItem", "position=" + position
+			Utils.logd("SlidePager instantiateItem", "position=" + position
 					+ " object=" + mViews.get(position));
 			((ViewPager) container).addView(mViews.get(position));
 
@@ -80,6 +80,7 @@ public class SlidePager extends android.support.v4.view.ViewPager {
 				}
 			}
 			setAdapter(mPagerAdapter);
+			Utils.logd("SlidePager setAssistant", "setAdapter mViews size="+mViews.size());
 		}
 		invalidate();
 	}
