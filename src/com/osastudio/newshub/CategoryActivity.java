@@ -9,6 +9,8 @@ import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.data.AppProperties;
+import com.osastudio.newshub.data.NewsAbstract;
+import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.data.user.ValidateResult;
@@ -1328,7 +1330,12 @@ public class CategoryActivity extends NewsBaseActivity {
          break;
       case Utils.MESSAGE_SEND_TYPE_LESSON:
          NewsAbstractCache cache = getNewsAbstractCache();
-
+         NewsAbstractList abstractList = cache.getNewsAbstractList();
+         List<NewsAbstract> list = abstractList.getList();
+         list.clear();
+         NewsAbstract abstractData = new NewsAbstract();
+         abstractData.setId(mServiceID);
+         list.add(abstractData);
          break;
 
       }
