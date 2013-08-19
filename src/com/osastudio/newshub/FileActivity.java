@@ -93,14 +93,6 @@ public class FileActivity extends NewsBaseActivity {
 
 	}
 
-	@Override
-	public void onBackPressed() {
-		if (mDirectEnter) {
-			Utils.backToCategory(this);
-		} else {
-			super.onBackPressed();
-		}
-	}
 
 	@Override
 	protected void onResume() {
@@ -188,7 +180,7 @@ public class FileActivity extends NewsBaseActivity {
 
 			mSummary_data = mSummary_list.getAbstractList().get(index);
 			mNewsArticle = NewsArticleApi.getNewsArticle(FileActivity.this,
-					mSummary_data);
+					mSummary_data.getId());
 			if (mNewsArticle == null) {
 				return -1;
 			}
@@ -196,6 +188,11 @@ public class FileActivity extends NewsBaseActivity {
 			mHtmlCotent = mNewsArticle.getContent();
 			mTitle = mNewsArticle.getTitle();
 			mArticleId = mNewsArticle.getId();
+			
+			String channel = mNewsArticle.getChannelName();
+			if (channel != null) {
+			   mCategoryTitle = channel;
+			}
 			AddTitleToHtml();
 			return index;
 		}

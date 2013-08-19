@@ -103,14 +103,6 @@ public class AzkerListActivity extends NewsBaseActivity {
 		mTouchSlop = configuration.getScaledTouchSlop();
 	}
 	
-	@Override
-	public void onBackPressed() {
-		if (mDirectEnter) {
-			Utils.backToCategory(this);
-		} else {
-			super.onBackPressed();
-		}
-	}
 
 	@Override
 	protected void onDestroy() {

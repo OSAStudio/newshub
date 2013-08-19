@@ -36,12 +36,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -119,14 +121,6 @@ public class PageActivity extends NewsBaseActivity {
 		setupData();
 	}
 	
-	@Override
-	public void onBackPressed() {
-		if (mDirectEnter) {
-			Utils.backToCategory(this);
-		} else {
-			super.onBackPressed();
-		}
-	}
 
 	@Override
 	protected void onResume() {
@@ -489,6 +483,9 @@ public class PageActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
+		   if (convertView instanceof ProgressBar) {
+            convertView = null;
+         }
 			mCurrentId = position;
 			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
 					+ position + " convertView=" + convertView);
@@ -528,8 +525,8 @@ public class PageActivity extends NewsBaseActivity {
 //				} else {
 //					title.setVisibility(View.GONE);
 //				}
-				summary.setText(mSummary);
-				resume.setText(mResume);
+				summary.setText(Html.fromHtml(mSummary));//(mSummary);
+				resume.setText(Html.fromHtml(mResume));//(mResume);
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
@@ -540,7 +537,7 @@ public class PageActivity extends NewsBaseActivity {
 				mTask = new LoadDataTask();
 				mTask.execute(position);
 				Utils.log("getView", " no data");
-				return null;
+				return createPogress();
 			}
 
 		}
@@ -566,12 +563,9 @@ public class PageActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			// FileView fileview = (FileView) convertView;
-			// if (fileview == null) {
-			// fileview = new FileView(FileActivity.this);
-			// }
-			// fileview.setData(mHtmlCotent);
-			// return fileview;
+		   if (convertView instanceof ProgressBar) {
+            convertView = null;
+         }
 
 			mCurrentId = position;
 			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
@@ -601,12 +595,21 @@ public class PageActivity extends NewsBaseActivity {
 				mTask = new LoadDataTask();
 				mTask.execute(position);
 				Utils.log("getView", " no data");
-				return null;
+				return createPogress();
 			}
 
 		}
 	}
 
 	private int mLastIndex = -1;
+	
+	private View createPogress() {
+      ProgressBar bar = new ProgressBar(this);
+      bar.setMax(100);
+      bar.setProgress(50);
+
+      return bar;
+
+   }
 
 }
