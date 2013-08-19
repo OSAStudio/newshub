@@ -114,25 +114,17 @@ public class NewsApp extends Application {
       return dm;
    }
 
-   public void setCurrentUserId(String userid) {
-      if (userid == null || mCurrentUserId == null
-            || !userid.equals(mCurrentUserId)) {
-         mCurrentUserId = userid;
-         SharedPreferences prefs = getSharedPreferences(
-               PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
-         if (prefs != null) {
-            prefs.edit().putString(PreferenceItems.USER_ID, userid).commit();
-         }
+   public void setCurrentUserId(String userId) {
+      if (userId == null || mCurrentUserId == null
+            || !userId.equals(mCurrentUserId)) {
+         mCurrentUserId = userId;
+         getPrefsManager().setUserId(userId);
       }
    }
 
    public String getCurrentUserId() {
       if (mCurrentUserId == null) {
-         SharedPreferences prefs = getSharedPreferences(
-               PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
-         if (prefs != null) {
-            mCurrentUserId = prefs.getString(PreferenceItems.USER_ID, null);
-         }
+         mCurrentUserId = getPrefsManager().getUserId();
       }
       return mCurrentUserId;
    }
