@@ -1332,10 +1332,15 @@ public class CategoryActivity extends NewsBaseActivity {
          NewsAbstractCache cache = getNewsAbstractCache();
          NewsAbstractList abstractList = cache.getNewsAbstractList();
          List<NewsAbstract> list = abstractList.getList();
-         list.clear();
-         NewsAbstract abstractData = new NewsAbstract();
-         abstractData.setId(mServiceID);
-         list.add(abstractData);
+         if (list != null) {
+            list.clear();
+            NewsAbstract abstractData = new NewsAbstract();
+            abstractData.setId(mServiceID);
+            list.add(abstractData);
+         }
+         
+         cache.setAbstracts(abstractList);
+         
          break;
 
       }
