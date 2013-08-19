@@ -247,7 +247,7 @@ public class NewsBaseApi {
             "expert!getExpertContentByMobile.do").toString();
    }
 
-   protected static String getNewsMessageSchedulerService() {
+   protected static String getNewsMessageScheduleService() {
       return new StringBuilder(getWebServer()).append(
             "message!getMessageSendTimeByMobile.do").toString();
    }

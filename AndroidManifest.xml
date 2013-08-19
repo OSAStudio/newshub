@@ -79,6 +79,7 @@
             android:name="com.osastudio.newshub.NewsService"
             android:process=":daemon" >
             <intent-filter>
+                <action android:name="com.osastudio.newshub.action.PULL_NEWS_MESSAGE_SCHEDULE" />
                 <action android:name="com.osastudio.newshub.action.PULL_NEWS_MESSAGE" />
             </intent-filter>
         </service>

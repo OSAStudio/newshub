@@ -11,7 +11,7 @@ import android.text.TextUtils;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
 
-public class NewsMessageScheduler extends NewsBaseObject {
+public class NewsMessageSchedule extends NewsBaseObject {
 
    private static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
 
@@ -22,11 +22,11 @@ public class NewsMessageScheduler extends NewsBaseObject {
    private int count = 0;
    private long offsetMillis = 0;
 
-   public NewsMessageScheduler() {
+   public NewsMessageSchedule() {
 
    }
 
-   public NewsMessageScheduler(JSONObject jsonObject) {
+   public NewsMessageSchedule(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
@@ -44,7 +44,7 @@ public class NewsMessageScheduler extends NewsBaseObject {
       return this.baseMillis;
    }
 
-   public NewsMessageScheduler setBaseMillis(long millis) {
+   public NewsMessageSchedule setBaseMillis(long millis) {
       this.baseMillis = toBaseMillis(millis);
       return this;
    }
@@ -53,7 +53,7 @@ public class NewsMessageScheduler extends NewsBaseObject {
       return this.count;
    }
 
-   public NewsMessageScheduler setCount(int count) {
+   public NewsMessageSchedule setCount(int count) {
       this.count = count;
       return this;
    }
@@ -62,7 +62,7 @@ public class NewsMessageScheduler extends NewsBaseObject {
       return this.offsetMillis;
    }
 
-   public NewsMessageScheduler setOffsetMillis(long millis) {
+   public NewsMessageSchedule setOffsetMillis(long millis) {
       this.offsetMillis = millis;
       return this;
    }
@@ -78,8 +78,12 @@ public class NewsMessageScheduler extends NewsBaseObject {
       return this.baseMillis + this.offsetMillis - now;
    }
    
+   public long getScheduleMillis() {
+      return this.baseMillis + this.offsetMillis;
+   }
+   
    public boolean pullNow() {
-      return Math.abs(getRemainingMillis()) < 10;
+      return getRemainingMillis() == 0;
    }
    
    public boolean isToday() {
@@ -111,11 +115,11 @@ public class NewsMessageScheduler extends NewsBaseObject {
       return formatAsString();
    }
 
-   public static NewsMessageScheduler parseFormattedString(String formattedString) {
-      NewsMessageScheduler result = null;
+   public static NewsMessageSchedule parseFormattedString(String formattedString) {
+      NewsMessageSchedule result = null;
       String[] arr = formattedString.split(SEPARATOR);
       if (arr != null && arr.length == MAX_COUNT) {
-         result = new NewsMessageScheduler();
+         result = new NewsMessageSchedule();
          try {
             if (!TextUtils.isEmpty(arr[0])) {
                result.setBaseMillis(Long.valueOf(arr[0]));

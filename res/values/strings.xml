@@ -117,4 +117,15 @@
     
     <string name="expert_label">专家：%s</string>
     
+    <string name="news_message_prompt_title">有新消息</string>
+    <string name="news_message_prompt_content">您有新消息，点击查看</string>
+    <string name="msg_prompt_title_notice">有新通知</string>
+    <string name="msg_prompt_title_daily_reminder">有新持之以恒消息</string>
+    <string name="msg_prompt_title_colomnist">有新推荐专栏</string>
+    <string name="msg_prompt_title_recommend">有新推荐课题</string>
+    <string name="msg_prompt_content_notice">您有新通知，点击查看</string>
+    <string name="msg_prompt_content_daily_reminder">您有新持之以恒消息，点击查看</string>
+    <string name="msg_prompt_content_colomnist">您有新推荐专栏，点击查看</string>
+    <string name="msg_prompt_content_recommend">您有新推荐课题，点击查看</string>
+    
 </resources>
