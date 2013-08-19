@@ -254,7 +254,7 @@ public class CategoryActivity extends NewsBaseActivity {
          }
       }
       
-//      mMessageType = Utils.MESSAGE_SEND_TYPE_NOTIFY;
+//      mMessageType = Utils.MESSAGE_SEND_TYPE_LESSON;
 //      mServiceID = "1";
 //      mNeedJump = true;
 //      View cover = findViewById(R.id.cover_layout);
@@ -1316,6 +1316,7 @@ public class CategoryActivity extends NewsBaseActivity {
                getString(R.string.default_daily_reminder_title));
          break;
       case Utils.MESSAGE_SEND_TYPE_NOTIFY:
+      case Utils.MESSAGE_SEND_TYPE_NOTIFY_BACK:
       case Utils.MESSAGE_SEND_TYPE_EXPERT:
          ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
          cacheList.add(new TempCacheData(mServiceID));
