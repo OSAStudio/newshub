@@ -19,6 +19,23 @@ public class NewsArticleApi extends NewsBaseApi {
 
    private static final String KEY_NEWS_ARTICLE_ID = "serviceID";
 
+   public static NewsArticle getNewsArticle(Context context, String articleId) {
+      List<NameValuePair> params = new ArrayList<NameValuePair>();
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+      params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, articleId));
+      JSONObject jsonObject = getJsonObject(getNewsArticleService(), params);
+      if (jsonObject == null) {
+         return null;
+      }
+
+      NewsArticle result = new NewsArticle(jsonObject);
+      if (result != null) {
+         result.setId(articleId);
+      }
+      return result;
+   }
+
    public static NewsArticle getNewsArticle(Context context,
          NewsAbstract newsAbstract) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
