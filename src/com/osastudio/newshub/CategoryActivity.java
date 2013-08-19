@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp.TempCacheData;
+import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
@@ -1313,10 +1314,21 @@ public class CategoryActivity extends NewsBaseActivity {
                getString(R.string.default_daily_reminder_title));
          break;
       case Utils.MESSAGE_SEND_TYPE_NOTIFY:
-         break;
       case Utils.MESSAGE_SEND_TYPE_EXPERT:
+         ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
+         cacheList.add(new TempCacheData(mServiceID));
+         mApp.setTempCache(cacheList);
+         int type =  Utils.IMPORT_NOTIFY_TYPE;
+         if (mMessageType == Utils.MESSAGE_SEND_TYPE_EXPERT) {
+            type =  Utils.IMPORT_EXPERT_TYPE;
+         }
+         it.putExtra(PageActivity.PAGE_TYPE, type);
+         it.putExtra(PageActivity.START_INDEX, 0);
+         it.putExtra(PageActivity.CATEGORY_TITLE, getString(R.string.default_notice_title));
          break;
       case Utils.MESSAGE_SEND_TYPE_LESSON:
+         NewsAbstractCache cache = getNewsAbstractCache();
+
          break;
 
       }
