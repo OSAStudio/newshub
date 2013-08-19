@@ -19,6 +19,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -36,8 +37,10 @@ public class NewsService extends Service {
 
    private static final String TAG = "NewsService";
 
-   private static final String ACTION_PULL_NEWS_MESSAGE_SCHEDULE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE_SCHEDULE";
-   private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
+   private static final String ACTION_PULL_NEWS_MESSAGE_SCHEDULE 
+         = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE_SCHEDULE";
+   private static final String ACTION_PULL_NEWS_MESSAGE 
+         = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
    private static final long RETRY_DELAYED_MILLIS = 10 * 60 * 1000;
    private static final int NEWS_MESSAGE_NOTIFICATION = 1300;
 
@@ -47,7 +50,6 @@ public class NewsService extends Service {
    private AppDeadline mAppDeadline;
    private INewsServiceBinder mBinder = new INewsServiceBinder();
    private NewsReceiver mNewsReceiver = new NewsReceiver();
-   private Bitmap mNewsMessageBitmap;
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
@@ -133,7 +135,8 @@ public class NewsService extends Service {
             Intent intent = new Intent();
             intent.setClass(NewsService.this, UpgradeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                  | Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+                  | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                  | Intent.FLAG_ACTIVITY_NO_HISTORY);
             intent.putExtra(AppProperties.EXTRA_APP_PROPERTIES, properties);
             startActivity(intent);
             return true;
@@ -162,8 +165,7 @@ public class NewsService extends Service {
       public void checkNewsMessage(String userId) {
          String str = ((NewsApp) NewsService.this.getApplication())
                .getPrefsManager().getMessageScheduleString();
-         NewsMessageSchedule schedule = NewsMessageSchedule
-               .parseFormattedString(str);
+         NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
          if (schedule != null) {
             analyzeNewsMessage(userId, schedule);
          } else {
@@ -174,7 +176,7 @@ public class NewsService extends Service {
    };
 
    private void analyzeNewsMessage(String userId, NewsMessageSchedule schedule) {
-      if (schedule.isPullingAllowed() && schedule.isToday()) {
+      if (schedule.isPullingAllowed()) {
          int count = schedule.getCount();
          if (count == 0) {
             if (schedule.pullNow()) {
@@ -239,47 +241,46 @@ public class NewsService extends Service {
    }
 
    private void notifyNewsMessage(NewsMessageList messages) {
-//      if (mNewsMessageBitmap == null) {
-//         mNewsMessageBitmap = BitmapFactory.decodeResource(getResources(),
-//               R.drawable.icon);
-//      }
       for (int i = 0; i < messages.getList().size(); i++) {
          NewsMessage msg = messages.getList().get(i);
+         Notification noti = new Notification(R.drawable.noti,
+               getString(R.string.news_message_prompt_title),
+               System.currentTimeMillis());
          PendingIntent pi = PendingIntent.getActivity(this, 0,
                getNewsMessageLaunchIntent(msg),
                PendingIntent.FLAG_UPDATE_CURRENT);
-//         Notification notification = new Notification.Builder(this)
-//               .setContentTitle(getTitleByMessageType(msg))
-//               .setContentText(getContentByMessageType(msg))
-//               .setSmallIcon(R.drawable.icon).setLargeIcon(mNewsMessageBitmap)
-//               .setContentIntent(pi).build();
-         Notification notification = new Notification(R.drawable.icon, 
-               getTitleByMessageType(msg), System.currentTimeMillis());
-         notification.setLatestEventInfo(this, getContentByMessageType(msg), "", pi);
-         notification.flags |= Notification.FLAG_AUTO_CANCEL;
+         noti.setLatestEventInfo(this, msg.getContent(),
+               getMsgTitleByType(msg), pi);
+         noti.flags |= Notification.FLAG_AUTO_CANCEL;
          NotificationManager manager = (NotificationManager) getApplicationContext()
                .getSystemService(Context.NOTIFICATION_SERVICE);
-         manager.notify(NEWS_MESSAGE_NOTIFICATION + i, notification);
+         manager.notify(NEWS_MESSAGE_NOTIFICATION + i, noti);
       }
    }
 
    private Intent getNewsMessageLaunchIntent(NewsMessage msg) {
       Intent intent = new Intent();
-      intent.setClass(this, CategoryActivity.class);
+      intent.setAction(Intent.ACTION_MAIN);
+      intent.addCategory(Intent.CATEGORY_DEFAULT);
+//      intent.setClass(this, CategoryActivity.class);
+      intent.setClassName("com.huadi.azker_phone", 
+            "com.osastudio.newshub.CategoryActivity");
       Bundle extras = new Bundle();
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
       intent.putExtras(extras);
+      intent.setData(Uri.parse("serviceId:" + msg.getId()));
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       return intent;
    }
 
-   private String getTitleByMessageType(NewsMessage msg) {
+   private String getMsgTitleByType(NewsMessage msg) {
       switch (msg.getType()) {
       case NewsMessage.MSG_TYPE_NOTICE:
          return getString(R.string.msg_prompt_title_notice);
 
       case NewsMessage.MSG_TYPE_NOTICE_FEEDBACK:
-         return getString(R.string.msg_prompt_title_notice);
+         return getString(R.string.msg_prompt_title_notice_feedback);
 
       case NewsMessage.MSG_TYPE_DAILY_REMINDER:
          return getString(R.string.msg_prompt_title_daily_reminder);
@@ -289,28 +290,6 @@ public class NewsService extends Service {
 
       case NewsMessage.MSG_TYPE_RECOMMEND:
          return getString(R.string.msg_prompt_title_recommend);
-
-      default:
-         return "";
-      }
-   }
-
-   private String getContentByMessageType(NewsMessage msg) {
-      switch (msg.getType()) {
-      case NewsMessage.MSG_TYPE_NOTICE:
-         return getString(R.string.msg_prompt_content_notice);
-
-      case NewsMessage.MSG_TYPE_NOTICE_FEEDBACK:
-         return msg.getContent();
-
-      case NewsMessage.MSG_TYPE_DAILY_REMINDER:
-         return getString(R.string.msg_prompt_content_daily_reminder);
-
-      case NewsMessage.MSG_TYPE_COLUMNIST:
-         return getString(R.string.msg_prompt_content_colomnist);
-
-      case NewsMessage.MSG_TYPE_RECOMMEND:
-         return getString(R.string.msg_prompt_content_recommend);
 
       default:
          return "";
@@ -455,10 +434,11 @@ public class NewsService extends Service {
          PreferenceManager prefsManager = ((NewsApp) NewsService.this
                .getApplication()).getPrefsManager();
          NewsMessageSchedule schedule = NewsMessageSchedule
-               .parseFormattedString(prefsManager.getMessageScheduleString());
+               .parseString(prefsManager.getMessageScheduleString());
          if (result != null && result.isSuccess()) {
             if (schedule != null) {
-               schedule.setCount(3);
+               // schedule.setCount(3);
+               schedule.setCount(this.count);
                prefsManager.setMessageScheduleString(schedule.toString());
             }
             notifyNewsMessage(result);

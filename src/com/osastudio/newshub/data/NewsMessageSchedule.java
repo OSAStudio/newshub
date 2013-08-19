@@ -10,9 +10,11 @@ import org.json.JSONObject;
 import android.text.TextUtils;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
+import com.osastudio.newshub.utils.Utils;
 
 public class NewsMessageSchedule extends NewsBaseObject {
 
+   public static final String JSON_KEY_SCHEDULE = "list";
    private static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
 
    private static final String SEPARATOR = ",";
@@ -31,8 +33,16 @@ public class NewsMessageSchedule extends NewsBaseObject {
 
       if (isSuccess()) {
          try {
-            if (!jsonObject.isNull(JSON_KEY_OFFSET_MILLIS)) {
-               this.offsetMillis = jsonObject.getLong(JSON_KEY_OFFSET_MILLIS);
+            JSONObject bodyObject = null;
+            if (!jsonObject.isNull(JSON_KEY_SCHEDULE)) {
+               bodyObject = jsonObject.getJSONObject(JSON_KEY_SCHEDULE);
+            }
+            if (bodyObject == null) {
+               return;
+            }
+
+            if (!bodyObject.isNull(JSON_KEY_OFFSET_MILLIS)) {
+               this.offsetMillis = bodyObject.getLong(JSON_KEY_OFFSET_MILLIS);
             }
          } catch (JSONException e) {
 
@@ -83,7 +93,8 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
    
    public boolean pullNow() {
-      return getRemainingMillis() == 0;
+//      return getRemainingMillis() == 0;
+      return true;
    }
    
    public boolean isToday() {
@@ -99,25 +110,30 @@ public class NewsMessageSchedule extends NewsBaseObject {
       }
       return false;
    }
+   
+   public boolean isPullingLate() {
+      return System.currentTimeMillis() <= this.baseMillis + this.offsetMillis;
+   }
+   
+   public boolean isPullingCountExceeded() {
+      return this.count >= MAX_COUNT;
+   }
 
    public boolean isPullingAllowed() {
-      return this.count < MAX_COUNT;
+//      return !isPullingCountExceeded() && isToday() && !isPullingLate();
+      return true;
    }
-
-   public String formatAsString() {
-      return new StringBuilder().append(this.baseMillis).append(SEPARATOR)
-            .append(this.offsetMillis).append(SEPARATOR).append(this.count)
-            .append(SEPARATOR).toString();
-   }
-
+   
    @Override
    public String toString() {
-      return formatAsString();
+      return new StringBuilder().append(this.baseMillis).append(SEPARATOR)
+            .append(this.offsetMillis).append(SEPARATOR).append(this.count)
+            .toString();
    }
 
-   public static NewsMessageSchedule parseFormattedString(String formattedString) {
+   public static NewsMessageSchedule parseString(String str) {
       NewsMessageSchedule result = null;
-      String[] arr = formattedString.split(SEPARATOR);
+      String[] arr = str.split(SEPARATOR);
       if (arr != null && arr.length == MAX_COUNT) {
          result = new NewsMessageSchedule();
          try {

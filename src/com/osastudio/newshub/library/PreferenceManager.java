@@ -20,7 +20,7 @@ public class PreferenceManager implements AppSettings {
       public static final String FONT_SIZE = "font_size";
       public static final String AUTO_LOADING_PICTURE = "auto_loading_picture";
       public static final String USER_ID = "user_id";
-      public static final String MESSAGE_SCHEDULE = "message_scheduler";
+      public static final String MESSAGE_SCHEDULE = "message_schedule";
    }
 
    public PreferenceManager(Context context) {

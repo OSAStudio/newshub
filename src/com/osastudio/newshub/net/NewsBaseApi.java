@@ -254,7 +254,7 @@ public class NewsBaseApi {
 
    protected static String getNewsMessageListService() {
       return new StringBuilder(getWebServer()).append(
-            "lesson!getMessagesByMobile.do").toString();
+            "message!getMessagesByMobile.do").toString();
    }
 
    protected static String getAppDeadlineService() {

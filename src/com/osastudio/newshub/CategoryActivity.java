@@ -14,6 +14,7 @@ import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
 import com.osastudio.newshub.data.user.ValidateResult;
+import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.AppPropertiesApi;
@@ -54,6 +55,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -246,7 +248,7 @@ public class CategoryActivity extends NewsBaseActivity {
       if (extras != null) {
          // mIsLauncher = extras.getBoolean(LAUNCHER);
          mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
-         mServiceID = extras.getString(MESSAGE_SERVICE_ID, null);
+         mServiceID = extras.getString(MESSAGE_SERVICE_ID);
          if (mMessageType >= 0 && mServiceID != null) {
             mNeedJump = true;
             View cover = findViewById(R.id.cover_layout);
@@ -843,6 +845,11 @@ public class CategoryActivity extends NewsBaseActivity {
          if (mAppProperties != null) {
             try {
                getNewsService().hasNewVersion(mAppProperties, false);
+               PreferenceManager prefsManager = ((NewsApp) getApplication()).getPrefsManager();
+               String userId = prefsManager.getUserId();
+               if (!TextUtils.isEmpty(userId)) {
+                  getNewsService().checkNewsMessage(userId);
+               }
             } catch (Exception e) {
                // e.printStackTrace();
             }
