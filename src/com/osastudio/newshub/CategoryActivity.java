@@ -111,6 +111,7 @@ public class CategoryActivity extends NewsBaseActivity {
    // private SlideSwitcher mSwitcher = null;
    // private Gallery mSwitcher = null;
    private SlidePager mSwitcher = null;
+   private View mToolbar = null;
    private View mActivateLayout = null;
    private DivisionEditText mActivateEdit = null;
    private View mActivateBtn = null;
@@ -397,17 +398,18 @@ public class CategoryActivity extends NewsBaseActivity {
       // top) / 2 - 5 * mdp);
 
       mRoot = (RelativeLayout) findViewById(R.id.root);
+      mToolbar = findViewById(R.id.tool_bar);
+      
       Bitmap bg = getImageFromAssetsFile("1.jpg");
       if (bg != null) {
          mRoot.setBackgroundDrawable(new BitmapDrawable(bg));
       }
 
       if (mXMargin < 20 * mdp) {
-         View toolbar = findViewById(R.id.tool_bar);
-         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) toolbar
+         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) mToolbar
                .getLayoutParams();
          rlp.rightMargin = mXMargin;
-         toolbar.setLayoutParams(rlp);
+         mToolbar.setLayoutParams(rlp);
       }
 
       mCover = (ImageView) findViewById(R.id.cover);
@@ -416,11 +418,11 @@ public class CategoryActivity extends NewsBaseActivity {
       if (mCoverBmp != null) {
          mCover.setImageBitmap(mCoverBmp);
       }
-
       // mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
       // mSwitcher = (Gallery)findViewById(R.id.switcher);
       mSwitcher = (SlidePager) findViewById(R.id.switcher);
       mSwitcher.setVisibility(View.INVISIBLE);
+      mToolbar.setVisibility(View.INVISIBLE);
       mSwitcher.setOnPageChangeListener(new OnPageChangeListener() {
 
          @Override
@@ -576,6 +578,7 @@ public class CategoryActivity extends NewsBaseActivity {
       View cover = findViewById(R.id.cover_layout);
       if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
          mSwitcher.setVisibility(View.VISIBLE);
+         mToolbar.setVisibility(View.VISIBLE);
          Animation anim = AnimationUtils.loadAnimation(this,
                R.anim.pull_out_to_top);
          cover.setVisibility(View.GONE);
@@ -605,6 +608,7 @@ public class CategoryActivity extends NewsBaseActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                mSwitcher.setVisibility(View.INVISIBLE);
+               mToolbar.setVisibility(View.INVISIBLE);
 
             }
          });
@@ -631,7 +635,7 @@ public class CategoryActivity extends NewsBaseActivity {
       if (view.getVisibility() != View.VISIBLE) {
          view.setVisibility(View.VISIBLE);
 
-         mAlphaAnim = new AlphaAnimation(0, 1.0f);
+         mAlphaAnim = new AlphaAnimation(1.0f, 0);
          mAlphaAnim.setDuration(2000);
          mAlphaAnim.setRepeatCount(Animation.INFINITE);
          mAlphaAnim.setRepeatMode(Animation.REVERSE);
@@ -836,14 +840,10 @@ public class CategoryActivity extends NewsBaseActivity {
          int status = values[0];
          switch (status) {
          case 0:
-            if (mUserStatus == 1) {
-               mActivateLayout.setVisibility(View.VISIBLE);
-            } else {
+            if (mUserStatus != 1) {
                mActivateLayout.setVisibility(View.INVISIBLE);
                if (mUserStatus == 2) {
                   showRegisterView();
-               } else if (mUserStatus == 3) {
-                  showSlideMsg();
                }
             }
             break;
@@ -856,6 +856,11 @@ public class CategoryActivity extends NewsBaseActivity {
                   mCoverBmp.recycle();
                }
                mCoverBmp = mReceiveBmp;
+               if (mUserStatus == 1) {
+                  mActivateLayout.setVisibility(View.VISIBLE);
+               }else if (mUserStatus == 3) {
+                  showSlideMsg();
+               }
             }
             break;
          }
@@ -1302,6 +1307,7 @@ public class CategoryActivity extends NewsBaseActivity {
          View cover = findViewById(R.id.cover_layout);
          cover.setVisibility(View.GONE);
          mSwitcher.setVisibility(View.VISIBLE);
+         mToolbar.setVisibility(View.VISIBLE);
          setupData(0);
          
          break;
