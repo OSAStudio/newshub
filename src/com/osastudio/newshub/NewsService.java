@@ -19,28 +19,24 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 public class NewsService extends Service {
 
    private static final String TAG = "NewsService";
 
-   private static final String ACTION_PULL_NEWS_MESSAGE_SCHEDULE 
-         = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE_SCHEDULE";
-   private static final String ACTION_PULL_NEWS_MESSAGE 
-         = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
+   private static final String ACTION_CHECK_NEWS_MESSAGE_SCHEDULE = "com.osastudio.newshub.action.CHECK_NEWS_MESSAGE_SCHEDULE";
+   private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
    private static final long RETRY_DELAYED_MILLIS = 10 * 60 * 1000;
    private static final int NEWS_MESSAGE_NOTIFICATION = 1300;
 
@@ -54,6 +50,9 @@ public class NewsService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Utils.logi(TAG, "____________onStartCommand");
+
+      scheduleCheckingNewsMessageSchedule();
+
       return START_STICKY;
    }
 
@@ -198,18 +197,30 @@ public class NewsService extends Service {
       new NewsMessagescheduleTask(userId).execute(NewsService.this);
    }
 
-   private void schedulePullingNewsMessageSchedule(String userId) {
+   private void checkNewsMessageSchedule() {
+      PreferenceManager prefsManager = ((NewsApp) getApplication())
+            .getPrefsManager();
+      String userId = prefsManager.getUserId();
+      if (!TextUtils.isEmpty(userId)) {
+         String str = prefsManager.getMessageScheduleString();
+         NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
+         if (!schedule.isToday()) {
+            requestNewsMessageSchedule(userId);
+         }
+      }
+   }
+
+   private void scheduleCheckingNewsMessageSchedule() {
       AlarmManager alarmManager = (AlarmManager) NewsService.this
             .getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
-      intent.setAction(ACTION_PULL_NEWS_MESSAGE_SCHEDULE);
+      intent.setAction(ACTION_CHECK_NEWS_MESSAGE_SCHEDULE);
       intent.setClass(NewsService.this, NewsService.class);
-      intent.setData(Uri.parse("userId:" + userId));
-      intent.putExtra("userId", userId);
       PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
             intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      alarmManager.cancel(pi);
       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis(), 60 * 1000, pi);
+            System.currentTimeMillis(), 10 * 60 * 1000, pi);
    }
 
    private void requestNewsMessageList(String userId, int count,
@@ -260,16 +271,11 @@ public class NewsService extends Service {
 
    private Intent getNewsMessageLaunchIntent(NewsMessage msg) {
       Intent intent = new Intent();
-      intent.setAction(Intent.ACTION_MAIN);
-      intent.addCategory(Intent.CATEGORY_DEFAULT);
-//      intent.setClass(this, CategoryActivity.class);
-      intent.setClassName("com.huadi.azker_phone", 
-            "com.osastudio.newshub.CategoryActivity");
+      intent.setClass(this, CategoryActivity.class);
       Bundle extras = new Bundle();
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
       intent.putExtras(extras);
-      intent.setData(Uri.parse("serviceId:" + msg.getId()));
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       return intent;
    }
@@ -307,9 +313,8 @@ public class NewsService extends Service {
       public void onReceive(Context context, Intent intent) {
          String action = intent.getAction();
          Utils.logi(TAG, "_______________onReceive: " + action);
-         if (ACTION_PULL_NEWS_MESSAGE_SCHEDULE.equals(action)) {
-            String userId = intent.getStringExtra("userId");
-            requestNewsMessageSchedule(userId);
+         if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
+            checkNewsMessageSchedule();
          } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
             Uri data = intent.getData();
             String userId = intent.getStringExtra("userId");
