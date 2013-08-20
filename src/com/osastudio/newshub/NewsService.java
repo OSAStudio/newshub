@@ -276,6 +276,7 @@ public class NewsService extends Service {
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
       intent.putExtras(extras);
+      intent.setData(Uri.parse("serviceId:" + msg.getId()));
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       return intent;
    }
