@@ -51,8 +51,6 @@ public class NewsService extends Service {
    public int onStartCommand(Intent intent, int flags, int startId) {
       Utils.logi(TAG, "____________onStartCommand");
 
-      scheduleCheckingNewsMessageSchedule();
-
       return START_STICKY;
    }
 
@@ -62,6 +60,7 @@ public class NewsService extends Service {
       Utils.logi(TAG, "____________onCreate");
 
       registerNewsReceiver();
+      scheduleCheckingNewsMessageSchedule();
 
       mHandler.postDelayed(new Runnable() {
          public void run() {
@@ -443,8 +442,7 @@ public class NewsService extends Service {
                .parseString(prefsManager.getMessageScheduleString());
          if (result != null && result.isSuccess()) {
             if (schedule != null) {
-               // schedule.setCount(3);
-               schedule.setCount(this.count);
+               schedule.setCount(3);
                prefsManager.setMessageScheduleString(schedule.toString());
             }
             notifyNewsMessage(result);

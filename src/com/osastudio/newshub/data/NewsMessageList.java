@@ -35,19 +35,6 @@ public class NewsMessageList extends NewsItemList<NewsMessage> {
 
          }
       }
-      // XTEST
-      NewsMessage msg = new NewsMessage();
-      msg.setType(1);
-      msg.setContent("通知类消息说明标题");
-      msg.setId("1");
-      this.list.add(msg);
-      msg = new NewsMessage();
-      msg.setType(5);
-      msg.setContent("今日课程说明");
-      msg.setId("1");
-      this.list.add(msg);
-      setList(this.list);
-      setResultCode(NewsResult.RESULT_OK);
    }
 
 }

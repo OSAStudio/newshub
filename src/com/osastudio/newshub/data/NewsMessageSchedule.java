@@ -93,8 +93,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
    
    public boolean pullNow() {
-//      return getRemainingMillis() == 0;
-      return true;
+      return getRemainingMillis() == 0;
    }
    
    public boolean isToday() {
@@ -120,8 +119,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
 
    public boolean isPullingAllowed() {
-//      return !isPullingCountExceeded() && isToday() && !isPullingLate();
-      return true;
+      return !isPullingCountExceeded() && isToday() && !isPullingLate();
    }
    
    @Override
