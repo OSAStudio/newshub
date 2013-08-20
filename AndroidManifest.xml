@@ -85,7 +85,8 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
-        <service android:name="com.osastudio.newshub.NewsService" >
+        <service android:name="com.osastudio.newshub.NewsService"
+            android:persistent="true">
 
             <!-- android:process=":daemon" > -->
             <intent-filter>

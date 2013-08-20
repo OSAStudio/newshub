@@ -217,7 +217,7 @@ public class NewsService extends Service {
       intent.setAction(ACTION_CHECK_NEWS_MESSAGE_SCHEDULE);
       intent.setClass(NewsService.this, NewsService.class);
       PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
-            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            intent, PendingIntent.FLAG_CANCEL_CURRENT);
       alarmManager.cancel(pi);
       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
             System.currentTimeMillis(), 10 * 60 * 1000, pi);
@@ -247,7 +247,7 @@ public class NewsService extends Service {
       intent.putExtra("userId", userId);
       intent.putExtra("count", count);
       PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
-            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            intent, PendingIntent.FLAG_CANCEL_CURRENT);
       alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pi);
    }
 
@@ -276,7 +276,7 @@ public class NewsService extends Service {
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
       intent.putExtras(extras);
-      intent.setData(Uri.parse("serviceId:" + msg.getId()));
+      intent.setData(Uri.parse("msg:" + msg));
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       return intent;
    }
