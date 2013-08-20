@@ -284,8 +284,7 @@ public class CategoryActivity extends NewsBaseActivity {
    @Override
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
-      
-      Bundle extras = getIntent().getExtras();
+      Bundle extras = intent.getExtras();
       if (extras != null) {
          // mIsLauncher = extras.getBoolean(LAUNCHER);
          mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
@@ -296,6 +295,8 @@ public class CategoryActivity extends NewsBaseActivity {
             cover.setVisibility(View.GONE);
          }
       }
+
+      Utils.logd("category", "onNewIntent "+mNeedJump+ " type="+mMessageType);
       if (mNeedJump) {
          JumpToMessageTarget();
       } else {

@@ -125,7 +125,7 @@ public class PageActivity extends NewsBaseActivity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 	   super.onNewIntent(intent);
-	   Bundle extras = getIntent().getExtras();
+	   Bundle extras = intent.getExtras();
       if (extras != null) {
          mPageType = extras.getInt(PAGE_TYPE);
          mCurrentId = extras.getInt(START_INDEX);
@@ -140,6 +140,8 @@ public class PageActivity extends NewsBaseActivity {
 
          }
       }
+
+      Utils.logd("Page", "onNewIntent type"+mPageType);
       setupData();
 	}
 	

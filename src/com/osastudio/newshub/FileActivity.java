@@ -97,7 +97,7 @@ public class FileActivity extends NewsBaseActivity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 	   super.onNewIntent(intent);
-	   Bundle extras = getIntent().getExtras();
+	   Bundle extras = intent.getExtras();
 	   if (extras != null) {
          mCurrentId = extras.getInt(START_INDEX);
          mCategoryTitle = extras.getString(CATEGORY_TITLE);
@@ -111,6 +111,8 @@ public class FileActivity extends NewsBaseActivity {
             mCurrentId = 0;
          }
       }
+
+      Utils.logd("File", "onNewIntent extras"+extras);
 	   setupData();
 
 	}

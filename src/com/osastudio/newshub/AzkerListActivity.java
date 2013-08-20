@@ -107,7 +107,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 	@Override
 	protected void onNewIntent(Intent intent) {
 	   super.onNewIntent(intent);
-	   Bundle extras = getIntent().getExtras();
+	   Bundle extras = intent.getExtras();
 
       if (extras != null) {
          mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
@@ -118,6 +118,8 @@ public class AzkerListActivity extends NewsBaseActivity {
          mLoadTask.execute();
          mDlg = Utils.showProgressDlg(this, null);
       }
+
+      Utils.logd("List", "onNewIntent mListType"+mListType);
 	}
 	
 

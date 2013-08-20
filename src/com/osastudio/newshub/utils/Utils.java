@@ -520,14 +520,6 @@ public class Utils {
       return getPackageInfo(context).versionName;
 	}
 	
-	public static void backToCategory(Activity activity) {
-		Intent it = new Intent(activity, CategoryActivity.class);
-		it.putExtra(CategoryActivity.LAUNCHER, false);
-		it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		activity.startActivity(it);
-	}
-	
-	
    
 	public static void log(String tag, String info) {
 		logi(tag, info);
