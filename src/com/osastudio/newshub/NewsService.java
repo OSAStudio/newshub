@@ -164,8 +164,8 @@ public class NewsService extends Service {
          String str = ((NewsApp) NewsService.this.getApplication())
                .getPrefsManager().getMessageScheduleString();
          NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
-         if (schedule != null) {
-            analyzeNewsMessage(userId, schedule);
+         if (schedule != null && schedule.isToday()) {
+            analyzeNewsMessageSchedule(userId, schedule);
          } else {
             requestNewsMessageSchedule(userId);
          }
@@ -173,7 +173,8 @@ public class NewsService extends Service {
 
    };
 
-   private void analyzeNewsMessage(String userId, NewsMessageSchedule schedule) {
+   private void analyzeNewsMessageSchedule(String userId,
+         NewsMessageSchedule schedule) {
       if (schedule.isPullingAllowed()) {
          int count = schedule.getCount();
          if (count == 0) {
@@ -203,7 +204,7 @@ public class NewsService extends Service {
       if (!TextUtils.isEmpty(userId)) {
          String str = prefsManager.getMessageScheduleString();
          NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
-         if (!schedule.isToday()) {
+         if (schedule == null || !schedule.isToday()) {
             requestNewsMessageSchedule(userId);
          }
       }
@@ -399,7 +400,7 @@ public class NewsService extends Service {
             result.setBaseMillis(System.currentTimeMillis());
             result.setCount(0);
             prefsManager.setMessageScheduleString(result.toString());
-            analyzeNewsMessage(this.userId, result);
+            analyzeNewsMessageSchedule(this.userId, result);
          }
       }
    }
