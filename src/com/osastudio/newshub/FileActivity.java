@@ -23,6 +23,7 @@ import com.osastudio.newshub.widgets.SummaryGrid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Xml;
 import android.view.MotionEvent;
 import android.view.View;
@@ -90,6 +91,27 @@ public class FileActivity extends NewsBaseActivity {
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
+
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+	   super.onNewIntent(intent);
+	   Bundle extras = getIntent().getExtras();
+	   if (extras != null) {
+         mCurrentId = extras.getInt(START_INDEX);
+         mCategoryTitle = extras.getString(CATEGORY_TITLE);
+         if (mCategoryTitle == null) {
+            mCategoryTitle = getString(R.string.default_file_title);
+         }
+         if (mCurrentId < 0) {
+            mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
+            mPageId = extras.getString(PAGE_ID);
+            // RuJin Add to set NewsAbstractCache, only have 1 item
+            mCurrentId = 0;
+         }
+      }
+	   setupData();
 
 	}
 

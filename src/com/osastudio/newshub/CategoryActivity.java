@@ -280,6 +280,28 @@ public class CategoryActivity extends NewsBaseActivity {
          checkNetWork();
       }
    }
+   
+   @Override
+   protected void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+      
+      Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+         // mIsLauncher = extras.getBoolean(LAUNCHER);
+         mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
+         mServiceID = extras.getString(MESSAGE_SERVICE_ID);
+         if (mMessageType >= 0 && mServiceID != null) {
+            mNeedJump = true;
+            View cover = findViewById(R.id.cover_layout);
+            cover.setVisibility(View.GONE);
+         }
+      }
+      if (mNeedJump) {
+         JumpToMessageTarget();
+      } else {
+         checkNetWork();
+      }
+   }
 
    private boolean mIsExit = false;
    private Toast mExitToast = null;

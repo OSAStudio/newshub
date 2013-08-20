@@ -103,6 +103,23 @@ public class AzkerListActivity extends NewsBaseActivity {
 		mTouchSlop = configuration.getScaledTouchSlop();
 	}
 	
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+	   super.onNewIntent(intent);
+	   Bundle extras = getIntent().getExtras();
+
+      if (extras != null) {
+         mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
+         mListType = extras.getInt(LIST_TYPE);
+         mTitle = extras.getString(LIST_TITLE);
+         findViews();
+         mLoadTask = new LoadTask();
+         mLoadTask.execute();
+         mDlg = Utils.showProgressDlg(this, null);
+      }
+	}
+	
 
 	@Override
 	protected void onDestroy() {

@@ -35,6 +35,7 @@ import com.osastudio.newshub.widgets.SummaryGrid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
 import android.util.Xml;
@@ -119,6 +120,27 @@ public class PageActivity extends NewsBaseActivity {
 		mSwitcher = (SlideSwitcher) findViewById(R.id.switcher);
 
 		setupData();
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+	   super.onNewIntent(intent);
+	   Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+         mPageType = extras.getInt(PAGE_TYPE);
+         mCurrentId = extras.getInt(START_INDEX);
+         mCategoryTitle = extras.getString(CATEGORY_TITLE);
+         if (mCurrentId < 0) {
+            mDirectEnter = extras.getBoolean(DIRECT_ENTER, false);
+            mPageId = extras.getString(PAGE_ID);
+            ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
+            cacheList.add(new TempCacheData(mPageId));
+            mApp.setTempCache(cacheList);
+            mCurrentId = 0;
+
+         }
+      }
+      setupData();
 	}
 	
 
