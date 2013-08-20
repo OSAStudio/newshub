@@ -6,12 +6,15 @@ import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
 public class DeviceUuidFactory {
+   
+   private static final String TAG = "DeviceUuidFactory";
 
    protected static final String PREFS_FILE = "device_id";
    protected static final String PREFS_DEVICE_ID = "device_id";
@@ -33,6 +36,7 @@ public class DeviceUuidFactory {
                   id = prefsId;
 //                  uuid = UUID.fromString(prefsId);
                } else {
+                  StringBuilder builder = new StringBuilder();
                   String serialNumber = null;
                   try {
                      Class<?> cls = Class
@@ -46,14 +50,17 @@ public class DeviceUuidFactory {
                   }
 
                   if (!TextUtils.isEmpty(serialNumber)) {
-                     try {
-                        id = serialNumber;
-                        uuid = UUID.nameUUIDFromBytes(serialNumber
-                              .getBytes("utf8"));
-                     } catch (UnsupportedEncodingException e) {
-                        // e.printStackTrace();
-                     }
-                  } else {
+                     Log.i(TAG, "SERIAL: " + serialNumber);
+                     builder.append(serialNumber);
+                  }
+//                     try {
+//                        id = serialNumber;
+//                        uuid = UUID.nameUUIDFromBytes(serialNumber
+//                              .getBytes("utf8"));
+//                     } catch (UnsupportedEncodingException e) {
+//                        // e.printStackTrace();
+//                     }
+//                  } else {
                   /*
                   final String androidId = Secure.getString(
                         context.getContentResolver(), Secure.ANDROID_ID);
@@ -71,10 +78,12 @@ public class DeviceUuidFactory {
                               .getSystemService(Context.TELEPHONY_SERVICE))
                               .getDeviceId();
                         if (!TextUtils.isEmpty(deviceId)) {
-                           id = deviceId;
-                           uuid = UUID.nameUUIDFromBytes(deviceId
-                                 .getBytes("utf8"));
+                           Log.i(TAG, "IMEI: " + deviceId);
+                           builder.append(deviceId);
                         }
+                        uuid = UUID.nameUUIDFromBytes(builder.toString().getBytes("utf8"));
+                        id = uuid.toString();
+                        Log.i(TAG, "deviceId: " + id);
 //                        uuid = deviceId != null ? UUID
 //                              .nameUUIDFromBytes(deviceId.getBytes("utf8"))
 //                              : UUID.randomUUID();
@@ -82,7 +91,7 @@ public class DeviceUuidFactory {
                   } catch (UnsupportedEncodingException e) {
                      // throw new RuntimeException(e);
                   }
-                  }
+//                  }
                   // Write the value out to the prefs file
                   prefs.edit().putString(PREFS_DEVICE_ID, id).commit();
                }

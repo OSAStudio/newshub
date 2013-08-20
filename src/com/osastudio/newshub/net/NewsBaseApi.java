@@ -62,7 +62,7 @@ public class NewsBaseApi {
 
    protected static final String KEY_USER_ID = "studentID";
 
-   protected static String getDeviceId(Context context) {
+   public static String getDeviceId(Context context) {
       String id = new DeviceUuidFactory(context).getDeviceId();
 
       if (NewsApp.IS_DEBUG) {
