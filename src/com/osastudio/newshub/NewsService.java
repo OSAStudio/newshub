@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -49,6 +48,7 @@ public class NewsService extends Service {
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
+      super.onStartCommand(intent, flags, startId);
       Utils.logi(TAG, "____________onStartCommand");
 
       return START_STICKY;
@@ -61,14 +61,7 @@ public class NewsService extends Service {
 
       registerNewsReceiver();
       scheduleCheckingNewsMessageSchedule();
-
-      mHandler.postDelayed(new Runnable() {
-         public void run() {
-            mHandler.postDelayed(this, 10000);
-            Utils.logi(TAG,
-                  "______________I am alive..." + System.currentTimeMillis());
-         }
-      }, 10000);
+      heartbeat();
    }
 
    @Override
@@ -95,6 +88,22 @@ public class NewsService extends Service {
       startService(selfIntent);
    }
 
+   private void heartbeat() {
+      new Thread(new Runnable() {
+         public void run() {
+            while (true) {
+               Utils.logi(TAG,
+                     "______________I'm alive..." + System.currentTimeMillis());
+               try {
+                  Thread.sleep(60 * 1000);
+               } catch (InterruptedException e) {
+                  // e.printStackTrace();
+               }
+            }
+         }
+      }).start();
+   }
+
    private class INewsServiceBinder extends INewsService.Stub {
 
       @Override
@@ -116,7 +125,7 @@ public class NewsService extends Service {
       public void checkNewVersion() {
          if (!mCheckingNewVersion) {
             mCheckingNewVersion = true;
-            new AppPropertiesTask().execute(NewsService.this);
+            new AppPropertiesTask(mHandler, NewsService.this).start();
          }
       }
 
@@ -125,8 +134,7 @@ public class NewsService extends Service {
       }
 
       @Override
-      public boolean hasNewVersion(AppProperties properties,
-            boolean notifyIfNoNewVersion) {
+      public boolean hasNewVersion(AppProperties properties, boolean notifyIfNot) {
          PackageInfo pkgInfo = Utils.getPackageInfo(NewsService.this);
          if (properties.isUpgradeAvailable(pkgInfo)
                || properties.isUpgradeNecessary(pkgInfo)) {
@@ -139,7 +147,7 @@ public class NewsService extends Service {
             startActivity(intent);
             return true;
          } else {
-            if (notifyIfNoNewVersion) {
+            if (notifyIfNot) {
                Toast.makeText(NewsService.this,
                      getString(R.string.no_new_version), Toast.LENGTH_LONG)
                      .show();
@@ -156,18 +164,22 @@ public class NewsService extends Service {
 
       @Override
       public void checkAppDeadline() {
-         new AppDeadlineTask().execute(NewsService.this);
+         new AppDeadlineTask(mHandler, NewsService.this).start();
       }
 
       @Override
-      public void checkNewsMessage(String userId) {
-         String str = ((NewsApp) NewsService.this.getApplication())
-               .getPrefsManager().getMessageScheduleString();
-         NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
-         if (schedule != null && schedule.isToday()) {
-            analyzeNewsMessageSchedule(userId, schedule);
-         } else {
-            requestNewsMessageSchedule(userId);
+      public void checkNewsMessage() {
+         PreferenceManager prefsManager = ((NewsApp) getApplication())
+               .getPrefsManager();
+         String userId = prefsManager.getUserId();
+         if (!TextUtils.isEmpty(userId)) {
+            String str = prefsManager.getMessageScheduleString();
+            NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
+            if (schedule != null && schedule.isToday()) {
+               analyzeNewsMessageSchedule(userId, schedule);
+            } else {
+               requestNewsMessageSchedule(userId);
+            }
          }
       }
 
@@ -194,7 +206,7 @@ public class NewsService extends Service {
    }
 
    private void requestNewsMessageSchedule(String userId) {
-      new NewsMessagescheduleTask(userId).execute(NewsService.this);
+      new NewsMessagescheduleTask(mHandler, this, userId).start();
    }
 
    private void checkNewsMessageSchedule() {
@@ -225,11 +237,11 @@ public class NewsService extends Service {
 
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis) {
-      NewsMessageListTask task = new NewsMessageListTask(userId);
+      NewsMessageListTask task = new NewsMessageListTask(mHandler, this, userId);
       task.setCount(count);
       task.setRetryIfFailed(retryIfFailed);
       task.setRetryDelayedMillis(retryDelayedMillis);
-      task.execute(NewsService.this);
+      task.start();
    }
 
    private void requestNewsMessageList(String userId, int count) {
@@ -339,15 +351,19 @@ public class NewsService extends Service {
       unregisterReceiver(mNewsReceiver);
    }
 
-   private class AppPropertiesTask extends
-         AsyncTask<Context, Integer, AppProperties> {
-      @Override
-      protected AppProperties doInBackground(Context... params) {
-         return AppPropertiesApi.getAppProperties(params[0]);
+   private class AppPropertiesTask extends NewsTask<AppProperties> {
+
+      public AppPropertiesTask(Handler handler, Context context) {
+         super(handler, context);
       }
 
       @Override
-      protected void onPostExecute(AppProperties result) {
+      public AppProperties doInBackground() {
+         return AppPropertiesApi.getAppProperties(this.context);
+      }
+
+      @Override
+      public void onPostExecute(AppProperties result) {
          mCheckingNewVersion = false;
          if (result != null) {
             try {
@@ -357,43 +373,47 @@ public class NewsService extends Service {
             }
          }
       }
+
    }
 
-   private class AppDeadlineTask extends
-         AsyncTask<Context, Integer, AppDeadline> {
-      private Context context;
+   private class AppDeadlineTask extends NewsTask<AppDeadline> {
 
-      @Override
-      protected AppDeadline doInBackground(Context... params) {
-         this.context = params[0];
-         return AppDeadlineApi.getAppDeadline(params[0]);
+      public AppDeadlineTask(Handler handler, Context context) {
+         super(handler, context);
       }
 
       @Override
-      protected void onPostExecute(AppDeadline result) {
+      public AppDeadline doInBackground() {
+         return AppDeadlineApi.getAppDeadline(this.context);
+      }
+
+      @Override
+      public void onPostExecute(AppDeadline result) {
          mAppDeadline = result;
          ((NewsApp) this.context.getApplicationContext())
                .setAppDeadline(result);
       }
+
    }
 
-   private class NewsMessagescheduleTask extends
-         AsyncTask<Context, Integer, NewsMessageSchedule> {
-      private Context context;
+   private class NewsMessagescheduleTask extends NewsTask<NewsMessageSchedule> {
+
       private String userId;
 
-      public NewsMessagescheduleTask(String userId) {
+      public NewsMessagescheduleTask(Handler handler, Context context,
+            String userId) {
+         super(handler, context);
          this.userId = userId;
       }
 
       @Override
-      protected NewsMessageSchedule doInBackground(Context... params) {
-         this.context = params[0];
-         return NewsMessageApi.getNewsMessageSchedule(params[0], this.userId);
+      public NewsMessageSchedule doInBackground() {
+         return NewsMessageApi
+               .getNewsMessageSchedule(this.context, this.userId);
       }
 
       @Override
-      protected void onPostExecute(NewsMessageSchedule result) {
+      public void onPostExecute(NewsMessageSchedule result) {
          if (result != null) {
             PreferenceManager prefsManager = ((NewsApp) NewsService.this
                   .getApplication()).getPrefsManager();
@@ -403,17 +423,18 @@ public class NewsService extends Service {
             analyzeNewsMessageSchedule(this.userId, result);
          }
       }
+
    }
 
-   private class NewsMessageListTask extends
-         AsyncTask<Context, Integer, NewsMessageList> {
-      private Context context;
+   private class NewsMessageListTask extends NewsTask<NewsMessageList> {
+
       private String userId;
       private int count = 0;
       private boolean retryIfFailed = false;
       private long retryDelayedMillis = 0;
 
-      public NewsMessageListTask(String userId) {
+      public NewsMessageListTask(Handler handler, Context context, String userId) {
+         super(handler, context);
          this.userId = userId;
       }
 
@@ -430,13 +451,12 @@ public class NewsService extends Service {
       }
 
       @Override
-      protected NewsMessageList doInBackground(Context... params) {
-         this.context = params[0];
-         return NewsMessageApi.getNewsMessageList(params[0], this.userId);
+      public NewsMessageList doInBackground() {
+         return NewsMessageApi.getNewsMessageList(this.context, this.userId);
       }
 
       @Override
-      protected void onPostExecute(NewsMessageList result) {
+      public void onPostExecute(NewsMessageList result) {
          PreferenceManager prefsManager = ((NewsApp) NewsService.this
                .getApplication()).getPrefsManager();
          NewsMessageSchedule schedule = NewsMessageSchedule
@@ -462,6 +482,40 @@ public class NewsService extends Service {
             }
          }
       }
+
+   }
+
+   public abstract class NewsTask<T> extends Thread {
+
+      protected Context context;
+      protected Handler handler;
+
+      public NewsTask(Handler handler) {
+         this.handler = handler;
+      }
+
+      public NewsTask(Handler handler, Context context) {
+         this(handler);
+         this.context = context;
+      }
+
+      @Override
+      public void run() {
+         final T result = doInBackground();
+
+         if (this.handler != null) {
+            this.handler.post(new Runnable() {
+               public void run() {
+                  onPostExecute(result);
+               }
+            });
+         }
+      }
+
+      public abstract T doInBackground();
+
+      public abstract void onPostExecute(T result);
+
    }
 
 }

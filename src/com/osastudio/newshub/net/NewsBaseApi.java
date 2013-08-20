@@ -65,8 +65,9 @@ public class NewsBaseApi {
    public static String getDeviceId(Context context) {
       String id = new DeviceUuidFactory(context).getDeviceId();
 
-      if (NewsApp.IS_DEBUG) {
-         id = "667ebbbf9fcd9229344681aebf4ec67316645186";
+      if (NewsApp.DEBUG) {
+//         id = "667ebbbf9fcd9229344681aebf4ec67316645186"; //TEST
+         id = "313429A2F72C00EC"; //Nexus S
       }
       return id;
    }

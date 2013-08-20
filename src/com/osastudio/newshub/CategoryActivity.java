@@ -873,11 +873,7 @@ public class CategoryActivity extends NewsBaseActivity {
          if (mAppProperties != null) {
             try {
                getNewsService().hasNewVersion(mAppProperties, false);
-               PreferenceManager prefsManager = ((NewsApp) getApplication()).getPrefsManager();
-               String userId = prefsManager.getUserId();
-               if (!TextUtils.isEmpty(userId)) {
-                  getNewsService().checkNewsMessage(userId);
-               }
+               getNewsService().checkNewsMessage();
             } catch (Exception e) {
                // e.printStackTrace();
             }
