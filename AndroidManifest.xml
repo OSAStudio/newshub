@@ -94,16 +94,14 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="com.osastudio.newshub.BootReceiver" >
-
-            <!-- android:process=":launch" > -->
+        <receiver android:name="com.osastudio.newshub.BootReceiver"
+            android:process=":launch" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.osastudio.newshub.UserUnlockReceiver" >
-
-            <!-- android:process=":launch" > -->
+        <receiver android:name="com.osastudio.newshub.UserUnlockReceiver"
+            android:process=":launch" >
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
