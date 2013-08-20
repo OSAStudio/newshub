@@ -1,6 +1,7 @@
 package com.osastudio.newshub.widgets;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.utils.Utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -168,7 +169,8 @@ public class DivisionEditText extends EditText {
 			// 只能一个一个字符输入
 			if (count == 1) {
 				// 从光标起始,是否还有空的位置
-				int index = isBlank(DivisionEditText.this.getSelectionStart());
+//				int index = isBlank(DivisionEditText.this.getSelectionStart());
+			   int index = getEnableIndex(DivisionEditText.this.getSelectionStart());
 				// 如果还有
 				if (index != -1) {
 					// 输入框内的字符串
@@ -181,9 +183,26 @@ public class DivisionEditText extends EditText {
 				// 设置文本
 				mySetText();
 				// 设置焦点
+				if (index < 0 || index >= length) {
 				mySetSelection();
+				} else {
+				   index++;
+				   mySetSelection(index);
+				}
 			}
 		}
+	}
+	
+	private int getEnableIndex(int selection) {
+	   Utils.logd("getEnableIndex", "selection="+selection);
+	   int index = selection-1;
+	   if (index < length && delimiter.equals(text[index])) {
+         index++;
+      }
+	   if (index >= length) {
+	      index = -1;
+	   }
+	   return index;
 	}
 
 	/**
@@ -232,6 +251,7 @@ public class DivisionEditText extends EditText {
 	 * @param text
 	 */
 	private void mySetSelection(int index) {
+	   Utils.logd("mySetSelection", "index="+index);
 		DivisionEditText.this.setSelection(index);
 	}
 
