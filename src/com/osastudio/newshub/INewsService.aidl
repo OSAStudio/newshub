@@ -12,12 +12,12 @@ interface INewsService {
    
    boolean isCheckingNewVersion();
    
-   boolean hasNewVersion(in AppProperties properties, in boolean notifyIfNoNewVersion);
+   boolean hasNewVersion(in AppProperties properties, in boolean notifyIfNot);
    
    void checkAppDeadline();
 
    boolean hasExpired();
    
-   void checkNewsMessage(in String userId);
+   void checkNewsMessage();
       
 }

@@ -16,7 +16,7 @@ import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
 
-   final public static boolean IS_DEBUG = false;
+   public static final boolean DEBUG = false;
 
    private ActivityStack mActivityStack;
    private PreferenceManager mPrefsManager;
