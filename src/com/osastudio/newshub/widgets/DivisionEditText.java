@@ -115,7 +115,7 @@ public class DivisionEditText extends EditText {
 	public String getResult() {
 		StringBuffer buffer = new StringBuffer();
 		for (String item : text) {
-			if (!placeHolder.equals(item) && !delimiter.equals(item)) {
+			if (!delimiter.equals(item)) {
 				buffer.append(item);
 			}
 		}

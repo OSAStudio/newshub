@@ -445,7 +445,7 @@ public class CategoryActivity extends NewsBaseActivity {
       });
 
       mActivateLayout = findViewById(R.id.activite);
-      mActivateLayout.setVisibility(View.INVISIBLE);
+      mActivateLayout.setVisibility(View.GONE);
       mActivateEdit = (DivisionEditText) findViewById(R.id.activite_edit);
       mActivateBtn = findViewById(R.id.activite_btn);
       mActivateBtn.setOnClickListener(new View.OnClickListener() {
@@ -708,20 +708,26 @@ public class CategoryActivity extends NewsBaseActivity {
    }
 
    private class ActivateTask extends AsyncTask<String, Void, Boolean> {
-
+      ValidateResult mResult = null;
       @Override
       protected Boolean doInBackground(String... params) {
-         ValidateResult result = UserApi.validate(getApplicationContext(),
+         mResult = UserApi.validate(getApplicationContext(),
                params[0]);
-         return result.isValidated();
+         return mResult.isValidated();
       }
 
       @Override
       protected void onPostExecute(Boolean result) {
          if (result) {
-            mActivateLayout.setVisibility(View.INVISIBLE);
+            mActivateLayout.setVisibility(View.GONE);
             showRegisterView();
          } else {
+            int code = mResult.getResultCode();
+            String msg = Utils.getErrorResultMsg(CategoryActivity.this, code);
+            if (msg == null) {
+               msg = CategoryActivity.this.getString(R.string.msg_activate_error);
+            }
+            Utils.ShowConfirmDialog(CategoryActivity.this, msg, null);
             mActivateEdit.init();
          }
          super.onPostExecute(result);
@@ -840,8 +846,10 @@ public class CategoryActivity extends NewsBaseActivity {
          int status = values[0];
          switch (status) {
          case 0:
-            if (mUserStatus != 1) {
-               mActivateLayout.setVisibility(View.INVISIBLE);
+            if (mUserStatus == 1) {
+               mActivateLayout.setVisibility(View.VISIBLE);
+            }else {
+               mActivateLayout.setVisibility(View.GONE);
                if (mUserStatus == 2) {
                   showRegisterView();
                }
@@ -856,9 +864,7 @@ public class CategoryActivity extends NewsBaseActivity {
                   mCoverBmp.recycle();
                }
                mCoverBmp = mReceiveBmp;
-               if (mUserStatus == 1) {
-                  mActivateLayout.setVisibility(View.VISIBLE);
-               }else if (mUserStatus == 3) {
+               if (mUserStatus == 3) {
                   showSlideMsg();
                }
             }
