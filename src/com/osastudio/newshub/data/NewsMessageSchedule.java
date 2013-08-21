@@ -111,7 +111,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
    
    public boolean isPullingLate() {
-      return System.currentTimeMillis() <= this.baseMillis + this.offsetMillis;
+      return System.currentTimeMillis() > this.baseMillis + this.offsetMillis;
    }
    
    public boolean isPullingCountExceeded() {

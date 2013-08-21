@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -37,9 +36,7 @@ import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
-import com.osastudio.newshub.data.base.NewsBaseAbstract;
 import com.osastudio.newshub.library.DeviceUuidFactory;
-import com.osastudio.newshub.library.Installation;
 import com.osastudio.newshub.utils.FileHelper;
 import com.osastudio.newshub.utils.InputStreamHelper;
 import com.osastudio.newshub.utils.Utils;

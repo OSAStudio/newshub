@@ -187,10 +187,13 @@ public class NewsService extends Service {
 
    private void analyzeNewsMessageSchedule(String userId,
          NewsMessageSchedule schedule) {
+      Utils.logi(TAG, "___________analyzeNewsMessageSchedule");
       if (schedule.isPullingAllowed()) {
          int count = schedule.getCount();
+         Utils.logi(TAG, "___________analyzeNewsMessageSchedule: count=" + count);
          if (count == 0) {
             if (schedule.pullNow()) {
+               Utils.logi(TAG, "___________analyzeNewsMessageSchedule: Pull now");
                requestNewsMessageList(userId, count + 1, true,
                      RETRY_DELAYED_MILLIS);
             } else {
@@ -206,10 +209,12 @@ public class NewsService extends Service {
    }
 
    private void requestNewsMessageSchedule(String userId) {
+      Utils.logi(TAG, "___________requestNewsMessageSchedule");
       new NewsMessagescheduleTask(mHandler, this, userId).start();
    }
 
    private void checkNewsMessageSchedule() {
+      Utils.logi(TAG, "___________checkNewsMessageSchedule");
       PreferenceManager prefsManager = ((NewsApp) getApplication())
             .getPrefsManager();
       String userId = prefsManager.getUserId();
@@ -223,13 +228,12 @@ public class NewsService extends Service {
    }
 
    private void scheduleCheckingNewsMessageSchedule() {
-      AlarmManager alarmManager = (AlarmManager) NewsService.this
-            .getSystemService(Context.ALARM_SERVICE);
+      Utils.logi(TAG, "___________scheduleCheckingNewsMessageSchedule");
+      AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
       intent.setAction(ACTION_CHECK_NEWS_MESSAGE_SCHEDULE);
-      intent.setClass(NewsService.this, NewsService.class);
-      PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
-            intent, PendingIntent.FLAG_CANCEL_CURRENT);
+      PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent,
+            PendingIntent.FLAG_CANCEL_CURRENT);
       alarmManager.cancel(pi);
       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
             System.currentTimeMillis(), 10 * 60 * 1000, pi);
@@ -237,6 +241,7 @@ public class NewsService extends Service {
 
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis) {
+      Utils.logi(TAG, "___________requestNewsMessageList: count=" + count);
       NewsMessageListTask task = new NewsMessageListTask(mHandler, this, userId);
       task.setCount(count);
       task.setRetryIfFailed(retryIfFailed);
@@ -250,16 +255,15 @@ public class NewsService extends Service {
 
    private void schedulePullingNewsMessage(String userId, long scheduleMillis,
          int count) {
-      AlarmManager alarmManager = (AlarmManager) NewsService.this
-            .getSystemService(Context.ALARM_SERVICE);
+      Utils.logi(TAG, "___________schedulePullingNewsMessage: count=" + count);
+      AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
       intent.setAction(ACTION_PULL_NEWS_MESSAGE);
-      intent.setClass(NewsService.this, NewsService.class);
-      intent.setData(Uri.parse("userId:" + userId));
       intent.putExtra("userId", userId);
       intent.putExtra("count", count);
-      PendingIntent pi = PendingIntent.getBroadcast(NewsService.this, 0,
+      PendingIntent pi = PendingIntent.getBroadcast(this, 0,
             intent, PendingIntent.FLAG_CANCEL_CURRENT);
+      alarmManager.cancel(pi);
       alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pi);
    }
 
@@ -329,10 +333,10 @@ public class NewsService extends Service {
          if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
             checkNewsMessageSchedule();
          } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
-            Uri data = intent.getData();
             String userId = intent.getStringExtra("userId");
-            int count = intent.getIntExtra("count", 0);
-            if (count == 0) {
+            int count = intent.getIntExtra("count", 1);
+            Utils.logi(TAG, "_______________onReceive: count=" + count);
+            if (count == 1) {
                requestNewsMessageList(userId, count, true, RETRY_DELAYED_MILLIS);
             } else {
                requestNewsMessageList(userId, count);
@@ -343,6 +347,7 @@ public class NewsService extends Service {
 
    private void registerNewsReceiver() {
       IntentFilter filter = new IntentFilter();
+      filter.addAction(ACTION_CHECK_NEWS_MESSAGE_SCHEDULE);
       filter.addAction(ACTION_PULL_NEWS_MESSAGE);
       registerReceiver(mNewsReceiver, filter);
    }
