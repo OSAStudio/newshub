@@ -1,5 +1,7 @@
 package com.osastudio.newshub.library;
 
+import java.util.HashMap;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -7,6 +9,7 @@ import android.text.TextUtils;
 public class PreferenceManager implements AppSettings {
 
    private Context mContext = null;
+   private HashMap<String, SharedPreferences> mPrefsMap = null;
 
    public class PreferenceFiles {
       public static final String APP_SETTINGS = "app_settings";
@@ -22,15 +25,30 @@ public class PreferenceManager implements AppSettings {
 
    public PreferenceManager(Context context) {
       mContext = context;
+      init();
+   }
+
+   private void init() {
+      mPrefsMap = new HashMap<String, SharedPreferences>();
+      SharedPreferences prefs = mContext.getSharedPreferences(
+            PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
+      mPrefsMap.put(PreferenceFiles.APP_SETTINGS, prefs);
    }
 
    public void cleanup() {
-      
+      mPrefsMap.clear();
    }
 
    public SharedPreferences getPrefs(String fileName) {
-      return TextUtils.isEmpty(fileName) ? null : 
-         mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+      SharedPreferences prefs = null;
+      if (!TextUtils.isEmpty(fileName)) {
+         prefs = mPrefsMap.get(fileName);
+         if (prefs == null) {
+            prefs = mContext.getSharedPreferences(fileName,
+                  Context.MODE_PRIVATE);
+         }
+      }
+      return prefs;
    }
 
    private SharedPreferences getAppSettingsPrefs() {
@@ -101,8 +119,7 @@ public class PreferenceManager implements AppSettings {
    public boolean setUserId(String value) {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
-         return prefs.edit()
-               .putString(PreferenceItems.USER_ID, value).commit();
+         return prefs.edit().putString(PreferenceItems.USER_ID, value).commit();
       }
       return false;
    }
@@ -118,8 +135,8 @@ public class PreferenceManager implements AppSettings {
    public boolean setMessageScheduleString(String value) {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
-         return prefs.edit()
-               .putString(PreferenceItems.MESSAGE_SCHEDULE, value).commit();
+         return prefs.edit().putString(PreferenceItems.MESSAGE_SCHEDULE, value)
+               .commit();
       }
       return false;
    }
