@@ -1,7 +1,5 @@
 package com.osastudio.newshub.library;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -9,7 +7,6 @@ import android.text.TextUtils;
 public class PreferenceManager implements AppSettings {
 
    private Context mContext = null;
-   private HashMap<String, SharedPreferences> mPrefsMap = null;
 
    public class PreferenceFiles {
       public static final String APP_SETTINGS = "app_settings";
@@ -25,33 +22,19 @@ public class PreferenceManager implements AppSettings {
 
    public PreferenceManager(Context context) {
       mContext = context;
-      init();
-   }
-
-   private void init() {
-      mPrefsMap = new HashMap<String, SharedPreferences>();
-      SharedPreferences prefs = mContext.getSharedPreferences(
-            PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
-      mPrefsMap.put(PreferenceFiles.APP_SETTINGS, prefs);
    }
 
    public void cleanup() {
-      mPrefsMap.clear();
+      
    }
 
    public SharedPreferences getPrefs(String fileName) {
-      if (TextUtils.isEmpty(fileName)) {
-         return null;
-      }
-      SharedPreferences prefs = mPrefsMap.get(fileName);
-      if (prefs == null) {
-         prefs = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-      }
-      return prefs;
+      return TextUtils.isEmpty(fileName) ? null : 
+         mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
    }
 
    private SharedPreferences getAppSettingsPrefs() {
-      return mPrefsMap.get(PreferenceFiles.APP_SETTINGS);
+      return getPrefs(PreferenceFiles.APP_SETTINGS);
    }
 
    public boolean isFirstRun() {

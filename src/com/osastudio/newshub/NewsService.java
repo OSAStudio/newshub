@@ -187,13 +187,12 @@ public class NewsService extends Service {
 
    private void analyzeNewsMessageSchedule(String userId,
          NewsMessageSchedule schedule) {
-      Utils.logi(TAG, "___________analyzeNewsMessageSchedule");
+      Utils.logi(TAG, "analyzeNewsMessageSchedule");
       if (schedule.isPullingAllowed()) {
          int count = schedule.getCount();
-         Utils.logi(TAG, "___________analyzeNewsMessageSchedule: count=" + count);
+         Utils.logi(TAG, "analyzeNewsMessageSchedule: count=" + count);
          if (count == 0) {
             if (schedule.pullNow()) {
-               Utils.logi(TAG, "___________analyzeNewsMessageSchedule: Pull now");
                requestNewsMessageList(userId, count + 1, true,
                      RETRY_DELAYED_MILLIS);
             } else {
@@ -209,17 +208,19 @@ public class NewsService extends Service {
    }
 
    private void requestNewsMessageSchedule(String userId) {
-      Utils.logi(TAG, "___________requestNewsMessageSchedule");
+      Utils.logi(TAG, "requestNewsMessageSchedule");
       new NewsMessagescheduleTask(mHandler, this, userId).start();
    }
 
    private void checkNewsMessageSchedule() {
-      Utils.logi(TAG, "___________checkNewsMessageSchedule");
+      Utils.logi(TAG, "checkNewsMessageSchedule");
       PreferenceManager prefsManager = ((NewsApp) getApplication())
             .getPrefsManager();
       String userId = prefsManager.getUserId();
+      Utils.logi(TAG, "checkNewsMessageSchedule: userId=" + userId);
       if (!TextUtils.isEmpty(userId)) {
          String str = prefsManager.getMessageScheduleString();
+         Utils.logi(TAG, "checkNewsMessageSchedule: schedule=" + str);
          NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
          if (schedule == null || !schedule.isToday()) {
             requestNewsMessageSchedule(userId);
@@ -228,7 +229,7 @@ public class NewsService extends Service {
    }
 
    private void scheduleCheckingNewsMessageSchedule() {
-      Utils.logi(TAG, "___________scheduleCheckingNewsMessageSchedule");
+      Utils.logi(TAG, "scheduleCheckingNewsMessageSchedule");
       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
       intent.setAction(ACTION_CHECK_NEWS_MESSAGE_SCHEDULE);
@@ -241,7 +242,7 @@ public class NewsService extends Service {
 
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis) {
-      Utils.logi(TAG, "___________requestNewsMessageList: count=" + count);
+      Utils.logi(TAG, "requestNewsMessageList: count=" + count);
       NewsMessageListTask task = new NewsMessageListTask(mHandler, this, userId);
       task.setCount(count);
       task.setRetryIfFailed(retryIfFailed);
@@ -255,7 +256,7 @@ public class NewsService extends Service {
 
    private void schedulePullingNewsMessage(String userId, long scheduleMillis,
          int count) {
-      Utils.logi(TAG, "___________schedulePullingNewsMessage: count=" + count);
+      Utils.logi(TAG, "schedulePullingNewsMessage: count=" + count);
       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
       intent.setAction(ACTION_PULL_NEWS_MESSAGE);

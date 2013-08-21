@@ -5,13 +5,9 @@ import java.util.ArrayList;
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.library.PreferenceManager;
-import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
-import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
