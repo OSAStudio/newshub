@@ -92,12 +92,13 @@
         <LinearLayout
             android:id="@+id/activite"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_height="fill_parent"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:paddingTop="80dp"
             android:orientation="vertical"
-            android:visibility="visible" >
+            android:visibility="visible" 
+            android:background="@drawable/activite_bg">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -114,7 +115,11 @@
                 fsms:delimiter="-"
                 fsms:eachLength="4"
                 fsms:placeHolder="0"
-                fsms:totalLength="16" />
+                fsms:totalLength="16"
+                android:background="@drawable/edit"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:textColor="@color/text_gray"/>
 
             <Button
                 android:id="@+id/activite_btn"
