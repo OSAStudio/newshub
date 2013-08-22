@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +36,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	private int mChannelType;
 	private String mChannelId = null;
 	private String mChannelTitle = null;
+	private String mChannelDsip = null;
 	private SlideSwitcher mSwitcher = null;
 	private List<NewsBaseAbstract> mSummaries = new ArrayList<NewsBaseAbstract>();
 	private int mTotalPage = 0;
@@ -154,6 +156,8 @@ public class SummaryActivity extends NewsBaseActivity {
 						getApplicationContext(), mChannelId);
 				if (summary_list != null) {
 					mSummaries = summary_list.asNewsBaseAbstractList();
+					mChannelTitle = summary_list.getChannelName();
+					mChannelDsip = summary_list.getChannelDescription();
 				}
 				break;
 //			case Utils.DAILY_REMINDER_TYPE:
@@ -169,10 +173,10 @@ public class SummaryActivity extends NewsBaseActivity {
 				mDlg = null;
 			}
 			if (mSummaries != null && mSummaries.size() > 0) {
-				if (mSummaries.size() % 6 == 0) {
-					mTotalPage = mSummaries.size() / 6;
+				if (mSummaries.size() % 4 == 0) {
+					mTotalPage = mSummaries.size() / 4;
 				} else {
-					mTotalPage = mSummaries.size() / 6 + 1;
+					mTotalPage = mSummaries.size() / 4 + 1;
 				}
 			}
 			mLoadDataTask = null;
@@ -229,7 +233,7 @@ public class SummaryActivity extends NewsBaseActivity {
 		@Override
 		public void onClick(int position, View v) {
 			int page = mSwitcher.getCurrentIndex();
-			int index = page * 6 + position;
+			int index = page * 4 + position-1;
 			if (index < mSummaries.size()) {
 				startFileActivity(index);
 			}
@@ -242,10 +246,10 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		public int getCount() {
-//			if (mSummaries.size() % 6 == 0) {
-//				return mSummaries.size() / 6;
+//			if (mSummaries.size() % 4 == 0) {
+//				return mSummaries.size() / 4;
 //			} else {
-//				return mSummaries.size() / 6 + 1;
+//				return mSummaries.size() / 4 + 1;
 //			}
 			return mTotalPage;
 		}
@@ -281,17 +285,17 @@ public class SummaryActivity extends NewsBaseActivity {
 		@Override
 		public int getCount() {
 			int count = 0;
-			if ((mPage + 1) * 6 <= mSummaries.size()) {
-				count = 6;
+			if ((mPage + 1) * 4 <= mSummaries.size()) {
+				count = 4;
 			} else {
-				count = 6 - ((mPage + 1) * 6 - mSummaries.size());
+				count = 4 - ((mPage + 1) * 4 - mSummaries.size());
 			}
 			return count;
 		}
 
 		@Override
 		public Object getItem(int position) {
-			int index = mPage * 6 + position;
+			int index = mPage * 4 + position;
 			if (index < mSummaries.size()) {
 				return mSummaries.get(index);
 			} else {
@@ -301,32 +305,43 @@ public class SummaryActivity extends NewsBaseActivity {
 
 		@Override
 		public View getView(int position, View convertView) {
-			int index = mPage * 6 + position;
-			if (index < mSummaries.size()) {
-				View summary = convertView;
-				if (summary == null) {
-					LayoutInflater inflater = LayoutInflater
-							.from(SummaryActivity.this);
-					summary = inflater.inflate(R.layout.summary_item, null);
-				}
-				NewsBaseAbstract data = mSummaries.get(index);
-				// View base = summary.findViewById(R.id.base);
-				// base.setBackgroundColor(data.title_color);
-				TextView tv = (TextView) summary.findViewById(R.id.title);
-				tv.setText(data.getTitle());
-
-				TextView name = (TextView) summary
-						.findViewById(R.id.expert_name);
-				name.setText(data.getAuthor());
-				if (position == 0) {
-					summary.setBackgroundColor(data.getColor());
-				} else {
-					summary.setBackgroundColor(color.transparent);
-				}
-				return summary;
-			} else {
-				return null;
+			TextView tv = null;
+			TextView sub = null;
+			View summary = convertView;
+			if (summary == null) {
+				LayoutInflater inflater = LayoutInflater
+						.from(SummaryActivity.this);
+				summary = inflater.inflate(R.layout.summary_item, null);
 			}
+			tv = (TextView) summary.findViewById(R.id.title);
+			sub = (TextView) summary
+					.findViewById(R.id.expert_name);
+			if (position == 0) {
+				tv.setTextColor(Color.WHITE);
+				tv.setTextSize(24);
+				tv.setText(mChannelTitle);
+				
+				sub.setTextColor(Color.WHITE);
+				sub.setText(mChannelDsip);
+				summary.setBackgroundColor(color.transparent);
+			} else {
+				int index = mPage * 4 + position-1;
+				if (index < mSummaries.size()) {
+					
+					NewsBaseAbstract data = mSummaries.get(index);
+					tv.setTextColor(Color.BLACK);
+					tv.setTextSize(16);
+					tv.setText(data.getTitle());
+
+					sub.setTextColor(SummaryActivity.this.getResources().getColor(R.color.text_gray));
+					sub.setText(data.getAuthor());
+					summary.setBackgroundColor(color.transparent);
+					
+				} else {
+					return null;
+				}
+			}
+			return summary;
 		}
 
 	}

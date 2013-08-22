@@ -40,7 +40,9 @@ public class SummaryGrid extends LinearLayout implements
 	private void findViews() {
 		for (int i = 0; i < CONTINER_ID.length; i++) {
 			RelativeLayout continer = (RelativeLayout) findViewById(CONTINER_ID[i]);
-			continer.setOnClickListener(this);
+			if (i != 0) {
+				continer.setOnClickListener(this);
+			}
 			continer.setOnLongClickListener(this);
 			mContiners.add(continer);
 		}

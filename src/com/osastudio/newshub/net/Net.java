@@ -28,8 +28,8 @@ public class Net {
 	}
 	/**
 	 * is network ok?
-	 * true  �豸�Ѿ���������
-	 * false �豸δ��������
+	 * true  锟借备锟窖撅拷锟斤拷锟斤拷锟斤拷锟斤拷
+	 * false 锟借备未锟斤拷锟斤拷锟斤拷锟斤拷
 	 * @return
 	 */
 	public  boolean PhoneIsOnLine(){
@@ -44,21 +44,22 @@ public class Net {
 	}
 	/**
 	 * is server ok
-	 * @param url  ��·��������ַ
+	 * @param url  锟斤拷路锟斤拷锟斤拷锟斤拷锟斤拷址
 	 * @return
-	 * true   ��·����������
-	 * false  ���������δ����
+	 * true   锟斤拷路锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
+	 * false  锟斤拷锟斤拷锟斤拷锟斤拷锟轿达拷锟斤拷锟�
 	 */
    private boolean NetIsOnLine(String path) {
       JSONObject jsonObject = NewsBaseApi.getJsonObject(path, null,
             HttpMethod.HTTP_GET);
-      return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
-            : false;
+//      return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
+//            : false;
+      return true;
    }
 	
 	
 	/**
-	 * �жϷ���������
+	 * 锟叫断凤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	 * @param HttpPath
 	 */
 	public void ExecutNetTask(String HttpPath){
@@ -102,7 +103,7 @@ public class Net {
 	}
 	
 	/**
-	 * ���ͼ����Ϣ
+	 * 锟斤拷锟酵硷拷锟斤拷锟较�
 	 * @param index
 	 * @param flag
 	 */
