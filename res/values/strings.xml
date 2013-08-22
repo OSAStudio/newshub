@@ -12,7 +12,7 @@
     <string name="activite_msg">请输入交易号验证</string>
     <string name="activite_btn">激活</string>
     <string name="school_c">学校</string>
-    <string name="grade_c">学年</string>
+    <string name="grade_c">入学年份</string>
     <string name="class_c">班级</string>
     <string name="register">注册</string>
     <string name="register_msg">请正确填写基础信息</string>
@@ -123,5 +123,11 @@
     <string name="msg_prompt_title_daily_reminder">持之以恒</string>
     <string name="msg_prompt_title_colomnist">推荐专栏</string>
     <string name="msg_prompt_title_recommend">推荐课题</string>
+    
+    <!-- empty msg  --> 
+    <string name="empty_notice_list">暂时没有通知</string>
+    <string name="empty_recommend_list">敬请等待上线</string>
+    <string name="empty_user_issue">您没有订阅包</string>
+    <string name="empty_daily_reminder">暂时没有任务</string>
     
 </resources>
