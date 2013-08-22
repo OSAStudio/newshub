@@ -1,7 +1,6 @@
 package com.osastudio.newshub.data;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.json.JSONException;
@@ -10,7 +9,6 @@ import org.json.JSONObject;
 import android.text.TextUtils;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
-import com.osastudio.newshub.utils.Utils;
 
 public class NewsMessageSchedule extends NewsBaseObject {
 
@@ -18,7 +16,8 @@ public class NewsMessageSchedule extends NewsBaseObject {
    private static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
 
    private static final String SEPARATOR = ",";
-   private static final int MAX_COUNT = 3;
+   private static final int MAX_PULLING_COUNT = 3;
+   private static final int PULLING_TIME_TOLERANCE = 10; // millisecond
 
    private long baseMillis = 0;
    private int count = 0;
@@ -78,14 +77,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
 
    public long getRemainingMillis() {
-      Calendar today = GregorianCalendar.getInstance();
-      long now = today.getTimeInMillis();
-      today.set(Calendar.HOUR_OF_DAY, 0);
-      today.set(Calendar.MINUTE, 0);
-      today.set(Calendar.SECOND, 0);
-      today.set(Calendar.MILLISECOND, 0);
-      this.baseMillis = today.getTimeInMillis();
-      return this.baseMillis + this.offsetMillis - now;
+      return this.baseMillis + this.offsetMillis - System.currentTimeMillis();
    }
    
    public long getScheduleMillis() {
@@ -93,7 +85,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
    
    public boolean pullNow() {
-      return getRemainingMillis() == 0;
+      return Math.abs(getRemainingMillis()) <= PULLING_TIME_TOLERANCE;
    }
    
    public boolean isToday() {
@@ -103,23 +95,23 @@ public class NewsMessageSchedule extends NewsBaseObject {
          today.set(Calendar.MINUTE, 0);
          today.set(Calendar.SECOND, 0);
          today.set(Calendar.MILLISECOND, 0);
-         Calendar date = GregorianCalendar.getInstance();
-         date.setTimeInMillis(this.baseMillis);
-         return date.compareTo(today) == 0;
+         Calendar scheduleDate = GregorianCalendar.getInstance();
+         scheduleDate.setTimeInMillis(this.baseMillis);
+         return scheduleDate.compareTo(today) == 0;
       }
       return false;
    }
    
    public boolean isPullingLate() {
-      return System.currentTimeMillis() > this.baseMillis + this.offsetMillis;
+      return getRemainingMillis() + PULLING_TIME_TOLERANCE < 0;
    }
    
-   public boolean isPullingCountExceeded() {
-      return this.count >= MAX_COUNT;
+   public boolean hasPullingCountExceeded() {
+      return this.count >= MAX_PULLING_COUNT;
    }
 
-   public boolean isPullingAllowed() {
-      return !isPullingCountExceeded() && isToday() && !isPullingLate();
+   public boolean allowPulling() {
+      return !hasPullingCountExceeded() && isToday() && !isPullingLate();
    }
    
    @Override
@@ -132,7 +124,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    public static NewsMessageSchedule parseString(String str) {
       NewsMessageSchedule result = null;
       String[] arr = str.split(SEPARATOR);
-      if (arr != null && arr.length == MAX_COUNT) {
+      if (arr != null && arr.length == 3) {
          result = new NewsMessageSchedule();
          try {
             if (!TextUtils.isEmpty(arr[0])) {
