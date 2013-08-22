@@ -15,11 +15,6 @@ public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
    public static final String JSON_KEY_PUBLISHED_TIME = "post_date";
    public static final String JSON_KEY_AUTHOR = "expert_name";
    public static final String JSON_KEY_TITLE = "lesson_title";
-   public static final String JSON_KEY_CHANNEL_NAME = "lssue_title";
-   public static final String JSON_KEY_CHANNEL_DESCRIPTION = "lssue_note";
-
-   private String channelName;
-   private String channelDesc;
 
    public NewsAbstract() {
       super();
@@ -58,36 +53,10 @@ public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
          if (!jsonObject.isNull(JSON_KEY_TITLE)) {
             result.setTitle(jsonObject.getString(JSON_KEY_TITLE).trim());
          }
-         if (!jsonObject.isNull(JSON_KEY_CHANNEL_NAME)) {
-            result.setChannelName(jsonObject.getString(JSON_KEY_CHANNEL_NAME)
-                  .trim());
-         }
-         if (!jsonObject.isNull(JSON_KEY_CHANNEL_DESCRIPTION)) {
-            result.setChannelDesciption(jsonObject.getString(
-                  JSON_KEY_CHANNEL_DESCRIPTION).trim());
-         }
       } catch (JSONException e) {
 
       }
       return result;
-   }
-
-   public String getChannelName() {
-      return this.channelName;
-   }
-
-   public NewsAbstract setChannelName(String name) {
-      this.channelName = name;
-      return this;
-   }
-
-   public String getChannelDescription() {
-      return this.channelDesc;
-   }
-
-   public NewsAbstract setChannelDesciption(String desc) {
-      this.channelDesc = desc;
-      return this;
    }
 
    @Override
