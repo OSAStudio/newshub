@@ -31,7 +31,7 @@ public class NewsAbstractApi extends NewsBaseApi {
       }
 
       NewsAbstractList result = new NewsAbstractList(jsonObject);
-      if (result != null && result.getAbstractList().size() > 0) {
+      if (result.getAbstractList().size() > 0) {
          for (NewsAbstract abs : result.getAbstractList()) {
             if (abs != null) {
                abs.setChannelId(newsChannelId);

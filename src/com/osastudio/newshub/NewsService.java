@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.widget.Toast;
 
 public class NewsService extends Service {
@@ -36,7 +37,7 @@ public class NewsService extends Service {
 
    private static final String ACTION_CHECK_NEWS_MESSAGE_SCHEDULE = "com.osastudio.newshub.action.CHECK_NEWS_MESSAGE_SCHEDULE";
    private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
-   private static final long RETRY_DELAYED_MILLIS = 10 * 60 * 1000;
+   private static final long RETRY_DELAYED_MILLIS = DateUtils.MINUTE_IN_MILLIS * 10;
    private static final int NEWS_MESSAGE_NOTIFICATION = 1300;
 
    private Handler mHandler = new Handler();
@@ -95,7 +96,7 @@ public class NewsService extends Service {
                Utils.logi(TAG,
                      "______________I'm alive..." + System.currentTimeMillis());
                try {
-                  Thread.sleep(60 * 1000);
+                  Thread.sleep(DateUtils.MINUTE_IN_MILLIS);
                } catch (InterruptedException e) {
                   // e.printStackTrace();
                }
@@ -213,7 +214,7 @@ public class NewsService extends Service {
    }
 
    private void checkNewsMessageSchedule() {
-      Utils.logi(TAG, "checkNewsMessageSchedule");
+      Utils.logi(TAG, "checkNewsMessageSchedule: " + System.currentTimeMillis());
       PreferenceManager prefsManager = ((NewsApp) getApplication())
             .getPrefsManager();
       String userId = prefsManager.getUserId();
@@ -237,7 +238,7 @@ public class NewsService extends Service {
             PendingIntent.FLAG_CANCEL_CURRENT);
       alarmManager.cancel(pi);
       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis(), 10 * 60 * 1000, pi);
+            System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS * 10, pi);
    }
 
    private void requestNewsMessageList(String userId, int count,
@@ -262,8 +263,8 @@ public class NewsService extends Service {
       intent.setAction(ACTION_PULL_NEWS_MESSAGE);
       intent.putExtra("userId", userId);
       intent.putExtra("count", count);
-      PendingIntent pi = PendingIntent.getBroadcast(this, 0,
-            intent, PendingIntent.FLAG_CANCEL_CURRENT);
+      PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent,
+            PendingIntent.FLAG_CANCEL_CURRENT);
       alarmManager.cancel(pi);
       alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pi);
    }
@@ -330,7 +331,10 @@ public class NewsService extends Service {
       @Override
       public void onReceive(Context context, Intent intent) {
          String action = intent.getAction();
-         Utils.logi(TAG, "_______________onReceive: " + action);
+         Utils.logi(
+               TAG,
+               "_______________onReceive: " + action + " "
+                     + System.currentTimeMillis());
          if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
             checkNewsMessageSchedule();
          } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
@@ -339,6 +343,8 @@ public class NewsService extends Service {
             Utils.logi(TAG, "_______________onReceive: count=" + count);
             if (count == 1) {
                requestNewsMessageList(userId, count, true, RETRY_DELAYED_MILLIS);
+            } else if (count == 2) {
+               requestNewsMessageList(userId, count, true, 0);
             } else {
                requestNewsMessageList(userId, count);
             }
@@ -481,7 +487,8 @@ public class NewsService extends Service {
             if (this.retryIfFailed) {
                if (this.retryDelayedMillis > 0) {
                   schedulePullingNewsMessage(this.userId,
-                        this.retryDelayedMillis, this.count + 1);
+                        System.currentTimeMillis() + this.retryDelayedMillis,
+                        this.count + 1);
                } else {
                   requestNewsMessageList(this.userId, this.count + 1);
                }

@@ -5,8 +5,8 @@ import org.json.JSONObject;
 
 public class NewsResult implements ResultCode {
 
-   protected static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
-   protected static final String JSON_KEY_RESULT_CODE = "stat";
+   public static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
+   public static final String JSON_KEY_RESULT_CODE = "stat";
    
    protected static final String JSON_KEY_LIST = "list";
    protected static final String JSON_KEY_USER_ID = "student_id";
@@ -92,5 +92,13 @@ public class NewsResult implements ResultCode {
    public boolean isFailure() {
       return !isSuccess();
    }
-
+   
+   public static int httpCode2ResultCode(int httpCode) {
+      return httpCode + RESULT_HTTP_BASE;
+   }
+   
+   public static int resultCode2HttpCode(int resultCode) {
+      return resultCode - RESULT_HTTP_BASE;
+   }
+   
 }

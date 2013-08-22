@@ -19,7 +19,16 @@ public interface ResultCode {
    public static final int RESULT_ILLEGAL_DEVICE = 111;
    public static final int RESULT_MAX_ACCOUNT_REACHED = 112;
    public static final int RESULT_NOTICE_ALREADY_FEEDBACK = 113;
+   public static final int RESULT_NO_SUBSCRIPTION = 114;
    
    public static final int RESULT_UNKNOWN_ERROR = -1;
+   
+   public static final int RESULT_HTTP_BASE = 8000;
+   
+   public static final int RESULT_EXCEPTION_BASE = 1000;
+   public static final int RESULT_CONNECT_TIMEOUT_EXCEPTION = 1001;
+   public static final int RESULT_CLIENT_PROTOCOL_EXCEPTION = 1002;
+   public static final int RESULT_IO_EXCEPTION = 1003;
+   public static final int RESULT_PARSE_EXCEPTION = 1004;
    
 }

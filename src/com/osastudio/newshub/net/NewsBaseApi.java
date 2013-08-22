@@ -20,7 +20,11 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
@@ -30,12 +34,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.library.DeviceUuidFactory;
 import com.osastudio.newshub.utils.FileHelper;
 import com.osastudio.newshub.utils.InputStreamHelper;
@@ -284,7 +290,6 @@ public class NewsBaseApi {
       try {
          jsonObject = new JSONObject(jsonString);
       } catch (JSONException e) {
-         e.printStackTrace();
          return null;
       }
       if (jsonObject.length() <= 0) {
@@ -374,26 +379,52 @@ public class NewsBaseApi {
    }
 
    protected static String getString(HttpUriRequest httpRequest, boolean logging) {
-      try {
-         HttpResponse httpResponse = new DefaultHttpClient()
-               .execute(httpRequest);
-         int status = httpResponse.getStatusLine().getStatusCode();
-         if (status == HttpStatus.SC_OK) {
-            String responseString = EntityUtils.toString(
-                  httpResponse.getEntity(), HTTP.UTF_8);
-            if (logging) {
-               Utils.logi(TAG, "getString() [RESPONSE] " + responseString);
+      int errorCode = 0;
+      String errorDesc = null;
+      int retries = 3;
+      while (retries-- > 0) {
+         try {
+            HttpParams httpParams = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 10);
+            HttpConnectionParams.setSoTimeout(httpParams, 1000 * 10);
+            HttpResponse httpResponse = new DefaultHttpClient(httpParams)
+                  .execute(httpRequest);
+            int status = httpResponse.getStatusLine().getStatusCode();
+            if (status == HttpStatus.SC_OK) {
+               String response = EntityUtils.toString(
+                     httpResponse.getEntity(), HTTP.UTF_8);
+               if (logging) {
+                  Utils.logi(TAG, "getString() [RESPONSE] " + response);
+               }
+               return response;
+            } else {
+               errorCode = NewsResult.httpCode2ResultCode(status);
+               errorDesc = httpResponse.getStatusLine().getReasonPhrase();
             }
-            return responseString;
-         } else {
-            // Error
+         } catch (ConnectTimeoutException e) {
+            errorCode = NewsResult.RESULT_CONNECT_TIMEOUT_EXCEPTION;
+            errorDesc = "Connect Timeout Exception";
+         } catch (ClientProtocolException e) {
+            errorCode = NewsResult.RESULT_CLIENT_PROTOCOL_EXCEPTION;
+            errorDesc = "Client Protocol Exception";
+         } catch (IOException e) {
+            errorCode = NewsResult.RESULT_IO_EXCEPTION;
+            errorDesc = "IO Exception";
+         } catch (ParseException e) {
+            errorCode = NewsResult.RESULT_PARSE_EXCEPTION;
+            errorDesc = "Parse Exception";
          }
-      } catch (ClientProtocolException e) {
-         e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
-      } catch (ParseException e) {
-         e.printStackTrace();
+         
+         if (retries <= 0) {
+            try {
+               JSONObject jsonObject = new JSONObject();
+               jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE, errorCode);
+               jsonObject.put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, errorDesc);
+               return jsonObject.toString();
+            } catch (JSONException e) {
+               
+            }
+         }
       }
 
       return null;

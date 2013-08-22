@@ -36,7 +36,7 @@ public class Utils {
 
 	private static final String APP_NAME = "NewsHub";
 
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	final static public int NOTIFY_LIST_TYPE = 1;
 	final static public int IMPORT_NOTIFY_TYPE = 2;
