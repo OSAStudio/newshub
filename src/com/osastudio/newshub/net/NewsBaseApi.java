@@ -63,8 +63,8 @@ public class NewsBaseApi {
       String id = new DeviceUuidFactory(context).getDeviceId();
 
       if (NewsApp.DEBUG) {
-//         id = "667ebbbf9fcd9229344681aebf4ec67316645186"; //TEST
-         id = "313429A2F72C00EC"; //Nexus S
+         // id = "667ebbbf9fcd9229344681aebf4ec67316645186"; //TEST
+         id = "313429A2F72C00EC"; // Nexus S
       }
       return id;
    }
@@ -261,12 +261,22 @@ public class NewsBaseApi {
 
    protected static JSONObject getJsonObject(String service,
          List<NameValuePair> params) {
-      return getJsonObject(service, params, DEFAULT_HTTP_METHOD);
+      return getJsonObject(service, params, true);
+   }
+
+   protected static JSONObject getJsonObject(String service,
+         List<NameValuePair> params, boolean logging) {
+      return getJsonObject(service, params, DEFAULT_HTTP_METHOD, logging);
    }
 
    protected static JSONObject getJsonObject(String service,
          List<NameValuePair> params, HttpMethod method) {
-      String jsonString = getString(service, params, method);
+      return getJsonObject(service, params, method, true);
+   }
+
+   protected static JSONObject getJsonObject(String service,
+         List<NameValuePair> params, HttpMethod method, boolean logging) {
+      String jsonString = getString(service, params, method, logging);
       if (TextUtils.isEmpty(jsonString)) {
          return null;
       }
@@ -284,23 +294,40 @@ public class NewsBaseApi {
    }
 
    protected static String getString(String service, List<NameValuePair> params) {
-      return getString(service, params, DEFAULT_HTTP_METHOD);
+      return getString(service, params, true);
+   }
+
+   protected static String getString(String service,
+         List<NameValuePair> params, boolean logging) {
+      return getString(service, params, DEFAULT_HTTP_METHOD, logging);
    }
 
    protected static String getString(String service,
          List<NameValuePair> params, HttpMethod method) {
+      return getString(service, params, method, true);
+   }
+
+   protected static String getString(String service,
+         List<NameValuePair> params, HttpMethod method, boolean logging) {
       if (method == HttpMethod.HTTP_GET) {
-         return getStringByHttpGet(service, params);
+         return getStringByHttpGet(service, params, logging);
       } else {
-         return getStringByHttpPost(service, params);
+         return getStringByHttpPost(service, params, logging);
       }
    }
 
    protected static String getStringByHttpGet(String service,
          List<NameValuePair> params) {
+      return getStringByHttpGet(service, params, true);
+   }
+
+   protected static String getStringByHttpGet(String service,
+         List<NameValuePair> params, boolean logging) {
       try {
-         Utils.logi(TAG, "getString() [SERVICE] " + service);
-         return getString(new HttpGet(service));
+         if (logging) {
+            Utils.logi(TAG, "getString() [SERVICE] " + service);
+         }
+         return getString(new HttpGet(service), logging);
       } catch (IllegalArgumentException e) {
          e.printStackTrace();
       }
@@ -310,18 +337,27 @@ public class NewsBaseApi {
 
    protected static String getStringByHttpPost(String service,
          List<NameValuePair> params) {
+      return getStringByHttpPost(service, params, true);
+   }
+
+   protected static String getStringByHttpPost(String service,
+         List<NameValuePair> params, boolean logging) {
       try {
-         Utils.logi(TAG, "getString() [SERVICE] " + service);
+         if (logging) {
+            Utils.logi(TAG, "getString() [SERVICE] " + service);
+         }
          HttpPost httpRequest = new HttpPost(service);
          if (params != null && params.size() > 0) {
             httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-            Utils.logi(
-                  TAG,
-                  "getString() [PARAMS] "
-                        + EntityUtils.toString(httpRequest.getEntity(),
-                              HTTP.UTF_8));
+            if (logging) {
+               Utils.logi(
+                     TAG,
+                     "getString() [PARAMS] "
+                           + EntityUtils.toString(httpRequest.getEntity(),
+                                 HTTP.UTF_8));
+            }
          }
-         return getString(httpRequest);
+         return getString(httpRequest, logging);
       } catch (IllegalArgumentException e) {
          e.printStackTrace();
       } catch (IOException e) {
@@ -334,6 +370,10 @@ public class NewsBaseApi {
    }
 
    protected static String getString(HttpUriRequest httpRequest) {
+      return getString(httpRequest, true);
+   }
+
+   protected static String getString(HttpUriRequest httpRequest, boolean logging) {
       try {
          HttpResponse httpResponse = new DefaultHttpClient()
                .execute(httpRequest);
@@ -341,7 +381,9 @@ public class NewsBaseApi {
          if (status == HttpStatus.SC_OK) {
             String responseString = EntityUtils.toString(
                   httpResponse.getEntity(), HTTP.UTF_8);
-            Utils.logi(TAG, "getString() [RESPONSE] " + responseString);
+            if (logging) {
+               Utils.logi(TAG, "getString() [RESPONSE] " + responseString);
+            }
             return responseString;
          } else {
             // Error
