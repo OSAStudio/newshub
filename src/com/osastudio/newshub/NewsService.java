@@ -188,7 +188,7 @@ public class NewsService extends Service {
    private void analyzeNewsMessageSchedule(String userId,
          NewsMessageSchedule schedule) {
       Utils.logi(TAG, "analyzeNewsMessageSchedule");
-      if (schedule.isPullingAllowed()) {
+      if (schedule.allowPulling()) {
          int count = schedule.getCount();
          Utils.logi(TAG, "analyzeNewsMessageSchedule: count=" + count);
          if (count == 0) {
