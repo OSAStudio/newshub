@@ -111,7 +111,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
 
    public boolean allowPulling() {
-      return !hasPullingCountExceeded() && isToday() && !isPullingLate();
+      return isToday() && !hasPullingCountExceeded() && !isPullingLate();
    }
    
    @Override
