@@ -22,9 +22,11 @@ import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.FileView;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -251,6 +253,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 					break;
 				}
 
+			} else {
+			   showEmpthyMessage(mListType);
 			}
 			super.onPostExecute(result);
 		}
@@ -609,6 +613,33 @@ public class AzkerListActivity extends NewsBaseActivity {
 		it.putExtra(SummaryActivity.CHANNEL_TITLE, mTitle);
 		it.putExtra(SummaryActivity.CHANNEL_ID, mListDatas.get(position).mId);
 		startActivity(it);
+	}
+	
+	private void showEmpthyMessage(int listType) {
+	   int str_id = 0;
+	   switch(listType) {
+      case Utils.RECOMMEND_LIST_TYPE:
+         str_id = R.string.empty_recommend_list;
+         break;
+      case Utils.NOTIFY_LIST_TYPE:
+         str_id = R.string.empty_notice_list;
+         break;
+      case Utils.USER_ISSUES_TYPE:
+         str_id = R.string.empty_user_issue;
+         break;
+      case Utils.DAILY_REMINDER_TYPE:
+         str_id = R.string.empty_daily_reminder;
+         break;
+	   }
+	   if (str_id > 0) {
+         Utils.ShowConfirmDialog(this, getString(str_id), new DialogConfirmCallback() {
+            
+            public void onConfirm(DialogInterface dialog) {
+              AzkerListActivity.this.finish();
+               
+            }
+         });
+	   }
 	}
 	
 	private class  ItemClickListener implements OnItemClickListener {

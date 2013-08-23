@@ -50,7 +50,7 @@ public class Utils {
 	final static public int MESSAGE_SEND_TYPE_NOTIFY = 1;
 	final static public int MESSAGE_SEND_TYPE_NOTIFY_BACK = 2;
    final static public int MESSAGE_SEND_TYPE_DAILY_REMINDER = 3;
-   final static public int MESSAGE_SEND_TYPE_EXPERT = 4;
+   final static public int MESSAGE_SEND_TYPE_RECOMMEND = 4;
    final static public int MESSAGE_SEND_TYPE_LESSON = 5;
 	
 

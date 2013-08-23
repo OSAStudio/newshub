@@ -257,7 +257,7 @@ public class CategoryActivity extends NewsBaseActivity {
          }
       }
       
-//      mMessageType = Utils.MESSAGE_SEND_TYPE_LESSON;
+//      mMessageType = Utils.MESSAGE_SEND_TYPE_RECOMMEND;
 //      mServiceID = "1";
 //      mNeedJump = true;
 //      View cover = findViewById(R.id.cover_layout);
@@ -796,16 +796,6 @@ public class CategoryActivity extends NewsBaseActivity {
                      }
                      if (idIndex < 0) {
                         mApp.setCurrentUserId(userIds.get(0));
-                        // SharedPreferences prefs = CategoryActivity.this
-                        // .getSharedPreferences(
-                        // PreferenceFiles.APP_SETTINGS,
-                        // Context.MODE_PRIVATE);
-                        // if (prefs != null) {
-                        // prefs.edit()
-                        // .putString(PreferenceItems.USER_ID,
-                        // userIds.get(0)).commit();
-                        //
-                        // }
                      }
                   }
 
@@ -1310,6 +1300,10 @@ public class CategoryActivity extends NewsBaseActivity {
          cover.setVisibility(View.GONE);
          mSwitcher.setVisibility(View.VISIBLE);
          mToolbar.setVisibility(View.VISIBLE);
+         
+         String cur_id = mApp.getPrefsManager().getUserId();
+         mApp.setCurrentUserId(cur_id);
+         
          setupData(0);
          
          break;
@@ -1355,13 +1349,13 @@ public class CategoryActivity extends NewsBaseActivity {
          break;
       case Utils.MESSAGE_SEND_TYPE_NOTIFY:
       case Utils.MESSAGE_SEND_TYPE_NOTIFY_BACK:
-      case Utils.MESSAGE_SEND_TYPE_EXPERT:
+      case Utils.MESSAGE_SEND_TYPE_RECOMMEND:
          ArrayList<TempCacheData> cacheList = new ArrayList<TempCacheData>();
          cacheList.add(new TempCacheData(mServiceID));
          mApp.setTempCache(cacheList);
          int type =  Utils.IMPORT_NOTIFY_TYPE;
-         if (mMessageType == Utils.MESSAGE_SEND_TYPE_EXPERT) {
-            type =  Utils.IMPORT_EXPERT_TYPE;
+         if (mMessageType == Utils.MESSAGE_SEND_TYPE_RECOMMEND) {
+            type =  Utils.RECOMMEND_LIST_TYPE;
          }
          it.setClass(this, PageActivity.class);
          it.putExtra(PageActivity.PAGE_TYPE, type);

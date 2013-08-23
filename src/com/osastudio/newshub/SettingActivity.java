@@ -227,12 +227,12 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
    }
 
    private class CheckTask extends AsyncTask<Void, Void, Boolean> {
-
+      ValidateResult mResult = null;
       protected Boolean doInBackground(Void... params) {
-         ValidateResult result = UserApi
+         mResult = UserApi
                .getValidateStatus(SettingActivity.this);
-         if (result != null) {
-        	 return result.isSuccess();
+         if (mResult != null) {
+        	 return mResult.isSuccess();
          } else {
         	 return false;
          }
@@ -255,9 +255,16 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
             screenHeight = screenHeight > 0 ? screenHeight : 0;
             showRegisterView(screenWidth, screenHeight);
          } else {
-            Utils.ShowConfirmDialog(SettingActivity.this,
-                  SettingActivity.this.getString(R.string.cant_add_user_msg),
-                  null);
+            String  msg = null;
+            
+            if (mResult != null) {
+               msg = Utils.getErrorResultMsg(SettingActivity.this, mResult.getResultCode());
+            }
+            if (msg == null) {
+               SettingActivity.this.getString(R.string.cant_add_user_msg);
+            }
+            
+            Utils.ShowConfirmDialog(SettingActivity.this, msg, null);
          }
 
          super.onPostExecute(result);

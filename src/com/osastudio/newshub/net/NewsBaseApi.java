@@ -381,8 +381,8 @@ public class NewsBaseApi {
          }
          try {
             HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 10);
-            HttpConnectionParams.setSoTimeout(httpParams, 1000 * 10);
+            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 20);
+            HttpConnectionParams.setSoTimeout(httpParams, 1000 * 20);
             HttpResponse httpResponse = new DefaultHttpClient(httpParams)
                   .execute(httpRequest);
             int status = httpResponse.getStatusLine().getStatusCode();
