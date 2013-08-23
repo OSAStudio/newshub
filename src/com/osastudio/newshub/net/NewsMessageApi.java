@@ -10,19 +10,20 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.osastudio.newshub.data.NewsMessageList;
-import com.osastudio.newshub.data.NewsMessageSchedule;
+import com.osastudio.newshub.data.NewsMessageScheduleList;
 
 public class NewsMessageApi extends NewsBaseApi {
 
    private static final String TAG = "NewsMessageApi";
 
-   public static NewsMessageSchedule getNewsMessageSchedule(Context context,
-         String userId) {
+   public static NewsMessageScheduleList getNewsMessageScheduleList(
+         Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
-      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       JSONObject jsonObject = getJsonObject(getNewsMessageScheduleService(),
             params);
-      return (jsonObject != null) ? new NewsMessageSchedule(jsonObject) : null;
+      return (jsonObject != null) ? new NewsMessageScheduleList(jsonObject)
+            : null;
    }
 
    public static NewsMessageList getNewsMessageList(Context context,

@@ -12,41 +12,34 @@ import com.osastudio.newshub.data.base.NewsBaseObject;
 
 public class NewsMessageSchedule extends NewsBaseObject {
 
-   public static final String JSON_KEY_SCHEDULE = "list";
-   private static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
+   protected static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
 
-   private static final String SEPARATOR = ",";
-   private static final int MAX_PULLING_COUNT = 3;
-   private static final int PULLING_TIME_TOLERANCE = 10; // millisecond
+   protected static final String SEPARATOR = ",";
+   protected static final int MAX_PULLING_COUNT = 3;
+   protected static final int PULLING_TIME_TOLERANCE = 10; // millisecond
 
    private long baseMillis = 0;
    private int count = 0;
    private long offsetMillis = 0;
+   private String userId;
 
    public NewsMessageSchedule() {
-
+      super();
    }
 
-   public NewsMessageSchedule(JSONObject jsonObject) {
-      super(jsonObject);
-
-      if (isSuccess()) {
-         try {
-            JSONObject bodyObject = null;
-            if (!jsonObject.isNull(JSON_KEY_SCHEDULE)) {
-               bodyObject = jsonObject.getJSONObject(JSON_KEY_SCHEDULE);
-            }
-            if (bodyObject == null) {
-               return;
-            }
-
-            if (!bodyObject.isNull(JSON_KEY_OFFSET_MILLIS)) {
-               this.offsetMillis = bodyObject.getLong(JSON_KEY_OFFSET_MILLIS);
-            }
-         } catch (JSONException e) {
-
+   public static NewsMessageSchedule parseJsonObject(JSONObject jsonObject) {
+      NewsMessageSchedule result = new NewsMessageSchedule();
+      try {
+         if (!jsonObject.isNull(JSON_KEY_OFFSET_MILLIS)) {
+            result.setOffsetMillis(jsonObject.getLong(JSON_KEY_OFFSET_MILLIS));
          }
+         if (!jsonObject.isNull(JSON_KEY_USER_ID)) {
+            result.setUserId(jsonObject.getString(JSON_KEY_USER_ID).trim());
+         }
+      } catch (JSONException e) {
+
       }
+      return result;
    }
 
    public long getBaseMillis() {
@@ -76,18 +69,27 @@ public class NewsMessageSchedule extends NewsBaseObject {
       return this;
    }
 
+   public String getUserId() {
+      return this.userId;
+   }
+
+   public NewsMessageSchedule setUserId(String userId) {
+      this.userId = userId;
+      return this;
+   }
+
    public long getRemainingMillis() {
       return this.baseMillis + this.offsetMillis - System.currentTimeMillis();
    }
-   
+
    public long getScheduleMillis() {
       return this.baseMillis + this.offsetMillis;
    }
-   
+
    public boolean pullNow() {
       return Math.abs(getRemainingMillis()) <= PULLING_TIME_TOLERANCE;
    }
-   
+
    public boolean isToday() {
       if (this.baseMillis > 0) {
          Calendar today = GregorianCalendar.getInstance();
@@ -101,11 +103,11 @@ public class NewsMessageSchedule extends NewsBaseObject {
       }
       return false;
    }
-   
+
    public boolean isPullingLate() {
       return getRemainingMillis() + PULLING_TIME_TOLERANCE < 0;
    }
-   
+
    public boolean hasPullingCountExceeded() {
       return this.count >= MAX_PULLING_COUNT;
    }
@@ -113,7 +115,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    public boolean allowPulling() {
       return isToday() && !hasPullingCountExceeded() && !isPullingLate();
    }
-   
+
    @Override
    public String toString() {
       return new StringBuilder().append(this.baseMillis).append(SEPARATOR)

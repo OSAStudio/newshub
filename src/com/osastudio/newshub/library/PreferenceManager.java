@@ -124,7 +124,7 @@ public class PreferenceManager implements AppSettings {
       return false;
    }
 
-   public String getMessageScheduleString() {
+   public String getMessageScheduleUserIds() {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
          return prefs.getString(PreferenceItems.MESSAGE_SCHEDULE, "");
@@ -132,11 +132,31 @@ public class PreferenceManager implements AppSettings {
       return "";
    }
 
-   public boolean setMessageScheduleString(String value) {
+   public boolean setMessageScheduleUserIds(String value) {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
          return prefs.edit().putString(PreferenceItems.MESSAGE_SCHEDULE, value)
                .commit();
+      }
+      return false;
+   }
+
+   public String getMessageScheduleByUserId(String userId) {
+      if (!TextUtils.isEmpty(userId)) {
+         SharedPreferences prefs = getAppSettingsPrefs();
+         if (prefs != null) {
+            return prefs.getString(userId, "");
+         }
+      }
+      return "";
+   }
+
+   public boolean setMessageScheduleByUserId(String userId, String value) {
+      if (!TextUtils.isEmpty(userId)) {
+         SharedPreferences prefs = getAppSettingsPrefs();
+         if (prefs != null) {
+            return prefs.edit().putString(userId, value).commit();
+         }
       }
       return false;
    }
