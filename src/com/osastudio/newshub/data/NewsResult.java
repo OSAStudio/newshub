@@ -81,7 +81,12 @@ public class NewsResult implements ResultCode {
             || this.resultCode == RESULT_REGISTER_FAILURE
             || this.resultCode == RESULT_NO_DEVICE_IDENTIFIER
             || this.resultCode == RESULT_PAYMENT_NEEDED
-            || this.resultCode == RESULT_ADD_ACCOUNT_FAILURE) {
+            || this.resultCode == RESULT_ADD_ACCOUNT_FAILURE
+            || this.resultCode == RESULT_FEEDBACK_FAILURE
+            || this.resultCode == RESULT_ILLEGAL_DEVICE
+            || this.resultCode == RESULT_MAX_ACCOUNT_REACHED
+            || this.resultCode == RESULT_NOTICE_ALREADY_FEEDBACK
+            || this.resultCode == RESULT_NO_SUBSCRIPTION) {
          return true;
       }
       return false;
@@ -93,6 +98,10 @@ public class NewsResult implements ResultCode {
 
    public boolean isFailure() {
       return !isSuccess();
+   }
+   
+   public boolean isNetworkError() {
+      return this.resultCode >= RESULT_NETWORK_ERROR_BASE;
    }
    
    public static int httpCode2ResultCode(int httpCode) {

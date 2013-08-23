@@ -2,6 +2,7 @@ package com.osastudio.newshub.data;
 
 public interface ResultCode {
 
+   public static final int RESULT_UNKNOWN_ERROR = -1;
    public static final int RESULT_NONE = 0;
    public static final int RESULT_OK = 1;
    
@@ -21,14 +22,14 @@ public interface ResultCode {
    public static final int RESULT_NOTICE_ALREADY_FEEDBACK = 113;
    public static final int RESULT_NO_SUBSCRIPTION = 114;
    
-   public static final int RESULT_UNKNOWN_ERROR = -1;
+   public static final int RESULT_NETWORK_ERROR_BASE = 1000;
    
-   public static final int RESULT_HTTP_BASE = 8000;
+   public static final int RESULT_EXCEPTION_BASE = RESULT_NETWORK_ERROR_BASE;
+   public static final int RESULT_CONNECT_TIMEOUT_EXCEPTION = RESULT_EXCEPTION_BASE + 1;
+   public static final int RESULT_CLIENT_PROTOCOL_EXCEPTION = RESULT_EXCEPTION_BASE + 2;
+   public static final int RESULT_IO_EXCEPTION = RESULT_EXCEPTION_BASE + 3;
+   public static final int RESULT_PARSE_EXCEPTION = RESULT_EXCEPTION_BASE + 4;
    
-   public static final int RESULT_EXCEPTION_BASE = 1000;
-   public static final int RESULT_CONNECT_TIMEOUT_EXCEPTION = 1001;
-   public static final int RESULT_CLIENT_PROTOCOL_EXCEPTION = 1002;
-   public static final int RESULT_IO_EXCEPTION = 1003;
-   public static final int RESULT_PARSE_EXCEPTION = 1004;
+   public static final int RESULT_HTTP_BASE = RESULT_NETWORK_ERROR_BASE + 7000;
    
 }
