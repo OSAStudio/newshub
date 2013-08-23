@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -151,7 +152,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 	private void findViews() {
 		mTitleView = (TextView) findViewById(R.id.title_text);
 		if (mTitle != null) {
-			mTitleView.setText(mTitle);
+			mTitleView.setText(Html.fromHtml(mTitle));
 		}
 		mListView = (ListView) findViewById(R.id.list);
 		mListView.setOnItemClickListener(new ItemClickListener());
@@ -487,10 +488,10 @@ public class AzkerListActivity extends NewsBaseActivity {
 				   icon.setImageBitmap(null);
 				}
 				if (data.mTitle != null) {
-					title.setText(data.mTitle);
+					title.setText(Html.fromHtml(data.mTitle));
 				}
 				if (data.mSubTitle != null) {
-					subtitle.setText(data.mSubTitle);
+					subtitle.setText(Html.fromHtml(data.mSubTitle));
 					subtitle.setVisibility(View.VISIBLE);
 				} else {
 					subtitle.setVisibility(View.GONE);
@@ -569,10 +570,10 @@ public class AzkerListActivity extends NewsBaseActivity {
 					lastDays.setVisibility(View.GONE);
 				}
 				if (data.mTitle != null) {
-					title.setText(data.mTitle);
+					title.setText(Html.fromHtml(data.mTitle));
 				}
 				if (data.mSubTitle != null) {
-					subTitle.setText(data.mSubTitle);
+					subTitle.setText(Html.fromHtml(data.mSubTitle));
 					expendBtn.setVisibility(View.VISIBLE);
 					if (data.mIsShowSubTitle) {
 						subTitle.setVisibility(View.VISIBLE);

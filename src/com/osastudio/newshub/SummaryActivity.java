@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -205,8 +206,8 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 	private void setupGridLayout(SummaryGrid grid_layout, int page) {
-		TextView title = (TextView)grid_layout.findViewById(R.id.title_text);
-		title.setText(mChannelTitle);
+//		TextView title = (TextView)grid_layout.findViewById(R.id.title_text);
+//		title.setText(mChannelTitle);
 
 		TextView pageTv = (TextView)grid_layout.findViewById(R.id.page);
 		pageTv.setText(String.valueOf(page+1)+"/"+String.valueOf(mTotalPage));
@@ -319,10 +320,10 @@ public class SummaryActivity extends NewsBaseActivity {
 			if (position == 0) {
 				tv.setTextColor(Color.WHITE);
 				tv.setTextSize(24);
-				tv.setText(mChannelTitle);
+				tv.setText(Html.fromHtml(mChannelTitle));
 				
 				sub.setTextColor(Color.WHITE);
-				sub.setText(mChannelDsip);
+				sub.setText(Html.fromHtml(mChannelDsip));
 				summary.setBackgroundColor(color.transparent);
 			} else {
 				int index = mPage * 4 + position-1;
@@ -331,10 +332,10 @@ public class SummaryActivity extends NewsBaseActivity {
 					NewsBaseAbstract data = mSummaries.get(index);
 					tv.setTextColor(Color.BLACK);
 					tv.setTextSize(16);
-					tv.setText(data.getTitle());
+					tv.setText(Html.fromHtml(data.getTitle()));
 
 					sub.setTextColor(SummaryActivity.this.getResources().getColor(R.color.text_gray));
-					sub.setText(data.getAuthor());
+					sub.setText(Html.fromHtml(data.getAuthor()));
 					summary.setBackgroundColor(color.transparent);
 					
 				} else {
