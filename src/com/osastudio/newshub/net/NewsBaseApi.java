@@ -283,19 +283,7 @@ public class NewsBaseApi {
    protected static JSONObject getJsonObject(String service,
          List<NameValuePair> params, HttpMethod method, boolean logging) {
       String jsonString = getString(service, params, method, logging);
-      if (TextUtils.isEmpty(jsonString)) {
-         return null;
-      }
-      JSONObject jsonObject = null;
-      try {
-         jsonObject = new JSONObject(jsonString);
-      } catch (JSONException e) {
-         return null;
-      }
-      if (jsonObject.length() <= 0) {
-         return null;
-      }
-      return jsonObject;
+      return NewsResult.toJsonObject(jsonString);
    }
 
    protected static String getString(String service, List<NameValuePair> params) {
@@ -379,10 +367,18 @@ public class NewsBaseApi {
    }
 
    protected static String getString(HttpUriRequest httpRequest, boolean logging) {
+      return getString(httpRequest, logging, false);
+   }
+   
+   protected static String getString(HttpUriRequest httpRequest, boolean logging, 
+         boolean checkConnectivityOnly) {
       int errorCode = 0;
       String errorDesc = null;
       int retries = 3;
       while (retries-- > 0) {
+         if (logging) {
+            Utils.logi(TAG, "getString() [RETRIES] " + retries);
+         }
          try {
             HttpParams httpParams = new BasicHttpParams();
             HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 10);
@@ -391,6 +387,19 @@ public class NewsBaseApi {
                   .execute(httpRequest);
             int status = httpResponse.getStatusLine().getStatusCode();
             if (status == HttpStatus.SC_OK) {
+               if (checkConnectivityOnly) {
+                  try {
+                     JSONObject jsonObject = new JSONObject();
+                     jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE, 
+                           NewsResult.RESULT_OK);
+                     jsonObject.put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, 
+                           httpResponse.getStatusLine().getReasonPhrase());
+                     return jsonObject.toString();
+                  } catch (JSONException e) {
+                     e.printStackTrace();
+                  }
+               }
+               
                String response = EntityUtils.toString(
                      httpResponse.getEntity(), HTTP.UTF_8);
                if (logging) {
@@ -398,19 +407,26 @@ public class NewsBaseApi {
                }
                return response;
             } else {
+               if (logging) {
+                  Utils.logi(TAG, "getString() [ERROR] " + status);
+               }
                errorCode = NewsResult.httpCode2ResultCode(status);
                errorDesc = httpResponse.getStatusLine().getReasonPhrase();
             }
          } catch (ConnectTimeoutException e) {
+            e.printStackTrace();
             errorCode = NewsResult.RESULT_CONNECT_TIMEOUT_EXCEPTION;
             errorDesc = "Connect Timeout Exception";
          } catch (ClientProtocolException e) {
+            e.printStackTrace();
             errorCode = NewsResult.RESULT_CLIENT_PROTOCOL_EXCEPTION;
             errorDesc = "Client Protocol Exception";
          } catch (IOException e) {
+            e.printStackTrace();
             errorCode = NewsResult.RESULT_IO_EXCEPTION;
             errorDesc = "IO Exception";
          } catch (ParseException e) {
+            e.printStackTrace();
             errorCode = NewsResult.RESULT_PARSE_EXCEPTION;
             errorDesc = "Parse Exception";
          }
@@ -420,9 +436,12 @@ public class NewsBaseApi {
                JSONObject jsonObject = new JSONObject();
                jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE, errorCode);
                jsonObject.put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, errorDesc);
+               if (logging) {
+                  Utils.logi(TAG, "getString() [RESULT] " + jsonObject.toString());
+               }
                return jsonObject.toString();
             } catch (JSONException e) {
-               
+               e.printStackTrace();
             }
          }
       }

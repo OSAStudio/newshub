@@ -2,6 +2,7 @@ package com.osastudio.newshub.net;
 /**
  * network tools
  */
+import org.apache.http.client.methods.HttpGet;
 import org.json.JSONObject;
 
 import com.osastudio.newshub.data.NewsResult;
@@ -50,11 +51,10 @@ public class Net {
 	 * false  锟斤拷锟斤拷锟斤拷锟斤拷锟轿达拷锟斤拷锟�
 	 */
    private boolean NetIsOnLine(String path) {
-      JSONObject jsonObject = NewsBaseApi.getJsonObject(path, null,
-            HttpMethod.HTTP_GET);
-//      return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
-//            : false;
-      return true;
+      String jsonString = NewsBaseApi.getString(new HttpGet(path), true, true);
+      JSONObject jsonObject = NewsResult.toJsonObject(jsonString);
+      return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
+            : false;
    }
 	
 	

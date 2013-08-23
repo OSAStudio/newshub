@@ -3,6 +3,8 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.TextUtils;
+
 public class NewsResult implements ResultCode {
 
    public static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
@@ -79,7 +81,12 @@ public class NewsResult implements ResultCode {
             || this.resultCode == RESULT_REGISTER_FAILURE
             || this.resultCode == RESULT_NO_DEVICE_IDENTIFIER
             || this.resultCode == RESULT_PAYMENT_NEEDED
-            || this.resultCode == RESULT_ADD_ACCOUNT_FAILURE) {
+            || this.resultCode == RESULT_ADD_ACCOUNT_FAILURE
+            || this.resultCode == RESULT_FEEDBACK_FAILURE
+            || this.resultCode == RESULT_ILLEGAL_DEVICE
+            || this.resultCode == RESULT_MAX_ACCOUNT_REACHED
+            || this.resultCode == RESULT_NOTICE_ALREADY_FEEDBACK
+            || this.resultCode == RESULT_NO_SUBSCRIPTION) {
          return true;
       }
       return false;
@@ -93,12 +100,30 @@ public class NewsResult implements ResultCode {
       return !isSuccess();
    }
    
+   public boolean isNetworkError() {
+      return this.resultCode >= RESULT_NETWORK_ERROR_BASE;
+   }
+   
    public static int httpCode2ResultCode(int httpCode) {
       return httpCode + RESULT_HTTP_BASE;
    }
    
    public static int resultCode2HttpCode(int resultCode) {
       return resultCode - RESULT_HTTP_BASE;
+   }
+   
+   public static JSONObject toJsonObject(String jsonString) {
+      if (!TextUtils.isEmpty(jsonString)) {
+         try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            if (jsonObject.length() > 0) {
+               return jsonObject;
+            }
+         } catch (JSONException e) {
+            
+         }
+      }
+      return null;
    }
    
 }
