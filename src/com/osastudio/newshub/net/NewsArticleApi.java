@@ -30,9 +30,7 @@ public class NewsArticleApi extends NewsBaseApi {
       }
 
       NewsArticle result = new NewsArticle(jsonObject);
-      if (result != null) {
-         result.setId(articleId);
-      }
+      result.setId(articleId);
       return result;
    }
 
@@ -49,9 +47,7 @@ public class NewsArticleApi extends NewsBaseApi {
       }
 
       NewsArticle result = new NewsArticle(jsonObject);
-      if (result != null) {
-         result.setNewsBaseAbstract(newsAbstract);
-      }
+      result.setNewsBaseAbstract(newsAbstract);
       return result;
    }
 

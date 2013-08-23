@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <!-- <TextView
+
+    <!--
+         <TextView
         android:id="@+id/title"
         style="@style/text_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/file_title_bg" /> -->
+        android:background="@color/file_title_bg" />
+    -->
 
     <ScrollView
         android:id="@+id/scroll_layout"
@@ -19,33 +22,46 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" >
 
                 <ImageView
                     android:id="@+id/image"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitCenter" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter" 
+                    android:layout_weight="2"/>
 
                 <TextView
                     android:id="@+id/summary"
-                    style="@style/text_black"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
             </LinearLayout>
+            
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="2px"
+                android:background="@drawable/line_bg" 
+                android:layout_marginTop="10dp" 
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/resume"
-                style="@style/text_black"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 

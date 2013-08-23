@@ -2,17 +2,9 @@ package com.osastudio.newshub.net;
 /**
  * network tools
  */
-import java.io.IOException;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import org.json.JSONObject;
 
-import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.utils.Utils;
 
 import android.content.Context;
@@ -21,7 +13,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
 
 public class Net {
 	private String httpPath ;
@@ -37,8 +28,8 @@ public class Net {
 	}
 	/**
 	 * is network ok?
-	 * true  Éè±¸ÒÑ¾­Á¬½ÓÍøÂç
-	 * false Éè±¸Î´Á¬½ÓÍøÂç
+	 * true  é”Ÿå€Ÿå¤‡é”Ÿçª–æ’…æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·
+	 * false é”Ÿå€Ÿå¤‡æœªé”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·
 	 * @return
 	 */
 	public  boolean PhoneIsOnLine(){
@@ -53,37 +44,22 @@ public class Net {
 	}
 	/**
 	 * is server ok
-	 * @param url  ÍøÂ··şÎñÆ÷µØÖ·
+	 * @param url  é”Ÿæ–¤æ‹·è·¯é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·å€
 	 * @return
-	 * true   ÍøÂ··şÎñÆ÷¿ªÆô
-	 * false  ÍøÂç·şÎñÆ÷Î´¿ªÆô
+	 * true   é”Ÿæ–¤æ‹·è·¯é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·
+	 * false  é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿè½¿è¾¾æ‹·é”Ÿæ–¤æ‹·é”Ÿï¿½
 	 */
-	private boolean NetIsOnLine(String path){
-		HttpParams httpParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParams, 10000);
-		HttpConnectionParams.setSoTimeout(httpParams, 10000);
-		HttpClient client = new DefaultHttpClient(httpParams);
-		HttpGet get = new HttpGet(path);
-		HttpResponse response = null;
-		try {
-		    response = client.execute(get);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			return false;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			return false;
-		}
-		if(response.getStatusLine().getStatusCode()==200){
-			return true;
-		}
-		
-		return false;
-	}
+   private boolean NetIsOnLine(String path) {
+      JSONObject jsonObject = NewsBaseApi.getJsonObject(path, null,
+            HttpMethod.HTTP_GET);
+//      return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
+//            : false;
+      return true;
+   }
 	
 	
 	/**
-	 * ÅĞ¶Ï·şÎñÆ÷ÍøÂç
+	 * é”Ÿå«æ–­å‡¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·
 	 * @param HttpPath
 	 */
 	public void ExecutNetTask(String HttpPath){
@@ -116,7 +92,6 @@ public class Net {
 
 		@Override
 		protected void onPostExecute(NetResult result) {
-			// TODO Auto-generated method stub
 			if(!result.isNetflag()){
 			   HandlerMessage(NetTipMessage_show, result.isNetflag());
 			} else {
@@ -128,7 +103,7 @@ public class Net {
 	}
 	
 	/**
-	 * ´«ËÍ¼ì²âĞÅÏ¢
+	 * é”Ÿæ–¤æ‹·é”Ÿé…µç¡·æ‹·é”Ÿæ–¤æ‹·é”Ÿè¾ƒï¿½
 	 * @param index
 	 * @param flag
 	 */

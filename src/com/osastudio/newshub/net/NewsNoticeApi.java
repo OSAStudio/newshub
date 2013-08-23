@@ -43,10 +43,8 @@ public class NewsNoticeApi extends NewsBaseApi {
       }
 
       NewsNoticeArticle result = new NewsNoticeArticle(jsonObject);
-      if (result != null) {
-//         result.setNewsBaseTitle(newsNotice);
-         result.setId(newsNotice.getId());
-      }
+//      result.setNewsBaseTitle(newsNotice);
+      result.setId(newsNotice.getId());
       return result;
    }
 

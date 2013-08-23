@@ -48,7 +48,7 @@ public class SubscriptionApi extends NewsBaseApi {
       }
 
       SubscriptionAbstractList result = new SubscriptionAbstractList(jsonObject);
-      if (result != null && result.getList().size() > 0) {
+      if (result.getList().size() > 0) {
          for (SubscriptionAbstract abs : result.getList()) {
             if (abs != null) {
                abs.setTopicId(newsTopic.getId());
@@ -83,9 +83,7 @@ public class SubscriptionApi extends NewsBaseApi {
       }
 
       SubscriptionArticle result = new SubscriptionArticle(jsonObject);
-      if (result != null) {
-         result.setNewsBaseAbstract(newsAbstract);
-      }
+      result.setNewsBaseAbstract(newsAbstract);
       return result;
    }
 

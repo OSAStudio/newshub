@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="#ffffffff">
 
     <TextView
         android:id="@+id/title_text"
@@ -24,7 +25,8 @@
         android:id="@+id/container0"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1" />
+        android:layout_weight="7" 
+        android:background="#ff3399ff"/>
 
     <ImageView
         android:layout_width="fill_parent"
@@ -34,7 +36,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="9"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -63,7 +65,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="9"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -84,22 +86,23 @@
             android:layout_weight="1.0" />
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@color/line_gray" />
+<!--     <ImageView -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="1px" -->
+<!--         android:background="@color/line_gray" /> -->
 
     <RelativeLayout
         android:id="@+id/container5"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1" />
+        android:layout_weight="6" 
+        android:visibility="gone"/>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bottom_dark"
-        android:gravity="right" >
+<!--     <RelativeLayout -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:background="@color/bottom_dark" -->
+<!--         android:gravity="right" > -->
 
         <TextView
             android:id="@+id/page"
@@ -110,16 +113,16 @@
             android:layout_marginLeft="30dp"
             android:gravity="center_vertical"
             android:text="1/1"
-            android:textColor="@color/white"
+            android:textColor="@color/text_gray"
             android:textSize="14dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/logo" />
-    </RelativeLayout>
+<!--         <ImageView -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_alignParentRight="true" -->
+<!--             android:layout_centerVertical="true" -->
+<!--             android:layout_marginRight="30dp" -->
+<!--             android:src="@drawable/logo" /> -->
+<!--     </RelativeLayout> -->
 
 </LinearLayout>
