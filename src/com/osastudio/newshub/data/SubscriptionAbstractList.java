@@ -10,12 +10,30 @@ import com.osastudio.newshub.data.base.NewsBaseAbstractList;
 
 public class SubscriptionAbstractList extends
       NewsBaseAbstractList<SubscriptionAbstract> {
+   
+   public static final String JSON_KEY_CHANNEL_NAME = "lssue_title";
+   public static final String JSON_KEY_CHANNEL_DESCRIPTION = "lssue_note";
+
+   private String channelName;
+   private String channelDesc;
+
+   public SubscriptionAbstractList() {
+      super();
+   }
 
    public SubscriptionAbstractList(JSONObject jsonObject) {
       super(jsonObject);
 
       if (isSuccess()) {
          try {
+            if (!jsonObject.isNull(JSON_KEY_CHANNEL_NAME)) {
+               setChannelName(jsonObject.getString(JSON_KEY_CHANNEL_NAME)
+                     .trim());
+            }
+            if (!jsonObject.isNull(JSON_KEY_CHANNEL_DESCRIPTION)) {
+               setChannelDesciption(jsonObject.getString(
+                     JSON_KEY_CHANNEL_DESCRIPTION).trim());
+            }
             if (!jsonObject.isNull(JSON_KEY_LIST)) {
                JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_LIST);
                SubscriptionAbstract abs = null;
@@ -39,6 +57,24 @@ public class SubscriptionAbstractList extends
 
          }
       }
+   }
+
+   public String getChannelName() {
+      return this.channelName;
+   }
+
+   public SubscriptionAbstractList setChannelName(String name) {
+      this.channelName = name;
+      return this;
+   }
+
+   public String getChannelDescription() {
+      return this.channelDesc;
+   }
+
+   public SubscriptionAbstractList setChannelDesciption(String desc) {
+      this.channelDesc = desc;
+      return this;
    }
 
 }
