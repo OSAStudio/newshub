@@ -148,7 +148,8 @@ public class SummaryActivity extends NewsBaseActivity {
 								mApp.getCurrentUserId(), mChannelId);
 				if (userIssueList != null) {
 					mSummaries = userIssueList.asNewsBaseAbstractList();
-					
+               mChannelTitle = userIssueList.getChannelName();
+               mChannelDsip = userIssueList.getChannelDescription();
 				}
 				break;
 			case Utils.LESSON_LIST_TYPE:
