@@ -1,13 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="fill_parent"
         android:background="@android:drawable/editbox_background_normal"
         android:orientation="vertical" >
 
@@ -17,7 +12,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:gravity="center_vertical" >
 
             <TextView
                 style="@style/text_black"
@@ -42,14 +38,15 @@
             android:orientation="vertical" >
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="3px"
+                android:layout_height="2px"
                 android:background="@drawable/line_bg" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:clickable="true"
-                android:orientation="horizontal" >
+                android:orientation="horizontal" 
+                android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_black"
@@ -75,14 +72,15 @@
             android:orientation="vertical" >
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="3px"
+                android:layout_height="2px"
                 android:background="@drawable/line_bg" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:clickable="true"
-                android:orientation="horizontal" >
+                android:orientation="horizontal" 
+                android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_black"
@@ -108,14 +106,15 @@
             android:orientation="vertical" >
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="3px"
+                android:layout_height="2px"
                 android:background="@drawable/line_bg" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:clickable="true"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:gravity="center_vertical" >
 
                 <TextView
                     style="@style/text_black"
@@ -141,13 +140,14 @@
             android:orientation="vertical" >
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="3px"
+                android:layout_height="2px"
                 android:background="@drawable/line_bg" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" >
 
                 <TextView
                     style="@style/text_black"
@@ -173,13 +173,14 @@
             android:orientation="vertical" >
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="3px"
+                android:layout_height="2px"
                 android:background="@drawable/line_bg" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" >
 
                 <TextView
                     style="@style/text_black"
@@ -202,18 +203,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical" 
-            android:visibility="gone" >
+            android:orientation="vertical"  
+            android:visibility="gone">
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="3px"
+                android:layout_height="2px"
                 android:background="@drawable/line_bg" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:clickable="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <TextView
                     style="@style/text_black"
@@ -231,5 +233,3 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-</LinearLayout>

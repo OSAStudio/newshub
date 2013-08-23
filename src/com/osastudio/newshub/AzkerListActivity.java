@@ -483,6 +483,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 
 				if (data.mBitmap != null && !data.mBitmap.isRecycled()) {
 					icon.setImageBitmap(data.mBitmap);
+				} else {
+				   icon.setImageBitmap(null);
 				}
 				if (data.mTitle != null) {
 					title.setText(data.mTitle);
