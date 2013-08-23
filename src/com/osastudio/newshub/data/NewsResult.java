@@ -3,6 +3,8 @@ package com.osastudio.newshub.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.TextUtils;
+
 public class NewsResult implements ResultCode {
 
    public static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
@@ -99,6 +101,20 @@ public class NewsResult implements ResultCode {
    
    public static int resultCode2HttpCode(int resultCode) {
       return resultCode - RESULT_HTTP_BASE;
+   }
+   
+   public static JSONObject toJsonObject(String jsonString) {
+      if (!TextUtils.isEmpty(jsonString)) {
+         try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            if (jsonObject.length() > 0) {
+               return jsonObject;
+            }
+         } catch (JSONException e) {
+            
+         }
+      }
+      return null;
    }
    
 }
