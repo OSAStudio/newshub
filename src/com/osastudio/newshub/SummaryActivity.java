@@ -32,6 +32,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	public static final String CHANNEL_TYPE = "Channel_type";
 	public static final String CHANNEL_ID = "Channel_id";
 	public static final String CHANNEL_TITLE = "Channel_title";
+	
 
 	private NewsApp mApp = null;
 	private int mChannelType;
@@ -322,10 +323,10 @@ public class SummaryActivity extends NewsBaseActivity {
 				tv.setTextColor(Color.WHITE);
 				tv.setTextSize(24);
 				tv.setText(Html.fromHtml(mChannelTitle));
-				
+				tv.setShadowLayer(2, 2, 2, Utils.COLOT_TEXT_GRAY);
 				sub.setTextColor(Color.WHITE);
 				sub.setText(Html.fromHtml(mChannelDsip));
-				summary.setBackgroundColor(color.transparent);
+				sub.setShadowLayer(1, 1, 1, Utils.COLOT_TEXT_GRAY);
 			} else {
 				int index = mPage * 4 + position-1;
 				if (index < mSummaries.size()) {

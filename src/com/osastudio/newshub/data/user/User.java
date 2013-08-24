@@ -7,8 +7,8 @@ import com.osastudio.newshub.data.base.NewsBaseObject;
 
 public class User extends NewsBaseObject {
 
-   public static final String FEMALE_NAME = "å¥³";
-   public static final String MALE_NAME = "ç”·";
+   public static final String FEMALE_NAME = "Å®";
+   public static final String MALE_NAME = "ÄÐ";
 
    public static final String JSON_KEY_BIRTHDAY = "birthday";
    public static final String JSON_KEY_CLASS_NAME = "class_name";
