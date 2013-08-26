@@ -20,7 +20,7 @@ public class PreferenceManager implements AppSettings {
       public static final String FONT_SIZE = "font_size";
       public static final String AUTO_LOADING_PICTURE = "auto_loading_picture";
       public static final String USER_ID = "user_id";
-      public static final String MESSAGE_SCHEDULE = "message_schedule";
+      public static final String MESSAGE_USER_IDS = "message_user_ids";
    }
 
    public PreferenceManager(Context context) {
@@ -127,7 +127,7 @@ public class PreferenceManager implements AppSettings {
    public String getMessageScheduleUserIds() {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
-         return prefs.getString(PreferenceItems.MESSAGE_SCHEDULE, "");
+         return prefs.getString(PreferenceItems.MESSAGE_USER_IDS, "");
       }
       return "";
    }
@@ -135,7 +135,7 @@ public class PreferenceManager implements AppSettings {
    public boolean setMessageScheduleUserIds(String value) {
       SharedPreferences prefs = getAppSettingsPrefs();
       if (prefs != null) {
-         return prefs.edit().putString(PreferenceItems.MESSAGE_SCHEDULE, value)
+         return prefs.edit().putString(PreferenceItems.MESSAGE_USER_IDS, value)
                .commit();
       }
       return false;
