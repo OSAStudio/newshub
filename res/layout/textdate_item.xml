@@ -78,7 +78,7 @@
         android:padding="5dp"
         android:text="sub_title"
         android:textColor="@color/white"
-        android:background="@color/bg_gray"
+        android:background="#ff999999"
         android:textSize="18sp"
         android:visibility="gone" />
 

@@ -52,6 +52,8 @@ public class Utils {
    final static public int MESSAGE_SEND_TYPE_DAILY_REMINDER = 3;
    final static public int MESSAGE_SEND_TYPE_RECOMMEND = 4;
    final static public int MESSAGE_SEND_TYPE_LESSON = 5;
+   
+   final static public int COLOT_TEXT_GRAY = 0Xff3f3f51;
 	
 
 	public static final String ROOT = Environment.getExternalStorageDirectory()

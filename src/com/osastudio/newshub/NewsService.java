@@ -6,6 +6,7 @@ import com.osastudio.newshub.data.AppProperties;
 import com.osastudio.newshub.data.NewsMessage;
 import com.osastudio.newshub.data.NewsMessageList;
 import com.osastudio.newshub.data.NewsMessageSchedule;
+import com.osastudio.newshub.data.NewsMessageScheduleList;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.UpgradeManager;
 import com.osastudio.newshub.net.AppDeadlineApi;
@@ -39,6 +40,7 @@ public class NewsService extends Service {
    private static final String ACTION_PULL_NEWS_MESSAGE = "com.osastudio.newshub.action.PULL_NEWS_MESSAGE";
    private static final long RETRY_DELAYED_MILLIS = DateUtils.MINUTE_IN_MILLIS * 10;
    private static final int NEWS_MESSAGE_NOTIFICATION = 1300;
+   private static final String SEPARATOR = ",";
 
    private Handler mHandler = new Handler();
    private UpgradeManager mUpgradeManager;
@@ -172,9 +174,16 @@ public class NewsService extends Service {
       public void checkNewsMessage() {
          PreferenceManager prefsManager = ((NewsApp) getApplication())
                .getPrefsManager();
+
+         String str = prefsManager.getMessageScheduleUserIds();
+         String[] userIds = str.split(SEPARATOR);
+         if (userIds != null && userIds.length > 0) {
+
+         }
+
          String userId = prefsManager.getUserId();
          if (!TextUtils.isEmpty(userId)) {
-            String str = prefsManager.getMessageScheduleString();
+            str = prefsManager.getMessageScheduleByUserId(userId);
             NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
             if (schedule != null && schedule.isToday()) {
                analyzeNewsMessageSchedule(userId, schedule);
@@ -210,7 +219,7 @@ public class NewsService extends Service {
 
    private void requestNewsMessageSchedule(String userId) {
       Utils.logi(TAG, "requestNewsMessageSchedule");
-      new NewsMessagescheduleTask(mHandler, this, userId).start();
+      new NewsMessageScheduleTask(mHandler, this, userId).start();
    }
 
    private void checkNewsMessageSchedule() {
@@ -220,7 +229,7 @@ public class NewsService extends Service {
       String userId = prefsManager.getUserId();
       Utils.logi(TAG, "checkNewsMessageSchedule: userId=" + userId);
       if (!TextUtils.isEmpty(userId)) {
-         String str = prefsManager.getMessageScheduleString();
+         String str = prefsManager.getMessageScheduleByUserId(userId);
          Utils.logi(TAG, "checkNewsMessageSchedule: schedule=" + str);
          NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
          if (schedule == null || !schedule.isToday()) {
@@ -293,6 +302,8 @@ public class NewsService extends Service {
       Bundle extras = new Bundle();
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
+      extras.putString(CategoryActivity.MESSAGE_USER_ID, msg.getUserId());
+      extras.putString(CategoryActivity.MESSAGE_USER_NAME, msg.getUserName());
       intent.putExtras(extras);
       intent.setData(Uri.parse("msg:" + msg));
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -408,31 +419,50 @@ public class NewsService extends Service {
 
    }
 
-   private class NewsMessagescheduleTask extends NewsTask<NewsMessageSchedule> {
+   private class NewsMessageScheduleTask extends
+         NewsTask<NewsMessageScheduleList> {
 
       private String userId;
 
-      public NewsMessagescheduleTask(Handler handler, Context context,
+      public NewsMessageScheduleTask(Handler handler, Context context,
             String userId) {
          super(handler, context);
          this.userId = userId;
       }
 
       @Override
-      public NewsMessageSchedule doInBackground() {
-         return NewsMessageApi
-               .getNewsMessageSchedule(this.context, this.userId);
+      public NewsMessageScheduleList doInBackground() {
+         return NewsMessageApi.getNewsMessageScheduleList(this.context);
       }
 
       @Override
-      public void onPostExecute(NewsMessageSchedule result) {
-         if (result != null) {
+      public void onPostExecute(NewsMessageScheduleList result) {
+         if (result != null && result.getList() != null
+               && result.getList().size() > 0) {
             PreferenceManager prefsManager = ((NewsApp) NewsService.this
                   .getApplication()).getPrefsManager();
-            result.setBaseMillis(System.currentTimeMillis());
-            result.setCount(0);
-            prefsManager.setMessageScheduleString(result.toString());
-            analyzeNewsMessageSchedule(this.userId, result);
+            StringBuilder builder = new StringBuilder();
+            NewsMessageSchedule target = null;
+            for (int i = 0; i < result.getList().size(); i++) {
+               NewsMessageSchedule schedule = result.getList().get(i);
+               if (schedule.getUserId().equals(this.userId)) {
+                  target = schedule;
+               }
+
+               schedule.setBaseMillis(System.currentTimeMillis());
+               schedule.setCount(0);
+               prefsManager.setMessageScheduleByUserId(schedule.getUserId(),
+                     schedule.toString());
+
+               builder.append(schedule.getUserId());
+               if (i < result.getList().size() - 1) {
+                  builder.append(SEPARATOR);
+               }
+            }
+            prefsManager.setMessageScheduleUserIds(builder.toString());
+            if (target != null) {
+               analyzeNewsMessageSchedule(this.userId, target);
+            }
          }
       }
 
@@ -472,17 +502,20 @@ public class NewsService extends Service {
          PreferenceManager prefsManager = ((NewsApp) NewsService.this
                .getApplication()).getPrefsManager();
          NewsMessageSchedule schedule = NewsMessageSchedule
-               .parseString(prefsManager.getMessageScheduleString());
+               .parseString(prefsManager
+                     .getMessageScheduleByUserId(this.userId));
          if (result != null && result.isSuccess()) {
             if (schedule != null) {
                schedule.setCount(3);
-               prefsManager.setMessageScheduleString(schedule.toString());
+               prefsManager.setMessageScheduleByUserId(this.userId,
+                     schedule.toString());
             }
             notifyNewsMessage(result);
          } else {
             if (schedule != null) {
                schedule.setCount(this.count);
-               prefsManager.setMessageScheduleString(schedule.toString());
+               prefsManager.setMessageScheduleByUserId(this.userId,
+                     schedule.toString());
             }
             if (this.retryIfFailed) {
                if (this.retryDelayedMillis > 0) {

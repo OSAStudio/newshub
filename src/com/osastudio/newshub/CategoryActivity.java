@@ -102,6 +102,8 @@ public class CategoryActivity extends NewsBaseActivity {
    public static final String LAUNCHER = "launcher";
    public static final String MESSAGE_SEND_TYPE = "message_send_type";
    public static final String MESSAGE_SERVICE_ID = "service_id";
+   public static final String MESSAGE_USER_ID = "student_id";
+   public static final String MESSAGE_USER_NAME = "student_name";
 
    private AppProperties mAppProperties = null;
    private Bitmap mReceiveBmp = null;

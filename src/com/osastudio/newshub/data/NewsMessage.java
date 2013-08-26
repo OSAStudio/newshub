@@ -14,7 +14,7 @@ public class NewsMessage extends NewsBaseObject implements NewsId, Parcelable {
    private static final String JSON_KEY_CONTENT = "message_content";
    private static final String JSON_KEY_ID = "service_id";
    private static final String JSON_KEY_TYPE = "message_class";
-   
+
    public static final int MSG_TYPE_NOTICE = 1;
    public static final int MSG_TYPE_NOTICE_FEEDBACK = 2;
    public static final int MSG_TYPE_DAILY_REMINDER = 3;
@@ -24,6 +24,8 @@ public class NewsMessage extends NewsBaseObject implements NewsId, Parcelable {
    private String content = "";
    private String id = "";
    private int type = 0;
+   private String userId = "";
+   private String userName = "";
 
    public NewsMessage() {
 
@@ -62,6 +64,24 @@ public class NewsMessage extends NewsBaseObject implements NewsId, Parcelable {
       return this;
    }
 
+   public String getUserId() {
+      return this.userId;
+   }
+
+   public NewsMessage setUserId(String userId) {
+      this.userId = userId;
+      return this;
+   }
+
+   public String getUserName() {
+      return this.userName;
+   }
+
+   public NewsMessage setUserName(String userName) {
+      this.userName = userName;
+      return this;
+   }
+
    @Override
    public int describeContents() {
       return 0;
@@ -79,6 +99,12 @@ public class NewsMessage extends NewsBaseObject implements NewsId, Parcelable {
          if (!jsonObject.isNull(JSON_KEY_TYPE)) {
             result.setType(Integer.valueOf(jsonObject.getString(JSON_KEY_TYPE)
                   .trim()));
+         }
+         if (!jsonObject.isNull(JSON_KEY_USER_ID)) {
+            result.setUserId(jsonObject.getString(JSON_KEY_USER_ID).trim());
+         }
+         if (!jsonObject.isNull(JSON_KEY_USER_NAME)) {
+            result.setUserName(jsonObject.getString(JSON_KEY_USER_NAME).trim());
          }
       } catch (JSONException e) {
 
