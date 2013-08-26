@@ -310,12 +310,15 @@ public class NewsService extends Service {
 
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis) {
-      Utils.logi(TAG, "requestNewsMessageList: count=" + count);
-      NewsMessageListTask task = new NewsMessageListTask(mHandler, this, userId);
-      task.setCount(count);
-      task.setRetryIfFailed(retryIfFailed);
-      task.setRetryDelayedMillis(retryDelayedMillis);
-      task.start();
+      if (NetworkHelper.isNetworkAvailable(NewsService.this)) {
+         Utils.logi(TAG, "requestNewsMessageList: count=" + count);
+         NewsMessageListTask task = new NewsMessageListTask(mHandler, this,
+               userId);
+         task.setCount(count);
+         task.setRetryIfFailed(retryIfFailed);
+         task.setRetryDelayedMillis(retryDelayedMillis);
+         task.start();
+      }
    }
 
    private void requestNewsMessageList(String userId, int count) {
@@ -404,12 +407,11 @@ public class NewsService extends Service {
                TAG,
                "_______________onReceive: " + action + " "
                      + System.currentTimeMillis());
-         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)
+               || ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
             if (NetworkHelper.isNetworkAvailable(context)) {
-
+               checkNewsMessageSchedule();
             }
-         } else if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
-            checkNewsMessageSchedule();
          } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
             String userId = intent.getStringExtra("userId");
             int count = intent.getIntExtra("count", 1);
