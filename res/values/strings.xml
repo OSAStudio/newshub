@@ -53,6 +53,7 @@
     <string name="msg_other_phonenum">此设备已使用过其他手机号注册</string><!-- 116  -->
     <string name="msg_user_forbidden">您已被禁止使用，请联系客服处理</string><!-- status=4  -->
     <string name="msg_user_no_authority">您的服务期限已过，请续费</string><!-- status=5 -->
+    <string name="msg_userid_no_authority">该账户的服务期限已过</string><!-- status=5 -->
     
     <string name="msg_without_regist">未注册完成，即将退出。</string>
     

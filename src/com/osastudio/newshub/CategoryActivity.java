@@ -319,9 +319,9 @@ public class CategoryActivity extends NewsBaseActivity {
 
    @Override
    public void onBackPressed() {
-      if (!mIsLoadFinish) {
-         return;
-      }
+//      if (!mIsLoadFinish) {
+//         return;
+//      }
       View cover = findViewById(R.id.cover_layout);
       if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
          hideCover();
@@ -738,7 +738,6 @@ public class CategoryActivity extends NewsBaseActivity {
          } else {
             mActivateEdit.init();
          }
-         super.onPostExecute(result);
       }
    }
 
@@ -824,7 +823,7 @@ public class CategoryActivity extends NewsBaseActivity {
                return mAppProperties;
             }
          case 1:
-            if (mApp.getCurrentUserId() != null) {
+            if (mApp.getCurrentUserId() != null && !mApp.getCurrentUserId().equals("")) {
                NewsChannelList channel_list = NewsChannelApi
                      .getNewsChannelList(getApplicationContext(),
                            mApp.getCurrentUserId());
@@ -889,12 +888,13 @@ public class CategoryActivity extends NewsBaseActivity {
          if (result != null ) {
             super.onPostExecute(result);
          }
-         if (result == null || result.isSuccess()){
-            mIsLoadFinish = true;
-            if (mDlg != null) {
-               Utils.closeProgressDlg(mDlg);
-               mDlg = null;
-            }
+
+         mIsLoadFinish = true;
+         if (mDlg != null) {
+            Utils.closeProgressDlg(mDlg);
+            mDlg = null;
+         }
+//         if (result == null || result.isSuccess()){
             if (mUserStatus == 4) {
                String msg = CategoryActivity.this.getString(R.string.msg_user_forbidden);
                Utils.ShowConfirmDialog(CategoryActivity.this, msg, new DialogConfirmCallback() {
@@ -926,7 +926,7 @@ public class CategoryActivity extends NewsBaseActivity {
                mLoadBitmapTask = new LoadBitmapTask();
                mLoadBitmapTask.execute();
             }
-         }
+//         }
          mTask = null;
          
       }
