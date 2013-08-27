@@ -187,14 +187,17 @@ public class NewsService extends Service {
 
       @Override
       public void run() {
+         Utils.logi(TAG, "checkNewsMessage");
          PreferenceManager prefsManager = ((NewsApp) getApplication())
                .getPrefsManager();
 
          String str = prefsManager.getMessageScheduleUserIds();
+         String currUserId = prefsManager.getUserId();
          String[] userIds = str.split(SEPARATOR);
-         if (userIds != null && userIds.length > 0) {
-            String currUserId = prefsManager.getUserId();
-            boolean syncSchedule = false;
+         boolean syncSchedule = false;
+         Utils.logi(TAG, "checkNewsMessage: " + "userIds=" + str
+               + " currUserId=" + currUserId);
+         if (!TextUtils.isEmpty(str) && userIds != null && userIds.length > 0) {
             for (int i = 0; i < userIds.length; i++) {
                String userId = userIds[i];
                if (!TextUtils.isEmpty(userId)) {
@@ -211,10 +214,13 @@ public class NewsService extends Service {
                   }
                }
             }
-            if (syncSchedule) {
-               if (!TextUtils.isEmpty(currUserId)) {
-                  requestNewsMessageSchedule(currUserId);
-               }
+         } else {
+            syncSchedule = true;
+         }
+
+         if (syncSchedule) {
+            if (!TextUtils.isEmpty(currUserId)) {
+               requestNewsMessageSchedule(currUserId);
             }
          }
       }
