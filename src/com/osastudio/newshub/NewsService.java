@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -218,9 +217,9 @@ public class NewsService extends Service {
          }
 
          if (syncSchedule) {
-            if (!TextUtils.isEmpty(currUserId)) {
-               requestNewsMessageSchedule(currUserId);
-            }
+            // if (!TextUtils.isEmpty(currUserId)) {
+            requestNewsMessageSchedule(currUserId);
+            // }
          }
       }
 
@@ -251,11 +250,6 @@ public class NewsService extends Service {
 
    private void requestNewsMessageSchedule(String userId) {
       if (mRequestNewsMessageScheduleRunnable == null) {
-         mRequestNewsMessageScheduleRunnable = new RequestNewsMessageScheduleRunnable(
-               userId);
-      }
-      if (!mRequestNewsMessageScheduleRunnable.getUserId().equals(userId)) {
-         mHandler.removeCallbacks(mRequestNewsMessageScheduleRunnable);
          mRequestNewsMessageScheduleRunnable = new RequestNewsMessageScheduleRunnable(
                userId);
       }
@@ -335,14 +329,14 @@ public class NewsService extends Service {
    private void schedulePullingNewsMessage(String userId, long scheduleMillis,
          int count) {
       Utils.logi(TAG, "schedulePullingNewsMessage: userId=" + userId
-            + " count=" + count);
+            + " count=" + count + " scheduleMillis=" + scheduleMillis);
       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
       intent.setAction(ACTION_PULL_NEWS_MESSAGE);
       intent.putExtra("userId", userId);
       intent.putExtra("count", count);
-      PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent,
-            PendingIntent.FLAG_CANCEL_CURRENT);
+      PendingIntent pi = PendingIntent.getBroadcast(this, userId.hashCode(), intent,
+            PendingIntent.FLAG_UPDATE_CURRENT);
       alarmManager.cancel(pi);
       alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pi);
    }
@@ -353,7 +347,7 @@ public class NewsService extends Service {
          Notification noti = new Notification(R.drawable.noti,
                getString(R.string.news_message_prompt_title),
                System.currentTimeMillis());
-         PendingIntent pi = PendingIntent.getActivity(this, 0,
+         PendingIntent pi = PendingIntent.getActivity(this, msg.hashCode(),
                getNewsMessageLaunchIntent(msg),
                PendingIntent.FLAG_UPDATE_CURRENT);
          noti.setLatestEventInfo(this, msg.getContent(),
@@ -361,7 +355,7 @@ public class NewsService extends Service {
          noti.flags |= Notification.FLAG_AUTO_CANCEL;
          NotificationManager manager = (NotificationManager) getApplicationContext()
                .getSystemService(Context.NOTIFICATION_SERVICE);
-         manager.notify(NEWS_MESSAGE_NOTIFICATION + i, noti);
+         manager.notify(msg.hashCode(), noti);
       }
    }
 
@@ -374,7 +368,6 @@ public class NewsService extends Service {
       extras.putString(CategoryActivity.MESSAGE_USER_ID, msg.getUserId());
       extras.putString(CategoryActivity.MESSAGE_USER_NAME, msg.getUserName());
       intent.putExtras(extras);
-      intent.setData(Uri.parse("msg:" + msg));
       intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       return intent;
    }
@@ -399,12 +392,6 @@ public class NewsService extends Service {
       default:
          return "";
       }
-   }
-
-   private void clearNewsMessageNotification() {
-      NotificationManager manager = (NotificationManager) getApplicationContext()
-            .getSystemService(Context.NOTIFICATION_SERVICE);
-      manager.cancel(NEWS_MESSAGE_NOTIFICATION);
    }
 
    private class NewsReceiver extends BroadcastReceiver {
@@ -522,7 +509,7 @@ public class NewsService extends Service {
                schedule.setCount(0);
                prefsManager.setMessageScheduleByUserId(schedule.getUserId(),
                      schedule.toString());
-               
+
                analyzeNewsMessageSchedule(schedule.getUserId(), schedule);
 
                builder.append(schedule.getUserId());
