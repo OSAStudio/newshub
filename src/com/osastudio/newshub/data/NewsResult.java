@@ -87,7 +87,9 @@ public class NewsResult implements ResultCode {
             || this.resultCode == RESULT_ILLEGAL_DEVICE
             || this.resultCode == RESULT_MAX_ACCOUNT_REACHED
             || this.resultCode == RESULT_NOTICE_ALREADY_FEEDBACK
-            || this.resultCode == RESULT_NO_SUBSCRIPTION) {
+            || this.resultCode == RESULT_NO_SUBSCRIPTION
+            || this.resultCode == RESULT_PHONE_NUMBER_ALREADY_REGISTERED
+            || this.resultCode == RESULT_DEVICE_ALREADY_BOUND_PHONE_NUMBER) {
          return true;
       }
       return false;
