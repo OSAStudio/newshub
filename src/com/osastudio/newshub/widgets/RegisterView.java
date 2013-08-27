@@ -29,6 +29,7 @@ import com.osastudio.newshub.data.user.SchoolTypeList;
 import com.osastudio.newshub.data.user.SchoolYear;
 import com.osastudio.newshub.data.user.SchoolYearlist;
 import com.osastudio.newshub.net.UserApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 
@@ -284,7 +285,7 @@ public class RegisterView extends Dialog {
 		params.userName = userName;
 		params.yearId = mGradeId;
 		if (mRegistTask == null) {
-			mRegistTask = new RegistTask();
+			mRegistTask = new RegistTask(mContext);
 			mRegistTask.execute(params);
 			if (mDlg == null) {
 				mDlg = Utils.showProgressDlg(mContext, null);
@@ -425,9 +426,13 @@ public class RegisterView extends Dialog {
 	}
 
 	private class RegistTask extends
-			AsyncTask<RegisterParameters, Void, NewsResult> {
+	   NewsResultAsyncTask<RegisterParameters, Void, NewsResult> {
 
-		@Override
+		public RegistTask(Context context) {
+         super(context);
+      }
+
+      @Override
 		protected NewsResult doInBackground(RegisterParameters... params) {
 			RegisterParameters param = params[0];
 			NewsResult result;
@@ -440,51 +445,42 @@ public class RegisterView extends Dialog {
 		}
 
 		@Override
-		protected void onPostExecute(NewsResult result) {
+		public void onPostExecute(NewsResult result) {
 			mRegistTask = null;
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
 			}
-			if (result == null || result.isFailure()) {
-				int msgId = 0;
-				if (mUserType.equals(USER_TYPE.REGISTER)) {
-					msgId = R.string.msg_register_error;
-				} else {
-					msgId = R.string.msg_add_account_error;
-				}
-				String msg = mContext.getString(msgId);
-				if (msg != null) {
-					Utils.ShowConfirmDialog(mContext, msg, null);
-				}
 
-			} else if ((result instanceof RegisterResult)
-					&& ((RegisterResult) result).getUserId() == null) {
-				String msg = mContext.getString(R.string.msg_register_error);
-				if (msg != null) {
-					Utils.ShowConfirmDialog(mContext, msg, null);
-				}
-			} else {
-				int msgId;
-				if (mUserType.equals(USER_TYPE.REGISTER)) {
-					String userid = ((RegisterResult) result).getUserId();
-					((NewsApp) ((Activity) mContext).getApplication())
-							.setCurrentUserId(userid);
-					msgId = R.string.regist_success_msg;
-				} else {
-					msgId = R.string.adduser_success_msg;
-				}
-				Utils.ShowConfirmDialog(mContext, mContext.getString(msgId),
-						new DialogConfirmCallback() {
-							public void onConfirm(DialogInterface dialog) {
-								RegisterView.this.dismiss();
-								if (mCallback != null) {
-									mCallback.onConfirm(dialog);
-								}
-							} 
-						});
+         super.onPostExecute(result);
+			if (result.isSuccess()) {
+   			if ((result instanceof RegisterResult)
+   					&& ((RegisterResult) result).getUserId() == null) {
+   				String msg = mContext.getString(R.string.msg_register_error);
+   				if (msg != null) {
+   					Utils.ShowConfirmDialog(mContext, msg, null);
+   				}
+   			} else {
+   				int msgId;
+   				if (mUserType.equals(USER_TYPE.REGISTER)) {
+   					String userid = ((RegisterResult) result).getUserId();
+   					((NewsApp) ((Activity) mContext).getApplication())
+   							.setCurrentUserId(userid);
+   					msgId = R.string.regist_success_msg;
+   				} else {
+   					msgId = R.string.adduser_success_msg;
+   				}
+   				Utils.ShowConfirmDialog(mContext, mContext.getString(msgId),
+   						new DialogConfirmCallback() {
+   							public void onConfirm(DialogInterface dialog) {
+   								RegisterView.this.dismiss();
+   								if (mCallback != null) {
+   									mCallback.onConfirm(dialog);
+   								}
+   							} 
+   						});
+   			}
 			}
-			super.onPostExecute(result);
 		}
 
 		@Override

@@ -10,8 +10,10 @@ import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.NoticeResult;
+import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.net.NewsArticleApi;
 import com.osastudio.newshub.net.NewsNoticeApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 
 import android.app.Activity;
@@ -79,7 +81,7 @@ public class FileView extends LinearLayout {
 		mPraiseBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				
-				new PraiseTask().execute();
+				new PraiseTask(mContext).execute();
 			}
 		});
 		setupWebView();
@@ -210,9 +212,15 @@ public class FileView extends LinearLayout {
 		}
 	}
 
-	private class PraiseTask extends AsyncTask<Void, Void, NewsResult> {
+	
+	private class PraiseTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
 
-		@Override
+		public PraiseTask(Context context) {
+         super(context);
+         // TODO Auto-generated constructor stub
+      }
+
+      @Override
 		protected NewsResult doInBackground(Void... params) {
 			NewsResult result=null;
 			if (!((Activity) mContext).isFinishing()) {
@@ -230,18 +238,13 @@ public class FileView extends LinearLayout {
 			}
 			return result;
 		}
+      
 		
 		@Override
-		protected void onPostExecute(NewsResult result) {
+		public void onPostExecute(NewsResult result) {
 			int msgId = -1;
 			if (!((Activity) mContext).isFinishing()) {
-				if (result instanceof NoticeResult) {
-					if (((NoticeResult)result).alreadyFeedback()) {
-						msgId = R.string.notice_already_feedback;
-					} else if (result.isSuccess()) {
-						msgId = R.string.notice_feedback;
-					}
-				} else if (result.isSuccess()){
+				if (result.isSuccess()){
 					msgId = R.string.praise;
 				}
 				if (msgId > 0) {

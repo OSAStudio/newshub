@@ -12,6 +12,7 @@ import com.osastudio.newshub.data.NewsColumnist;
 import com.osastudio.newshub.data.NewsColumnistList;
 import com.osastudio.newshub.data.NewsNotice;
 import com.osastudio.newshub.data.NewsNoticeList;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.RecommendedTopicList;
 import com.osastudio.newshub.data.SubscriptionTopic;
@@ -21,11 +22,13 @@ import com.osastudio.newshub.net.NewsColumnistApi;
 import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.FileView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -96,7 +99,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mListType = extras.getInt(LIST_TYPE);
 			mTitle = extras.getString(LIST_TITLE);
 			findViews();
-			mLoadTask = new LoadTask();
+			mLoadTask = new LoadTask(this);
 			mLoadTask.execute();
 			mDlg = Utils.showProgressDlg(this, null);
 		}
@@ -117,7 +120,7 @@ public class AzkerListActivity extends NewsBaseActivity {
          mListType = extras.getInt(LIST_TYPE);
          mTitle = extras.getString(LIST_TITLE);
          findViews();
-         mLoadTask = new LoadTask();
+         mLoadTask = new LoadTask(this);
          mLoadTask.execute();
          mDlg = Utils.showProgressDlg(this, null);
       }
@@ -199,11 +202,16 @@ public class AzkerListActivity extends NewsBaseActivity {
 	}
 	
 
-	private class LoadTask extends AsyncTask<Void, Void, Boolean> {
+	private class LoadTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
 
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			boolean rtn = false;
+		public LoadTask(Context context) {
+         super(context);
+         // TODO Auto-generated constructor stub
+      }
+
+      @Override
+		protected NewsResult doInBackground(Void... params) {
+         NewsResult rtn = null;
 			switch (mListType) {
 			case Utils.RECOMMEND_LIST_TYPE:
 				rtn = getRecommendListData();
@@ -229,13 +237,23 @@ public class AzkerListActivity extends NewsBaseActivity {
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		public void onPostExecute(NewsResult result) {
 			mLoadTask = null;
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
 			}
-			if (result) {
+			if (result.isFailure()) {
+			   String msg = Utils.getErrorResultMsg(AzkerListActivity.this, result.getResultCode());
+			   if (msg != null) {
+			      Utils.ShowConfirmDialog(AzkerListActivity.this, msg, new DialogConfirmCallback() {
+                  
+                  public void onConfirm(DialogInterface dialog) {
+                    AzkerListActivity.this.finish();
+                  }
+               });
+			   }
+			}else if (mListDatas != null && mListDatas.size() > 0) {
 				switch (mListType) {
 				case Utils.RECOMMEND_LIST_TYPE:
 				case Utils.EXPERT_LIST_TYPE:
@@ -296,7 +314,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 
 	}
 
-	private boolean getRecommendListData() {
+	private NewsResult getRecommendListData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
 			mListDatas = null;
@@ -319,14 +337,14 @@ public class AzkerListActivity extends NewsBaseActivity {
 						cacheList.add(new TempCacheData(topic.getId()));
 					}
 					mApp.setTempCache(cacheList);
-					return true;
 				}
 			}
+	      return list;
 		}
-		return false;
+		return null;
 	}
 
-	private boolean getExpertListData() {
+	private NewsResult getExpertListData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
 			mListDatas = null;
@@ -350,14 +368,15 @@ public class AzkerListActivity extends NewsBaseActivity {
 						cacheList.add(new TempCacheData(expert.getId()));
 					}
 					mApp.setTempCache(cacheList);
-					return true;
+					
 				}
 			}
+			return list;
 		}
-		return false;
+		return null;
 	}
 
-	private boolean getUserIssuesData() {
+	private NewsResult getUserIssuesData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
 			mListDatas = null;
@@ -377,14 +396,15 @@ public class AzkerListActivity extends NewsBaseActivity {
 						mListDatas.add(new ListData(userIssue.getId(),
 								userIssue.getTitle(), userIssue.getIconUrl()));
 					}
-					return true;
 				}
+
 			}
+         return list;
 		}
-		return false;
+		return null;
 	}
 
-	private boolean getNoticeListData() {
+	private NewsResult getNoticeListData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
 			mListDatas = null;
@@ -407,16 +427,17 @@ public class AzkerListActivity extends NewsBaseActivity {
 						cacheList.add(new TempCacheData(notice.getId()));
 					}
 					mApp.setTempCache(cacheList);
-					return true;
 				}
 			}
+
+         return list;
 		}
-		return false;
+		return null;
 	}
 
 	private List<DailyReminder> mDailyReminderList = null;
 
-	private boolean getDailyReminderData() {
+	private NewsResult getDailyReminderData() {
 		if (mListDatas != null) {
 			mListDatas.clear();
 			mListDatas = null;
@@ -445,11 +466,11 @@ public class AzkerListActivity extends NewsBaseActivity {
 						// String id, String title, String iconUrl,
 						// String subTitle, String date, String dateNum
 					}
-					return true;
 				}
 			}
+         return list;
 		}
-		return false;
+		return null;
 	}
 
 	private class IconTextAdapter extends BaseAdapter {

@@ -13,6 +13,7 @@ import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsChannelList;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
@@ -23,6 +24,7 @@ import com.osastudio.newshub.net.NewsBaseApi;
 import com.osastudio.newshub.net.NewsChannelApi;
 import com.osastudio.newshub.net.UserApi;
 import com.osastudio.newshub.utils.NetworkHelper;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.AzkerGridLayout;
@@ -294,9 +296,11 @@ public class CategoryActivity extends NewsBaseActivity {
       if (extras != null) {
          // mIsLauncher = extras.getBoolean(LAUNCHER);
          mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
-         mServiceID = extras.getString(MESSAGE_SERVICE_ID);
-         if (mMessageType >= 0 && mServiceID != null) {
+         mServiceID = extras.getString(MESSAGE_SERVICE_ID);String userID = extras.getString(MESSAGE_USER_ID);
+         
+         if (userID != null && mMessageType >= 0 && mServiceID != null) {
             mNeedJump = true;
+            mApp.setCurrentUserId(userID);
             View cover = findViewById(R.id.cover_layout);
             cover.setVisibility(View.GONE);
          }
@@ -457,7 +461,7 @@ public class CategoryActivity extends NewsBaseActivity {
          public void onClick(View v) {
             String activate_str = mActivateEdit.getResult();
             if (activate_str != null && !activate_str.equals("")) {
-               new ActivateTask().execute(activate_str);
+               new ActivateTask(CategoryActivity.this).execute(activate_str);
             }
 
          }
@@ -670,7 +674,7 @@ public class CategoryActivity extends NewsBaseActivity {
          }
       }
 
-      mTask = new LoadDataTask();
+      mTask = new LoadDataTask(this);
       mTask.execute(stage);
    }
 
@@ -712,27 +716,26 @@ public class CategoryActivity extends NewsBaseActivity {
       }
    }
 
-   private class ActivateTask extends AsyncTask<String, Void, Boolean> {
-      ValidateResult mResult = null;
-      @Override
-      protected Boolean doInBackground(String... params) {
-         mResult = UserApi.validate(getApplicationContext(),
-               params[0]);
-         return mResult.isValidated();
+   private class ActivateTask extends NewsResultAsyncTask<String, Void, NewsResult> {
+      public ActivateTask(Context context) {
+         super(context);
+         // TODO Auto-generated constructor stub
       }
 
       @Override
-      protected void onPostExecute(Boolean result) {
-         if (result) {
+      protected NewsResult doInBackground(String... params) {
+         return UserApi.validate(getApplicationContext(),
+               params[0]);
+      }
+
+      @Override
+      public void onPostExecute(NewsResult rtn) {
+         super.onPostExecute(rtn);
+         ValidateResult result = (ValidateResult)rtn;
+         if (result.isSuccess()) {
             mActivateLayout.setVisibility(View.GONE);
             showRegisterView();
          } else {
-            int code = mResult.getResultCode();
-            String msg = Utils.getErrorResultMsg(CategoryActivity.this, code);
-            if (msg == null) {
-               msg = CategoryActivity.this.getString(R.string.msg_activate_error);
-            }
-            Utils.ShowConfirmDialog(CategoryActivity.this, msg, null);
             mActivateEdit.init();
          }
          super.onPostExecute(result);
@@ -773,10 +776,15 @@ public class CategoryActivity extends NewsBaseActivity {
    //
    // }
 
-   private class LoadDataTask extends AsyncTask<Integer, Integer, Void> {
+   private class LoadDataTask extends NewsResultAsyncTask<Integer, Integer, NewsResult> {
+
+      public LoadDataTask(Context context) {
+         super(context);
+         // TODO Auto-generated constructor stub
+      }
 
       @Override
-      protected Void doInBackground(Integer... params) {
+      protected NewsResult doInBackground(Integer... params) {
          int startFlag = params[0];
 
          switch (startFlag) {
@@ -784,11 +792,10 @@ public class CategoryActivity extends NewsBaseActivity {
             mAppProperties = AppPropertiesApi
                   .getAppProperties(CategoryActivity.this);
             Utils.logd("LoadDataTask", "mAppProperties=" + mAppProperties);
-            if (mAppProperties != null) {
+            if (mAppProperties .isSuccess()) {
                mUserStatus = mAppProperties.getUserStatus();
                if (mUserStatus == 3) {
                   List<String> userIds = mAppProperties.getUserIds();
-
                   String curId = mApp.getCurrentUserId();
                   int idIndex = -1;
                   if (userIds != null && userIds.size() > 0) {
@@ -806,18 +813,26 @@ public class CategoryActivity extends NewsBaseActivity {
 
                } else {
                   mApp.setCurrentUserId(null);
+                  if (mUserStatus == 4 || mUserStatus == 5) {
+                     return mAppProperties;
+                  }
                }
                publishProgress(0);
 
+            }
+            else {
+               return mAppProperties;
             }
          case 1:
             if (mApp.getCurrentUserId() != null) {
                NewsChannelList channel_list = NewsChannelApi
                      .getNewsChannelList(getApplicationContext(),
                            mApp.getCurrentUserId());
-               if (channel_list != null) {
+               if (channel_list .isSuccess()) {
                   mCategoryList = (ArrayList<NewsChannel>) channel_list
                         .getChannelList();
+               } else {
+                  return channel_list;
                }
             }
 
@@ -870,29 +885,50 @@ public class CategoryActivity extends NewsBaseActivity {
       }
 
       @Override
-      protected void onPostExecute(Void result) {
-         if (mAppProperties != null) {
+      public void onPostExecute(NewsResult result) {
+         if (result != null ) {
+            super.onPostExecute(result);
+         }
+         if (result == null || result.isSuccess()){
+            mIsLoadFinish = true;
+            if (mDlg != null) {
+               Utils.closeProgressDlg(mDlg);
+               mDlg = null;
+            }
+            if (mUserStatus == 4) {
+               String msg = CategoryActivity.this.getString(R.string.msg_user_forbidden);
+               Utils.ShowConfirmDialog(CategoryActivity.this, msg, new DialogConfirmCallback() {
+                  @Override
+                  public void onConfirm(DialogInterface dialog) {
+                     CategoryActivity.this.finish();
+                  }
+               });
+            } else if (mUserStatus == 5) {
+               String msg = CategoryActivity.this.getString(R.string.msg_user_no_authority);
+               Utils.ShowConfirmDialog(CategoryActivity.this, msg, new DialogConfirmCallback() {
+                  @Override
+                  public void onConfirm(DialogInterface dialog) {
+                     CategoryActivity.this.finish();
+                  }
+               });
+            }
+            
             try {
                getNewsService().hasNewVersion(mAppProperties, false);
                getNewsService().checkNewsMessage();
             } catch (Exception e) {
                // e.printStackTrace();
             }
-         }
-         mIsLoadFinish = true;
-         if (mDlg != null) {
-            Utils.closeProgressDlg(mDlg);
-            mDlg = null;
-         }
-         if (mCategoryList != null && mCategoryList.size() > 0) {
-            SwitchAssistent assistent = new SwitchAssistent();
-            mSwitcher.setAssistant(assistent);
-            setPageText(mSwitcher.getCurrentItem());
-            mLoadBitmapTask = new LoadBitmapTask();
-            mLoadBitmapTask.execute();
+            if (mCategoryList != null && mCategoryList.size() > 0) {
+               SwitchAssistent assistent = new SwitchAssistent();
+               mSwitcher.setAssistant(assistent);
+               setPageText(mSwitcher.getCurrentItem());
+               mLoadBitmapTask = new LoadBitmapTask();
+               mLoadBitmapTask.execute();
+            }
          }
          mTask = null;
-         super.onPostExecute(result);
+         
       }
 
       @Override
@@ -1292,7 +1328,7 @@ public class CategoryActivity extends NewsBaseActivity {
                   if (!userId.equals(mApp.getCurrentUserId())) {
                      mApp.setCurrentUserId(userId);
                      mDlg = Utils.showProgressDlg(this, null);
-                     mTask = new LoadDataTask();
+                     mTask = new LoadDataTask(this);
                      mTask.execute(1);
                   }
                }
@@ -1321,7 +1357,7 @@ public class CategoryActivity extends NewsBaseActivity {
       @Override
       public void onConfirm(DialogInterface dialog) {
          mDlg = Utils.showProgressDlg(CategoryActivity.this, null);
-         mTask = new LoadDataTask();
+         mTask = new LoadDataTask(CategoryActivity.this);
          mTask.execute(0);
 
       }

@@ -433,51 +433,50 @@ public class Utils {
 	public interface DialogConfirmCallback {
 		void onConfirm(DialogInterface dialog);
 	}
+	
+	public static int getErrorResultMsgId(int recult_code) {
+	   int msgId = -1;
 
-	public static String getErrorResultMsg(Context context, int recult_code) {
-		String msg = null;
-		int msgId = -1;
-
-		switch (recult_code) {
-		case 100:
+      switch (recult_code) {
+      case 100:
          msgId = R.string.msg_para_type_error;
-		   break;
-		case 101:
+         break;
+      case 101:
          msgId = R.string.msg_loss_para;
-		   break;
-		case 102:
+         break;
+      case 102:
          msgId = R.string.msg_key_error;
-		   break;
+         break;
       case 103:
          msgId = R.string.msg_activate_error;
          break;
-		case 104:
+      case 104:
          msgId = R.string.msg_key_cache;
-		   break;
-		case 105:
-			msgId = R.string.msg_key_error;
-			break;
-		case 106:
-			msgId = R.string.msg_register_error;
-			break;
-		case 107:
-			msgId = R.string.msg_error_deviceid;
-			break;
-		case 108:
-			msgId = R.string.msg_no_pay;
-			break;
-		case 109:
-			msgId = R.string.msg_add_account_error;
-			break;
-		case 110:
-			msgId = R.string.msg_feedback_error;
-			break;
-		case 111:
-			msgId = R.string.msg_no_authority;
-			break;
-		case 112:
-			msgId = R.string.msg_accout_full;
-			break;
+         break;
+      case 105:
+         msgId = R.string.msg_key_error;
+         break;
+      case 106:
+         msgId = R.string.msg_register_error;
+         break;
+      case 107:
+         msgId = R.string.msg_error_deviceid;
+         break;
+      case 108:
+         msgId = R.string.msg_no_pay;
+         break;
+      case 109:
+         msgId = R.string.msg_add_account_error;
+         break;
+      case 110:
+         msgId = R.string.msg_feedback_error;
+         break;
+      case 111:
+         msgId = R.string.msg_no_authority;
+         break;
+      case 112:
+         msgId = R.string.msg_accout_full;
+         break;
       case 113:
          msgId = R.string.msg_notice_has_feedback;
          break;
@@ -491,7 +490,13 @@ public class Utils {
          msgId = R.string.msg_other_phonenum;
          break;
 
-		}
+      }
+      return msgId;
+	}
+
+	public static String getErrorResultMsg(Context context, int recult_code) {
+		String msg = null;
+		int msgId = getErrorResultMsgId(recult_code);
 		if (msgId > 0) {
 			msg = context.getString(msgId);
 		}
