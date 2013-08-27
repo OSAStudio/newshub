@@ -437,14 +437,25 @@ public class Utils {
 	public static String getErrorResultMsg(Context context, int recult_code) {
 		String msg = null;
 		int msgId = -1;
+
 		switch (recult_code) {
+		case 100:
+         msgId = R.string.msg_para_type_error;
+		   break;
+		case 101:
+         msgId = R.string.msg_loss_para;
+		   break;
 		case 102:
+         msgId = R.string.msg_key_error;
+		   break;
+      case 103:
+         msgId = R.string.msg_activate_error;
+         break;
 		case 104:
+         msgId = R.string.msg_key_cache;
+		   break;
 		case 105:
 			msgId = R.string.msg_key_error;
-			break;
-		case 103:
-			msgId = R.string.msg_activate_error;
 			break;
 		case 106:
 			msgId = R.string.msg_register_error;
@@ -467,6 +478,18 @@ public class Utils {
 		case 112:
 			msgId = R.string.msg_accout_full;
 			break;
+      case 113:
+         msgId = R.string.msg_notice_has_feedback;
+         break;
+      case 114:
+         msgId = R.string.msg_no_user_issue;
+         break;
+      case 115:
+         msgId = R.string.msg_phonenum_has_registe;
+         break;
+      case 116:
+         msgId = R.string.msg_other_phonenum;
+         break;
 
 		}
 		if (msgId > 0) {

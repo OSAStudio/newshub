@@ -7,7 +7,7 @@
     <string name="empty_alert">您未填写完全</string>
     <string name="male_name">男</string>
     <string name="female_name">女</string>
-    <string name="activite_msg">请输入交易号验证</string>
+    <string name="activite_msg">请您输入真实的手机号\n若输入虚假号码，可能会被停止使用</string>
     <string name="activite_btn">激活</string>
     <string name="school_c">学校</string>
     <string name="grade_c">入学年份</string>
@@ -34,8 +34,12 @@
     <string name="feedback_content_too_many">您提交的反馈内容太多了。</string>
 
     <!-- alert msg -->
-    <string name="msg_key_error">激活码无效</string> <!-- 102, 104, 105 -->
+    <string name="msg_para_type_error">参数类型错误</string><!-- 100  -->
+    <string name="msg_loss_para">缺少必须参数</string><!-- 101  -->
+    <string name="msg_key_error">激活码无效</string> <!-- 102 -->
     <string name="msg_activate_error">激活失败</string> <!-- 103 -->
+    <string name="msg_key_cache">激活码状态异常</string><!-- 104-->
+    <string name="msg_key_hasused">激活码已被使用，后台会记录本次提交的设备信息，如用户换设备由业务人员后台处理</string><!-- 105 -->
     <string name="msg_register_error">注册失败</string> <!-- 106 -->
     <string name="msg_error_deviceid">对不起，您的设备不支持此款应用！</string> <!-- 107 -->
     <string name="msg_no_pay">对不起，您还还未缴费。</string> <!-- 108 -->
@@ -43,7 +47,13 @@
     <string name="msg_feedback_error">问题反馈失败。</string> <!-- 110 -->
     <string name="msg_no_authority">设备无权限或已过有效期。</string> <!-- 111 -->
     <string name="msg_accout_full">子账号数量超过限制。</string> <!-- 112 -->
+    <string name="msg_notice_has_feedback">已报名 手机端已对此通知报名，不需要再报名</string><!--     113  -->
+    <string name="msg_no_user_issue">没有订阅包 此用户未订阅任何扩展包</string><!-- 114  -->
+    <string name="msg_phonenum_has_registe">此手机号已被注册，请联系客服处理</string><!-- 115  -->
+    <string name="msg_other_phonenum">此设备已使用过其他手机号注册</string><!-- 116  -->
+    
     <string name="msg_without_regist">未注册完成，即将退出。</string>
+    
     <string name="recommend">增值推荐</string>
     <string name="expertlist">专栏列表</string>
     <string name="user_issues_list">扩展包</string>
@@ -100,7 +110,6 @@
     
     <string name="praise">赞！</string>
     <string name="notice_feedback">报名</string>
-    <string name="notice_already_feedback">已报名</string>
     <string name="tip">提示</string>
     <string name="tip_message">检测网络中......</string>
     <string name="net_isonline_tip_msg">服务器网络服务异常!</string>
