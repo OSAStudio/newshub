@@ -9,7 +9,6 @@ import android.text.TextUtils;
 public class PreferenceManager implements AppSettings {
 
    private Context mContext = null;
-   private HashMap<String, SharedPreferences> mPrefsMap = null;
 
    public class PreferenceFiles {
       public static final String APP_SETTINGS = "app_settings";
@@ -29,24 +28,19 @@ public class PreferenceManager implements AppSettings {
    }
 
    private void init() {
-      mPrefsMap = new HashMap<String, SharedPreferences>();
       SharedPreferences prefs = mContext.getSharedPreferences(
             PreferenceFiles.APP_SETTINGS, Context.MODE_PRIVATE);
-      mPrefsMap.put(PreferenceFiles.APP_SETTINGS, prefs);
    }
 
    public void cleanup() {
-      mPrefsMap.clear();
+      
    }
 
    public SharedPreferences getPrefs(String fileName) {
       SharedPreferences prefs = null;
       if (!TextUtils.isEmpty(fileName)) {
-         prefs = mPrefsMap.get(fileName);
-         if (prefs == null) {
-            prefs = mContext.getSharedPreferences(fileName,
-                  Context.MODE_PRIVATE);
-         }
+         prefs = mContext.getSharedPreferences(fileName,
+               Context.MODE_PRIVATE);
       }
       return prefs;
    }
