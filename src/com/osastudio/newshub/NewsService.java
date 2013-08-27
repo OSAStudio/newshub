@@ -12,6 +12,7 @@ import com.osastudio.newshub.library.UpgradeManager;
 import com.osastudio.newshub.net.AppDeadlineApi;
 import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsMessageApi;
+import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.Utils;
 
 import android.app.AlarmManager;
@@ -24,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,6 +66,7 @@ public class NewsService extends Service {
 
       registerNewsReceiver();
       scheduleCheckingNewsMessageSchedule();
+      mBinder.checkNewsMessage();
       heartbeat();
    }
 
@@ -172,28 +175,57 @@ public class NewsService extends Service {
 
       @Override
       public void checkNewsMessage() {
+         mHandler.removeCallbacks(mCheckNewsMessageRunnable);
+         mHandler.postDelayed(mCheckNewsMessageRunnable, 10 * 1000);
+      }
+
+   };
+
+   private CheckNewsMessageRunnable mCheckNewsMessageRunnable = new CheckNewsMessageRunnable();
+
+   private class CheckNewsMessageRunnable implements Runnable {
+
+      @Override
+      public void run() {
+         Utils.logi(TAG, "checkNewsMessage");
          PreferenceManager prefsManager = ((NewsApp) getApplication())
                .getPrefsManager();
 
          String str = prefsManager.getMessageScheduleUserIds();
+         String currUserId = prefsManager.getUserId();
          String[] userIds = str.split(SEPARATOR);
-         if (userIds != null && userIds.length > 0) {
-
+         boolean syncSchedule = false;
+         Utils.logi(TAG, "checkNewsMessage: " + "userIds=" + str
+               + " currUserId=" + currUserId);
+         if (!TextUtils.isEmpty(str) && userIds != null && userIds.length > 0) {
+            for (int i = 0; i < userIds.length; i++) {
+               String userId = userIds[i];
+               if (!TextUtils.isEmpty(userId)) {
+                  str = prefsManager.getMessageScheduleByUserId(userId);
+                  NewsMessageSchedule schedule = NewsMessageSchedule
+                        .parseString(str);
+                  if (schedule != null && schedule.isToday()) {
+                     analyzeNewsMessageSchedule(userId, schedule);
+                  } else {
+                     syncSchedule = true;
+                     if (TextUtils.isEmpty(currUserId)) {
+                        currUserId = userId;
+                     }
+                  }
+               }
+            }
+         } else {
+            syncSchedule = true;
          }
 
-         String userId = prefsManager.getUserId();
-         if (!TextUtils.isEmpty(userId)) {
-            str = prefsManager.getMessageScheduleByUserId(userId);
-            NewsMessageSchedule schedule = NewsMessageSchedule.parseString(str);
-            if (schedule != null && schedule.isToday()) {
-               analyzeNewsMessageSchedule(userId, schedule);
-            } else {
-               requestNewsMessageSchedule(userId);
+         if (syncSchedule) {
+            if (!TextUtils.isEmpty(currUserId)) {
+               requestNewsMessageSchedule(currUserId);
             }
          }
       }
 
-   };
+   }
 
    private void analyzeNewsMessageSchedule(String userId,
          NewsMessageSchedule schedule) {
@@ -218,8 +250,40 @@ public class NewsService extends Service {
    }
 
    private void requestNewsMessageSchedule(String userId) {
-      Utils.logi(TAG, "requestNewsMessageSchedule");
-      new NewsMessageScheduleTask(mHandler, this, userId).start();
+      if (mRequestNewsMessageScheduleRunnable == null) {
+         mRequestNewsMessageScheduleRunnable = new RequestNewsMessageScheduleRunnable(
+               userId);
+      }
+      if (!mRequestNewsMessageScheduleRunnable.getUserId().equals(userId)) {
+         mHandler.removeCallbacks(mRequestNewsMessageScheduleRunnable);
+         mRequestNewsMessageScheduleRunnable = new RequestNewsMessageScheduleRunnable(
+               userId);
+      }
+      mHandler.removeCallbacks(mRequestNewsMessageScheduleRunnable);
+      mHandler.postDelayed(mRequestNewsMessageScheduleRunnable, 10 * 1000);
+   }
+
+   private RequestNewsMessageScheduleRunnable mRequestNewsMessageScheduleRunnable;
+
+   private class RequestNewsMessageScheduleRunnable implements Runnable {
+
+      private String userId;
+
+      public RequestNewsMessageScheduleRunnable(String userId) {
+         this.userId = userId;
+      }
+
+      public String getUserId() {
+         return this.userId;
+      }
+
+      @Override
+      public void run() {
+         Utils.logi(TAG, "requestNewsMessageSchedule");
+         new NewsMessageScheduleTask(mHandler, NewsService.this, this.userId)
+               .start();
+      }
+
    }
 
    private void checkNewsMessageSchedule() {
@@ -252,12 +316,15 @@ public class NewsService extends Service {
 
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis) {
-      Utils.logi(TAG, "requestNewsMessageList: count=" + count);
-      NewsMessageListTask task = new NewsMessageListTask(mHandler, this, userId);
-      task.setCount(count);
-      task.setRetryIfFailed(retryIfFailed);
-      task.setRetryDelayedMillis(retryDelayedMillis);
-      task.start();
+      if (NetworkHelper.isNetworkAvailable(NewsService.this)) {
+         Utils.logi(TAG, "requestNewsMessageList: count=" + count);
+         NewsMessageListTask task = new NewsMessageListTask(mHandler, this,
+               userId);
+         task.setCount(count);
+         task.setRetryIfFailed(retryIfFailed);
+         task.setRetryDelayedMillis(retryDelayedMillis);
+         task.start();
+      }
    }
 
    private void requestNewsMessageList(String userId, int count) {
@@ -346,8 +413,11 @@ public class NewsService extends Service {
                TAG,
                "_______________onReceive: " + action + " "
                      + System.currentTimeMillis());
-         if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
-            checkNewsMessageSchedule();
+         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)
+               || ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
+            if (NetworkHelper.isNetworkAvailable(context)) {
+               checkNewsMessageSchedule();
+            }
          } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
             String userId = intent.getStringExtra("userId");
             int count = intent.getIntExtra("count", 1);
@@ -367,6 +437,7 @@ public class NewsService extends Service {
       IntentFilter filter = new IntentFilter();
       filter.addAction(ACTION_CHECK_NEWS_MESSAGE_SCHEDULE);
       filter.addAction(ACTION_PULL_NEWS_MESSAGE);
+      filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
       registerReceiver(mNewsReceiver, filter);
    }
 
