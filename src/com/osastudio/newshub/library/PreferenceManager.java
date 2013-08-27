@@ -1,7 +1,5 @@
 package com.osastudio.newshub.library;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;

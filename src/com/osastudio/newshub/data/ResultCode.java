@@ -21,6 +21,8 @@ public interface ResultCode {
    public static final int RESULT_MAX_ACCOUNT_REACHED = 112;
    public static final int RESULT_NOTICE_ALREADY_FEEDBACK = 113;
    public static final int RESULT_NO_SUBSCRIPTION = 114;
+   public static final int RESULT_PHONE_NUMBER_ALREADY_REGISTERED = 115;
+   public static final int RESULT_DEVICE_ALREADY_BOUND_PHONE_NUMBER = 116;
    
    public static final int RESULT_NETWORK_ERROR_BASE = 1000;
    
