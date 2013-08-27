@@ -252,8 +252,11 @@ public class CategoryActivity extends NewsBaseActivity {
          // mIsLauncher = extras.getBoolean(LAUNCHER);
          mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
          mServiceID = extras.getString(MESSAGE_SERVICE_ID);
-         if (mMessageType >= 0 && mServiceID != null) {
+         String userID = extras.getString(MESSAGE_USER_ID);
+         
+         if (userID != null && mMessageType >= 0 && mServiceID != null) {
             mNeedJump = true;
+            mApp.setCurrentUserId(userID);
             View cover = findViewById(R.id.cover_layout);
             cover.setVisibility(View.GONE);
          }
