@@ -190,7 +190,6 @@ public class NewsService extends Service {
          Utils.logi(TAG, "checkNewsMessage");
          PreferenceManager prefsManager = ((NewsApp) getApplication())
                .getPrefsManager();
-
          String str = prefsManager.getMessageScheduleUserIds();
          String currUserId = prefsManager.getUserId();
          String[] userIds = str.split(SEPARATOR);
@@ -232,7 +231,8 @@ public class NewsService extends Service {
       Utils.logi(TAG, "analyzeNewsMessageSchedule");
       if (schedule.allowPulling()) {
          int count = schedule.getCount();
-         Utils.logi(TAG, "analyzeNewsMessageSchedule: count=" + count);
+         Utils.logi(TAG, "analyzeNewsMessageSchedule: userId=" + userId
+               + " count=" + count);
          if (count == 0) {
             if (schedule.pullNow()) {
                requestNewsMessageList(userId, count + 1, true,
@@ -279,7 +279,7 @@ public class NewsService extends Service {
 
       @Override
       public void run() {
-         Utils.logi(TAG, "requestNewsMessageSchedule");
+         Utils.logi(TAG, "requestNewsMessageSchedule: userId=" + this.userId);
          new NewsMessageScheduleTask(mHandler, NewsService.this, this.userId)
                .start();
       }
@@ -317,7 +317,8 @@ public class NewsService extends Service {
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis) {
       if (NetworkHelper.isNetworkAvailable(NewsService.this)) {
-         Utils.logi(TAG, "requestNewsMessageList: count=" + count);
+         Utils.logi(TAG, "requestNewsMessageList: userId=" + userId + " count="
+               + count);
          NewsMessageListTask task = new NewsMessageListTask(mHandler, this,
                userId);
          task.setCount(count);
@@ -333,7 +334,8 @@ public class NewsService extends Service {
 
    private void schedulePullingNewsMessage(String userId, long scheduleMillis,
          int count) {
-      Utils.logi(TAG, "schedulePullingNewsMessage: count=" + count);
+      Utils.logi(TAG, "schedulePullingNewsMessage: userId=" + userId
+            + " count=" + count);
       AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
       Intent intent = new Intent();
       intent.setAction(ACTION_PULL_NEWS_MESSAGE);
@@ -421,7 +423,8 @@ public class NewsService extends Service {
          } else if (ACTION_PULL_NEWS_MESSAGE.equals(action)) {
             String userId = intent.getStringExtra("userId");
             int count = intent.getIntExtra("count", 1);
-            Utils.logi(TAG, "_______________onReceive: count=" + count);
+            Utils.logi(TAG, "_______________onReceive: userId=" + userId
+                  + " count=" + count);
             if (count == 1) {
                requestNewsMessageList(userId, count, true, RETRY_DELAYED_MILLIS);
             } else if (count == 2) {
@@ -513,17 +516,14 @@ public class NewsService extends Service {
             PreferenceManager prefsManager = ((NewsApp) NewsService.this
                   .getApplication()).getPrefsManager();
             StringBuilder builder = new StringBuilder();
-            NewsMessageSchedule target = null;
             for (int i = 0; i < result.getList().size(); i++) {
                NewsMessageSchedule schedule = result.getList().get(i);
-               if (schedule.getUserId().equals(this.userId)) {
-                  target = schedule;
-               }
-
                schedule.setBaseMillis(System.currentTimeMillis());
                schedule.setCount(0);
                prefsManager.setMessageScheduleByUserId(schedule.getUserId(),
                      schedule.toString());
+               
+               analyzeNewsMessageSchedule(schedule.getUserId(), schedule);
 
                builder.append(schedule.getUserId());
                if (i < result.getList().size() - 1) {
@@ -531,9 +531,6 @@ public class NewsService extends Service {
                }
             }
             prefsManager.setMessageScheduleUserIds(builder.toString());
-            if (target != null) {
-               analyzeNewsMessageSchedule(this.userId, target);
-            }
          }
       }
 
