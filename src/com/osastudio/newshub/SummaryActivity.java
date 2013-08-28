@@ -322,10 +322,18 @@ public class SummaryActivity extends NewsBaseActivity {
 			if (position == 0) {
 				tv.setTextColor(Color.WHITE);
 				tv.setTextSize(24);
-				tv.setText(Html.fromHtml(mChannelTitle));
+				if (mChannelTitle != null) {
+				   tv.setText(Html.fromHtml(mChannelTitle));
+				} else {
+				   tv.setText(null);
+				}
 				tv.setShadowLayer(2, 2, 2, Utils.COLOT_TEXT_GRAY);
 				sub.setTextColor(Color.WHITE);
-				sub.setText(Html.fromHtml(mChannelDsip));
+				if (mChannelDsip != null) {
+				   sub.setText(Html.fromHtml(mChannelDsip));
+				} else {
+				   sub.setText(null);
+				}
 				sub.setShadowLayer(1, 1, 1, Utils.COLOT_TEXT_GRAY);
 			} else {
 				int index = mPage * 4 + position-1;
@@ -334,10 +342,13 @@ public class SummaryActivity extends NewsBaseActivity {
 					NewsBaseAbstract data = mSummaries.get(index);
 					tv.setTextColor(Color.BLACK);
 					tv.setTextSize(16);
-					tv.setText(Html.fromHtml(data.getTitle()));
-
+					if (data.getTitle() != null) {
+					   tv.setText(Html.fromHtml(data.getTitle()));
+					}
 					sub.setTextColor(SummaryActivity.this.getResources().getColor(R.color.text_gray));
-					sub.setText(Html.fromHtml(data.getAuthor()));
+					if (data.getAuthor() != null) {
+					   sub.setText(Html.fromHtml(data.getAuthor()));
+					}
 					summary.setBackgroundColor(color.transparent);
 					
 				} else {

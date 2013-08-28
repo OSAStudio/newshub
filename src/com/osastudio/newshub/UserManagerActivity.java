@@ -3,16 +3,19 @@ package com.osastudio.newshub;
 import java.util.ArrayList;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.user.User;
 import com.osastudio.newshub.data.user.UserInfo;
 import com.osastudio.newshub.data.user.UserInfoList;
 import com.osastudio.newshub.data.user.UserList;
 import com.osastudio.newshub.net.UserApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.UserInfoView;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
@@ -30,7 +33,7 @@ public class UserManagerActivity extends NewsBaseActivity {
 		setContentView(R.layout.activity_usermanager);
 		findViews();
 		mPDlg = Utils.showProgressDlg(this, null);
-		mTask = new LoadTask();
+		mTask = new LoadTask(this);
 		mTask.execute();
 	}
 
@@ -71,19 +74,25 @@ public class UserManagerActivity extends NewsBaseActivity {
 		
 	}
 
-	private class LoadTask extends AsyncTask<Void, Void, Void> {
+	private class LoadTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
 
-		protected Void doInBackground(Void... params) {
+		public LoadTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+
+		protected NewsResult doInBackground(Void... params) {
 			UserInfoList list = UserApi
 					.getUserInfoList(UserManagerActivity.this);
 			if (list != null) {
 				mUserInfos = (ArrayList<UserInfo>) list.getList();
 			}
-			return null;
+			return list;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		public void onPostExecute(NewsResult result) {
+			super.onPostExecute(result);
 			if (mPDlg != null) {
 				Utils.closeProgressDlg(mPDlg);
 				mPDlg = null;
@@ -92,7 +101,6 @@ public class UserManagerActivity extends NewsBaseActivity {
 				setupViews();
 			}
 
-			super.onPostExecute(result);
 		}
 
 	}

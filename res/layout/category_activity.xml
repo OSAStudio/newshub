@@ -115,11 +115,12 @@
                 fsms:delimiter="-"
                 fsms:eachLength="4"
                 fsms:placeHolder="0"
-                fsms:totalLength="16"
+                fsms:totalLength="11"
                 android:background="@drawable/edit"
                 android:padding="5dp"
                 android:textSize="16sp"
-                android:textColor="@color/text_gray"/>
+                android:textColor="@color/black"
+                android:inputType="number"/>"
 
             <Button
                 android:id="@+id/activite_btn"
@@ -129,7 +130,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/blue_btn"
                 android:gravity="center"
-                android:text="@string/activite_btn"
+                android:text="@string/confirm"
                 android:textColor="@color/white" />
         </LinearLayout>
         

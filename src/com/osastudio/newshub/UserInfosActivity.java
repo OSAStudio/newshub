@@ -3,16 +3,20 @@ package com.osastudio.newshub;
 import java.util.ArrayList;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.user.User;
 import com.osastudio.newshub.data.user.UserList;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceFiles;
 import com.osastudio.newshub.library.PreferenceManager.PreferenceItems;
 import com.osastudio.newshub.net.UserApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.UserInfoView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -46,7 +50,7 @@ public class UserInfosActivity extends NewsBaseActivity {
 		setContentView(R.layout.activity_userinfos);
 		findViews();
 		mPDlg = Utils.showProgressDlg(this, null);
-		mTask = new LoadTask();
+		mTask = new LoadTask(this);
 		mTask.execute();
 	}
 
@@ -98,24 +102,30 @@ public class UserInfosActivity extends NewsBaseActivity {
 
 			public void onClick(View v) {
 				if (mUserList != null && mUserList.size() > 0) {
-					if (mCurrentUserIndex >= 4 || mCurrentUserIndex < 0) {
+					if (mCurrentUserIndex >= 4 || mCurrentUserIndex < 0 || mCurrentUserIndex >= mUserList.size()) {
 						mCurrentUserIndex = 0;
 					}
-					SharedPreferences prefs = UserInfosActivity.this
-							.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
-									Context.MODE_PRIVATE);
-					if (prefs != null) {
-						prefs.edit()
-								.putString(
-										PreferenceItems.USER_ID,
-										mUserList.get(mCurrentUserIndex)
-												.getUserId()).commit();
-
+					User user = mUserList.get(mCurrentUserIndex);
+					if (user.getServiceExpiredTime() != null) {
+			               String msg = UserInfosActivity.this.getString(R.string.msg_userid_no_authority);
+			               Utils.ShowConfirmDialog(UserInfosActivity.this, msg, null);
+			            
+					} else { 
+						SharedPreferences prefs = UserInfosActivity.this
+								.getSharedPreferences(PreferenceFiles.APP_SETTINGS,
+										Context.MODE_PRIVATE);
+						if (prefs != null) {
+							prefs.edit().putString(
+								PreferenceItems.USER_ID,
+								mUserList.get(mCurrentUserIndex)
+										.getUserId()).commit();
+	
+						}
+	
+						UserInfosActivity.this.setResult(RESULT_OK);
+						UserInfosActivity.this.finish();
 					}
-
-					UserInfosActivity.this.setResult(RESULT_OK);
 				}
-				UserInfosActivity.this.finish();
 			}
 		});
 	}
@@ -164,25 +174,29 @@ public class UserInfosActivity extends NewsBaseActivity {
 
 	}
 
-	private class LoadTask extends AsyncTask<Void, Void, Void> {
+	private class LoadTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
 
-		protected Void doInBackground(Void... params) {
+		public LoadTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+
+		protected NewsResult doInBackground(Void... params) {
 			UserList userList = UserApi.getUserList(UserInfosActivity.this);
 			if (userList != null) {
 				mUserList = (ArrayList<User>) userList.getList();
 			}
-			return null;
+			return userList;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		public void onPostExecute(NewsResult result) {
+			super.onPostExecute(result);
 			if (mPDlg != null) {
 				Utils.closeProgressDlg(mPDlg);
 				mPDlg = null;
 			}
 			setupViews();
-
-			super.onPostExecute(result);
 		}
 
 	}

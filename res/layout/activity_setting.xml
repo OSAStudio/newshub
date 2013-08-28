@@ -1,385 +1,397 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/root_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/bg_gray"
-    android:scrollbars="none|vertical" >
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/title_text"
+        style="@style/text_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/title_blue"
+        android:text="@string/setting" />
+
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/title_text"
-            style="@style/text_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/title_blue"
-            android:text="@string/setting" />
+        android:scrollbars="none|vertical" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:drawable/editbox_background_normal"
             android:orientation="vertical" >
 
             <LinearLayout
-                android:id="@+id/account_manager"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/account_manager" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:orientation="vertical" >
 
                 <LinearLayout
+                    android:id="@+id/account_manager"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                    <TextView
-                        style="@style/text_normal"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/account_manager" />
+                        android:src="@drawable/account_manager" />
 
-                    <TextView
-                        style="@style/text_small"
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/account_manager" />
+
+                        <TextView
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/account_manager_sub" />
+                    </LinearLayout>
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/account_manager_sub" />
+                        android:src="@drawable/angle_right" />
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/angle_right" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="3px"
-                android:background="@drawable/line_bg" />
-
-            <LinearLayout
-                android:id="@+id/add_account"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/add_account" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/line_bg" />
 
                 <LinearLayout
+                    android:id="@+id/add_account"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                    <TextView
-                        style="@style/text_normal"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_account" />
+                        android:src="@drawable/add_account" />
 
-                    <TextView
-                        style="@style/text_small"
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_account" />
+
+                        <TextView
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_account_sub" />
+                    </LinearLayout>
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_account_sub" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/angle_right" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:drawable/editbox_background_normal"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:id="@+id/text_size"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/text_size" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        style="@style/text_normal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_size" />
-
-                    <TextView
-                        android:id="@+id/font_size_prompt"
-                        style="@style/text_small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="" />
-                </LinearLayout>
-
-                <LinearLayout 
-                    android:id="@+id/font_size_group"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                    <TextView 
-                        android:id="@+id/big_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/big"
-                        android:background="@drawable/switch_btn_bg"/>
-                    <TextView 
-                        android:id="@+id/normal_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/normal"
-                        android:background="@drawable/switch_btn_bg"/>"
-                    <TextView 
-                        android:id="@+id/small_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/small"
-                        android:background="@drawable/switch_btn_bg"/>
+                        android:src="@drawable/angle_right" />
                 </LinearLayout>
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="3px"
-                android:background="@drawable/line_bg" />
-
             <LinearLayout
-                android:id="@+id/download_control"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/download_control" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:orientation="vertical" >
 
                 <LinearLayout
+                    android:id="@+id/text_size"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                    <TextView
-                        style="@style/text_normal"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/download_concrol" />
+                        android:src="@drawable/text_size" />
 
-                    <TextView
-                        style="@style/text_small"
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_size" />
+
+                        <TextView
+                            android:id="@+id/font_size_prompt"
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/font_size_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/download_concrol_sub" />
+                        android:orientation="horizontal" >
+
+                        <TextView
+                            android:id="@+id/big_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/switch_btn_bg"
+                            android:gravity="center"
+                            android:text="@string/big"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/normal_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/switch_btn_bg"
+                            android:gravity="center"
+                            android:text="@string/normal"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+"
+
+                        <TextView
+                            android:id="@+id/small_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/switch_btn_bg"
+                            android:gravity="center"
+                            android:text="@string/small"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout 
-                    android:id="@+id/auto_download_group"
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/line_bg" />
+
+                <LinearLayout
+                    android:id="@+id/download_control"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/download_control" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_concrol" />
+
+                        <TextView
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_concrol_sub" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/auto_download_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="visible">
-                    <TextView 
-                        android:id="@+id/close_btn"
+                        android:visibility="visible" >
+
+                        <TextView
+                            android:id="@+id/close_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/switch_btn_bg"
+                            android:gravity="center"
+                            android:text="@string/close"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/open_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/switch_btn_bg"
+                            android:gravity="center"
+                            android:text="@string/open"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/help"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/close"
-                        android:background="@drawable/switch_btn_bg"/>
-                    <TextView 
-                        android:id="@+id/open_btn"
+                        android:src="@drawable/setting_help" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/help" />
+
+                        <TextView
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/help_sub" />
+                    </LinearLayout>
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="@string/open"
-                        android:background="@drawable/switch_btn_bg"/>
+                        android:src="@drawable/angle_right" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/line_bg" />
+
+                <LinearLayout
+                    android:id="@+id/check_update"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/check_update" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/check_update" />
+
+                        <TextView
+                            android:id="@+id/version_name"
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/check_update_sub" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/angle_right" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/line_bg" />
+
+                <LinearLayout
+                    android:id="@+id/about"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/about" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about" />
+
+                        <TextView
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/about_sub" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/angle_right" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:drawable/editbox_background_normal"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:id="@+id/help"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/setting_help" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        style="@style/text_normal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/help" />
-
-                    <TextView
-                        style="@style/text_small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/help_sub" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/angle_right" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="3px"
-                android:background="@drawable/line_bg" />
-
-            <LinearLayout
-                android:id="@+id/check_update"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:clickable="true" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/check_update" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        style="@style/text_normal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/check_update" />
-
-                    <TextView
-                        android:id="@+id/version_name"
-                        style="@style/text_small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/check_update_sub" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/angle_right" />
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="3px"
-                android:background="@drawable/line_bg" />
-
-            <LinearLayout
-                android:id="@+id/about"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/about" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        style="@style/text_normal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about" />
-
-                    <TextView
-                        style="@style/text_small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_sub" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/angle_right" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

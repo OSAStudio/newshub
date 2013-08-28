@@ -53,6 +53,7 @@
     <string name="msg_other_phonenum">此设备已使用过其他手机号注册</string><!-- 116  -->
     <string name="msg_user_forbidden">您已被禁止使用，请联系客服处理</string><!-- status=4  -->
     <string name="msg_user_no_authority">您的服务期限已过，请续费</string><!-- status=5 -->
+    <string name="msg_userid_no_authority">该账户的服务期限已过</string><!-- status=5 -->
     
     <string name="msg_without_regist">未注册完成，即将退出。</string>
     
@@ -84,7 +85,7 @@
     <string name="about">关于我们</string>
     <string name="about_sub">AZKER的介绍和联系方式</string>
     <string name="about_title">关于AZKER&#160;&#160;&#160;v%s</string>
-    <string name="about_company">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+    <string name="about_company">\n&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
       AZKER是由合肥华迪信息技术有限公司开发运营的平台，
       平台内容是由专家团队多年工作、教育、教学、咨询等经验的积累，
       针对不同阶段学生的特点定制化、标准化服务的平台。

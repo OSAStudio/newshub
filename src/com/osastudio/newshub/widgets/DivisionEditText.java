@@ -12,24 +12,24 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * 分割输入框
+ * 鍒嗗壊杈撳叆妗�
  * 
  * @author Administrator
  * 
  */
 public class DivisionEditText extends EditText {
 
-	/* 内容数组 */
+	/* 鍐呭鏁扮粍 */
 	private String[] text;
-	/* 数组实际长度 (内容+分隔符) */
+	/* 鏁扮粍瀹為檯闀垮害 (鍐呭+鍒嗛殧绗� */
 	private Integer length;
-	/* 允许输入的长度 */
+	/* 鍏佽杈撳叆鐨勯暱搴�*/
 	private Integer totalLength;
-	/* 每组的长度 */
+	/* 姣忕粍鐨勯暱搴�*/
 	private Integer eachLength;
-	/* 分隔符 */
+	/* 鍒嗛殧绗�*/
 	private String delimiter;
-	/* 占位符 */
+	/* 鍗犱綅绗�*/
 	private String placeHolder;
 
 	public DivisionEditText(Context context) {
@@ -39,7 +39,7 @@ public class DivisionEditText extends EditText {
 	public DivisionEditText(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		try {
-			// 初始化属性
+			// 鍒濆鍖栧睘鎬�
 			TypedArray typedArray = context.obtainStyledAttributes(attrs,
 					R.styleable.EditText);
 			this.totalLength = typedArray.getInteger(
@@ -58,12 +58,12 @@ public class DivisionEditText extends EditText {
 			}
 			typedArray.recycle();
 
-			// 初始化
+			// 鍒濆鍖�
 			init();
 
-			// 内容变化监听
+			// 鍐呭鍙樺寲鐩戝惉
 			this.addTextChangedListener(new DivisionTextWatcher());
-			// 获取焦点监听
+			// 鑾峰彇鐒︾偣鐩戝惉
 			this.setOnFocusChangeListener(new DivisionFocusChangeListener());
 
 		} catch (Exception e) {
@@ -76,39 +76,43 @@ public class DivisionEditText extends EditText {
 	}
 
 	/**
-	 * 初始化
+	 * 鍒濆鍖�
 	 */
 	public void init() {
-		// 总共分几组
+		// 鎬诲叡鍒嗗嚑缁�
 		int groupNum = 0;
-		// 如果每组长度(除数)不为0,计算
+		// 濡傛灉姣忕粍闀垮害(闄ゆ暟)涓嶄负0,璁＄畻
 		if (this.eachLength != 0) {
 			groupNum = this.totalLength / this.eachLength;
+			if (this.totalLength % this.eachLength != 0) {
+				groupNum++;
+			}
 		}
-		// 实际长度
+		// 瀹為檯闀垮害
 		length = this.totalLength + this.eachLength != 0 ? this.totalLength
 				+ groupNum - 1 : 0;
-		// 初始化数组
+		// 鍒濆鍖栨暟缁�
 		text = new String[this.length];
-		// 如果数组大小大于0,初始化里面内容
-		// 空格占位,分隔符占位
+		// 濡傛灉鏁扮粍澶у皬澶т簬0,鍒濆鍖栭噷闈㈠唴瀹�
+		// 绌烘牸鍗犱綅,鍒嗛殧绗﹀崰浣�
 		if (length > 0) {
 			for (int i = 0; i < length; i++) {
-				if (i != 0 && (i + 1) % (this.eachLength + 1) == 0) {
+//			for (int i = length - 1; i >= 0; i--) {
+				if (i != 0 && (length - i)%(this.eachLength + 1) == 0) {//(i + 1) % (this.eachLength + 1) == 0) {
 					text[i] = this.delimiter;
 				} else {
 					text[i] = placeHolder;
 				}
 			}
-			// 设置文本
+			// 璁剧疆鏂囨湰
 			mySetText();
-			// 设置焦点
+			// 璁剧疆鐒︾偣
 			mySetSelection();
 		}
 	}
 
 	/**
-	 * 获取结果
+	 * 鑾峰彇缁撴灉
 	 * 
 	 * @return
 	 */
@@ -123,7 +127,7 @@ public class DivisionEditText extends EditText {
 	}
 
 	/**
-	 * 文本监听
+	 * 鏂囨湰鐩戝惉
 	 * 
 	 * @author Administrator
 	 * 
@@ -143,46 +147,46 @@ public class DivisionEditText extends EditText {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			// 如果当前长度小于数组长度,认为使用退格
+			// 濡傛灉褰撳墠闀垮害灏忎簬鏁扮粍闀垮害,璁や负浣跨敤閫�牸
 			if (s.length() < length) {
-				// 光标所在位置
+				// 鍏夋爣鎵�湪浣嶇疆
 				int index = DivisionEditText.this.getSelectionStart();
-				// 删除的字符
+				// 鍒犻櫎鐨勫瓧绗�
 				String deleteStr = text[index];
-				// 如果是分隔符,删除分隔符前一个
+				// 濡傛灉鏄垎闅旂,鍒犻櫎鍒嗛殧绗﹀墠涓�釜
 				if (delimiter.equals(deleteStr)) {
 					index--;
 				}
-				// 置空
+				// 缃┖
 				text[index] = placeHolder;
-				// 查看前一个是否为分隔符
+				// 鏌ョ湅鍓嶄竴涓槸鍚︿负鍒嗛殧绗�
 				if (index - 1 >= 0) {
 					if (delimiter.equals(text[index - 1])) {
 						index--;
 					}
 				}
-				// 设置文本
+				// 璁剧疆鏂囨湰
 				mySetText();
-				// 设置焦点
+				// 璁剧疆鐒︾偣
 				mySetSelection(index);
 			}
-			// 只能一个一个字符输入
+			// 鍙兘涓�釜涓�釜瀛楃杈撳叆
 			if (count == 1) {
-				// 从光标起始,是否还有空的位置
+				// 浠庡厜鏍囪捣濮�鏄惁杩樻湁绌虹殑浣嶇疆
 //				int index = isBlank(DivisionEditText.this.getSelectionStart());
 			   int index = getEnableIndex(DivisionEditText.this.getSelectionStart());
-				// 如果还有
+				// 濡傛灉杩樻湁
 				if (index != -1) {
-					// 输入框内的字符串
+					// 杈撳叆妗嗗唴鐨勫瓧绗︿覆
 					String allStr = s.toString();
-					// 输入的字符串
+					// 杈撳叆鐨勫瓧绗︿覆
 					String inputStr = allStr.substring(start, start + count);
-					// 替换占位符
+					// 鏇挎崲鍗犱綅绗�
 					text[index] = inputStr;
 				}
-				// 设置文本
+				// 璁剧疆鏂囨湰
 				mySetText();
-				// 设置焦点
+				// 璁剧疆鐒︾偣
 				if (index < 0 || index >= length) {
 				mySetSelection();
 				} else {
@@ -206,7 +210,7 @@ public class DivisionEditText extends EditText {
 	}
 
 	/**
-	 * 获取焦点监听
+	 * 鑾峰彇鐒︾偣鐩戝惉
 	 * 
 	 * @author Administrator
 	 * 
@@ -216,14 +220,14 @@ public class DivisionEditText extends EditText {
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
 			if (hasFocus) {
-				// 设置焦点
+				// 璁剧疆鐒︾偣
 				mySetSelection(0);
 			}
 		}
 	}
 
 	/**
-	 * 设置文本
+	 * 璁剧疆鏂囨湰
 	 * 
 	 * @param text
 	 */
@@ -232,12 +236,12 @@ public class DivisionEditText extends EditText {
 		for (String item : text) {
 			buffer.append(item);
 		}
-		// 设置文本
+		// 璁剧疆鏂囨湰
 		setText(buffer);
 	}
 
 	/**
-	 * 设置焦点
+	 * 璁剧疆鐒︾偣
 	 * 
 	 * @param text
 	 */
@@ -246,7 +250,7 @@ public class DivisionEditText extends EditText {
 	}
 
 	/**
-	 * 设置焦点
+	 * 璁剧疆鐒︾偣
 	 * 
 	 * @param text
 	 */
@@ -256,7 +260,7 @@ public class DivisionEditText extends EditText {
 	}
 
 	/**
-	 * 从光标位置起始,检查后面是否还有空的占位符
+	 * 浠庡厜鏍囦綅缃捣濮�妫�煡鍚庨潰鏄惁杩樻湁绌虹殑鍗犱綅绗�
 	 * 
 	 * @param text
 	 * @param selection
@@ -274,7 +278,7 @@ public class DivisionEditText extends EditText {
 	}
 
 	/**
-	 * 最后一个不空的字符后的光标位置
+	 * 鏈�悗涓�釜涓嶇┖鐨勫瓧绗﹀悗鐨勫厜鏍囦綅缃�
 	 * 
 	 * @param text
 	 * @return

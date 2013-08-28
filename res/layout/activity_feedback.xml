@@ -18,7 +18,8 @@
             android:layout_marginBottom="20dp"
             android:text="@string/feedback_title"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,6 +53,7 @@
             android:background="@drawable/spinner_bg"
             android:gravity="top|left" 
             android:textSize="16sp"
+            android:textColor="@color/black"
             android:hint="@string/feedback_length_hint"/>
 
         <TextView

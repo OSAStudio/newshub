@@ -8,9 +8,6 @@ import com.osastudio.newshub.data.base.NewsItemList;
 
 public class NewsMessageList extends NewsItemList<NewsMessage> {
    
-   private static final boolean DEBUG = true;
-   private static boolean TEST = false;
-
    public NewsMessageList(JSONObject jsonObject) {
       super(jsonObject);
 
@@ -37,33 +34,6 @@ public class NewsMessageList extends NewsItemList<NewsMessage> {
          } catch (JSONException e) {
 
          }
-      }
-      
-      //XTEST
-      if (DEBUG) {
-         NewsMessage msg = new NewsMessage();
-         msg.setId("15");
-         msg.setType(1);
-         msg.setContent("新学期开始，致家长们的一封信");
-         msg.setUserId("10070");
-         msg.setUserName("小菲");
-         this.list.add(msg);
-         
-         msg = new NewsMessage();
-         msg.setId("1");
-         msg.setType(4);
-         msg.setContent("发掘孩子的潜力就是培养天才");
-         msg.setUserId("10070");
-         msg.setUserName("小菲");
-         this.list.add(msg);
-         
-         msg = new NewsMessage();
-         msg.setId("88");
-         msg.setType(5);
-         msg.setContent("谁了解我的认知");
-         msg.setUserId("10070");
-         msg.setUserName("小菲");
-         this.list.add(msg);
       }
    }
 
