@@ -75,7 +75,7 @@ public class SubscriptionApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsAbstract
-            .getTopicId()));
+            .getId()));
       JSONObject jsonObject = getJsonObject(getSubscriptionArticleService(),
             params);
       if (jsonObject == null) {
