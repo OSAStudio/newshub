@@ -178,7 +178,11 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mInitY = y;
 			mIsDisplayTop = false;
 			if (mListView.getFirstVisiblePosition() <= 0) {
-				mIsDisplayTop = true;
+			   View v = mListView.getChildAt(0);
+			   int t = v.getTop();
+			   if (t >= 0) {
+			      mIsDisplayTop = true;
+			   }
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:

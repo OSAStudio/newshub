@@ -549,8 +549,12 @@ public class PageActivity extends NewsBaseActivity {
 //				} else {
 //					title.setVisibility(View.GONE);
 //				}
-				summary.setText(Html.fromHtml(mSummary));//(mSummary);
-				resume.setText(Html.fromHtml(mResume));//(mResume);
+				if (mSummary != null) {
+				   summary.setText(Html.fromHtml(mSummary));//(mSummary);
+				}
+				if (mResume != null) {
+				   resume.setText(Html.fromHtml(mResume));//(mResume);
+				}
 				Utils.log("getView", " real data");
 				return fileview;
 			} else {
