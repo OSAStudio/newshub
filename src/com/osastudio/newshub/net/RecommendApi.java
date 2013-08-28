@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.osastudio.newshub.NewsApp;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.RecommendedTopicIntro;
 import com.osastudio.newshub.data.RecommendedTopicList;
@@ -45,7 +46,7 @@ public class RecommendApi extends NewsBaseApi {
       }
 
       RecommendedTopicIntro result = new RecommendedTopicIntro(jsonObject);
-//      result.setNewsBaseTopic(newsTopic);
+      // result.setNewsBaseTopic(newsTopic);
       result.setId(newsTopic.getId());
       return result;
    }
@@ -56,6 +57,18 @@ public class RecommendApi extends NewsBaseApi {
       RecommendedTopic topic = new RecommendedTopic();
       topic.setId(topicId);
       return getRecommendedTopicIntro(context, userId, topic);
+   }
+
+   public static NewsResult subscribeRecommendedTopic(Context context,
+         String userId, String topicId) {
+      List<NameValuePair> params = new ArrayList<NameValuePair>();
+      params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
+      params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
+      params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, topicId));
+      JSONObject jsonObject = getJsonObject(subscribeRecommendedTopicService(),
+            params);
+      return (jsonObject != null) ? new NewsResult(jsonObject) : null;
    }
 
 }

@@ -241,6 +241,11 @@ public class NewsBaseApi {
             "expandlssue!getRecommendLssueContentByMobile.do").toString();
    }
 
+   protected static String subscribeRecommendedTopicService() {
+      return new StringBuilder(getWebServer()).append(
+            "expandlssue!submitExpandLssueByMobile.do").toString();
+   }
+
    protected static String getNewsColumnistListService() {
       return new StringBuilder(getWebServer()).append(
             "expert!getExpertListByMobile.do").toString();
