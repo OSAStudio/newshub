@@ -11,8 +11,8 @@ import com.osastudio.newshub.data.base.NewsBaseAbstractList;
 public class SubscriptionAbstractList extends
       NewsBaseAbstractList<SubscriptionAbstract> {
    
-   public static final String JSON_KEY_CHANNEL_NAME = "lssue_title";
-   public static final String JSON_KEY_CHANNEL_DESCRIPTION = "lssue_note";
+   public static final String JSON_KEY_CHANNEL_NAME = "expand_lssue_title";
+   public static final String JSON_KEY_CHANNEL_DESCRIPTION = "expand_lssue_note";
 
    private String channelName;
    private String channelDesc;
