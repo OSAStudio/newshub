@@ -353,6 +353,13 @@ public class NewsService extends Service {
          noti.setLatestEventInfo(this, msg.getContent(),
                getMsgTitleByType(msg), pi);
          noti.flags |= Notification.FLAG_AUTO_CANCEL;
+         if (i == 0) {
+            noti.defaults |= Notification.DEFAULT_SOUND;
+            noti.defaults |= Notification.DEFAULT_LIGHTS;
+            noti.defaults |= Notification.DEFAULT_VIBRATE;
+         } else {
+            noti.defaults = 0;
+         }
          NotificationManager manager = (NotificationManager) getApplicationContext()
                .getSystemService(Context.NOTIFICATION_SERVICE);
          manager.notify(msg.hashCode(), noti);
