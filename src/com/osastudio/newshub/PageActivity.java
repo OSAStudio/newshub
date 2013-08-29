@@ -424,6 +424,35 @@ public class PageActivity extends NewsBaseActivity {
 		}
 
 	}
+	
+	private class UserIssueTask extends NewsResultAsyncTask<Integer, Void, NewsResult> {
+		String mPageId = null;
+		public UserIssueTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected NewsResult doInBackground(Integer... params) {
+			int page = params[0];
+			mPageId = mCacheList.get(page).mId;
+			NewsResult result = RecommendApi.subscribeRecommendedTopic(PageActivity.this, mApp.getCurrentUserId(),
+					mPageId);
+			return result;
+		}
+		
+		@Override
+		public void onPostExecute(NewsResult result) {
+			super.onPostExecute(result);
+			if (result != null && result.isSuccess()) {
+				Intent intent = new Intent();
+				intent.putExtra(PAGE_ID, mPageId);
+				setResult(Activity.RESULT_OK, intent);
+				finish();
+			}
+		}
+		
+	}
 
 	final static private int MAX_DATA_SIZE = 5;
 	private ArrayList<IconData> mIconList = new ArrayList<IconData>();
@@ -511,6 +540,10 @@ public class PageActivity extends NewsBaseActivity {
 			e.printStackTrace();
 		}
 		mHtmlCotent = xmlString + mHtmlCotent;
+	}
+	
+	private void userIssue(int position) {
+		new UserIssueTask(this).execute(position);
 	}
 
 	private class ExpertAssistent extends BaseAssistent {
@@ -611,7 +644,7 @@ public class PageActivity extends NewsBaseActivity {
 		}
 
 		@Override
-		public View getView(int position, View convertView) {
+		public View getView(final int position, View convertView) {
 		   if (convertView instanceof ProgressBar) {
             convertView = null;
          }
@@ -625,9 +658,23 @@ public class PageActivity extends NewsBaseActivity {
 				return convertView;
 			} else if (mCurrentId == mCurrentShowId) {
 				FileView fileview = (FileView) convertView;
+				
 				if (fileview == null) {
 					fileview = new FileView(PageActivity.this);
 				}
+				View btn = fileview.findViewById(R.id.btn);
+				btn.setOnClickListener(new View.OnClickListener() {
+					
+					public void onClick(View v) {
+						userIssue(position);
+					}
+				});
+				if (mPageType == Utils.RECOMMEND_LIST_TYPE) {
+					btn.setVisibility(View.VISIBLE);
+				} else {
+					btn.setVisibility(View.GONE);
+				}
+				
 				TextView title = (TextView) fileview.findViewById(R.id.title);
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);

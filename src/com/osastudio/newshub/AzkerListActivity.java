@@ -55,6 +55,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 	public static final String DIRECT_ENTER="direct_enter";
 	final static public String LIST_TYPE = "list type";
 	final static public String LIST_TITLE = "list title";
+	final static public int RECOMMEND_REQUEST_CODE = 50;
 	
 	private NewsApp mApp = null;
 	private int mListType = -1;
@@ -619,12 +620,16 @@ public class AzkerListActivity extends NewsBaseActivity {
 
 	}
 	
-	private void startPageActivity(int position) {
+	private void startPageActivity(int position, boolean bNeedResult) {
 		Intent it = new Intent(this, PageActivity.class);
 		it.putExtra(PageActivity.PAGE_TYPE, mListType);
 		it.putExtra(PageActivity.START_INDEX, position);
 		it.putExtra(PageActivity.CATEGORY_TITLE, mTitle);
-		startActivity(it);
+		if (bNeedResult) {
+			startActivityForResult(it, RECOMMEND_REQUEST_CODE);
+		} else {
+			startActivity(it);
+		}
 	}
 	
 	private void startSummaryActivity(int position) {
@@ -669,9 +674,11 @@ public class AzkerListActivity extends NewsBaseActivity {
 				long id) {
 			switch (mListType) {
 			case Utils.RECOMMEND_LIST_TYPE:
+				startPageActivity(position, true);
+				break;
 			case Utils.EXPERT_LIST_TYPE:
 			case Utils.NOTIFY_LIST_TYPE:
-				startPageActivity(position);
+				startPageActivity(position, false);
 				break;
 			case Utils.USER_ISSUES_TYPE:
 			case Utils.DAILY_REMINDER_TYPE:
@@ -727,5 +734,44 @@ public class AzkerListActivity extends NewsBaseActivity {
 		String mDate = null; // for notify and DailyReminder
 		String mDayNum = null;// for DailyReminder
 		boolean mIsShowSubTitle = false;// for DailyReminder
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == RECOMMEND_REQUEST_CODE) {
+				
+				Bundle extras =data.getExtras();
+				if (extras != null) {
+					String pageId = extras.getString(PageActivity.PAGE_ID);
+					UserIssueRecommend(pageId);
+				}
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private void UserIssueRecommend(String pageId) {
+		boolean bEmpty = false;
+		if (pageId != null) {
+			if (mListDatas.size() > 0) {
+				for (int i = 0; i < mListDatas.size(); i++) {
+					ListData data = mListDatas.get(i);
+					if (pageId.equals(data.mId)) {
+						mListDatas.remove(data);
+						mAdapter.notifyDataSetChanged();
+						if (mListDatas.size() <= 0) {
+							bEmpty = true;
+						}
+					}
+				}
+			} else {
+				bEmpty = true;
+			}
+		}
+		if (bEmpty) {
+			showEmpthyMessage(Utils.RECOMMEND_LIST_TYPE);
+		}
+		
 	}
 }

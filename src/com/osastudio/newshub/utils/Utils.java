@@ -555,6 +555,10 @@ public class Utils {
       case 116:
          msgId = R.string.msg_other_phonenum;
          break;
+      case 117:
+          msgId = R.string.msg_user_issue_repeat;
+          break;
+    	  
 
       }
       return msgId;
