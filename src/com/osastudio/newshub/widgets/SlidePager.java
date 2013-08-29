@@ -52,7 +52,10 @@ public class SlidePager extends android.support.v4.view.ViewPager {
 				Object object) {
 			Utils.logd("SlidePager destroyItem", "position=" + position
 					+ " object=" + object);
-			((ViewPager) container).removeView(mViews.get(position));
+			container.removeAllViews();
+//			if (position < mViews.size()) {
+//			   ((ViewPager) container).removeView(mViews.get(position));
+//			}
 		}
 
 		@Override
