@@ -7,10 +7,12 @@ import com.osastudio.newshub.data.FeedbackType;
 import com.osastudio.newshub.data.FeedbackTypeList;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.net.FeedbackApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class FeedbackActivity extends NewsBaseActivity {
 		findViews();
 		mDlg = Utils.showProgressDlg(this, getString(R.string.wait));
 
-		new LoadTask().execute();
+		new LoadTask(this).execute();
 	}
 
 	private void findViews() {
@@ -74,7 +76,7 @@ public class FeedbackActivity extends NewsBaseActivity {
 								FeedbackActivity.this
 										.getString(R.string.feedback_content_too_many), null);
 					} else if (mTypeList != null && mTypeList.size() > mTypePosition) {
-						new CommitTask().execute(mTypeList.get(mTypePosition)
+						new CommitTask(FeedbackActivity.this).execute(mTypeList.get(mTypePosition)
 								.getId(), cotent);
 					}
 				}
@@ -135,51 +137,56 @@ public class FeedbackActivity extends NewsBaseActivity {
 
 	}
 
-	private class LoadTask extends AsyncTask<Void, Void, Void> {
+	private class LoadTask extends NewsResultAsyncTask<Void, Void, FeedbackTypeList> {
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			FeedbackTypeList list = FeedbackApi
-					.getFeedbackTypeList(getApplicationContext());
-			if (list != null) {
-				mTypeList = (ArrayList<FeedbackType>) list.getList();
-			}
-			return null;
+		public LoadTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			if (mTypeList != null) {
-				setupSpinner();
+		protected FeedbackTypeList doInBackground(Void... params) {
+			FeedbackTypeList list = FeedbackApi
+					.getFeedbackTypeList(getApplicationContext());
+			
+			return list;
+		}
+
+		@Override
+		public void onPostExecute(FeedbackTypeList result) {
+			super.onPostExecute(result);
+			if (result != null && result.isSuccess()) {
+				mTypeList = (ArrayList<FeedbackType>) result.getList();
+			
+				if (mTypeList != null) {
+					setupSpinner();
+				}
 			}
 			Utils.closeProgressDlg(mDlg);
 			mDlg = null;
-			super.onPostExecute(result);
 		}
 	}
 
-	private class CommitTask extends AsyncTask<String, Void, Boolean> {
-		NewsResult mResult = null;
+	private class CommitTask extends NewsResultAsyncTask<String, Void, NewsResult> {
+		public CommitTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected NewsResult doInBackground(String... params) {
 			String feedbackTypeId = params[0];
 			String feedbackContent = params[1];
-			mResult = FeedbackApi.feedback(getApplicationContext(),
+			NewsResult result = FeedbackApi.feedback(getApplicationContext(),
 					feedbackTypeId, feedbackContent);
-			return mResult.isSuccess();
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean bSuccess) {
-			if (!bSuccess) {
-				int code = mResult.getResultCode();
-				String msg = Utils.getErrorResultMsg(FeedbackActivity.this,
-						code);
-				if (msg != null) {
-					Utils.ShowConfirmDialog(FeedbackActivity.this, msg, null);
-				}
-			} else {
+		public void onPostExecute(NewsResult result) {
+			super.onPostExecute(result);
+			if (result != null && result.isSuccess()) {
 				Utils.ShowConfirmDialog(FeedbackActivity.this,
 						FeedbackActivity.this
 								.getString(R.string.feedback_success),
@@ -190,7 +197,6 @@ public class FeedbackActivity extends NewsBaseActivity {
 							}
 						});
 			}
-			super.onPostExecute(bSuccess);
 		}
 	}
 }

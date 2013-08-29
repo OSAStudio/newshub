@@ -12,8 +12,10 @@ import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsArticle;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.net.NewsArticleApi;
 import com.osastudio.newshub.utils.NetworkHelper;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
@@ -23,6 +25,7 @@ import com.osastudio.newshub.widgets.SummaryGrid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Xml;
 import android.view.MotionEvent;
@@ -193,46 +196,49 @@ public class FileActivity extends NewsBaseActivity {
 		}
 	}
 
-	private class LoadDataTask extends AsyncTask<Integer, Void, Integer> {
+	private class LoadDataTask extends NewsResultAsyncTask<Integer, Void, NewsArticle> {
+		public LoadDataTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
 
+		int mIndex = -1;
 		@Override
-		protected Integer doInBackground(Integer... params) {
-			int index = params[0];
-			if (index < 0 || index >= mSummary_list.getAbstractList().size()) {
-				return -1;
+		protected NewsArticle doInBackground(Integer... params) {
+			mIndex = params[0];
+			if (mIndex < 0 || mIndex >= mSummary_list.getAbstractList().size()) {
+				return null;
 			}
 
-			mSummary_data = mSummary_list.getAbstractList().get(index);
+			mSummary_data = mSummary_list.getAbstractList().get(mIndex);
 			mNewsArticle = NewsArticleApi.getNewsArticle(FileActivity.this,
 					mSummary_data.getId());
-			if (mNewsArticle == null) {
-				return -1;
-			}
-			Utils.log("LoadDataTask", "getNewsArticle ok");
-			mHtmlCotent = mNewsArticle.getContent();
-			mTitle = mNewsArticle.getTitle();
-			mArticleId = mNewsArticle.getId();
 			
-			String channel = mNewsArticle.getChannelName();
-			if (channel != null) {
-			   mCategoryTitle = channel;
-			}
-			AddTitleToHtml();
-			return index;
+			
+			return mNewsArticle;
 		}
 
 		@Override
-		protected void onPostExecute(Integer index) {
-			if (index >= 0) {
-				mCurrentShowId = index;
-				SwitchAssistent assistent = new SwitchAssistent();
-				mSwitcher.setAssistant(assistent);
-				Utils.log("LoadDataTask", "update switch");
-			} else {
-
+		public void onPostExecute(NewsArticle result) {
+			super.onPostExecute(result);
+			if (result != null && result.isSuccess()) {
+				mHtmlCotent = result.getContent();
+				mTitle = result.getTitle();
+				mArticleId = result.getId();
+				
+				String channel = result.getChannelName();
+				if (channel != null) {
+				   mCategoryTitle = channel;
+				}
+				AddTitleToHtml();
+				if (mIndex >= 0) {
+					mCurrentShowId = mIndex;
+					SwitchAssistent assistent = new SwitchAssistent();
+					mSwitcher.setAssistant(assistent);
+					Utils.log("LoadDataTask", "update switch");
+				}
 			}
 			mTask = null;
-			super.onPostExecute(index);
 		}
 
 	}
@@ -312,7 +318,7 @@ public class FileActivity extends NewsBaseActivity {
 					mTask.cancel(true);
 					mTask = null;
 				}
-				mTask = new LoadDataTask();
+				mTask = new LoadDataTask(FileActivity.this);
 				mTask.execute(position);
 				Utils.log("getView", " no data");
 				return createPogress();

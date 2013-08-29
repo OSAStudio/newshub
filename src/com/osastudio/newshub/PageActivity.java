@@ -17,6 +17,7 @@ import com.osastudio.newshub.data.NewsArticle;
 import com.osastudio.newshub.data.NewsChannel;
 import com.osastudio.newshub.data.NewsColumnistInfo;
 import com.osastudio.newshub.data.NewsNoticeArticle;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.RecommendedTopicIntro;
 import com.osastudio.newshub.data.SubscriptionAbstract;
 import com.osastudio.newshub.data.SubscriptionArticle;
@@ -26,6 +27,7 @@ import com.osastudio.newshub.net.NewsNoticeApi;
 import com.osastudio.newshub.net.RecommendApi;
 import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.NetworkHelper;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
@@ -35,6 +37,7 @@ import com.osastudio.newshub.widgets.SummaryGrid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
@@ -278,105 +281,124 @@ public class PageActivity extends NewsBaseActivity {
 //		}
 //	}
 
-	private void loadUserIssue(int page) {
+	private SubscriptionArticle loadUserIssue(int page) {
 		SubscriptionArticle userIssue = SubscriptionApi.getSubscriptionArticle(
 				this, mApp.getCurrentUserId(), mUserIssueList.get(page));
-		mHtmlCotent = userIssue.getContent();
-		mTitle = userIssue.getTitle();
-		AddTitleToHtml();
+		if (userIssue != null && userIssue.isSuccess()) {
+			mHtmlCotent = userIssue.getContent();
+			mTitle = userIssue.getTitle();
+			AddTitleToHtml();
+		}
+		return userIssue;
 	}
 
-	private void loadRecommendPage(int page) {
+	private RecommendedTopicIntro loadRecommendPage(int page) {
 		RecommendedTopicIntro recommend = RecommendApi
 				.getRecommendedTopicIntro(this, mApp.getCurrentUserId(),
 						mCacheList.get(page).mId);
-		mHtmlCotent = recommend.getContent();
-		mTitle = recommend.getTitle();
-		AddTitleToHtml();
+		if (recommend != null && recommend.isSuccess()) {
+			mHtmlCotent = recommend.getContent();
+			mTitle = recommend.getTitle();
+			AddTitleToHtml();
+		}
+		return recommend;
 	}
 
-	private void loadNoticePage(int page) {
+	private NewsNoticeArticle loadNoticePage(int page) {
 		NewsNoticeArticle notice = NewsNoticeApi.getNewsNoticeArticle(this,
 				mApp.getCurrentUserId(), mCacheList.get(page).mId);
-		mHtmlCotent = notice.getContent();
-		mTitle = notice.getTitle();
-		mNeedFeedback = notice.isFeedbackRequired();
-		if (mNeedFeedback) {
-			mNoticeId = notice.getId();
+		if (notice != null && notice.isSuccess()) {
+			mHtmlCotent = notice.getContent();
+			mTitle = notice.getTitle();
+			mNeedFeedback = notice.isFeedbackRequired();
+			if (mNeedFeedback) {
+				mNoticeId = notice.getId();
+			}
+			AddTitleToHtml();
 		}
-		AddTitleToHtml();
+		return notice;
 	}
 
-	private void loadExpertPage(int page) {
+	private NewsColumnistInfo loadExpertPage(int page) {
 		NewsColumnistInfo expert = NewsColumnistApi.getNewsColumnistInfo(this,
 				mApp.getCurrentUserId(), mCacheList.get(page).mId);
-		mTitle = expert.getName();
-		mSummary = expert.getSummary();
-		mResume = expert.getResume();
-		mIconUrl = expert.getPortraitUrl();
-
-		boolean bGetIcon = false;
-		for (int i = 0; i < mIconList.size(); i++) {
-			IconData data = mIconList.get(i);
-			if (data.mPage == page) {
-				if (data.mBmp == null || data.mBmp.isRecycled()) {
-					mIconList.remove(data);
-					mLoadBitmapTask = new LoadBitmapTask();
-					mLoadBitmapTask.execute(data);
-
+		if (expert != null && expert.isSuccess()) {
+			mTitle = expert.getName();
+			mSummary = expert.getSummary();
+			mResume = expert.getResume();
+			mIconUrl = expert.getPortraitUrl();
+	
+			boolean bGetIcon = false;
+			for (int i = 0; i < mIconList.size(); i++) {
+				IconData data = mIconList.get(i);
+				if (data.mPage == page) {
+					if (data.mBmp == null || data.mBmp.isRecycled()) {
+						mIconList.remove(data);
+						mLoadBitmapTask = new LoadBitmapTask();
+						mLoadBitmapTask.execute(data);
+	
+					}
+					bGetIcon = true;
+					break;
 				}
-				bGetIcon = true;
-				break;
+			}
+			if (!bGetIcon) {
+				IconData data = new IconData();
+				data.mPage = page;
+				data.mIconUrl = mIconUrl;
+	
+				mLoadBitmapTask = new LoadBitmapTask();
+				mLoadBitmapTask.execute(data);
 			}
 		}
-		if (!bGetIcon) {
-			IconData data = new IconData();
-			data.mPage = page;
-			data.mIconUrl = mIconUrl;
-
-			mLoadBitmapTask = new LoadBitmapTask();
-			mLoadBitmapTask.execute(data);
-		}
+		return expert;
 	}
 
-	private class LoadDataTask extends AsyncTask<Integer, Void, Integer> {
+	private class LoadDataTask extends NewsResultAsyncTask<Integer, Void, NewsResult> {
+		public LoadDataTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
 
+		int mIndex = -1;
 		@Override
-		protected Integer doInBackground(Integer... params) {
-			int index = params[0];
+		protected NewsResult doInBackground(Integer... params) {
+			mIndex = params[0];
 			if (mPageType == Utils.USER_ISSUES_TYPE) {
-				if (index < 0 || index >= mUserIssueList.size()) {
-					return -1;
+				if (mIndex < 0 || mIndex >= mUserIssueList.size()) {
+					return null;
 				}
-			} else if (index < 0 || index >= mCacheList.size()) {
-				return -1;
+			} else if (mIndex < 0 || mIndex >= mCacheList.size()) {
+				return null;
 			}
+			NewsResult result = null;
 			mNeedFeedback = false;
 			mNoticeId = null;
 			switch (mPageType) {
 			case Utils.NOTIFY_LIST_TYPE:
 			case Utils.IMPORT_NOTIFY_TYPE:
-				loadNoticePage(index);
+				result = loadNoticePage(mIndex);
 				break;
 			case Utils.EXPERT_LIST_TYPE:
 			case Utils.IMPORT_EXPERT_TYPE:
-				loadExpertPage(index);
+				result = loadExpertPage(mIndex);
 				break;
 			case Utils.RECOMMEND_LIST_TYPE:
-				loadRecommendPage(index);
+				result = loadRecommendPage(mIndex);
 				break;
 			case Utils.USER_ISSUES_TYPE:
-				loadUserIssue(index);
+				result = loadUserIssue(mIndex);
 				break;
 
 			}
-			return index;
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(Integer index) {
-			if (index >= 0) {
-				mCurrentShowId = index;
+		public void onPostExecute(NewsResult result) {
+			super.onPostExecute(result);
+			if (result != null && result.isSuccess() && mIndex >= 0) {
+				mCurrentShowId = mIndex;
 				Utils.log("LoadDataTask", "update switch");
 
 				switch (mPageType) {
@@ -399,7 +421,6 @@ public class PageActivity extends NewsBaseActivity {
 
 			}
 			mTask = null;
-			super.onPostExecute(index);
 		}
 
 	}
@@ -562,7 +583,7 @@ public class PageActivity extends NewsBaseActivity {
 					mTask.cancel(true);
 					mTask = null;
 				}
-				mTask = new LoadDataTask();
+				mTask = new LoadDataTask(PageActivity.this);
 				mTask.execute(position);
 				Utils.log("getView", " no data");
 				return createPogress();
@@ -620,7 +641,7 @@ public class PageActivity extends NewsBaseActivity {
 					mTask.cancel(true);
 					mTask = null;
 				}
-				mTask = new LoadDataTask();
+				mTask = new LoadDataTask(PageActivity.this);
 				mTask.execute(position);
 				Utils.log("getView", " no data");
 				return createPogress();

@@ -15,11 +15,16 @@ public abstract class NewsResultAsyncTask<Params, Progress, Result extends NewsR
    
    @Override
    public void onPostExecute(Result result) {
-      if (result != null && result.isFailure() && result.getResultCode() != 114) {
-         String msg = Utils.getErrorResultMsg(mContext, result.getResultCode());
-         if (msg != null) {
-            Utils.ShowConfirmDialog(mContext, msg, null);
-         }
+      if (result != null && result.isFailure()) {
+    	  if (result.isNetworkError()) {
+    		  Utils.ShowNetworkErrorDialog(mContext, true);
+    	  } else {
+//	         String msg = Utils.getErrorResultMsg(mContext, result.getResultCode());
+//	         if (msg != null) {
+//	            Utils.ShowConfirmDialog(mContext, msg, null);
+//	         }
+    		 Utils.ShowResultErrorDialog(mContext, result.getResultCode(), false);
+    	  }
       }
    }
 

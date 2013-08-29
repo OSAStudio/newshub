@@ -732,7 +732,7 @@ public class CategoryActivity extends NewsBaseActivity {
       public void onPostExecute(NewsResult rtn) {
          super.onPostExecute(rtn);
          ValidateResult result = (ValidateResult)rtn;
-         if (result.isSuccess()) {
+         if (result != null && result.isSuccess()) {
             mActivateLayout.setVisibility(View.GONE);
             showRegisterView();
          } else {
@@ -791,7 +791,7 @@ public class CategoryActivity extends NewsBaseActivity {
             mAppProperties = AppPropertiesApi
                   .getAppProperties(CategoryActivity.this);
             Utils.logd("LoadDataTask", "mAppProperties=" + mAppProperties);
-            if (mAppProperties .isSuccess()) {
+            if (mAppProperties != null && mAppProperties .isSuccess()) {
                mUserStatus = mAppProperties.getUserStatus();
                if (mUserStatus == 3) {
                   List<String> userIds = mAppProperties.getUserIds();
@@ -827,7 +827,7 @@ public class CategoryActivity extends NewsBaseActivity {
                NewsChannelList channel_list = NewsChannelApi
                      .getNewsChannelList(getApplicationContext(),
                            mApp.getCurrentUserId());
-               if (channel_list .isSuccess()) {
+               if (channel_list != null && channel_list .isSuccess()) {
                   mCategoryList = (ArrayList<NewsChannel>) channel_list
                         .getChannelList();
                } else {
@@ -885,9 +885,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
       @Override
       public void onPostExecute(NewsResult result) {
-         if (result != null ) {
-            super.onPostExecute(result);
-         }
+    	 super.onPostExecute(result);
 
          mIsLoadFinish = true;
          if (mDlg != null) {

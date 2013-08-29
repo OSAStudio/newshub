@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.NewsAbstractList;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.SubscriptionAbstractList;
 import com.osastudio.newshub.data.base.NewsBaseAbstract;
 import com.osastudio.newshub.net.NewsAbstractApi;
 import com.osastudio.newshub.net.SubscriptionApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.SlideSwitcher;
@@ -19,6 +21,7 @@ import android.R.color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.Html;
@@ -71,7 +74,7 @@ public class SummaryActivity extends NewsBaseActivity {
 
 	private void setupData() {
 		mDlg = Utils.showProgressDlg(this, null);
-		mLoadDataTask = new LoadDataTask();
+		mLoadDataTask = new LoadDataTask(this);
 		mLoadDataTask.execute();
 	}
 	
@@ -137,62 +140,71 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 
-	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
+	private class LoadDataTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			NewsAbstractList summary_list = null;
-			switch (mChannelType) {
-			case Utils.USER_ISSUES_TYPE:
-				SubscriptionAbstractList userIssueList = SubscriptionApi
-						.getSubscriptionAbstractList(getApplicationContext(),
-								mApp.getCurrentUserId(), mChannelId);
-				if (userIssueList != null) {
-					mSummaries = userIssueList.asNewsBaseAbstractList();
-               mChannelTitle = userIssueList.getChannelName();
-               mChannelDsip = userIssueList.getChannelDescription();
-				}
-				break;
-			case Utils.LESSON_LIST_TYPE:
-			case Utils.DAILY_REMINDER_TYPE:
-				summary_list = NewsAbstractApi.getNewsAbstractList(
-						getApplicationContext(), mChannelId);
-				if (summary_list != null) {
-					mSummaries = summary_list.asNewsBaseAbstractList();
-					mChannelTitle = summary_list.getChannelName();
-					mChannelDsip = summary_list.getChannelDescription();
-				}
-				break;
-//			case Utils.DAILY_REMINDER_TYPE:
-//				break;
-			}
-			return null;
+		public LoadDataTask(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected NewsResult doInBackground(Void... params) {
+			NewsResult result = null;
+			switch (mChannelType) {
+			case Utils.USER_ISSUES_TYPE:
+				result = SubscriptionApi
+						.getSubscriptionAbstractList(getApplicationContext(),
+								mApp.getCurrentUserId(), mChannelId);
+				
+				break;
+			case Utils.LESSON_LIST_TYPE:
+			case Utils.DAILY_REMINDER_TYPE:
+				result = NewsAbstractApi.getNewsAbstractList(
+						getApplicationContext(), mChannelId);
+				
+				break;
+			}
+			return result;
+		}
+
+		@Override
+		public void onPostExecute(NewsResult result) {
+			super.onPostExecute(result);
+
+			mLoadDataTask = null;
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
 			}
-			if (mSummaries != null && mSummaries.size() > 0) {
-				if (mSummaries.size() % 4 == 0) {
-					mTotalPage = mSummaries.size() / 4;
-				} else {
-					mTotalPage = mSummaries.size() / 4 + 1;
+
+			if(result != null && result.isSuccess()) {
+				if (mChannelType == Utils.USER_ISSUES_TYPE) {
+					SubscriptionAbstractList userIssueList = (SubscriptionAbstractList)result;
+					mSummaries = userIssueList.asNewsBaseAbstractList();
+					mChannelTitle = userIssueList.getChannelName();
+					mChannelDsip = userIssueList.getChannelDescription();
+				} else if (mChannelType == Utils.LESSON_LIST_TYPE || mChannelType == Utils.DAILY_REMINDER_TYPE) {
+					NewsAbstractList summary_list = (NewsAbstractList)result;
+					mSummaries = summary_list.asNewsBaseAbstractList();
+					mChannelTitle = summary_list.getChannelName();
+					mChannelDsip = summary_list.getChannelDescription();
+				}
+				if (mSummaries != null && mSummaries.size() > 0) {
+					if (mSummaries.size() % 4 == 0) {
+						mTotalPage = mSummaries.size() / 4;
+					} else {
+						mTotalPage = mSummaries.size() / 4 + 1;
+					}
+				}
+				switch (mChannelType) {
+				case Utils.USER_ISSUES_TYPE:
+				case Utils.LESSON_LIST_TYPE:
+				case Utils.DAILY_REMINDER_TYPE:
+					SwitchAssistent assistent = new SwitchAssistent();
+					mSwitcher.setAssistant(assistent);
+					break;
 				}
 			}
-			mLoadDataTask = null;
-			switch (mChannelType) {
-			case Utils.USER_ISSUES_TYPE:
-			case Utils.LESSON_LIST_TYPE:
-			case Utils.DAILY_REMINDER_TYPE:
-				SwitchAssistent assistent = new SwitchAssistent();
-				mSwitcher.setAssistant(assistent);
-				break;
-//				break;
-			}
-			super.onPostExecute(result);
 		}
 		
 		@Override

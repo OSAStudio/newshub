@@ -3,12 +3,14 @@ package com.osastudio.newshub;
 import java.util.ArrayList;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.user.UserInfo;
 import com.osastudio.newshub.data.user.UserInfoList;
 import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.library.AppSettings;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.net.UserApi;
+import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.widgets.RegisterView;
 import com.osastudio.newshub.widgets.RegisterView.USER_TYPE;
@@ -187,7 +189,7 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
 
          public void onClick(View v) {
             mPDlg = Utils.showProgressDlg(SettingActivity.this, null);
-            mCheckTask = new CheckTask();
+            mCheckTask = new CheckTask(SettingActivity.this);
             mCheckTask.execute();
          }
       });
@@ -226,26 +228,29 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       registerDlg.show();
    }
 
-   private class CheckTask extends AsyncTask<Void, Void, Boolean> {
-      ValidateResult mResult = null;
-      protected Boolean doInBackground(Void... params) {
-         mResult = UserApi
+   private class CheckTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
+      
+      public CheckTask(Context context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
+
+	protected NewsResult doInBackground(Void... params) {
+    	  return UserApi
                .getValidateStatus(SettingActivity.this);
-         if (mResult != null) {
-        	 return mResult.isSuccess();
-         } else {
-        	 return false;
-         }
+         
       }
 
       @Override
-      protected void onPostExecute(Boolean result) {
+      public void onPostExecute(NewsResult result) {
          if (mPDlg != null) {
             Utils.closeProgressDlg(mPDlg);
             mPDlg = null;
          }
 
-         if (result) {
+         super.onPostExecute(result);
+
+         if (result != null && result.isSuccess()) {
             WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
 
@@ -254,20 +259,8 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
             int screenHeight = display.getHeight();
             screenHeight = screenHeight > 0 ? screenHeight : 0;
             showRegisterView(screenWidth, screenHeight);
-         } else {
-            String  msg = null;
-            
-            if (mResult != null) {
-               msg = Utils.getErrorResultMsg(SettingActivity.this, mResult.getResultCode());
-            }
-            if (msg == null) {
-               SettingActivity.this.getString(R.string.cant_add_user_msg);
-            }
-            
-            Utils.ShowConfirmDialog(SettingActivity.this, msg, null);
          }
 
-         super.onPostExecute(result);
       }
 
    }

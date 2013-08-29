@@ -244,7 +244,7 @@ public class FileView extends LinearLayout {
 		public void onPostExecute(NewsResult result) {
 			int msgId = -1;
 			if (!((Activity) mContext).isFinishing()) {
-				if (result.isSuccess()){
+				if (result != null && result.isSuccess()){
 					msgId = R.string.praise;
 				}
 				if (msgId > 0) {

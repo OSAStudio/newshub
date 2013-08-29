@@ -247,17 +247,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
 			}
-			if (result.isFailure()) {
-			   String msg = Utils.getErrorResultMsg(AzkerListActivity.this, result.getResultCode());
-			   if (msg != null) {
-			      Utils.ShowConfirmDialog(AzkerListActivity.this, msg, new DialogConfirmCallback() {
-                  
-                  public void onConfirm(DialogInterface dialog) {
-                    AzkerListActivity.this.finish();
-                  }
-               });
-			   }
-			}else if (mListDatas != null && mListDatas.size() > 0) {
+			if (result != null && result.isFailure()) {
+				if (result.isNetworkError()) {
+					Utils.ShowNetworkErrorDialog(AzkerListActivity.this, true);
+				} else {
+					Utils.ShowResultErrorDialog(AzkerListActivity.this, result.getResultCode(), true);
+				}
+			}else if (result != null && result.isSuccess() && mListDatas != null && mListDatas.size() > 0) {
 				switch (mListType) {
 				case Utils.RECOMMEND_LIST_TYPE:
 				case Utils.EXPERT_LIST_TYPE:
@@ -278,7 +274,6 @@ public class AzkerListActivity extends NewsBaseActivity {
 			} else {
 			   showEmpthyMessage(mListType);
 			}
-			super.onPostExecute(result);
 		}
 
 	}

@@ -453,7 +453,7 @@ public class RegisterView extends Dialog {
 			}
 
          super.onPostExecute(result);
-			if (result.isSuccess()) {
+			if (result != null && result.isSuccess()) {
    			if ((result instanceof RegisterResult)
    					&& ((RegisterResult) result).getUserId() == null) {
    				String msg = mContext.getString(R.string.msg_register_error);
@@ -495,15 +495,18 @@ public class RegisterView extends Dialog {
 
 	}
 
-	private class LoadTask extends AsyncTask<Object, Void, Object> {
+	private class LoadTask extends AsyncTask<Object, Void, NewsResult> {
 		ArrayList<Data> datalist = new ArrayList<Data>();
-
+		LIST_TYPE type = LIST_TYPE.CITY;
 		@Override
-		protected Object doInBackground(Object... params) {
-			LIST_TYPE type = (LIST_TYPE) params[0];
+		protected NewsResult doInBackground(Object... params) {
+			type = (LIST_TYPE) params[0];
 
 			if (type.equals(LIST_TYPE.CITY)) {
 				CityList citylist = UserApi.getCityList(mContext);
+				if (citylist.isFailure()) {
+					return citylist;
+				}
 				List<City> citys = citylist.getList();
 
 				if (datalist.size() > 0) {
@@ -518,6 +521,9 @@ public class RegisterView extends Dialog {
 				String cityId = (String) params[1];
 				CityDistrictList district = UserApi.getCityDistrictList(
 						mContext, cityId);
+				if (district.isFailure()) {
+					return district;
+				}
 				List<CityDistrict> districts = district.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();
@@ -529,6 +535,9 @@ public class RegisterView extends Dialog {
 				}
 			} else if (type.equals(LIST_TYPE.SCHOOLTYPE)) {
 				SchoolTypeList schoolType = UserApi.getSchoolTypeList(mContext);
+				if (schoolType.isFailure()) {
+					return schoolType;
+				}
 				List<SchoolType> typelist = schoolType.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();
@@ -541,6 +550,9 @@ public class RegisterView extends Dialog {
 			} else if (type.equals(LIST_TYPE.SCHOOL)) {
 				SchoolList schoollist = UserApi.getSchoolList(mContext,
 						mDistrictId, mSchoolType);
+				if (schoollist.isFailure()) {
+					return schoollist;
+				}
 				List<School> schools = schoollist.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();
@@ -553,6 +565,9 @@ public class RegisterView extends Dialog {
 			} else if (type.equals(LIST_TYPE.GRADE)) {
 				SchoolYearlist gradelist = UserApi.getSchoolYearList(mContext,
 						mSchoolId);
+				if (gradelist.isFailure()) {
+					return gradelist;
+				}
 				List<SchoolYear> grades = gradelist.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();
@@ -565,6 +580,9 @@ public class RegisterView extends Dialog {
 			} else if (type.equals(LIST_TYPE.CLASS)) {
 				SchoolClasslist classlist = UserApi.getSchoolClassList(
 						mContext, mGradeId);
+				if (classlist.isFailure()) {
+					return classlist;
+				}
 				List<SchoolClass> classes = classlist.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();
@@ -577,6 +595,9 @@ public class RegisterView extends Dialog {
 			} else if (type.equals(LIST_TYPE.EDU)) {
 				QualificationList edulist = UserApi
 						.getQualificationList(mContext);
+				if (edulist.isFailure()) {
+					return edulist;
+				}
 				List<Qualification> edu_list = edulist.getList();
 				if (datalist.size() > 0) {
 					datalist.clear();
@@ -587,19 +608,40 @@ public class RegisterView extends Dialog {
 					datalist.add(data);
 				}
 			}
-			return type;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Object result) {
+		protected void onPostExecute(NewsResult result) {
 
 			if (mDlg != null) {
 				Utils.closeProgressDlg(mDlg);
 				mDlg = null;
 			}
 			mLoadTask = null;
-			LIST_TYPE type = (LIST_TYPE) result;
-			setupList(type, datalist);
+			if (result != null && result.isFailure()) {
+				if (result.isNetworkError()) {
+					Utils.ShowNetworkErrorDialog(mContext, new DialogConfirmCallback() {
+						
+						@Override
+						public void onConfirm(DialogInterface dialog) {
+							RegisterView.this.dismiss();
+							
+						}
+					});
+				} else {
+					Utils.ShowResultErrorDialog(mContext, result.getResultCode(), new DialogConfirmCallback() {
+						
+						@Override
+						public void onConfirm(DialogInterface dialog) {
+							RegisterView.this.dismiss();
+							
+						}
+					});
+				}
+			} else {
+				setupList(type, datalist);
+			}
 			super.onPostExecute(result);
 		}
 

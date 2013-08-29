@@ -429,6 +429,72 @@ public class Utils {
 							}
 						}).setCancelable(false).show();
 	}
+	
+	public static void ShowResultErrorDialog(final Context context, int resultCode,
+			final boolean bNeedFinish) {
+		String msg = getErrorResultMsg(context, resultCode);
+		new AlertDialog.Builder(context)
+		.setMessage(msg)
+		.setPositiveButton(R.string.confirm,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						if (bNeedFinish) {
+							((Activity)context).finish();
+						}
+
+					}
+				}).setCancelable(false).show();
+	}
+	
+	public static void ShowResultErrorDialog(final Context context, int resultCode,
+			final DialogConfirmCallback cb) {
+		String msg = getErrorResultMsg(context, resultCode);
+		new AlertDialog.Builder(context)
+		.setMessage(msg)
+		.setPositiveButton(R.string.confirm,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						if (cb != null) {
+							cb.onConfirm(dialog);
+						}
+
+					}
+				}).setCancelable(false).show();
+	}
+	
+	public static void ShowNetworkErrorDialog(final Context context,
+			final boolean bNeedFinish) {
+		new AlertDialog.Builder(context)
+		.setMessage(R.string.net_isonline_tip_msg)
+		.setPositiveButton(R.string.confirm,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						if (bNeedFinish) {
+							((Activity)context).finish();
+						}
+
+					}
+				}).setCancelable(false).show();
+	}
+	
+	public static void ShowNetworkErrorDialog(final Context context,
+			final DialogConfirmCallback cb) {
+		new AlertDialog.Builder(context)
+		.setMessage(R.string.net_isonline_tip_msg)
+		.setPositiveButton(R.string.confirm,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						if (cb != null) {
+							cb.onConfirm(dialog);
+						}
+
+					}
+				}).setCancelable(false).show();
+	}
 
 	public interface DialogConfirmCallback {
 		void onConfirm(DialogInterface dialog);
