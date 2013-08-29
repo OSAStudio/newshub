@@ -51,6 +51,7 @@
     <string name="msg_no_user_issue">没有订阅包 此用户未订阅任何扩展包</string><!-- 114  -->
     <string name="msg_phonenum_has_registe">此手机号已被注册，请联系客服处理</string><!-- 115  -->
     <string name="msg_other_phonenum">此设备已使用过其他手机号注册</string><!-- 116  -->
+    <string name="msg_user_issue_repeat">此扩展包已订阅，不需再次订阅</string><!-- 117  -->
     <string name="msg_user_forbidden">您已被禁止使用，请联系客服处理</string><!-- status=4  -->
     <string name="msg_user_no_authority">您的服务期限已过，请续费</string><!-- status=5 -->
     <string name="msg_userid_no_authority">该账户的服务期限已过</string><!-- status=5 -->
