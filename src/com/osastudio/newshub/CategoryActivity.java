@@ -1395,13 +1395,15 @@ public class CategoryActivity extends NewsBaseActivity {
          cacheList.add(new TempCacheData(mServiceID));
          mApp.setTempCache(cacheList);
          int type =  Utils.IMPORT_NOTIFY_TYPE;
+         int title_src = R.string.default_notice_title;
          if (mMessageType == Utils.MESSAGE_SEND_TYPE_RECOMMEND) {
             type =  Utils.RECOMMEND_LIST_TYPE;
+            title_src = R.string.recommend;
          }
          it.setClass(this, PageActivity.class);
          it.putExtra(PageActivity.PAGE_TYPE, type);
          it.putExtra(PageActivity.START_INDEX, 0);
-         it.putExtra(PageActivity.CATEGORY_TITLE, getString(R.string.default_notice_title));
+         it.putExtra(PageActivity.CATEGORY_TITLE, getString(title_src));
          break;
       case Utils.MESSAGE_SEND_TYPE_LESSON:
          NewsAbstractCache cache = getNewsAbstractCache();
