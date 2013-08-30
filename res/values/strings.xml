@@ -137,5 +137,7 @@
     <string name="empty_recommend_list">敬请等待上线</string>
     <string name="empty_user_issue">您没有订阅包</string>
     <string name="empty_daily_reminder">暂时没有任务</string>
+    
+    <string name="user_issue_success">订阅成功</string>
 
 </resources>

@@ -29,6 +29,7 @@ import com.osastudio.newshub.net.SubscriptionApi;
 import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
+import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 import com.osastudio.newshub.widgets.BaseAssistent;
 import com.osastudio.newshub.widgets.FileView;
 import com.osastudio.newshub.widgets.SlideSwitcher;
@@ -38,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.Html;
@@ -445,10 +447,20 @@ public class PageActivity extends NewsBaseActivity {
 		public void onPostExecute(NewsResult result) {
 			super.onPostExecute(result);
 			if (result != null && result.isSuccess()) {
-				Intent intent = new Intent();
-				intent.putExtra(PAGE_ID, mPageId);
-				setResult(Activity.RESULT_OK, intent);
-				finish();
+			   Utils.ShowConfirmDialog(PageActivity.this, 
+			         PageActivity.this.getString(R.string.user_issue_success), 
+			         new DialogConfirmCallback() {
+               
+               @Override
+               public void onConfirm(DialogInterface dialog) {
+                  Intent intent = new Intent();
+                  intent.putExtra(PAGE_ID, mPageId);
+                  setResult(Activity.RESULT_OK, intent);
+                  finish();
+                  
+               }
+            });
+				
 			}
 		}
 		
