@@ -830,6 +830,29 @@ public class CategoryActivity extends NewsBaseActivity {
                if (channel_list != null && channel_list .isSuccess()) {
                   mCategoryList = (ArrayList<NewsChannel>) channel_list
                         .getChannelList();
+//                  ArrayList<NewsChannel> list = (ArrayList<NewsChannel>) channel_list
+//                      .getChannelList();
+//                  if (mCategoryList == null) {
+//                     mCategoryList = new ArrayList<NewsChannel>();
+//                  } else {
+//                     mCategoryList.clear();
+//                  }
+//                  for (int i = 0; i < list.size(); i++) {
+//                     NewsChannel channel = list.get(i);
+//                     for(int j = 0; j < 4; j++) {
+//                        NewsChannel item = new NewsChannel();
+//                        item.setChannelId(channel.getChannelId());
+//                        item.setIconId(channel.getIconId());
+//                        item.setIconUrl(channel.getIconUrl());
+//                        item.setResultCode(channel.getResultCode());
+//                        item.setResultDescription(channel.getResultDescription());
+//                        item.setTitleColor(channel.getTitleColor());
+//                        item.setTitleId(channel.getTitleId());
+//                        item.setTitleName(channel.getTitleName());
+//                        item.setTitleType(item.getTitleType());
+//                        mCategoryList.add(item);
+//                     }
+//                  }
                } else {
                   return channel_list;
                }

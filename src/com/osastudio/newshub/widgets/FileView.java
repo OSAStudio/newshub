@@ -193,7 +193,6 @@ public class FileView extends LinearLayout {
       
 		boolean autoLoad = (bWIFI || ((NewsApp) mContext.getApplicationContext())
 		      .getPrefsManager().isAutoLoadingPictureEnabled());
-
       mHtml = processContent(html, size, autoLoad);
 		mWebView.loadDataWithBaseURL("about:blank", mHtml, MIMETYPE, ENCODING,
 				"");
