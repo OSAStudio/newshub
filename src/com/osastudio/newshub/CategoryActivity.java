@@ -172,16 +172,18 @@ public class CategoryActivity extends NewsBaseActivity {
             setupData(0);
             break;
          case Net.NetTipMessage_show:
-            Utils.ShowConfirmDialog(
-                  CategoryActivity.this,
-                  CategoryActivity.this.getResources().getString(
-                        R.string.net_isonline_tip_msg),
-                  new DialogConfirmCallback() {
-                     public void onConfirm(DialogInterface dialog) {
-                        CategoryActivity.this.finish();
-
-                     }
-                  });
+        	if (!CategoryActivity.this.isFinishing()) {
+	            Utils.ShowConfirmDialog(
+	                  CategoryActivity.this,
+	                  CategoryActivity.this.getResources().getString(
+	                        R.string.net_isonline_tip_msg),
+	                  new DialogConfirmCallback() {
+	                     public void onConfirm(DialogInterface dialog) {
+	                        CategoryActivity.this.finish();
+	
+	                     }
+	                  });
+        	 }
             break;
          }
          super.handleMessage(msg);
@@ -323,7 +325,7 @@ public class CategoryActivity extends NewsBaseActivity {
 //         return;
 //      }
       View cover = findViewById(R.id.cover_layout);
-      if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3) {
+      if (cover.getVisibility() == View.VISIBLE && mUserStatus == 3 && mIsLoadFinish) {
          hideCover();
       } else if (mIsExit) {
          if (mExitToast != null) {

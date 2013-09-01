@@ -11,6 +11,7 @@ import com.osastudio.newshub.utils.NewsResultAsyncTask;
 import com.osastudio.newshub.utils.Utils;
 import com.osastudio.newshub.utils.Utils.DialogConfirmCallback;
 
+import android.R.anim;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;

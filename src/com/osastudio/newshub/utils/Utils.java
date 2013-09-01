@@ -416,6 +416,9 @@ public class Utils {
 
 	public static void ShowConfirmDialog(Context context, String msg,
 			final DialogConfirmCallback cb) {
+		if (((Activity)context).isFinishing()) {
+			return;
+		}
 		new AlertDialog.Builder(context)
 				.setMessage(msg)
 				.setPositiveButton(R.string.confirm,

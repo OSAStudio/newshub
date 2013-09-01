@@ -34,7 +34,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/spinner_bg" />
+            android:background="@drawable/spinner_bg" 
+            android:popupBackground="@android:drawable/editbox_background_normal"/>
 
         <TextView
             android:layout_width="wrap_content"
