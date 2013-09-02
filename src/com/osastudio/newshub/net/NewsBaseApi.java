@@ -34,7 +34,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
@@ -69,8 +68,7 @@ public class NewsBaseApi {
       String id = new DeviceUuidFactory(context).getDeviceId();
 
       if (NewsApp.DEBUG) {
-         // id = "667ebbbf9fcd9229344681aebf4ec67316645186"; //TEST
-         id = "313429A2F72C00EC"; // Nexus S
+         id = "667ebbbf9fcd9229344681aebf4ec67316645186"; // TEST
       }
       return id;
    }
@@ -374,9 +372,9 @@ public class NewsBaseApi {
    protected static String getString(HttpUriRequest httpRequest, boolean logging) {
       return getString(httpRequest, logging, false);
    }
-   
-   protected static String getString(HttpUriRequest httpRequest, boolean logging, 
-         boolean checkConnectivityOnly) {
+
+   protected static String getString(HttpUriRequest httpRequest,
+         boolean logging, boolean checkConnectivityOnly) {
       int errorCode = 0;
       String errorDesc = null;
       int retries = 3;
@@ -395,18 +393,18 @@ public class NewsBaseApi {
                if (checkConnectivityOnly) {
                   try {
                      JSONObject jsonObject = new JSONObject();
-                     jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE, 
+                     jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE,
                            NewsResult.RESULT_OK);
-                     jsonObject.put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, 
+                     jsonObject.put(NewsResult.JSON_KEY_RESULT_DESCRIPTION,
                            httpResponse.getStatusLine().getReasonPhrase());
                      return jsonObject.toString();
                   } catch (JSONException e) {
                      e.printStackTrace();
                   }
                }
-               
-               String response = EntityUtils.toString(
-                     httpResponse.getEntity(), HTTP.UTF_8);
+
+               String response = EntityUtils.toString(httpResponse.getEntity(),
+                     HTTP.UTF_8);
                if (logging) {
                   Utils.logi(TAG, "getString() [RESPONSE] " + response);
                }
@@ -435,14 +433,16 @@ public class NewsBaseApi {
             errorCode = NewsResult.RESULT_PARSE_EXCEPTION;
             errorDesc = "Parse Exception";
          }
-         
+
          if (retries <= 0) {
             try {
                JSONObject jsonObject = new JSONObject();
                jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE, errorCode);
-               jsonObject.put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, errorDesc);
+               jsonObject
+                     .put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, errorDesc);
                if (logging) {
-                  Utils.logi(TAG, "getString() [RESULT] " + jsonObject.toString());
+                  Utils.logi(TAG,
+                        "getString() [RESULT] " + jsonObject.toString());
                }
                return jsonObject.toString();
             } catch (JSONException e) {

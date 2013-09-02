@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.library.PreferenceManager;
+import com.osastudio.newshub.net.NewsBaseApi;
 
 import android.app.Activity;
 import android.app.Application;
@@ -23,6 +24,8 @@ public class NewsApp extends Application {
    @Override
    public void onCreate() {
       super.onCreate();
+      
+      NewsBaseApi.enableDebug(false);
    }
 
    public ActivityStack getActivityStack() {
