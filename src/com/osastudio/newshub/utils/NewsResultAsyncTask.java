@@ -19,11 +19,11 @@ public abstract class NewsResultAsyncTask<Params, Progress, Result extends NewsR
     	  if (result.isNetworkError()) {
     		  Utils.ShowNetworkErrorDialog(mContext, true);
     	  } else {
-//	         String msg = Utils.getErrorResultMsg(mContext, result.getResultCode());
-//	         if (msg != null) {
-//	            Utils.ShowConfirmDialog(mContext, msg, null);
-//	         }
-    		 Utils.ShowResultErrorDialog(mContext, result.getResultCode(), false);
+//    		 boolean rtn = Utils.ShowResultErrorDialog(mContext, result.getResultCode(), false);
+//    		 if (!rtn) {
+//    		   Utils.ShowConfirmDialog(mContext, result.getResultDescription(), null);
+//    		 }
+    	    Utils.ShowConfirmDialog(mContext, result.getResultDescription(), null);
     	  }
       }
    }

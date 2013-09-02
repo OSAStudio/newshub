@@ -630,14 +630,31 @@ public class RegisterView extends Dialog {
 						}
 					});
 				} else {
-					Utils.ShowResultErrorDialog(mContext, result.getResultCode(), new DialogConfirmCallback() {
-						
-						@Override
-						public void onConfirm(DialogInterface dialog) {
-							RegisterView.this.dismiss();
-							
-						}
-					});
+//					boolean rtn = Utils.ShowResultErrorDialog(mContext, result.getResultCode(), new DialogConfirmCallback() {
+//						
+//						public void onConfirm(DialogInterface dialog) {
+//							RegisterView.this.dismiss();
+//							
+//						}
+//					});
+//					if (!rtn) {
+//					   Utils.ShowConfirmDialog(mContext, result.getResultDescription(), new DialogConfirmCallback() {
+//                     
+//                     public void onConfirm(DialogInterface dialog) {
+//                        RegisterView.this.dismiss();
+//                        
+//                     }
+//                  });
+//					}
+
+               Utils.ShowConfirmDialog(mContext, result.getResultDescription(), new DialogConfirmCallback() {
+                  
+                  public void onConfirm(DialogInterface dialog) {
+                     RegisterView.this.dismiss();
+                     
+                  }
+               });
+            
 				}
 			} else {
 				setupList(type, datalist);

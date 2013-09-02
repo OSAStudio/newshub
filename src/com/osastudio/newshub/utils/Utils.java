@@ -433,9 +433,12 @@ public class Utils {
 						}).setCancelable(false).show();
 	}
 	
-	public static void ShowResultErrorDialog(final Context context, int resultCode,
+	public static boolean ShowResultErrorDialog(final Context context, int resultCode,
 			final boolean bNeedFinish) {
 		String msg = getErrorResultMsg(context, resultCode);
+		if (msg == null) {
+		   return false;
+		}
 		new AlertDialog.Builder(context)
 		.setMessage(msg)
 		.setPositiveButton(R.string.confirm,
@@ -448,11 +451,15 @@ public class Utils {
 
 					}
 				}).setCancelable(false).show();
+		return true;
 	}
 	
-	public static void ShowResultErrorDialog(final Context context, int resultCode,
+	public static boolean ShowResultErrorDialog(final Context context, int resultCode,
 			final DialogConfirmCallback cb) {
 		String msg = getErrorResultMsg(context, resultCode);
+		if (msg == null) {
+         return false;
+      }
 		new AlertDialog.Builder(context)
 		.setMessage(msg)
 		.setPositiveButton(R.string.confirm,
@@ -465,6 +472,7 @@ public class Utils {
 
 					}
 				}).setCancelable(false).show();
+		return true;
 	}
 	
 	public static void ShowNetworkErrorDialog(final Context context,
