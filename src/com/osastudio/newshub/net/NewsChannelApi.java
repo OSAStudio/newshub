@@ -15,13 +15,14 @@ public class NewsChannelApi extends NewsBaseApi {
 
    private static final String TAG = "NewsChannelApi";
 
-   public static NewsChannelList getNewsChannelList(Context context, String userId) {
+   public static NewsChannelList getNewsChannelList(Context context,
+         String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(getNewsChannelListService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsChannelListService(context), params);
       return (jsonObject != null) ? new NewsChannelList(jsonObject) : null;
    }
 

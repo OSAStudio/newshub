@@ -25,8 +25,8 @@ public class NewsColumnistApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(getNewsColumnistListService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsColumnistListService(context), params);
       return (jsonObject != null) ? new NewsColumnistList(jsonObject) : null;
    }
 
@@ -38,14 +38,14 @@ public class NewsColumnistApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_COLUMNIST_ID, newsColumnist
             .getId()));
-      JSONObject jsonObject = getJsonObject(getNewsColumnistInfoService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsColumnistInfoService(context), params);
       if (jsonObject == null) {
          return null;
       }
 
       NewsColumnistInfo result = new NewsColumnistInfo(jsonObject);
-//      result.setColumnist(newsColumnist);
+      // result.setColumnist(newsColumnist);
       result.setId(newsColumnist.getId());
       return result;
    }

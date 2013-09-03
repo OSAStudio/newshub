@@ -16,9 +16,9 @@ import com.osastudio.newshub.data.user.UserStatus;
 
 public class AppProperties extends NewsBaseObject implements Parcelable,
       UserStatus {
-   
+
    public static final String EXTRA_APP_PROPERTIES = "app_properties";
-   
+
    public static final String JSON_KEY_LOGIN_INFO = "list";
    public static final String JSON_KEY_APK_URL = "android_url";
    public static final String JSON_KEY_MIN_VERSION_CODE = "min_version_code";
@@ -28,6 +28,8 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
    public static final String JSON_KEY_USER_STATUS = "user_status";
    public static final String JSON_KEY_VERSION_CODE = "version_code";
    public static final String JSON_KEY_VERSION_NAME = "version_id";
+   public static final String JSON_KEY_MAIN_SERVER = "server_url";
+   public static final String JSON_KEY_BACKUP_SERVER = "back_server_url";
    public static final String JSON_KEY_PROPERTIES = "list";
 
    private String apkUrl = "";
@@ -38,6 +40,8 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
    private int userStatus = 0;
    private int versionCode = 0;
    private String versionName = "";
+   private String mainServer = "";
+   private String backupServer = "";
 
    public AppProperties() {
 
@@ -49,10 +53,11 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
       this.releaseNotes = src.readString();
       this.splashImageUrl = src.readString();
       src.readStringList(this.userIds);
-      ;
       this.userStatus = src.readInt();
       this.versionCode = src.readInt();
       this.versionName = src.readString();
+      this.mainServer = src.readString();
+      this.backupServer = src.readString();
    }
 
    public AppProperties(JSONObject jsonObject) {
@@ -103,6 +108,14 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
             if (!propertiesObject.isNull(JSON_KEY_VERSION_NAME)) {
                setVersionName(propertiesObject.getString(JSON_KEY_VERSION_NAME)
                      .trim());
+            }
+            if (!propertiesObject.isNull(JSON_KEY_MAIN_SERVER)) {
+               setMainServer(propertiesObject.getString(JSON_KEY_MAIN_SERVER)
+                     .trim());
+            }
+            if (!propertiesObject.isNull(JSON_KEY_BACKUP_SERVER)) {
+               setBackupServer(propertiesObject.getString(
+                     JSON_KEY_BACKUP_SERVER).trim());
             }
          } catch (JSONException e) {
 
@@ -183,11 +196,29 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
    }
 
    public boolean isUpgradeAvailable(PackageInfo pkgInfo) {
-       return pkgInfo.versionCode < this.versionCode;
+      return pkgInfo.versionCode < this.versionCode;
    }
 
    public boolean isUpgradeNecessary(PackageInfo pkgInfo) {
-       return pkgInfo.versionCode < this.minVersionCode;
+      return pkgInfo.versionCode < this.minVersionCode;
+   }
+
+   public String getMainServer() {
+      return this.mainServer;
+   }
+
+   public AppProperties setMainServer(String url) {
+      this.mainServer = url;
+      return this;
+   }
+
+   public String getBackupServer() {
+      return this.backupServer;
+   }
+
+   public AppProperties setBackupServer(String url) {
+      this.backupServer = url;
+      return this;
    }
 
    @Override
@@ -205,6 +236,8 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
       dst.writeInt(this.userStatus);
       dst.writeInt(this.versionCode);
       dst.writeString(this.versionName);
+      dst.writeString(this.mainServer);
+      dst.writeString(this.backupServer);
    }
 
    public static final Parcelable.Creator<AppProperties> CREATOR = new Creator<AppProperties>() {

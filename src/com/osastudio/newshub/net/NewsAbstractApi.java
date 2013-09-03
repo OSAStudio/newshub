@@ -24,8 +24,8 @@ public class NewsAbstractApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_NEWS_CHANNEL_ID, newsChannelId));
-      JSONObject jsonObject = getJsonObject(getNewsAbstractListService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsAbstractListService(context), params);
       if (jsonObject == null) {
          return null;
       }
@@ -38,7 +38,7 @@ public class NewsAbstractApi extends NewsBaseApi {
             }
          }
          getNewsAbstractCache(context).setNewsAbstractList(result);
-//         getNewsBaseAbstractCache(context).setList(result.getList());
+         // getNewsBaseAbstractCache(context).setList(result.getList());
       }
       return result;
    }

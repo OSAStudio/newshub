@@ -28,8 +28,8 @@ public class SubscriptionApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(getSubscriptionTopicListService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getSubscriptionTopicListService(context), params);
       return (jsonObject != null) ? new SubscriptionTopicList(jsonObject)
             : null;
    }
@@ -41,8 +41,8 @@ public class SubscriptionApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, newsTopic.getId()));
-      JSONObject jsonObject = getJsonObject(
-            getSubscriptionAbstractListService(), params);
+      JSONObject jsonObject = getJsonObject(context,
+            getSubscriptionAbstractListService(context), params);
       if (jsonObject == null) {
          return null;
       }
@@ -55,7 +55,7 @@ public class SubscriptionApi extends NewsBaseApi {
             }
          }
          getSubscriptionAbstractCache(context).setAbstracts(result);
-//         getNewsBaseAbstractCache(context).setList(result.getList());
+         // getNewsBaseAbstractCache(context).setList(result.getList());
       }
       return result;
    }
@@ -76,8 +76,8 @@ public class SubscriptionApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsAbstract
             .getId()));
-      JSONObject jsonObject = getJsonObject(getSubscriptionArticleService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getSubscriptionArticleService(context), params);
       if (jsonObject == null) {
          return null;
       }

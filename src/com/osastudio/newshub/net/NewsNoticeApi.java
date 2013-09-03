@@ -25,7 +25,8 @@ public class NewsNoticeApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(getNewsNoticeListService(), params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsNoticeListService(context), params);
       return (jsonObject != null) ? new NewsNoticeList(jsonObject) : null;
    }
 
@@ -36,14 +37,14 @@ public class NewsNoticeApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, newsNotice.getId()));
-      JSONObject jsonObject = getJsonObject(getNewsNoticeArticleService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsNoticeArticleService(context), params);
       if (jsonObject == null) {
          return null;
       }
 
       NewsNoticeArticle result = new NewsNoticeArticle(jsonObject);
-//      result.setNewsBaseTitle(newsNotice);
+      // result.setNewsBaseTitle(newsNotice);
       result.setId(newsNotice.getId());
       return result;
    }
@@ -59,7 +60,8 @@ public class NewsNoticeApi extends NewsBaseApi {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_NEWS_NOTICE_ID, noticeId));
-      JSONObject jsonObject = getJsonObject(feedbackNoticeService(), params);
+      JSONObject jsonObject = getJsonObject(context,
+            feedbackNoticeService(context), params);
       return (jsonObject != null) ? new NoticeResult(jsonObject) : null;
    }
 

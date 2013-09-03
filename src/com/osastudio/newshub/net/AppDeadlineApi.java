@@ -9,8 +9,8 @@ import com.osastudio.newshub.data.AppDeadline;
 public class AppDeadlineApi extends NewsBaseApi {
 
    public static AppDeadline getAppDeadline(Context context) {
-      JSONObject jsonObject = getJsonObject(getAppDeadlineService(), null,
-            HttpMethod.HTTP_GET, false);
+      JSONObject jsonObject = getJsonObject(context,
+            getAppDeadlineService(context), null, HttpMethod.HTTP_GET, false);
       return (jsonObject != null) ? new AppDeadline(jsonObject)
             : new AppDeadline();
    }

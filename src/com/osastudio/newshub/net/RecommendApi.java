@@ -27,8 +27,8 @@ public class RecommendApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(getRecommendedTopicListService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getRecommendedTopicListService(context), params);
       return (jsonObject != null) ? new RecommendedTopicList(jsonObject) : null;
    }
 
@@ -39,8 +39,8 @@ public class RecommendApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, newsTopic.getId()));
-      JSONObject jsonObject = getJsonObject(getRecommendedTopicIntroService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getRecommendedTopicIntroService(context), params);
       if (jsonObject == null) {
          return null;
       }
@@ -66,8 +66,8 @@ public class RecommendApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_TOPIC_ID, topicId));
-      JSONObject jsonObject = getJsonObject(subscribeRecommendedTopicService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            subscribeRecommendedTopicService(context), params);
       return (jsonObject != null) ? new NewsResult(jsonObject) : null;
    }
 

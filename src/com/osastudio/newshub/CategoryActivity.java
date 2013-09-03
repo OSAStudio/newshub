@@ -357,7 +357,7 @@ public class CategoryActivity extends NewsBaseActivity {
       if (mNet.PhoneIsOnLine()) {
          mIsLoadFinish = false;
          // mDlg = Utils.showProgressDlg(this, null);
-         mNet.ExecutNetTask(NewsBaseApi.getWebServer());
+         mNet.ExecutNetTask(this, NewsBaseApi.getWebServer(this));
       } else {
          Utils.ShowConfirmDialog(this,
                getString(R.string.phone_isonline_tip_msg),
