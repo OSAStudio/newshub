@@ -8,7 +8,6 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:background="@drawable/notice_item_bg"
     android:orientation="vertical" >
 
@@ -65,8 +64,10 @@
 
         <ImageView
             android:id="@+id/expend_btn"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:src="@drawable/angle_down"
             android:visibility="visible" />
     </LinearLayout>
