@@ -8,6 +8,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.osastudio.newshub.data.AppProperties;
 
@@ -19,9 +20,21 @@ public class AppPropertiesApi extends NewsBaseApi {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-      JSONObject jsonObject = getJsonObject(getAppPropertiesService(),
+      JSONObject jsonObject = getJsonObject(context,
+            getAppPropertiesService(context, getDefaultWebServer(context)),
             params);
-      return (jsonObject != null) ? new AppProperties(jsonObject) : null;
+      AppProperties result = null;
+      if (jsonObject != null) {
+         result = new AppProperties(jsonObject);
+         if (!TextUtils.isEmpty(result.getMainServer())) {
+            getPrefsManager(context).setMainServer(result.getMainServer());
+            setWebServer(result.getMainServer());
+         }
+         if (!TextUtils.isEmpty(result.getBackupServer())) {
+            getPrefsManager(context).setBackupServer(result.getBackupServer());
+         }
+      }
+      return result;
    }
 
 }

@@ -20,8 +20,8 @@ public class FeedbackApi extends NewsBaseApi {
    private static final String KEY_FEEDBACK_CONTENT = "feedbackContext";
 
    public static FeedbackTypeList getFeedbackTypeList(Context context) {
-      JSONObject jsonObject = getJsonObject(getFeedbackTypeListService(),
-            null);
+      JSONObject jsonObject = getJsonObject(context,
+            getFeedbackTypeListService(context), null);
       return (jsonObject != null) ? new FeedbackTypeList(jsonObject) : null;
    }
 
@@ -31,7 +31,8 @@ public class FeedbackApi extends NewsBaseApi {
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_FEEDBACK_TYPE_ID, feedbackTypeId));
       params.add(new BasicNameValuePair(KEY_FEEDBACK_CONTENT, feedbackContent));
-      JSONObject jsonObject = getJsonObject(feedbackService(), params);
+      JSONObject jsonObject = getJsonObject(context, feedbackService(context),
+            params);
       return (jsonObject != null) ? new NewsResult(jsonObject) : null;
    }
 

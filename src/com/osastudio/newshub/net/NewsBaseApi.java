@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -34,6 +36,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
@@ -42,6 +45,7 @@ import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.library.DeviceUuidFactory;
+import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.utils.FileHelper;
 import com.osastudio.newshub.utils.InputStreamHelper;
 import com.osastudio.newshub.utils.Utils;
@@ -52,8 +56,8 @@ public class NewsBaseApi {
 
    protected static boolean DEBUG = false;
 
-   protected static final String DEFAULT_WEB_SERVER = "www.azker.com";
-   protected static final String DEFAULT_DEBUG_WEB_SERVER = "218.23.42.49";
+   protected static final String DEFAULT_WEB_SERVER = "http://www.azker.com:9010/azker";
+   protected static final String DEFAULT_DEBUG_WEB_SERVER = "http://218.23.42.49:9010/azker";
    protected static String WEB_SERVER = DEFAULT_WEB_SERVER;
    protected static String DEBUG_WEB_SERVER = DEFAULT_DEBUG_WEB_SERVER;
 
@@ -77,7 +81,7 @@ public class NewsBaseApi {
       DEBUG = debug;
    }
 
-   public static void setWebServer(String addr) {
+   protected static void setWebServer(String addr) {
       if (DEBUG) {
          DEBUG_WEB_SERVER = addr;
       } else {
@@ -89,241 +93,256 @@ public class NewsBaseApi {
       return "android";
    }
 
-   public static String getWebServer() {
-      return "http://" + (DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER)
-            + ":9010/azker/admin/";
+   public static String getDefaultWebServer(Context context) {
+      return generateWebServer(context, DEBUG ? DEFAULT_DEBUG_WEB_SERVER
+            : DEFAULT_WEB_SERVER);
    }
 
-   protected static String getAppPropertiesService() {
-      return new StringBuilder(getWebServer()).append(
+   public static String getWebServer(Context context) {
+      return generateWebServer(context, DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER);
+   }
+
+   protected static String generateWebServer(Context context, String server) {
+      return new StringBuilder(server).append("/admin/").toString();
+   }
+
+   protected static String getAppPropertiesService(Context context) {
+      return getAppPropertiesService(context, getWebServer(context));
+   }
+
+   protected static String getAppPropertiesService(Context context,
+         String server) {
+      return new StringBuilder(server).append(
             "loginpicture!checkLoginInfoByMobile.do").toString();
    }
 
-   protected static String getNewsChannelListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsChannelListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "titleshow!getTitleListByMobile.do").toString();
    }
 
-   protected static String getNewsAbstractListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsAbstractListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "lesson!getLessonListByMobile.do").toString();
    }
 
-   protected static String getNewsArticleService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "lesson!getLessonContentByMobile.do").toString();
    }
 
-   protected static String likeArticleService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String likeArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "lesson!submitLessonUPByMobile.do").toString();
    }
 
-   protected static String getUserListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getUserListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getUserInfosByMobile.do").toString();
    }
 
-   protected static String getUserInfoListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getUserInfoListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getUserInfoAndServiceInfoByMobile.do").toString();
    }
 
-   protected static String validateService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String validateService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "serial!checkSerialByMobile.do").toString();
    }
 
-   protected static String getValidateStatusService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getValidateStatusService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!checkActiveUserByMobile.do").toString();
    }
 
-   protected static String registerService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String registerService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!submitUserInfoByMobile.do").toString();
    }
 
-   protected static String addUserService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String addUserService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!addAnotherUserByMobile.do").toString();
    }
 
-   protected static String getCityListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getCityListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getCitysByMobile.do").toString();
    }
 
-   protected static String getCityDistrictListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getCityDistrictListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getAreasByMobile.do").toString();
    }
 
-   protected static String getSchoolTypeListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSchoolTypeListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getSchoolClassByMobile.do").toString();
    }
 
-   protected static String getSchoolListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSchoolListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getSchoolsByMobile.do").toString();
    }
 
-   protected static String getSchoolYearListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSchoolYearListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getYearsByMobile.do").toString();
    }
 
-   protected static String getSchoolClassListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSchoolClassListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getClassesByMobile.do").toString();
    }
 
-   protected static String getQualificationListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getQualificationListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "custom!getXueliByMobile.do").toString();
    }
 
-   protected static String getFeedbackTypeListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getFeedbackTypeListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "problemfeedback!getProblemTypeByMobile.do").toString();
    }
 
-   protected static String feedbackService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String feedbackService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "problemfeedback!submitProblemFeedbackByMobile.do").toString();
    }
 
-   protected static String getNewsNoticeListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsNoticeListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "notify!getNotifyListByMobile.do").toString();
    }
 
-   protected static String getNewsNoticeArticleService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsNoticeArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "notify!getNotifyContentByMobile.do").toString();
    }
 
-   protected static String feedbackNoticeService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String feedbackNoticeService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "notify!submitNotifyFeedbackByMobile.do").toString();
    }
 
-   protected static String getDailyReminderListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getDailyReminderListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "dailyreminder!getDailyReminderListByMobile.do").toString();
    }
 
-   protected static String getSubscriptionTopicListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSubscriptionTopicListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expandlssue!getUserLssuesByMobile.do").toString();
    }
 
-   protected static String getSubscriptionAbstractListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSubscriptionAbstractListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expandlesson!getExpandLessonsByMobile.do").toString();
    }
 
-   protected static String getSubscriptionArticleService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getSubscriptionArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expandlesson!getExpandLessonContentByMobile.do").toString();
    }
 
-   protected static String getRecommendedTopicListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getRecommendedTopicListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expandlssue!getRecommendLssueListByMobile.do").toString();
    }
 
-   protected static String getRecommendedTopicIntroService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getRecommendedTopicIntroService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expandlssue!getRecommendLssueContentByMobile.do").toString();
    }
 
-   protected static String subscribeRecommendedTopicService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String subscribeRecommendedTopicService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expandlssue!submitExpandLssueByMobile.do").toString();
    }
 
-   protected static String getNewsColumnistListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsColumnistListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expert!getExpertListByMobile.do").toString();
    }
 
-   protected static String getNewsColumnistInfoService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsColumnistInfoService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "expert!getExpertContentByMobile.do").toString();
    }
 
-   protected static String getNewsMessageScheduleService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsMessageScheduleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "message!getMessageSendTimeByMobile.do").toString();
    }
 
-   protected static String getNewsMessageListService() {
-      return new StringBuilder(getWebServer()).append(
+   protected static String getNewsMessageListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
             "message!getMessagesByMobile.do").toString();
    }
 
-   protected static String getAppDeadlineService() {
+   protected static String getAppDeadlineService(Context context) {
       return "http://m.weather.com.cn/data/101220101.html";
    }
 
-   protected static JSONObject getJsonObject(String service,
+   protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params) {
-      return getJsonObject(service, params, true);
+      return getJsonObject(context, service, params, true);
    }
 
-   protected static JSONObject getJsonObject(String service,
+   protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params, boolean logging) {
-      return getJsonObject(service, params, DEFAULT_HTTP_METHOD, logging);
+      return getJsonObject(context, service, params, DEFAULT_HTTP_METHOD,
+            logging);
    }
 
-   protected static JSONObject getJsonObject(String service,
+   protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params, HttpMethod method) {
-      return getJsonObject(service, params, method, true);
+      return getJsonObject(context, service, params, method, true);
    }
 
-   protected static JSONObject getJsonObject(String service,
+   protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params, HttpMethod method, boolean logging) {
-      String jsonString = getString(service, params, method, logging);
+      String jsonString = getString(context, service, params, method, logging);
       return NewsResult.toJsonObject(jsonString);
    }
 
-   protected static String getString(String service, List<NameValuePair> params) {
-      return getString(service, params, true);
+   protected static String getString(Context context, String service,
+         List<NameValuePair> params) {
+      return getString(context, service, params, true);
    }
 
-   protected static String getString(String service,
+   protected static String getString(Context context, String service,
          List<NameValuePair> params, boolean logging) {
-      return getString(service, params, DEFAULT_HTTP_METHOD, logging);
+      return getString(context, service, params, DEFAULT_HTTP_METHOD, logging);
    }
 
-   protected static String getString(String service,
+   protected static String getString(Context context, String service,
          List<NameValuePair> params, HttpMethod method) {
-      return getString(service, params, method, true);
+      return getString(context, service, params, method, true);
    }
 
-   protected static String getString(String service,
+   protected static String getString(Context context, String service,
          List<NameValuePair> params, HttpMethod method, boolean logging) {
       if (method == HttpMethod.HTTP_GET) {
-         return getStringByHttpGet(service, params, logging);
+         return getStringByHttpGet(context, service, params, logging);
       } else {
-         return getStringByHttpPost(service, params, logging);
+         return getStringByHttpPost(context, service, params, logging);
       }
    }
 
-   protected static String getStringByHttpGet(String service,
+   protected static String getStringByHttpGet(Context context, String service,
          List<NameValuePair> params) {
-      return getStringByHttpGet(service, params, true);
+      return getStringByHttpGet(context, service, params, true);
    }
 
-   protected static String getStringByHttpGet(String service,
+   protected static String getStringByHttpGet(Context context, String service,
          List<NameValuePair> params, boolean logging) {
       try {
          if (logging) {
             Utils.logi(TAG, "getString() [SERVICE] " + service);
          }
-         return getString(new HttpGet(service), logging);
+         return getString(context, new HttpGet(service), logging);
       } catch (IllegalArgumentException e) {
          e.printStackTrace();
       }
@@ -331,12 +350,12 @@ public class NewsBaseApi {
       return null;
    }
 
-   protected static String getStringByHttpPost(String service,
+   protected static String getStringByHttpPost(Context context, String service,
          List<NameValuePair> params) {
-      return getStringByHttpPost(service, params, true);
+      return getStringByHttpPost(context, service, params, true);
    }
 
-   protected static String getStringByHttpPost(String service,
+   protected static String getStringByHttpPost(Context context, String service,
          List<NameValuePair> params, boolean logging) {
       try {
          if (logging) {
@@ -353,7 +372,7 @@ public class NewsBaseApi {
                                  HTTP.UTF_8));
             }
          }
-         return getString(httpRequest, logging);
+         return getString(context, httpRequest, logging);
       } catch (IllegalArgumentException e) {
          e.printStackTrace();
       } catch (IOException e) {
@@ -365,20 +384,23 @@ public class NewsBaseApi {
       return null;
    }
 
-   protected static String getString(HttpUriRequest httpRequest) {
-      return getString(httpRequest, true);
+   protected static String getString(Context context,
+         HttpRequestBase httpRequest) {
+      return getString(context, httpRequest, true);
    }
 
-   protected static String getString(HttpUriRequest httpRequest, boolean logging) {
-      return getString(httpRequest, logging, false);
+   protected static String getString(Context context,
+         HttpRequestBase httpRequest, boolean logging) {
+      return getString(context, httpRequest, logging, false);
    }
 
-   protected static String getString(HttpUriRequest httpRequest,
-         boolean logging, boolean checkConnectivityOnly) {
+   protected static String getString(Context context,
+         HttpRequestBase httpRequest, boolean logging,
+         boolean checkConnectivityOnly) {
       int errorCode = 0;
       String errorDesc = null;
       int retries = 3;
-      while (retries-- > 0) {
+      while (retries > 0) {
          if (logging) {
             Utils.logi(TAG, "getString() [RETRIES] " + retries);
          }
@@ -434,7 +456,19 @@ public class NewsBaseApi {
             errorDesc = "Parse Exception";
          }
 
-         if (retries <= 0) {
+         retries--;
+
+         if (retries == 1) {
+            PreferenceManager prefsManager = getPrefsManager(context);
+            String mainServer = prefsManager.getMainServer();
+            String backServer = prefsManager.getBackupServer();
+            String service = httpRequest.getURI().toString();
+            String newService = service.replaceFirst(mainServer, backServer);
+            if (logging) {
+               Utils.logi(TAG, "getString() [NEW SERVICE] " + newService);
+            }
+            httpRequest.setURI(URI.create(newService));
+         } else if (retries <= 0) {
             try {
                JSONObject jsonObject = new JSONObject();
                jsonObject.put(NewsResult.JSON_KEY_RESULT_CODE, errorCode);
@@ -659,6 +693,10 @@ public class NewsBaseApi {
          Utils.logi(TAG, "length=" + file.length());
       }
       return filePath;
+   }
+
+   protected static PreferenceManager getPrefsManager(Context context) {
+      return ((NewsApp) context.getApplicationContext()).getPrefsManager();
    }
 
    protected static CacheManager getCacheManager(Context context) {

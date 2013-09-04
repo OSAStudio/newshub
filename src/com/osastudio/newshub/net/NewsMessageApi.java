@@ -20,8 +20,8 @@ public class NewsMessageApi extends NewsBaseApi {
          Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
-      JSONObject jsonObject = getJsonObject(getNewsMessageScheduleService(),
-            params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsMessageScheduleService(context), params);
       return (jsonObject != null) ? new NewsMessageScheduleList(jsonObject)
             : null;
    }
@@ -31,7 +31,8 @@ public class NewsMessageApi extends NewsBaseApi {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(getNewsMessageListService(), params);
+      JSONObject jsonObject = getJsonObject(context,
+            getNewsMessageListService(context), params);
       return (jsonObject != null) ? new NewsMessageList(jsonObject) : null;
    }
 

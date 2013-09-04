@@ -50,8 +50,9 @@ public class Net {
 	 * true   锟斤拷路锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	 * false  锟斤拷锟斤拷锟斤拷锟斤拷锟轿达拷锟斤拷锟�
 	 */
-   private boolean NetIsOnLine(String path) {
-      String jsonString = NewsBaseApi.getString(new HttpGet(path), true, true);
+   private boolean NetIsOnLine(Context context, String path) {
+      String jsonString = NewsBaseApi.getString(context, new HttpGet(path), 
+            true, true);
       JSONObject jsonObject = NewsResult.toJsonObject(jsonString);
       return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
             : false;
@@ -62,9 +63,9 @@ public class Net {
 	 * 锟叫断凤拷锟斤拷锟斤拷锟斤拷锟斤拷
 	 * @param HttpPath
 	 */
-	public void ExecutNetTask(String HttpPath){
+	public void ExecutNetTask(Context context, String HttpPath){
 		this.httpPath = HttpPath;
-		new NetTask().execute();
+		new NetTask().execute(context);
 	}
 	
 	static class NetResult {
@@ -80,11 +81,11 @@ public class Net {
 	   
 	}
 	
-	class NetTask extends AsyncTask<Void, Void, NetResult>{
+	class NetTask extends AsyncTask<Context, Void, NetResult> {
 
 		@Override
-		protected NetResult doInBackground(Void... params) {
-			boolean flag = NetIsOnLine(httpPath);
+		protected NetResult doInBackground(Context... params) {
+			boolean flag = NetIsOnLine(params[0], httpPath);
 			NetResult result = new NetResult();
 			result.setNetflag(flag);
 			return result;
