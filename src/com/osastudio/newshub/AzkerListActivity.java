@@ -604,7 +604,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 					subTitle.setText(Html.fromHtml(data.mSubTitle));
 					expendBtn.setVisibility(View.VISIBLE);
 					expendBtn.setClickable(true);
-					expendBtn.setBackgroundColor(Color.CYAN);
+//					expendBtn.setBackgroundColor(Color.CYAN);
 					if (data.mIsShowSubTitle) {
 						subTitle.setVisibility(View.VISIBLE);
 						expendBtn.setImageResource(R.drawable.angle_up);

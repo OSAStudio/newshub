@@ -66,10 +66,10 @@ public class FileView extends LinearLayout {
 
       LayoutInflater inflater = LayoutInflater.from(mContext);
       inflater.inflate(R.layout.file_view, this);
-      mPraiseBtn = findViewById(R.id.praise_btn);
+      mPraiseBtn = findViewById(R.id.praise_layout);
       mPraiseBtn.setOnClickListener(new OnClickListener() {
          public void onClick(View v) {
-
+        	 Utils.logd("FileView", "mPraiseBtn click");
             new PraiseTask(mContext).execute();
          }
       });
