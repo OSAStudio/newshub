@@ -64,12 +64,13 @@
 
         <ImageView
             android:id="@+id/expend_btn"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+			android:minWidth="60dp"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:src="@drawable/angle_down"
-            android:visibility="visible" />
+            android:visibility="visible" 
+            android:clickable="true"
+            android:scaleType="center"/>"
     </LinearLayout>
 
     <TextView

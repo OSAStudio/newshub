@@ -163,7 +163,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mTitleView.setText(Html.fromHtml(mTitle));
 		}
 		mListView = (ListView) findViewById(R.id.list);
-//		mListView.setOnItemClickListener(new ItemClickListener());
+		mListView.setOnItemClickListener(new ItemClickListener());
 	}
 	
 	
@@ -573,6 +573,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 				expendBtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						Utils.logd("listActivity", "expend btn click");
 						ListData data = mListDatas.get(position);
 						data.mIsShowSubTitle = !data.mIsShowSubTitle;
 						// if (subTitle.getVisibility() != View.VISIBLE) {
@@ -602,6 +603,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 				if (data.mSubTitle != null) {
 					subTitle.setText(Html.fromHtml(data.mSubTitle));
 					expendBtn.setVisibility(View.VISIBLE);
+					expendBtn.setClickable(true);
 					expendBtn.setBackgroundColor(Color.CYAN);
 					if (data.mIsShowSubTitle) {
 						subTitle.setVisibility(View.VISIBLE);
@@ -614,14 +616,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 					subTitle.setVisibility(View.GONE);
 					expendBtn.setVisibility(View.GONE);
 				}
-				layout.setOnClickListener(new OnClickListener() {
-               
-               @Override
-               public void onClick(View v) {
-                  startNextActivityByClick(position);
-                  
-               }
-            });
+//				layout.setOnClickListener(new OnClickListener() {
+//               
+//               @Override
+//                  startNextActivityByClick(position);
+//                  
+//               }
+//            });
 
 				return layout;
 			} else {
