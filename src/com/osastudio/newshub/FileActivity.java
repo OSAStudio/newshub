@@ -305,6 +305,7 @@ public class FileActivity extends NewsBaseActivity {
 				if (fileview == null) {
 					fileview = new FileView(FileActivity.this);
 				}
+				
 				TextView title = (TextView) fileview.findViewById(R.id.title);
 				if (title != null && mCategoryTitle != null) {
 					title.setText(mCategoryTitle);

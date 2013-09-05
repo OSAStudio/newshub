@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 import com.huadi.azker_phone.R;
+import com.huadi.azker_phone.R.color;
 import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.data.DailyReminder;
 import com.osastudio.newshub.data.DailyReminderList;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -571,6 +573,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 				expendBtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						Utils.logd("listActivity", "expend btn click");
 						ListData data = mListDatas.get(position);
 						data.mIsShowSubTitle = !data.mIsShowSubTitle;
 						// if (subTitle.getVisibility() != View.VISIBLE) {
@@ -600,6 +603,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 				if (data.mSubTitle != null) {
 					subTitle.setText(Html.fromHtml(data.mSubTitle));
 					expendBtn.setVisibility(View.VISIBLE);
+					expendBtn.setClickable(true);
+//					expendBtn.setBackgroundColor(Color.CYAN);
 					if (data.mIsShowSubTitle) {
 						subTitle.setVisibility(View.VISIBLE);
 						expendBtn.setImageResource(R.drawable.angle_up);
@@ -611,6 +616,13 @@ public class AzkerListActivity extends NewsBaseActivity {
 					subTitle.setVisibility(View.GONE);
 					expendBtn.setVisibility(View.GONE);
 				}
+//				layout.setOnClickListener(new OnClickListener() {
+//               
+//               @Override
+//                  startNextActivityByClick(position);
+//                  
+//               }
+//            });
 
 				return layout;
 			} else {
@@ -672,23 +684,41 @@ public class AzkerListActivity extends NewsBaseActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			switch (mListType) {
-			case Utils.RECOMMEND_LIST_TYPE:
-				startPageActivity(position, true);
-				break;
-			case Utils.EXPERT_LIST_TYPE:
-			case Utils.NOTIFY_LIST_TYPE:
-				startPageActivity(position, false);
-				break;
-			case Utils.USER_ISSUES_TYPE:
-			case Utils.DAILY_REMINDER_TYPE:
-				startSummaryActivity(position);
-
-				break;
-			}
+		   startNextActivityByClick(position);
+//			switch (mListType) {
+//			case Utils.RECOMMEND_LIST_TYPE:
+//				startPageActivity(position, true);
+//				break;
+//			case Utils.EXPERT_LIST_TYPE:
+//			case Utils.NOTIFY_LIST_TYPE:
+//				startPageActivity(position, false);
+//				break;
+//			case Utils.USER_ISSUES_TYPE:
+//			case Utils.DAILY_REMINDER_TYPE:
+//				startSummaryActivity(position);
+//
+//				break;
+//			}
 			
 		}
 		
+	}
+	
+	private void startNextActivityByClick(int position) {
+	   switch (mListType) {
+      case Utils.RECOMMEND_LIST_TYPE:
+         startPageActivity(position, true);
+         break;
+      case Utils.EXPERT_LIST_TYPE:
+      case Utils.NOTIFY_LIST_TYPE:
+         startPageActivity(position, false);
+         break;
+      case Utils.USER_ISSUES_TYPE:
+      case Utils.DAILY_REMINDER_TYPE:
+         startSummaryActivity(position);
+
+         break;
+      }
 	}
 	
 
