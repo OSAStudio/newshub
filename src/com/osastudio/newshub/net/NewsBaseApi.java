@@ -102,6 +102,22 @@ public class NewsBaseApi {
       return generateWebServer(context, DEBUG ? DEBUG_WEB_SERVER : WEB_SERVER);
    }
 
+   public static String getWebServerByType(Context context, ServerType type) {
+      String server = null;
+      if (ServerType.isMainServer(type)) {
+         server = getPrefsManager(context).getMainServer();
+      } else if (ServerType.isBackupServer(type)) {
+         server = getPrefsManager(context).getBackupServer();
+      } else if (ServerType.isAutomatic(type)) {
+         server = getWebServer(context);
+      }
+
+      if (TextUtils.isEmpty(server)) {
+         server = getDefaultWebServer(context);
+      }
+      return server;
+   }
+
    protected static String generateWebServer(Context context, String server) {
       return new StringBuilder(server).append("/admin/").toString();
    }
@@ -277,8 +293,13 @@ public class NewsBaseApi {
    }
 
    protected static String getNewsMessageListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "message!getMessagesByMobile.do").toString();
+      return getNewsMessageListService(context, getWebServer(context));
+   }
+
+   protected static String getNewsMessageListService(Context context,
+         String server) {
+      return new StringBuilder(server).append("message!getMessagesByMobile.do")
+            .toString();
    }
 
    protected static String getAppDeadlineService(Context context) {
@@ -287,62 +308,68 @@ public class NewsBaseApi {
 
    protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params) {
-      return getJsonObject(context, service, params, true);
+      return getJsonObject(context, service, params, new ExtraParameter());
    }
 
    protected static JSONObject getJsonObject(Context context, String service,
-         List<NameValuePair> params, boolean logging) {
+         List<NameValuePair> params, ExtraParameter extras) {
       return getJsonObject(context, service, params, DEFAULT_HTTP_METHOD,
-            logging);
+            extras);
    }
 
    protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params, HttpMethod method) {
-      return getJsonObject(context, service, params, method, true);
+      return getJsonObject(context, service, params, method,
+            new ExtraParameter());
    }
 
    protected static JSONObject getJsonObject(Context context, String service,
-         List<NameValuePair> params, HttpMethod method, boolean logging) {
-      String jsonString = getString(context, service, params, method, logging);
+         List<NameValuePair> params, HttpMethod method, ExtraParameter extras) {
+      String jsonString = getString(context, service, params, method, extras);
       return NewsResult.toJsonObject(jsonString);
    }
 
    protected static String getString(Context context, String service,
          List<NameValuePair> params) {
-      return getString(context, service, params, true);
+      return getString(context, service, params, new ExtraParameter());
    }
 
    protected static String getString(Context context, String service,
-         List<NameValuePair> params, boolean logging) {
-      return getString(context, service, params, DEFAULT_HTTP_METHOD, logging);
+         List<NameValuePair> params, ExtraParameter extras) {
+      return getString(context, service, params, DEFAULT_HTTP_METHOD, extras);
    }
 
    protected static String getString(Context context, String service,
          List<NameValuePair> params, HttpMethod method) {
-      return getString(context, service, params, method, true);
+      return getString(context, service, params, method, new ExtraParameter());
    }
 
    protected static String getString(Context context, String service,
-         List<NameValuePair> params, HttpMethod method, boolean logging) {
+         List<NameValuePair> params, HttpMethod method, ExtraParameter extras) {
       if (method == HttpMethod.HTTP_GET) {
-         return getStringByHttpGet(context, service, params, logging);
+         return getStringByHttpGet(context, service, params, extras);
       } else {
-         return getStringByHttpPost(context, service, params, logging);
+         return getStringByHttpPost(context, service, params, extras);
       }
    }
 
    protected static String getStringByHttpGet(Context context, String service,
          List<NameValuePair> params) {
-      return getStringByHttpGet(context, service, params, true);
+      return getStringByHttpGet(context, service, params, new ExtraParameter());
    }
 
    protected static String getStringByHttpGet(Context context, String service,
-         List<NameValuePair> params, boolean logging) {
+         List<NameValuePair> params, ExtraParameter extras) {
+      boolean logging = true;
+      if (extras != null) {
+         logging = extras.enableLogging;
+      }
+
       try {
          if (logging) {
             Utils.logi(TAG, "getString() [SERVICE] " + service);
          }
-         return getString(context, new HttpGet(service), logging);
+         return getString(context, new HttpGet(service), extras);
       } catch (IllegalArgumentException e) {
          e.printStackTrace();
       }
@@ -352,11 +379,16 @@ public class NewsBaseApi {
 
    protected static String getStringByHttpPost(Context context, String service,
          List<NameValuePair> params) {
-      return getStringByHttpPost(context, service, params, true);
+      return getStringByHttpPost(context, service, params, new ExtraParameter());
    }
 
    protected static String getStringByHttpPost(Context context, String service,
-         List<NameValuePair> params, boolean logging) {
+         List<NameValuePair> params, ExtraParameter extras) {
+      boolean logging = true;
+      if (extras != null) {
+         logging = extras.enableLogging;
+      }
+
       try {
          if (logging) {
             Utils.logi(TAG, "getString() [SERVICE] " + service);
@@ -372,7 +404,7 @@ public class NewsBaseApi {
                                  HTTP.UTF_8));
             }
          }
-         return getString(context, httpRequest, logging);
+         return getString(context, httpRequest, extras);
       } catch (IllegalArgumentException e) {
          e.printStackTrace();
       } catch (IOException e) {
@@ -386,17 +418,20 @@ public class NewsBaseApi {
 
    protected static String getString(Context context,
          HttpRequestBase httpRequest) {
-      return getString(context, httpRequest, true);
+      return getString(context, httpRequest, new ExtraParameter());
    }
 
    protected static String getString(Context context,
-         HttpRequestBase httpRequest, boolean logging) {
-      return getString(context, httpRequest, logging, false);
-   }
+         HttpRequestBase httpRequest, ExtraParameter extras) {
+      boolean logging = true;
+      boolean checkConnectivityOnly = false;
+      boolean useBackupServerIfFailed = true;
+      if (extras != null) {
+         logging = extras.enableLogging;
+         checkConnectivityOnly = extras.checkConnectivityOnly;
+         useBackupServerIfFailed = extras.useBackupServerIfFailed;
+      }
 
-   protected static String getString(Context context,
-         HttpRequestBase httpRequest, boolean logging,
-         boolean checkConnectivityOnly) {
       int errorCode = 0;
       String errorDesc = null;
       int retries = 3;
@@ -459,15 +494,17 @@ public class NewsBaseApi {
          retries--;
 
          if (retries == 1) {
-            PreferenceManager prefsManager = getPrefsManager(context);
-            String mainServer = prefsManager.getMainServer();
-            String backServer = prefsManager.getBackupServer();
-            String service = httpRequest.getURI().toString();
-            String newService = service.replaceFirst(mainServer, backServer);
-            if (logging) {
-               Utils.logi(TAG, "getString() [NEW SERVICE] " + newService);
+            if (useBackupServerIfFailed) {
+               PreferenceManager prefsManager = getPrefsManager(context);
+               String mainServer = prefsManager.getMainServer();
+               String backServer = prefsManager.getBackupServer();
+               String service = httpRequest.getURI().toString();
+               String newService = service.replaceFirst(mainServer, backServer);
+               if (logging) {
+                  Utils.logi(TAG, "getString() [NEW SERVICE] " + newService);
+               }
+               httpRequest.setURI(URI.create(newService));
             }
-            httpRequest.setURI(URI.create(newService));
          } else if (retries <= 0) {
             try {
                JSONObject jsonObject = new JSONObject();

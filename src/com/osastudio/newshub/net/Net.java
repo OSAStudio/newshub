@@ -51,8 +51,10 @@ public class Net {
 	 * false  锟斤拷锟斤拷锟斤拷锟斤拷锟轿达拷锟斤拷锟�
 	 */
    private boolean NetIsOnLine(Context context, String path) {
+      ExtraParameter extras = new ExtraParameter();
+      extras.checkConnectivity = true;
       String jsonString = NewsBaseApi.getString(context, new HttpGet(path), 
-            true, true);
+            extras);
       JSONObject jsonObject = NewsResult.toJsonObject(jsonString);
       return (jsonObject != null) ? new NewsResult(jsonObject).isSuccess()
             : false;

@@ -28,11 +28,20 @@ public class NewsMessageApi extends NewsBaseApi {
 
    public static NewsMessageList getNewsMessageList(Context context,
          String userId) {
+      return getNewsMessageList(context, userId, ServerType.AUTOMATIC);
+   }
+
+   public static NewsMessageList getNewsMessageList(Context context,
+         String userId, ServerType serverType) {
+      ExtraParameter extras = new ExtraParameter();
+      extras.useBackupServerIfFailed = false;
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_USER_ID, userId));
-      JSONObject jsonObject = getJsonObject(context,
-            getNewsMessageListService(context), params);
+      JSONObject jsonObject = getJsonObject(
+            context,
+            getNewsMessageListService(context,
+                  getWebServerByType(context, serverType)), params, extras);
       return (jsonObject != null) ? new NewsMessageList(jsonObject) : null;
    }
 

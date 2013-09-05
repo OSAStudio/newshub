@@ -12,6 +12,7 @@ import com.osastudio.newshub.library.UpgradeManager;
 import com.osastudio.newshub.net.AppDeadlineApi;
 import com.osastudio.newshub.net.AppPropertiesApi;
 import com.osastudio.newshub.net.NewsMessageApi;
+import com.osastudio.newshub.net.ServerType;
 import com.osastudio.newshub.utils.NetworkHelper;
 import com.osastudio.newshub.utils.Utils;
 
@@ -243,7 +244,8 @@ public class NewsService extends Service {
          } else if (count == 1) {
             requestNewsMessageList(userId, count + 1, true, 0);
          } else if (count == 2) {
-            requestNewsMessageList(userId, count + 1);
+            requestNewsMessageList(userId, count + 1, false, 0,
+                  ServerType.BACKUP);
          }
       }
    }
@@ -309,7 +311,7 @@ public class NewsService extends Service {
    }
 
    private void requestNewsMessageList(String userId, int count,
-         boolean retryIfFailed, long retryDelayedMillis) {
+         boolean retryIfFailed, long retryDelayedMillis, ServerType serverType) {
       if (NetworkHelper.isNetworkAvailable(NewsService.this)) {
          Utils.logi(TAG, "requestNewsMessageList: userId=" + userId + " count="
                + count);
@@ -318,8 +320,15 @@ public class NewsService extends Service {
          task.setCount(count);
          task.setRetryIfFailed(retryIfFailed);
          task.setRetryDelayedMillis(retryDelayedMillis);
+         task.setServerType(serverType);
          task.start();
       }
+   }
+
+   private void requestNewsMessageList(String userId, int count,
+         boolean retryIfFailed, long retryDelayedMillis) {
+      requestNewsMessageList(userId, count, retryIfFailed, retryDelayedMillis,
+            ServerType.AUTOMATIC);
    }
 
    private void requestNewsMessageList(String userId, int count) {
@@ -335,8 +344,8 @@ public class NewsService extends Service {
       intent.setAction(ACTION_PULL_NEWS_MESSAGE);
       intent.putExtra("userId", userId);
       intent.putExtra("count", count);
-      PendingIntent pi = PendingIntent.getBroadcast(this, userId.hashCode(), intent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent pi = PendingIntent.getBroadcast(this, userId.hashCode(),
+            intent, PendingIntent.FLAG_UPDATE_CURRENT);
       alarmManager.cancel(pi);
       alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleMillis, pi);
    }
@@ -424,7 +433,8 @@ public class NewsService extends Service {
             } else if (count == 2) {
                requestNewsMessageList(userId, count, true, 0);
             } else {
-               requestNewsMessageList(userId, count);
+               requestNewsMessageList(userId, count, false, 0,
+                     ServerType.BACKUP);
             }
          }
       }
@@ -536,6 +546,7 @@ public class NewsService extends Service {
       private int count = 0;
       private boolean retryIfFailed = false;
       private long retryDelayedMillis = 0;
+      private ServerType serverType = ServerType.AUTOMATIC;
 
       public NewsMessageListTask(Handler handler, Context context, String userId) {
          super(handler, context);
@@ -554,9 +565,14 @@ public class NewsService extends Service {
          this.retryDelayedMillis = millis;
       }
 
+      public void setServerType(ServerType type) {
+         this.serverType = type;
+      }
+
       @Override
       public NewsMessageList doInBackground() {
-         return NewsMessageApi.getNewsMessageList(this.context, this.userId);
+         return NewsMessageApi.getNewsMessageList(this.context, this.userId,
+               this.serverType);
       }
 
       @Override
@@ -585,7 +601,8 @@ public class NewsService extends Service {
                         System.currentTimeMillis() + this.retryDelayedMillis,
                         this.count + 1);
                } else {
-                  requestNewsMessageList(this.userId, this.count + 1);
+                  requestNewsMessageList(this.userId, this.count + 1, false, 0,
+                        ServerType.BACKUP);
                }
             }
          }
