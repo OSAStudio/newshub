@@ -52,7 +52,7 @@ public class Net {
 	 */
    private boolean NetIsOnLine(Context context, String path) {
       ExtraParameter extras = new ExtraParameter();
-      extras.checkConnectivity = true;
+      extras.checkConnectivityOnly = true;
       String jsonString = NewsBaseApi.getString(context, new HttpGet(path), 
             extras);
       JSONObject jsonObject = NewsResult.toJsonObject(jsonString);
