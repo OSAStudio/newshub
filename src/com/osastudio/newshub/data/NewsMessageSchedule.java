@@ -15,7 +15,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    protected static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
 
    protected static final String SEPARATOR = ",";
-   protected static final int MAX_PULLING_COUNT = 3;
+   public static final int MAX_PULLING_COUNT = 3;
    protected static final int PULLING_TIME_TOLERANCE = 10; // millisecond
 
    private long baseMillis = 0;
@@ -114,6 +114,10 @@ public class NewsMessageSchedule extends NewsBaseObject {
 
    public boolean allowPulling() {
       return isToday() && !hasPullingCountExceeded() && !isPullingLate();
+   }
+   
+   public boolean hasNotifiedToday() {
+      return isToday() && hasPullingCountExceeded();
    }
 
    @Override

@@ -353,25 +353,32 @@ public class NewsService extends Service {
    private void notifyNewsMessage(NewsMessageList messages) {
       for (int i = 0; i < messages.getList().size(); i++) {
          NewsMessage msg = messages.getList().get(i);
-         Notification noti = new Notification(R.drawable.noti,
-               getString(R.string.news_message_prompt_title),
-               System.currentTimeMillis());
-         PendingIntent pi = PendingIntent.getActivity(this, msg.hashCode(),
-               getNewsMessageLaunchIntent(msg),
-               PendingIntent.FLAG_UPDATE_CURRENT);
-         noti.setLatestEventInfo(this, msg.getContent(),
-               getMsgTitleByType(msg), pi);
-         noti.flags |= Notification.FLAG_AUTO_CANCEL;
-         if (i == 0) {
-            noti.defaults |= Notification.DEFAULT_SOUND;
-            noti.defaults |= Notification.DEFAULT_LIGHTS;
-            noti.defaults |= Notification.DEFAULT_VIBRATE;
-         } else {
-            noti.defaults = 0;
+         PreferenceManager prefsManager = ((NewsApp) getApplication())
+               .getPrefsManager();
+         NewsMessageSchedule schedule = NewsMessageSchedule
+               .parseString(prefsManager.getMessageScheduleByUserId(msg
+                     .getUserId()));
+         if (!schedule.hasNotifiedToday()) {
+            Notification noti = new Notification(R.drawable.noti,
+                  getString(R.string.news_message_prompt_title),
+                  System.currentTimeMillis());
+            PendingIntent pi = PendingIntent.getActivity(this, msg.hashCode(),
+                  getNewsMessageLaunchIntent(msg),
+                  PendingIntent.FLAG_UPDATE_CURRENT);
+            noti.setLatestEventInfo(this, msg.getContent(),
+                  getMsgTitleByType(msg), pi);
+            noti.flags |= Notification.FLAG_AUTO_CANCEL;
+            if (i == 0) {
+               noti.defaults |= Notification.DEFAULT_SOUND;
+               noti.defaults |= Notification.DEFAULT_LIGHTS;
+               noti.defaults |= Notification.DEFAULT_VIBRATE;
+            } else {
+               noti.defaults = 0;
+            }
+            NotificationManager manager = (NotificationManager) getApplicationContext()
+                  .getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(msg.hashCode(), noti);
          }
-         NotificationManager manager = (NotificationManager) getApplicationContext()
-               .getSystemService(Context.NOTIFICATION_SERVICE);
-         manager.notify(msg.hashCode(), noti);
       }
    }
 

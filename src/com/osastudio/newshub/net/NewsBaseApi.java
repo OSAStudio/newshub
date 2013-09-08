@@ -423,18 +423,19 @@ public class NewsBaseApi {
 
    protected static String getString(Context context,
          HttpRequestBase httpRequest, ExtraParameter extras) {
-      boolean logging = true;
-      boolean checkConnectivityOnly = false;
-      boolean useBackupServerIfFailed = true;
+      boolean logging = ExtraParameter.DEFAULT_LOGGING_STATUS;
+      boolean checkConnectivityOnly = ExtraParameter.DEFAULT_CHECK_CONNECTIVITY_STATUS;
+      boolean useBackupServerIfFailed = ExtraParameter.DEFAULT_USE_BACKUP_SERVER_STATUS;
+      int retries = ExtraParameter.DEFAULT_RETRY_TIMES_ON_ERROR;
       if (extras != null) {
          logging = extras.enableLogging;
          checkConnectivityOnly = extras.checkConnectivityOnly;
          useBackupServerIfFailed = extras.useBackupServerIfFailed;
+         retries = extras.retryTimesOnError;
       }
 
       int errorCode = 0;
       String errorDesc = null;
-      int retries = 3;
       while (retries > 0) {
          if (logging) {
             Utils.logi(TAG, "getString() [RETRIES] " + retries);
