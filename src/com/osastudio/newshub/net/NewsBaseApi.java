@@ -306,6 +306,21 @@ public class NewsBaseApi {
       return "http://m.weather.com.cn/data/101220101.html";
    }
 
+   protected static String getExamInfoService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "").toString();
+   }
+
+   protected static String getExamService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "").toString();
+   }
+
+   protected static String commitExamAnswerService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "").toString();
+   }
+
    protected static JSONObject getJsonObject(Context context, String service,
          List<NameValuePair> params) {
       return getJsonObject(context, service, params, new ExtraParameter());

@@ -1,5 +1,7 @@
 package com.osastudio.newshub.data.base;
 
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,6 +12,10 @@ public class NewsBaseTitle extends NewsBaseObject implements NewsId, Parcelable 
 
    public NewsBaseTitle() {
       
+   }
+   
+   public NewsBaseTitle(JSONObject jsonObject) {
+      super(jsonObject);
    }
 
    public NewsBaseTitle(Parcel src) {
