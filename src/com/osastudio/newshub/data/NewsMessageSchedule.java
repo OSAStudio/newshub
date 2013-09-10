@@ -9,8 +9,11 @@ import org.json.JSONObject;
 import android.text.TextUtils;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
+import com.osastudio.newshub.utils.Utils;
 
 public class NewsMessageSchedule extends NewsBaseObject {
+   
+   private static final String TAG = "NewsMessageSchedule";
 
    protected static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
 
@@ -134,16 +137,19 @@ public class NewsMessageSchedule extends NewsBaseObject {
          result = new NewsMessageSchedule();
          try {
             if (!TextUtils.isEmpty(arr[0])) {
+               Utils.log(TAG, "parseString: baseMillis=" + arr[0]);
                result.setBaseMillis(Long.valueOf(arr[0]));
             }
             if (!TextUtils.isEmpty(arr[1])) {
+               Utils.log(TAG, "parseString: offsetMillis=" + arr[1]);
                result.setOffsetMillis(Long.valueOf(arr[1]));
             }
             if (!TextUtils.isEmpty(arr[2])) {
+               Utils.log(TAG, "parseString: count=" + arr[2]);
                result.setCount(Integer.valueOf(arr[2]));
             }
          } catch (NumberFormatException e) {
-
+            e.printStackTrace();
          }
       }
       return result;
