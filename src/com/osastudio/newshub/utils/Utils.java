@@ -4,21 +4,18 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 import com.huadi.azker_phone.R;
-import com.osastudio.newshub.CategoryActivity;
-import com.osastudio.newshub.PageActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -28,15 +25,15 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
-import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 
 public class Utils {
 
+   private static final Logger logger = LoggerFactory.getLogger();
+   
 	private static final String APP_NAME = "NewsHub";
 
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 
 	final static public int NOTIFY_LIST_TYPE = 1;
 	final static public int IMPORT_NOTIFY_TYPE = 2;
@@ -181,8 +178,7 @@ public class Utils {
 				sbmp = Bitmap.createBitmap(outputW, outputH,
 						Bitmap.Config.ARGB_8888);
 			} catch (OutOfMemoryError e) {
-				Utils.logd("DecodeCache",
-						"createStretchBitmap, OutOfMemoryError!");
+            e.printStackTrace();
 			}
 			if (sbmp != null) {
 				Canvas canvas = new Canvas(sbmp);
@@ -317,8 +313,7 @@ public class Utils {
 			try {
 				sbmp = Bitmap.createBitmap(ow, oh, Bitmap.Config.ARGB_8888);
 			} catch (OutOfMemoryError e) {
-				Utils.logd("DecodeCache",
-						"createStretchBitmap, OutOfMemoryError!");
+            e.printStackTrace();
 			}
 			if (sbmp != null) {
 				Canvas canvas = new Canvas(sbmp);
@@ -633,36 +628,9 @@ public class Utils {
 	
    
 	public static void log(String tag, String info) {
-		logi(tag, info);
-	}
-
-	public static void logd(String tag, String info) {
 		if (DEBUG) {
-			Log.d(APP_NAME + ">>>>>>>>>>" + tag, "-------->" + info);
-		}
-	}
-
-	public static void loge(String tag, String info) {
-		if (DEBUG) {
-			Log.e(APP_NAME + ">>>>>>>>>>" + tag, "-------->" + info);
-		}
-	}
-
-	public static void logi(String tag, String info) {
-		if (DEBUG) {
-			Log.i(APP_NAME + ">>>>>>>>>>" + tag, "-------->" + info);
-		}
-	}
-
-	public static void logv(String tag, String info) {
-		if (DEBUG) {
-			Log.v(APP_NAME + ">>>>>>>>>>" + tag, "-------->" + info);
-		}
-	}
-
-	public static void logw(String tag, String info) {
-		if (DEBUG) {
-			Log.w(APP_NAME + ">>>>>>>>>>" + tag, "-------->" + info);
+//			Log.d(APP_NAME + ">>>>>>>>>>" + tag, "---->----" + info);
+   		logger.debug(tag + "---->----" + info);
 		}
 	}
 

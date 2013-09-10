@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+import com.google.code.microlog4android.config.PropertyConfigurator;
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.NewsApp.TempCacheData;
 import com.osastudio.newshub.cache.NewsAbstractCache;
@@ -162,7 +165,7 @@ public class CategoryActivity extends NewsBaseActivity {
       public void handleMessage(Message msg) {
          switch (msg.what) {
          case Net.NetIsOK:
-            Utils.logd("NetIsOK", "setupData");
+//            Utils.log("NetIsOK", "setupData");
 //            if (mNeedJump) {
 //               JumpToMessageTarget();
 //               mNeedJump = false;
@@ -210,6 +213,8 @@ public class CategoryActivity extends NewsBaseActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      
+      PropertyConfigurator.getConfigurator(this).configure();
 
       bindNewsService(mNewsServiceConn);
 
@@ -308,7 +313,7 @@ public class CategoryActivity extends NewsBaseActivity {
          }
       }
 
-      Utils.logd("category", "onNewIntent "+mNeedJump+ " type="+mMessageType);
+//      Utils.log("category", "onNewIntent "+mNeedJump+ " type="+mMessageType);
       if (mNeedJump) {
          JumpToMessageTarget();
       } else {
@@ -781,7 +786,6 @@ public class CategoryActivity extends NewsBaseActivity {
 
       public LoadDataTask(Context context) {
          super(context);
-         // TODO Auto-generated constructor stub
       }
 
       @Override
@@ -792,7 +796,6 @@ public class CategoryActivity extends NewsBaseActivity {
          case 0:
             mAppProperties = AppPropertiesApi
                   .getAppProperties(CategoryActivity.this);
-            Utils.logd("LoadDataTask", "mAppProperties=" + mAppProperties);
             if (mAppProperties != null && mAppProperties .isSuccess()) {
                mUserStatus = mAppProperties.getUserStatus();
                if (mUserStatus == 3) {
@@ -865,8 +868,8 @@ public class CategoryActivity extends NewsBaseActivity {
                mReceiveBmp = Utils.getBitmapFromUrl(
                      mAppProperties.getSplashImageUrl(), true);
 
-               Utils.logd("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
-                     + mAppProperties.getSplashImageUrl());
+//               Utils.log("LoadDataTask", "get cover bmp=" + mCoverBmp + "// "
+//                     + mAppProperties.getSplashImageUrl());
                publishProgress(2);
             }
 
@@ -995,8 +998,8 @@ public class CategoryActivity extends NewsBaseActivity {
                Bitmap bmp = Utils.getBitmapFromUrl(channel.getIconUrl(),
                      mScreenHeight / 12, true);
 
-               Utils.logd("LoadBitmapTask",
-                     "decode icon " + channel.getIconUrl() + " " + bmp);
+//               Utils.log("LoadBitmapTask",
+//                     "decode icon " + channel.getIconUrl() + " " + bmp);
                if (bmp != null) {
                   IconData iconData = new IconData();
                   iconData.mIconUrl = channel.getIconUrl();
@@ -1022,7 +1025,6 @@ public class CategoryActivity extends NewsBaseActivity {
          // mGalleryAdapter.notifyDataSetChanged();
          // }
 
-         Utils.logd("LoadBitmapTask", "update icon ui");
          super.onProgressUpdate(values);
       }
 

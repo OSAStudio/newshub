@@ -198,7 +198,7 @@ public class DivisionEditText extends EditText {
 	}
 	
 	private int getEnableIndex(int selection) {
-	   Utils.logd("getEnableIndex", "selection="+selection);
+//	   Utils.log("getEnableIndex", "selection="+selection);
 	   int index = selection-1;
 	   if (index < length && delimiter.equals(text[index])) {
          index++;
@@ -255,7 +255,7 @@ public class DivisionEditText extends EditText {
 	 * @param text
 	 */
 	private void mySetSelection(int index) {
-	   Utils.logd("mySetSelection", "index="+index);
+//	   Utils.log("mySetSelection", "index="+index);
 		DivisionEditText.this.setSelection(index);
 	}
 

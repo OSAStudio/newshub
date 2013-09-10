@@ -69,7 +69,7 @@ public class FileView extends LinearLayout {
       mPraiseBtn = findViewById(R.id.praise_layout);
       mPraiseBtn.setOnClickListener(new OnClickListener() {
          public void onClick(View v) {
-        	 Utils.logd("FileView", "mPraiseBtn click");
+//        	 Utils.log("FileView", "mPraiseBtn click");
             new PraiseTask(mContext).execute();
          }
       });
@@ -85,7 +85,7 @@ public class FileView extends LinearLayout {
       }
 
       public void getRemoteImage(String imgUrl) {
-         Utils.logi("", "______________________getRemoteImage: " + imgUrl);
+         Utils.log("", "getRemoteImage: " + imgUrl);
          this.webView.loadUrl("javascript:(function(){"
                + "var objs = document.getElementsByTagName(\"img\"); "
                + "for(var i=0;i<objs.length;i++)  " + "{"
@@ -145,7 +145,7 @@ public class FileView extends LinearLayout {
                + "px; line-height: " + (size + size) + "px}\n" + "</style> \n";
          document.head().append(style).toString();
 
-         // Utils.logi("", "___________processContent: " + document.toString());
+         // Utils.log("", "processContent: " + document.toString());
          return document.toString();
       }
       return content;

@@ -115,7 +115,7 @@ public class SummaryActivity extends NewsBaseActivity {
 
 					int lastIndex = mSwitcher.getCurrentIndex();
 					mSwitcher.SwitcherOnScroll(mDirection);
-					Utils.logd("FileActivity", "switch scroll " + mDirection);
+//					Utils.log("FileActivity", "switch scroll " + mDirection);
 					mbSwitchAble = false;
 					break;
 				}

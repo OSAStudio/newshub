@@ -127,8 +127,6 @@ public class AzkerListActivity extends NewsBaseActivity {
          mLoadTask.execute();
          mDlg = Utils.showProgressDlg(this, null);
       }
-
-      Utils.logd("List", "onNewIntent mListType"+mListType);
 	}
 	
 
@@ -573,7 +571,6 @@ public class AzkerListActivity extends NewsBaseActivity {
 				expendBtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Utils.logd("listActivity", "expend btn click");
 						ListData data = mListDatas.get(position);
 						data.mIsShowSubTitle = !data.mIsShowSubTitle;
 						// if (subTitle.getVisibility() != View.VISIBLE) {

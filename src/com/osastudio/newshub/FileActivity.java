@@ -115,7 +115,7 @@ public class FileActivity extends NewsBaseActivity {
          }
       }
 
-      Utils.logd("File", "onNewIntent extras"+extras);
+//      Utils.log("File", "onNewIntent extras"+extras);
 	   setupData();
 
 	}
@@ -172,7 +172,7 @@ public class FileActivity extends NewsBaseActivity {
 					int lastIndex = mSwitcher.getCurrentIndex();
 					mSwitcher.SwitcherOnScroll(mDirection);
 					mLastIndex = lastIndex;
-					Utils.logd("FileActivity", "switch scroll " + mDirection);
+//					Utils.log("FileActivity", "switch scroll " + mDirection);
 					mbSwitchAble = false;
 					break;
 				}
@@ -235,7 +235,7 @@ public class FileActivity extends NewsBaseActivity {
 					mCurrentShowId = mIndex;
 					SwitchAssistent assistent = new SwitchAssistent();
 					mSwitcher.setAssistant(assistent);
-					Utils.log("LoadDataTask", "update switch");
+//					Utils.log("LoadDataTask", "update switch");
 				}
 			}
 			mTask = null;
@@ -294,10 +294,10 @@ public class FileActivity extends NewsBaseActivity {
 				convertView = null;
 			}
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
-					+ position + " convertView=" + convertView);
+//			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
+//					+ position + " convertView=" + convertView);
 			if (mLastIndex == position && convertView != null) {
-				Utils.log("getView", " last data");
+//				Utils.log("getView", " last data");
 				((FileView) convertView).displayTop();
 				return convertView;
 			} else if (mCurrentId == mCurrentShowId) {
@@ -312,7 +312,7 @@ public class FileActivity extends NewsBaseActivity {
 				}
 				fileview.setData(Utils.LESSON_LIST_TYPE, mHtmlCotent,
 						mTextSize, mArticleId, mIsWIFI);
-				Utils.log("getView", " real data");
+//				Utils.log("getView", " real data");
 				return fileview;
 			} else {
 				if (mTask != null) {
@@ -321,7 +321,7 @@ public class FileActivity extends NewsBaseActivity {
 				}
 				mTask = new LoadDataTask(FileActivity.this);
 				mTask.execute(position);
-				Utils.log("getView", " no data");
+//				Utils.log("getView", " no data");
 				return createPogress();
 			}
 

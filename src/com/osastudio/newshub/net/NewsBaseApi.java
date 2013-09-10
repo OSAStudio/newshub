@@ -382,7 +382,7 @@ public class NewsBaseApi {
 
       try {
          if (logging) {
-            Utils.logi(TAG, "getString() [SERVICE] " + service);
+            Utils.log(TAG, "getString() [SERVICE] " + service);
          }
          return getString(context, new HttpGet(service), extras);
       } catch (IllegalArgumentException e) {
@@ -406,13 +406,13 @@ public class NewsBaseApi {
 
       try {
          if (logging) {
-            Utils.logi(TAG, "getString() [SERVICE] " + service);
+            Utils.log(TAG, "getString() [SERVICE] " + service);
          }
          HttpPost httpRequest = new HttpPost(service);
          if (params != null && params.size() > 0) {
             httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             if (logging) {
-               Utils.logi(
+               Utils.log(
                      TAG,
                      "getString() [PARAMS] "
                            + EntityUtils.toString(httpRequest.getEntity(),
@@ -453,7 +453,7 @@ public class NewsBaseApi {
       String errorDesc = null;
       while (retries > 0) {
          if (logging) {
-            Utils.logi(TAG, "getString() [RETRIES] " + retries);
+            Utils.log(TAG, "getString() [RETRIES] " + retries);
          }
          try {
             HttpParams httpParams = new BasicHttpParams();
@@ -479,12 +479,12 @@ public class NewsBaseApi {
                String response = EntityUtils.toString(httpResponse.getEntity(),
                      HTTP.UTF_8);
                if (logging) {
-                  Utils.logi(TAG, "getString() [RESPONSE] " + response);
+                  Utils.log(TAG, "getString() [RESPONSE] " + response);
                }
                return response;
             } else {
                if (logging) {
-                  Utils.logi(TAG, "getString() [ERROR] " + status);
+                  Utils.log(TAG, "getString() [ERROR] " + status);
                }
                errorCode = NewsResult.httpCode2ResultCode(status);
                errorDesc = httpResponse.getStatusLine().getReasonPhrase();
@@ -517,7 +517,7 @@ public class NewsBaseApi {
                String service = httpRequest.getURI().toString();
                String newService = service.replaceFirst(mainServer, backServer);
                if (logging) {
-                  Utils.logi(TAG, "getString() [NEW SERVICE] " + newService);
+                  Utils.log(TAG, "getString() [NEW SERVICE] " + newService);
                }
                httpRequest.setURI(URI.create(newService));
             }
@@ -528,7 +528,7 @@ public class NewsBaseApi {
                jsonObject
                      .put(NewsResult.JSON_KEY_RESULT_DESCRIPTION, errorDesc);
                if (logging) {
-                  Utils.logi(TAG,
+                  Utils.log(TAG,
                         "getString() [RESULT] " + jsonObject.toString());
                }
                return jsonObject.toString();
@@ -549,7 +549,7 @@ public class NewsBaseApi {
          HttpResponse httpResponse = httpClient.execute(httpGet);
          if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             InputStream is = httpResponse.getEntity().getContent();
-            Utils.logi(TAG, "getFile() URL=" + url + " length="
+            Utils.log(TAG, "getFile() URL=" + url + " length="
                   + httpResponse.getEntity().getContentLength());
             if (is != null) {
                return is;
@@ -577,7 +577,7 @@ public class NewsBaseApi {
          HttpResponse httpResponse = httpClient.execute(httpGet);
          if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             length = httpResponse.getEntity().getContentLength();
-            Utils.logi(TAG, "getFileLength() URL=" + url + " length=" + length);
+            Utils.log(TAG, "getFileLength() URL=" + url + " length=" + length);
          }
       } catch (ClientProtocolException e) {
          // e.printStackTrace();
@@ -597,7 +597,7 @@ public class NewsBaseApi {
       if (is != null) {
          InputStreamHelper helper = new InputStreamHelper(is);
          if (helper.writeToFile(path)) {
-            Utils.logi(TAG, "getFile() PATH=" + url);
+            Utils.log(TAG, "getFile() PATH=" + url);
             result = path;
          }
          helper.close();
@@ -682,7 +682,7 @@ public class NewsBaseApi {
             : 0;
       while (true) {
          if (task != null && task.isCancelled()) {
-            Utils.logi(TAG, "getFile() Task cancelled: " + urlString);
+            Utils.log(TAG, "getFile() Task cancelled: " + urlString);
             break;
          }
 
@@ -708,7 +708,7 @@ public class NewsBaseApi {
 
             bos.write(buffer, 0, length);
          } catch (IOException e) {
-            Utils.loge(TAG, "getFile() IOException occurs (" + downloadSize
+            Utils.log(TAG, "getFile() IOException occurs (" + downloadSize
                   + ":" + fileSize + ")");
             hasError = true;
             break;
@@ -739,11 +739,11 @@ public class NewsBaseApi {
          });
       }
 
-      Utils.logi(TAG, "getFile() " + filePath + " (" + downloadSize + ":"
+      Utils.log(TAG, "getFile() " + filePath + " (" + downloadSize + ":"
             + fileSize + ")");
       File file = new File(filePath);
       if (file.exists()) {
-         Utils.logi(TAG, "length=" + file.length());
+         Utils.log(TAG, "length=" + file.length());
       }
       return filePath;
    }

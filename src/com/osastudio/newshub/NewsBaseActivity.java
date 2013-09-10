@@ -4,7 +4,6 @@ import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.cache.NewsAbstractCache;
 import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
-import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.utils.UIUtils;
 import com.umeng.analytics.MobclickAgent;

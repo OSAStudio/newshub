@@ -172,7 +172,7 @@ public class RegisterView extends Dialog {
 		// mSchool.setOnClickListener(this);
 		mSchool.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Utils.logd("pp", "mSchool onClick");
+//				Utils.log("pp", "mSchool onClick");
 				startLoadTask(LIST_TYPE.CITY);
 			}
 		});

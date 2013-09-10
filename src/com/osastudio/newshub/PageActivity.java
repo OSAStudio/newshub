@@ -146,7 +146,7 @@ public class PageActivity extends NewsBaseActivity {
          }
       }
 
-      Utils.logd("Page", "onNewIntent type"+mPageType);
+//      Utils.log("Page", "onNewIntent type"+mPageType);
       setupData();
 	}
 	
@@ -215,7 +215,7 @@ public class PageActivity extends NewsBaseActivity {
 					int lastIndex = mSwitcher.getCurrentIndex();
 					mSwitcher.SwitcherOnScroll(mDirection);
 					mLastIndex = lastIndex;
-					Utils.logd("FileActivity", "switch scroll " + mDirection);
+//					Utils.log("FileActivity", "switch scroll " + mDirection);
 					mbSwitchAble = false;
 					break;
 				}
@@ -264,7 +264,7 @@ public class PageActivity extends NewsBaseActivity {
 //					int lastIndex = mSwitcher.getCurrentIndex();
 //					mSwitcher.SwitcherOnScroll(mDirection);
 //					mLastIndex = lastIndex;
-//					Utils.logd("FileActivity", "switch scroll " + mDirection);
+//					Utils.log("FileActivity", "switch scroll " + mDirection);
 //					mbSwitchAble = false;
 //					break;
 //				}
@@ -401,7 +401,7 @@ public class PageActivity extends NewsBaseActivity {
 			super.onPostExecute(result);
 			if (result != null && result.isSuccess() && mIndex >= 0) {
 				mCurrentShowId = mIndex;
-				Utils.log("LoadDataTask", "update switch");
+//				Utils.log("LoadDataTask", "update switch");
 
 				switch (mPageType) {
 				case Utils.NOTIFY_LIST_TYPE:
@@ -508,7 +508,7 @@ public class PageActivity extends NewsBaseActivity {
 		// ExpertAssistent assistent = new ExpertAssistent();
 		// mSwitcher.setAssistant(assistent);
 		//
-		// Utils.logd("LoadBitmapTask", "update icon ui");
+		// Utils.log("LoadBitmapTask", "update icon ui");
 		// super.onProgressUpdate(values);
 		// }
 
@@ -577,10 +577,10 @@ public class PageActivity extends NewsBaseActivity {
             convertView = null;
          }
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
-					+ position + " convertView=" + convertView);
+//			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
+//					+ position + " convertView=" + convertView);
 			if (mLastIndex == position && convertView != null) {
-				Utils.log("getView", " last data");
+//				Utils.log("getView", " last data");
 				ScrollView scrollview = (ScrollView) convertView
 						.findViewById(R.id.scroll_layout);
 				scrollview.scrollTo(scrollview.getScrollX(), 0);
@@ -621,7 +621,7 @@ public class PageActivity extends NewsBaseActivity {
 				if (mResume != null) {
 				   resume.setText(Html.fromHtml(mResume));//(mResume);
 				}
-				Utils.log("getView", " real data");
+//				Utils.log("getView", " real data");
 				return fileview;
 			} else {
 				if (mTask != null) {
@@ -630,7 +630,7 @@ public class PageActivity extends NewsBaseActivity {
 				}
 				mTask = new LoadDataTask(PageActivity.this);
 				mTask.execute(position);
-				Utils.log("getView", " no data");
+//				Utils.log("getView", " no data");
 				return createPogress();
 			}
 
@@ -662,10 +662,10 @@ public class PageActivity extends NewsBaseActivity {
          }
 
 			mCurrentId = position;
-			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
-					+ position + " convertView=" + convertView);
+//			Utils.log("getView", "mLastIndex=" + mLastIndex + " mCurrentId="
+//					+ position + " convertView=" + convertView);
 			if (mLastIndex == position && convertView != null) {
-				Utils.log("getView", " last data");
+//				Utils.log("getView", " last data");
 				((FileView) convertView).displayTop();
 				return convertView;
 			} else if (mCurrentId == mCurrentShowId) {
@@ -692,7 +692,7 @@ public class PageActivity extends NewsBaseActivity {
 					title.setText(mCategoryTitle);
 				}
 				fileview.setData(mPageType, mHtmlCotent, mTextSize, mNoticeId, mIsWIFI);
-				Utils.log("getView", " real data");
+//				Utils.log("getView", " real data");
 				
 				return fileview;
 			} else {
@@ -702,7 +702,7 @@ public class PageActivity extends NewsBaseActivity {
 				}
 				mTask = new LoadDataTask(PageActivity.this);
 				mTask.execute(position);
-				Utils.log("getView", " no data");
+//				Utils.log("getView", " no data");
 				return createPogress();
 			}
 

@@ -37,7 +37,7 @@ public class Net {
 		if (conn_Manager != null) {
 	         NetworkInfo networkInfo = conn_Manager.getActiveNetworkInfo();
 	         if (networkInfo != null) {
-	        	 Utils.log("PhoneIsOnLine networkInfo", "available="+networkInfo.isAvailable()+" Connected="+networkInfo.isConnected());
+//	        	 Utils.log("PhoneIsOnLine networkInfo", "available="+networkInfo.isAvailable()+" Connected="+networkInfo.isConnected());
 	             return networkInfo.isAvailable() && networkInfo.isConnected();
 	         }
 	      }

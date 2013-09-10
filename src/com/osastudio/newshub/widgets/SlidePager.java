@@ -38,20 +38,18 @@ public class SlidePager extends android.support.v4.view.ViewPager {
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return mSize;
 		}
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			// TODO Auto-generated method stub
 			return arg0 == arg1;
 		}
 
 		public void destroyItem(android.view.ViewGroup container, int position,
 				Object object) {
-			Utils.logd("SlidePager destroyItem", "position=" + position
-					+ " object=" + object);
+//			Utils.log("SlidePager destroyItem", "position=" + position
+//					+ " object=" + object);
 //			container.removeAllViews();
 			if (position < mViews.size()) {
 			   ((ViewPager) container).removeView(mViews.get(position));
@@ -60,8 +58,8 @@ public class SlidePager extends android.support.v4.view.ViewPager {
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			Utils.logd("SlidePager instantiateItem", "position=" + position
-					+ " object=" + mViews.get(position));
+//			Utils.log("SlidePager instantiateItem", "position=" + position
+//					+ " object=" + mViews.get(position));
 			((ViewPager) container).addView(mViews.get(position));
 
 			return mViews.get(position);
@@ -83,7 +81,7 @@ public class SlidePager extends android.support.v4.view.ViewPager {
 				}
 			}
 			setAdapter(mPagerAdapter);
-			Utils.logd("SlidePager setAssistant", "setAdapter mViews size="+mViews.size());
+//			Utils.log("SlidePager setAssistant", "setAdapter mViews size="+mViews.size());
 		}
 		invalidate();
 	}

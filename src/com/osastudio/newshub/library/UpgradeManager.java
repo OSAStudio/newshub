@@ -65,14 +65,14 @@ public class UpgradeManager {
    }
 
    public void download(String url) {
-      Utils.logi(TAG, "_______________upgrade");
+      Utils.log(TAG, "download");
       mDownloading = true;
       new UpgradeTask().execute(url);
    }
 
    public void install(String path) {
       mDownloading = false;
-      Utils.logi(TAG, "_______________install");
+      Utils.log(TAG, "install");
    }
 
    private void showNotification(String url) {

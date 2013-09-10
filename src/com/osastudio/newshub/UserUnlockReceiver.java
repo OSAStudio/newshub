@@ -10,7 +10,7 @@ public class UserUnlockReceiver extends BroadcastReceiver {
 
    @Override
    public void onReceive(Context context, Intent intent) {
-      Utils.logi("UserUnlockReceiver", "______________" + intent.getAction());
+      Utils.log("UserUnlockReceiver", intent.getAction());
       Intent serviceIntent = new Intent();
       serviceIntent.setClass(context, NewsService.class);
       context.startService(serviceIntent);
