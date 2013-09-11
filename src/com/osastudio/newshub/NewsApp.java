@@ -6,6 +6,7 @@ import com.osastudio.newshub.cache.CacheManager;
 import com.osastudio.newshub.data.AppDeadline;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.net.NewsBaseApi;
+import com.osastudio.newshub.utils.Utils;
 
 import android.app.Activity;
 import android.app.Application;
@@ -13,7 +14,7 @@ import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
 
-   public static final boolean DEBUG = false;
+   public static final boolean DEBUG = true;
 
    private ActivityStack mActivityStack;
    private PreferenceManager mPrefsManager;
@@ -25,7 +26,8 @@ public class NewsApp extends Application {
    public void onCreate() {
       super.onCreate();
       
-      NewsBaseApi.enableDebug(false);
+      Utils.enableLogging(false);
+      NewsBaseApi.enableDebug(DEBUG);
    }
 
    public ActivityStack getActivityStack() {

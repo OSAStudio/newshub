@@ -21,7 +21,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
@@ -36,7 +35,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.cache.CacheManager;
@@ -54,8 +52,6 @@ public class NewsBaseApi {
 
    private static final String TAG = "NewsBaseApi";
 
-   protected static boolean DEBUG = false;
-
    protected static final String DEFAULT_WEB_SERVER = "http://www.azker.com:9010/azker";
    protected static final String DEFAULT_DEBUG_WEB_SERVER = "http://218.23.42.49:9010/azker";
    protected static String WEB_SERVER = DEFAULT_WEB_SERVER;
@@ -68,13 +64,10 @@ public class NewsBaseApi {
 
    protected static final String KEY_USER_ID = "studentID";
 
-   public static String getDeviceId(Context context) {
-      String id = new DeviceUuidFactory(context).getDeviceId();
+   protected static boolean DEBUG = false;
 
-      if (NewsApp.DEBUG) {
-         id = "667ebbbf9fcd9229344681aebf4ec67316645186"; // TEST
-      }
-      return id;
+   public static String getDeviceId(Context context) {
+      return new DeviceUuidFactory(context).getDeviceId();
    }
 
    public static void enableDebug(boolean debug) {

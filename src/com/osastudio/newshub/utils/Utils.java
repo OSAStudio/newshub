@@ -33,7 +33,7 @@ public class Utils {
    
 	private static final String APP_NAME = "NewsHub";
 
-	private static final boolean DEBUG = true;
+	private static boolean DEBUG = false;
 
 	final static public int NOTIFY_LIST_TYPE = 1;
 	final static public int IMPORT_NOTIFY_TYPE = 2;
@@ -626,6 +626,9 @@ public class Utils {
       return getPackageInfo(context).versionName;
 	}
 	
+   public static void enableLogging(boolean logging) {
+      DEBUG = logging;
+   }
    
 	public static void log(String tag, String info) {
 		if (DEBUG) {
