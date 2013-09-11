@@ -14,8 +14,6 @@ import android.util.DisplayMetrics;
 
 public class NewsApp extends Application {
 
-   public static final boolean DEBUG = false;
-
    private ActivityStack mActivityStack;
    private PreferenceManager mPrefsManager;
    private CacheManager mCacheManager;
@@ -26,8 +24,8 @@ public class NewsApp extends Application {
    public void onCreate() {
       super.onCreate();
       
-      Utils.enableLogging(true);
-      NewsBaseApi.enableDebug(DEBUG);
+      Utils.enableLogging(false);
+      NewsBaseApi.enableDebug(false);
    }
 
    public ActivityStack getActivityStack() {
