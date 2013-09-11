@@ -357,37 +357,27 @@ public class NewsService extends Service {
       Utils.log(TAG, "notifyNewsMessage");
       for (int i = 0; i < messages.getList().size(); i++) {
          NewsMessage msg = messages.getList().get(i);
-         PreferenceManager prefsManager = ((NewsApp) getApplication())
-               .getPrefsManager();
-         NewsMessageSchedule schedule = NewsMessageSchedule
-               .parseString(prefsManager.getMessageScheduleByUserId(msg
-                     .getUserId()));
-         if (!schedule.hasNotifiedToday()) {
-            Utils.log(TAG, "[NOTIFY] userId=" + msg.getUserId() + " userName="
-                  + msg.getUserName() + " msgType=" + msg.getType());
-            Notification noti = new Notification(R.drawable.noti,
-                  getString(R.string.news_message_prompt_title),
-                  System.currentTimeMillis());
-            PendingIntent pi = PendingIntent.getActivity(this, msg.hashCode(),
-                  getNewsMessageLaunchIntent(msg),
-                  PendingIntent.FLAG_UPDATE_CURRENT);
-            noti.setLatestEventInfo(this, msg.getContent(),
-                  getMsgTitleByType(msg), pi);
-            noti.flags |= Notification.FLAG_AUTO_CANCEL;
-            if (i == 0) {
-               noti.defaults |= Notification.DEFAULT_SOUND;
-               noti.defaults |= Notification.DEFAULT_LIGHTS;
-               noti.defaults |= Notification.DEFAULT_VIBRATE;
-            } else {
-               noti.defaults = 0;
-            }
-            NotificationManager manager = (NotificationManager) getApplicationContext()
-                  .getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(msg.hashCode(), noti);
+         Utils.log(TAG, "notifyNewsMessage: userId=" + msg.getUserId()
+               + " userName=" + msg.getUserName() + " msgType=" + msg.getType());
+         Notification noti = new Notification(R.drawable.noti,
+               getString(R.string.news_message_prompt_title),
+               System.currentTimeMillis());
+         PendingIntent pi = PendingIntent.getActivity(this, msg.hashCode(),
+               getNewsMessageLaunchIntent(msg),
+               PendingIntent.FLAG_UPDATE_CURRENT);
+         noti.setLatestEventInfo(this, msg.getContent(),
+               getMsgTitleByType(msg), pi);
+         noti.flags |= Notification.FLAG_AUTO_CANCEL;
+         if (i == 0) {
+            noti.defaults |= Notification.DEFAULT_SOUND;
+            noti.defaults |= Notification.DEFAULT_LIGHTS;
+            noti.defaults |= Notification.DEFAULT_VIBRATE;
          } else {
-            Utils.log(TAG, "[IGNORE] userId=" + msg.getUserId() + " userName="
-                  + msg.getUserName() + " msgType=" + msg.getType());
+            noti.defaults = 0;
          }
+         NotificationManager manager = (NotificationManager) getApplicationContext()
+               .getSystemService(Context.NOTIFICATION_SERVICE);
+         manager.notify(msg.hashCode(), noti);
       }
    }
 
