@@ -445,14 +445,16 @@ public class NewsBaseApi {
 
       int errorCode = 0;
       String errorDesc = null;
+      final int INTERVAL = 10 * 1000;
+      int timeout = 10 * 1000;
       while (retries > 0) {
          if (logging) {
             Utils.log(TAG, "getString() [RETRIES] " + retries);
          }
          try {
             HttpParams httpParams = new BasicHttpParams();
-            HttpConnectionParams.setConnectionTimeout(httpParams, 1000 * 20);
-            HttpConnectionParams.setSoTimeout(httpParams, 1000 * 20);
+            HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
+            HttpConnectionParams.setSoTimeout(httpParams, timeout);
             HttpResponse httpResponse = new DefaultHttpClient(httpParams)
                   .execute(httpRequest);
             int status = httpResponse.getStatusLine().getStatusCode();
@@ -502,6 +504,7 @@ public class NewsBaseApi {
          }
 
          retries--;
+         timeout += INTERVAL;
 
          if (retries == 1) {
             if (useBackupServerIfFailed) {
