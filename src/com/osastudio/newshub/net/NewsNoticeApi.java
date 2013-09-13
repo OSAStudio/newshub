@@ -16,9 +16,22 @@ import com.osastudio.newshub.data.NoticeResult;
 
 public class NewsNoticeApi extends NewsBaseApi {
 
-   private static final String TAG = "NewsNoticeApi";
-
    private static final String KEY_NEWS_NOTICE_ID = "notifyID";
+
+   protected static String getNewsNoticeListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "notify!getNotifyListByMobile.do").toString();
+   }
+
+   protected static String getNewsNoticeArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "notify!getNotifyContentByMobile.do").toString();
+   }
+
+   protected static String feedbackNoticeService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "notify!submitNotifyFeedbackByMobile.do").toString();
+   }
 
    public static NewsNoticeList getNewsNoticeList(Context context, String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

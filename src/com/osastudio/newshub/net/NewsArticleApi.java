@@ -15,9 +15,17 @@ import com.osastudio.newshub.data.NewsResult;
 
 public class NewsArticleApi extends NewsBaseApi {
 
-   private static final String TAG = "NewsArticleApi";
-
    private static final String KEY_NEWS_ARTICLE_ID = "serviceID";
+
+   protected static String getNewsArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "lesson!getLessonContentByMobile.do").toString();
+   }
+
+   protected static String likeArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "lesson!submitLessonUPByMobile.do").toString();
+   }
 
    public static NewsArticle getNewsArticle(Context context, String articleId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

@@ -13,7 +13,10 @@ import com.osastudio.newshub.data.DailyReminderList;
 
 public class DailyReminderApi extends NewsBaseApi {
 
-   private static final String TAG = "DailyReminderApi";
+   protected static String getDailyReminderListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "dailyreminder!getDailyReminderListByMobile.do").toString();
+   }
 
    public static DailyReminderList getDailyReminderList(Context context,
          String userId) {

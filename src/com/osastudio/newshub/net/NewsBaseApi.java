@@ -67,8 +67,12 @@ public class NewsBaseApi {
    protected static boolean DEBUG = false;
 
    public static String getDeviceId(Context context) {
-      return new DeviceUuidFactory(context).getDeviceId();
-//      return "5df705bd-7f6b-3fe2-ba24-b86c15183bed";
+//      return new DeviceUuidFactory(context).getDeviceId();
+      return "5df705bd-7f6b-3fe2-ba24-b86c15183bed";
+   }
+
+   protected static String getDeviceType() {
+      return "android";
    }
 
    public static void enableDebug(boolean debug) {
@@ -81,10 +85,6 @@ public class NewsBaseApi {
       } else {
          WEB_SERVER = addr;
       }
-   }
-
-   protected static String getDeviceType() {
-      return "android";
    }
 
    public static String getDefaultWebServer(Context context) {
@@ -114,205 +114,6 @@ public class NewsBaseApi {
 
    protected static String generateWebServer(Context context, String server) {
       return new StringBuilder(server).append("/admin/").toString();
-   }
-
-   protected static String getAppPropertiesService(Context context) {
-      return getAppPropertiesService(context, getWebServer(context));
-   }
-
-   protected static String getAppPropertiesService(Context context,
-         String server) {
-      return new StringBuilder(server).append(
-            "loginpicture!checkLoginInfoByMobile.do").toString();
-   }
-
-   protected static String getNewsChannelListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "titleshow!getTitleListByMobile.do").toString();
-   }
-
-   protected static String getNewsAbstractListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "lesson!getLessonListByMobile.do").toString();
-   }
-
-   protected static String getNewsArticleService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "lesson!getLessonContentByMobile.do").toString();
-   }
-
-   protected static String likeArticleService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "lesson!submitLessonUPByMobile.do").toString();
-   }
-
-   protected static String getUserListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getUserInfosByMobile.do").toString();
-   }
-
-   protected static String getUserInfoListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getUserInfoAndServiceInfoByMobile.do").toString();
-   }
-
-   protected static String validateService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "serial!checkSerialByMobile.do").toString();
-   }
-
-   protected static String getValidateStatusService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!checkActiveUserByMobile.do").toString();
-   }
-
-   protected static String registerService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!submitUserInfoByMobile.do").toString();
-   }
-
-   protected static String addUserService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!addAnotherUserByMobile.do").toString();
-   }
-
-   protected static String getCityListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getCitysByMobile.do").toString();
-   }
-
-   protected static String getCityDistrictListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getAreasByMobile.do").toString();
-   }
-
-   protected static String getSchoolTypeListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getSchoolClassByMobile.do").toString();
-   }
-
-   protected static String getSchoolListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getSchoolsByMobile.do").toString();
-   }
-
-   protected static String getSchoolYearListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getYearsByMobile.do").toString();
-   }
-
-   protected static String getSchoolClassListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getClassesByMobile.do").toString();
-   }
-
-   protected static String getQualificationListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "custom!getXueliByMobile.do").toString();
-   }
-
-   protected static String getFeedbackTypeListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "problemfeedback!getProblemTypeByMobile.do").toString();
-   }
-
-   protected static String feedbackService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "problemfeedback!submitProblemFeedbackByMobile.do").toString();
-   }
-
-   protected static String getNewsNoticeListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "notify!getNotifyListByMobile.do").toString();
-   }
-
-   protected static String getNewsNoticeArticleService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "notify!getNotifyContentByMobile.do").toString();
-   }
-
-   protected static String feedbackNoticeService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "notify!submitNotifyFeedbackByMobile.do").toString();
-   }
-
-   protected static String getDailyReminderListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "dailyreminder!getDailyReminderListByMobile.do").toString();
-   }
-
-   protected static String getSubscriptionTopicListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expandlssue!getUserLssuesByMobile.do").toString();
-   }
-
-   protected static String getSubscriptionAbstractListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expandlesson!getExpandLessonsByMobile.do").toString();
-   }
-
-   protected static String getSubscriptionArticleService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expandlesson!getExpandLessonContentByMobile.do").toString();
-   }
-
-   protected static String getRecommendedTopicListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expandlssue!getRecommendLssueListByMobile.do").toString();
-   }
-
-   protected static String getRecommendedTopicIntroService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expandlssue!getRecommendLssueContentByMobile.do").toString();
-   }
-
-   protected static String subscribeRecommendedTopicService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expandlssue!submitExpandLssueByMobile.do").toString();
-   }
-
-   protected static String getNewsColumnistListService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expert!getExpertListByMobile.do").toString();
-   }
-
-   protected static String getNewsColumnistInfoService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "expert!getExpertContentByMobile.do").toString();
-   }
-
-   protected static String getNewsMessageScheduleService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "message!getMessageSendTimeByMobile.do").toString();
-   }
-
-   protected static String getNewsMessageListService(Context context) {
-      return getNewsMessageListService(context, getWebServer(context));
-   }
-
-   protected static String getNewsMessageListService(Context context,
-         String server) {
-      return new StringBuilder(server).append("message!getMessagesByMobile.do")
-            .toString();
-   }
-
-   protected static String getAppDeadlineService(Context context) {
-      return "http://m.weather.com.cn/data/101220101.html";
-   }
-
-   protected static String getExamInfoService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "").toString();
-   }
-
-   protected static String getExamService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "").toString();
-   }
-
-   protected static String commitExamAnswerService(Context context) {
-      return new StringBuilder(getWebServer(context)).append(
-            "").toString();
    }
 
    protected static JSONObject getJsonObject(Context context, String service,

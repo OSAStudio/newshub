@@ -14,7 +14,15 @@ import com.osastudio.newshub.data.AppProperties;
 
 public class AppPropertiesApi extends NewsBaseApi {
 
-   private static final String TAG = "AppPropertiesApi";
+   protected static String getAppPropertiesService(Context context) {
+      return getAppPropertiesService(context, getWebServer(context));
+   }
+
+   protected static String getAppPropertiesService(Context context,
+         String server) {
+      return new StringBuilder(server).append(
+            "loginpicture!checkLoginInfoByMobile.do").toString();
+   }
 
    public static AppProperties getAppProperties(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

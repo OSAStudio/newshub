@@ -13,7 +13,10 @@ import com.osastudio.newshub.data.NewsChannelList;
 
 public class NewsChannelApi extends NewsBaseApi {
 
-   private static final String TAG = "NewsChannelApi";
+   protected static String getNewsChannelListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "titleshow!getTitleListByMobile.do").toString();
+   }
 
    public static NewsChannelList getNewsChannelList(Context context,
          String userId) {

@@ -14,10 +14,18 @@ import com.osastudio.newshub.data.NewsResult;
 
 public class FeedbackApi extends NewsBaseApi {
 
-   private static final String TAG = "FeedbackApi";
-
    private static final String KEY_FEEDBACK_TYPE_ID = "problemTypeID";
    private static final String KEY_FEEDBACK_CONTENT = "feedbackContext";
+
+   protected static String getFeedbackTypeListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "problemfeedback!getProblemTypeByMobile.do").toString();
+   }
+
+   protected static String feedbackService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "problemfeedback!submitProblemFeedbackByMobile.do").toString();
+   }
 
    public static FeedbackTypeList getFeedbackTypeList(Context context) {
       JSONObject jsonObject = getJsonObject(context,

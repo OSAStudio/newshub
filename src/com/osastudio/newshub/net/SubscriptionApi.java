@@ -17,10 +17,23 @@ import com.osastudio.newshub.data.SubscriptionTopicList;
 
 public class SubscriptionApi extends NewsBaseApi {
 
-   private static final String TAG = "SubscribedNewsApi";
-
    private static final String KEY_NEWS_TOPIC_ID = "recommendLssueID";
    private static final String KEY_NEWS_ARTICLE_ID = "expandLessonID";
+
+   protected static String getSubscriptionTopicListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expandlssue!getUserLssuesByMobile.do").toString();
+   }
+
+   protected static String getSubscriptionAbstractListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expandlesson!getExpandLessonsByMobile.do").toString();
+   }
+
+   protected static String getSubscriptionArticleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expandlesson!getExpandLessonContentByMobile.do").toString();
+   }
 
    public static SubscriptionTopicList getSubscriptionTopicList(
          Context context, String userId) {

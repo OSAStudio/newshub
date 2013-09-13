@@ -1,20 +1,30 @@
 <resources>
-   <color name="holo_blue">#ff33b5e5</color>
-   <color name="translucent_black">#4c000000</color>
-   <color name="gray">#ffdddddd</color>
-   <color name="bg_blue">#ff018cdd</color>
-   <color name="confirm_btn_bg">#ffe8643e</color>
-   
-   <color name="title_blue">#ff42cdf6</color>
-   
-   <drawable name="transparent_background">#00000000</drawable>
-   <color name="text_gray">#ff3f3f51</color>
-   <color name="line_gray">#ffdddddd</color>
-   <color name="bg_gray">#ffdcdddd</color>
-   <color name="bottom_dark">#ff403f51</color>
-   <color name="file_title_bg">#fffca733</color>
-   <color name="about_text_color">#ff333333</color>
-   <color name="white">#ffffffff</color>
-   <color name="black">#ff000000</color>
-   <color name="transparent">#00000000</color>
+
+    <color name="holo_blue">#ff33b5e5</color>
+    <color name="translucent_black">#4c000000</color>
+    <color name="gray">#ffdddddd</color>
+    <color name="bg_blue">#ff018cdd</color>
+    <color name="confirm_btn_bg">#ffe8643e</color>
+    <color name="title_blue">#ff42cdf6</color>
+    <color name="text_gray">#ff3f3f51</color>
+    <color name="line_gray">#ffdddddd</color>
+    <color name="bg_gray">#ffdcdddd</color>
+    <color name="bottom_dark">#ff403f51</color>
+    <color name="file_title_bg">#fffca733</color>
+    <color name="about_text_color">#ff333333</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="ex_default_text">#ff666666</color>
+    <color name="ex_btn_bg">#ffe8643e</color>
+    <color name="ex_continue_btn_bg">#ffdf4f37</color>
+    <color name="ex_progress_bg">#ffdf4f37</color>
+    <color name="ex_progress_default_bg">#ff3e454d</color>
+    <color name="ex_progress_text">#fffd484a</color>
+    <color name="ex_progress_default_text">#ff777777</color>
+    <color name="ex_report_score_text">#ffff6666</color>
+    <color name="ex_divider_bg">#ffcdcdcd</color>
+
+    <drawable name="transparent_background">#00000000</drawable>
+
 </resources>

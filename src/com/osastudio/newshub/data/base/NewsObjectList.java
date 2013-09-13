@@ -28,5 +28,9 @@ public class NewsObjectList<T> extends NewsBaseObject {
    public void setList(List<T> list) {
       this.list = list;
    }
+   
+   public int getCount() {
+      return this.list.size();
+   }
 
 }

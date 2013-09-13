@@ -13,10 +13,12 @@ public class ExamInfo extends NewsBaseTitle {
    public static final String JSON_KEY_ID = "evaluation_id";
    public static final String JSON_KEY_TITLE = "evaluation_title";
    public static final String JSON_KEY_TYPE = "evaluation_type";
+   public static final String JSON_KEY_ALLOW_ANSWER = "show_button";
    
    protected int type;
    protected ExamIntro introduction;
    protected ExamReport report;
+   protected boolean allowAnswer;
    
    public ExamInfo() {
       super();
@@ -78,6 +80,14 @@ public class ExamInfo extends NewsBaseTitle {
 
    public void setReport(ExamReport report) {
       this.report = report;
+   }
+   
+   public boolean allowAnswer() {
+      return this.allowAnswer;
+   }
+   
+   public void setAllowAnswer(boolean allow) {
+      this.allowAnswer = allow;
    }
 
 }

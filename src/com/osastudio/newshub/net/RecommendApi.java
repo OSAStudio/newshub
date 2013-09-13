@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.osastudio.newshub.NewsApp;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.RecommendedTopic;
 import com.osastudio.newshub.data.RecommendedTopicIntro;
@@ -17,9 +16,22 @@ import com.osastudio.newshub.data.RecommendedTopicList;
 
 public class RecommendApi extends NewsBaseApi {
 
-   private static final String TAG = "RecommendedNewsApi";
-
    private static final String KEY_NEWS_TOPIC_ID = "recommendLssueID";
+
+   protected static String getRecommendedTopicListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expandlssue!getRecommendLssueListByMobile.do").toString();
+   }
+
+   protected static String getRecommendedTopicIntroService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expandlssue!getRecommendLssueContentByMobile.do").toString();
+   }
+
+   protected static String subscribeRecommendedTopicService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expandlssue!submitExpandLssueByMobile.do").toString();
+   }
 
    public static RecommendedTopicList getRecommendedTopicList(Context context,
          String userId) {

@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff" >
+
+    <TextView
+        android:id="@+id/ex_title"
+        style="@style/text_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/title_blue" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/ex_action_btn"
+        android:layout_below="@id/ex_title" >
+
+        <ScrollView
+            android:id="@+id/ex_container"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none|vertical" />
+
+        <ProgressBar
+            android:id="@+id/ex_loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@id/ex_action_btn"
+        style="@style/ex_btn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/ex_btn_bg"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:visibility="invisible" />
+
+</RelativeLayout>

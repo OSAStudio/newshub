@@ -26,8 +26,6 @@ import com.osastudio.newshub.library.ChecksumHelper;
 
 public class UserApi extends NewsBaseApi {
 
-   private static final String TAG = "UserApi";
-
    private static final String KEY_BIRTHDAY = "birthday";
    private static final String KEY_CITY_ID = "cityID";
    private static final String KEY_CLASS_ID = "classID";
@@ -40,6 +38,71 @@ public class UserApi extends NewsBaseApi {
    private static final String KEY_VALIDATE_CODE = "serial";
    private static final String KEY_YEAR_ID = "yearID";
    private static final String KEY_PHONE_NUMBER = "mobile";
+
+   protected static String getUserListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getUserInfosByMobile.do").toString();
+   }
+
+   protected static String getUserInfoListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getUserInfoAndServiceInfoByMobile.do").toString();
+   }
+
+   protected static String validateService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "serial!checkSerialByMobile.do").toString();
+   }
+
+   protected static String getValidateStatusService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!checkActiveUserByMobile.do").toString();
+   }
+
+   protected static String registerService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!submitUserInfoByMobile.do").toString();
+   }
+
+   protected static String addUserService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!addAnotherUserByMobile.do").toString();
+   }
+
+   protected static String getCityListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getCitysByMobile.do").toString();
+   }
+
+   protected static String getCityDistrictListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getAreasByMobile.do").toString();
+   }
+
+   protected static String getSchoolTypeListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getSchoolClassByMobile.do").toString();
+   }
+
+   protected static String getSchoolListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getSchoolsByMobile.do").toString();
+   }
+
+   protected static String getSchoolYearListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getYearsByMobile.do").toString();
+   }
+
+   protected static String getSchoolClassListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getClassesByMobile.do").toString();
+   }
+
+   protected static String getQualificationListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "custom!getXueliByMobile.do").toString();
+   }
 
    public static ValidateResult getValidateStatus(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

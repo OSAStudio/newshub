@@ -16,6 +16,8 @@ public class Question extends NewsBaseTitle {
    protected int type;
    protected int optionsCount;
    protected OptionList optionsList;
+   protected int order = 0;
+   protected int totalCount = 0;
 
    public Question() {
       super();
@@ -67,6 +69,22 @@ public class Question extends NewsBaseTitle {
 
    public void setOptions(OptionList options) {
       this.optionsList = options;
+   }
+
+   public int getOrder() {
+      return this.order;
+   }
+
+   public void setOrder(int order) {
+      this.order = order;
+   }
+
+   public int getTotalCount() {
+      return this.totalCount;
+   }
+
+   public void setTotalCount(int totalCount) {
+      this.totalCount = totalCount;
    }
 
 }

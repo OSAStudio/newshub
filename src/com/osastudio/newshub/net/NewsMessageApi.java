@@ -14,7 +14,20 @@ import com.osastudio.newshub.data.NewsMessageScheduleList;
 
 public class NewsMessageApi extends NewsBaseApi {
 
-   private static final String TAG = "NewsMessageApi";
+   protected static String getNewsMessageScheduleService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "message!getMessageSendTimeByMobile.do").toString();
+   }
+
+   protected static String getNewsMessageListService(Context context) {
+      return getNewsMessageListService(context, getWebServer(context));
+   }
+
+   protected static String getNewsMessageListService(Context context,
+         String server) {
+      return new StringBuilder(server).append("message!getMessagesByMobile.do")
+            .toString();
+   }
 
    public static NewsMessageScheduleList getNewsMessageScheduleList(
          Context context) {

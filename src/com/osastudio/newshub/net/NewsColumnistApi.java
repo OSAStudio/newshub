@@ -15,9 +15,17 @@ import com.osastudio.newshub.data.NewsColumnistList;
 
 public class NewsColumnistApi extends NewsBaseApi {
 
-   private static final String TAG = "NewsColumnistApi";
-
    private static final String KEY_NEWS_COLUMNIST_ID = "expertID";
+
+   protected static String getNewsColumnistListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expert!getExpertListByMobile.do").toString();
+   }
+
+   protected static String getNewsColumnistInfoService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "expert!getExpertContentByMobile.do").toString();
+   }
 
    public static NewsColumnistList getNewsColumnistList(Context context,
          String userId) {

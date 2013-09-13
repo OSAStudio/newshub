@@ -14,9 +14,12 @@ import com.osastudio.newshub.data.NewsAbstractList;
 
 public class NewsAbstractApi extends NewsBaseApi {
 
-   private static final String TAG = "NewsAbstractApi";
-
    private static final String KEY_NEWS_CHANNEL_ID = "serviceID";
+
+   protected static String getNewsAbstractListService(Context context) {
+      return new StringBuilder(getWebServer(context)).append(
+            "lesson!getLessonListByMobile.do").toString();
+   }
 
    public static NewsAbstractList getNewsAbstractList(Context context,
          String newsChannelId) {
