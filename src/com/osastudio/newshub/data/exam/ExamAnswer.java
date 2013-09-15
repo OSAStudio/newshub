@@ -31,16 +31,16 @@ public class ExamAnswer extends JSONHelper {
       this.examId = examId;
    }
 
-   public void addQuestionAnswer(QuestionAnswer questionResult) {
-      this.questionAnswers.add(questionResult);
+   public void addQuestionAnswer(QuestionAnswer questionAnswer) {
+      this.questionAnswers.add(questionAnswer);
    }
 
    public List<QuestionAnswer> getQuestionAnswers() {
       return this.questionAnswers;
    }
 
-   public void setQuestionAnswers(List<QuestionAnswer> questionResults) {
-      this.questionAnswers = questionResults;
+   public void setQuestionAnswers(List<QuestionAnswer> questionAnswers) {
+      this.questionAnswers = questionAnswers;
    }
 
    @Override
@@ -57,8 +57,9 @@ public class ExamAnswer extends JSONHelper {
                   array.put(obj);
                }
             }
+            result.put(JSON_KEY_QUESTIONS, array);
          } catch (JSONException e) {
-
+            
          }
       }
       return result;

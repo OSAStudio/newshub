@@ -35,6 +35,7 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:max="100"
             android:progress="0"
             android:progressDrawable="@drawable/ex_progress" />
@@ -56,6 +57,7 @@
         android:id="@+id/options_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:cacheColorHint="@color/transparent" />
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent" />
 
 </LinearLayout>

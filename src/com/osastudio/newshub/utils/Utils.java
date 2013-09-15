@@ -43,6 +43,7 @@ public class Utils {
 	final static public int LESSON_LIST_TYPE = 6;
 	final static public int DAILY_REMINDER_TYPE = 7;
 	final static public int RECOMMEND_LIST_TYPE = 8;
+	final static public int EXAM_TYPE = 9;
 	
 	final static public int MESSAGE_SEND_TYPE_NOTIFY = 1;
 	final static public int MESSAGE_SEND_TYPE_NOTIFY_BACK = 2;

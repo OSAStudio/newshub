@@ -14,6 +14,7 @@ public class Option extends NewsBaseTitle {
    protected String name;
    protected int order = 0;
    protected int totalCount = 0;
+   protected boolean selected = false;
    
    public Option() {
       super();
@@ -59,6 +60,14 @@ public class Option extends NewsBaseTitle {
 
    public void setTotalCount(int totalCount) {
       this.totalCount = totalCount;
+   }
+   
+   public boolean isSelected() {
+      return this.selected;
+   }
+   
+   public void setSelected(boolean selected) {
+      this.selected = selected;
    }
 
 }

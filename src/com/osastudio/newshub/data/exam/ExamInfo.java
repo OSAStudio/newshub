@@ -18,7 +18,7 @@ public class ExamInfo extends NewsBaseTitle {
    protected int type;
    protected ExamIntro introduction;
    protected ExamReport report;
-   protected boolean allowAnswer;
+   protected boolean allowAnswer = false;
    
    public ExamInfo() {
       super();
@@ -46,6 +46,9 @@ public class ExamInfo extends NewsBaseTitle {
             if (!infoObject.isNull(JSON_KEY_TYPE)) {
                this.type = infoObject.getInt(JSON_KEY_TYPE);
             }
+            if (!infoObject.isNull(JSON_KEY_ALLOW_ANSWER)) {
+               this.allowAnswer = infoObject.getBoolean(JSON_KEY_ALLOW_ANSWER);
+            }
             this.introduction = new ExamIntro(infoObject);
             this.report = new ExamReport(infoObject);
          } catch (JSONException e) {
@@ -60,6 +63,14 @@ public class ExamInfo extends NewsBaseTitle {
 
    public void setType(int type) {
       this.type = type;
+   }
+   
+   public boolean isIntroduction() {
+      return this.type == INTRODUCTION;
+   }
+   
+   public boolean isReport() {
+      return this.type == REPORT;
    }
    
    public boolean hasExamined() {

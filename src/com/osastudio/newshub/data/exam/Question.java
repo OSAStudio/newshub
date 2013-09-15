@@ -10,11 +10,11 @@ public class Question extends NewsBaseTitle {
    public static final String JSON_KEY_ID = "quess_id";
    public static final String JSON_KEY_TITLE = "quess_title";
    public static final String JSON_KEY_TYPE = "quess_class";
-   public static final String JSON_KEY_OPTIONS_COUNT = "quess_opnion";
+   public static final String JSON_KEY_MAX_CHOICES = "quess_opnion";
    public static final String JSON_KEY_OPTIONS_LIST = "option_list";
 
    protected int type;
-   protected int optionsCount;
+   protected int maxChoices;
    protected OptionList optionsList;
    protected int order = 0;
    protected int totalCount = 0;
@@ -36,8 +36,8 @@ public class Question extends NewsBaseTitle {
          if (!jsonObject.isNull(JSON_KEY_TYPE)) {
             this.type = jsonObject.getInt(JSON_KEY_TYPE);
          }
-         if (!jsonObject.isNull(JSON_KEY_OPTIONS_COUNT)) {
-            this.optionsCount = jsonObject.getInt(JSON_KEY_OPTIONS_COUNT);
+         if (!jsonObject.isNull(JSON_KEY_MAX_CHOICES)) {
+            this.maxChoices = jsonObject.getInt(JSON_KEY_MAX_CHOICES);
          }
          if (!jsonObject.isNull(JSON_KEY_OPTIONS_LIST)) {
             this.optionsList = new OptionList(jsonObject);
@@ -55,12 +55,20 @@ public class Question extends NewsBaseTitle {
       this.type = type;
    }
 
-   public int getOptionsCount() {
-      return this.optionsCount;
+   public int getMaxChoices() {
+      return this.maxChoices;
    }
 
-   public void setOptionsCount(int optionsCount) {
-      this.optionsCount = optionsCount;
+   public void setMaxChoices(int maxChoices) {
+      this.maxChoices = maxChoices;
+   }
+
+   public boolean isSingleChoice() {
+      return this.maxChoices == 1;
+   }
+
+   public boolean isMultipleChoice() {
+      return this.maxChoices > 1;
    }
 
    public OptionList getOptions() {

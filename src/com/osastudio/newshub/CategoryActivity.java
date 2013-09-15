@@ -1266,10 +1266,20 @@ public class CategoryActivity extends NewsBaseActivity {
             case Utils.LESSON_LIST_TYPE:
                startSummaryActivity(mCategoryList.get(index));
                break;
+            case Utils.EXAM_TYPE:
+               startExamActivity(data);
+               break;
             }
          }
       }
 
+   }
+   
+   private void startExamActivity(NewsChannel channel) {
+      Intent intent = new Intent(this, ExamActivity.class);
+      intent.putExtra(ExamActivity.EXTRA_EXAM_ID, channel.getChannelId());
+      intent.putExtra(ExamActivity.EXTRA_EXAM_TITLE, channel.getTitleName());
+      startActivity(intent);
    }
 
    private void startSummaryActivity(NewsChannel data) {

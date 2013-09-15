@@ -89,7 +89,7 @@
     </style> 
     
     <style name="ex_title_text">
-      <item name="android:textColor">@color/ex_progress_text</item>
+      <item name="android:textColor">@color/ex_default_text</item>
       <item name="android:textSize">30sp</item>
       <item name="android:gravity">left</item> 
     </style> 

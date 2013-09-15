@@ -142,11 +142,17 @@
     
     <!-- exam -->
     <string name="ex_continue">继续</string>
-    <string name="ex_once_again">重新答题</string>
+    <string name="ex_do_again">重新答题</string>
+    <string name="ex_next">下一题</string>
+    <string name="ex_commit">提交答卷</string>
+    <string name="ex_report">测试报告</string>
     <string name="ex_report_score">你的得分</string>
     <string name="ex_report_time">测试日期：%s</string>
     <string name="ex_report_conclusion">测试结果</string>
     <string name="ex_step">STEP:</string>
     <string name="ex_number">%1$s、%2$s</string>
+    <string name="ex_exit">您确定要退出本次测试吗？</string>
+    <string name="ex_max_choices">本题最多只能选%s个</string>
+    <string name="ex_not_answered">您还没有答题！</string>
 
 </resources>

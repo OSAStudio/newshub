@@ -12,6 +12,7 @@ import com.osastudio.newshub.data.exam.Exam;
 import com.osastudio.newshub.data.exam.ExamAnswer;
 import com.osastudio.newshub.data.exam.ExamInfo;
 import com.osastudio.newshub.data.exam.ExamReport;
+import com.osastudio.newshub.utils.Utils;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -61,7 +62,12 @@ public class ExamApi extends NewsBaseApi {
    }
 
    public static ExamReport commitExamAnswer(Context context, String userId,
-         String reportId, ExamAnswer examAnswer) {
+         ExamAnswer examAnswer) {
+      return commitExamAnswer(context, userId, examAnswer, null);
+   }
+
+   public static ExamReport commitExamAnswer(Context context, String userId,
+         ExamAnswer examAnswer, String reportId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));

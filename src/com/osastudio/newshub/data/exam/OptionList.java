@@ -19,6 +19,8 @@ public class OptionList extends NewsItemList<Option> {
                try {
                   if (!jsonArray.isNull(i)) {
                      opt = new Option(jsonArray.getJSONObject(i));
+                     opt.setOrder(i + 1);
+                     opt.setTotalCount(jsonArray.length());
                      this.list.add(opt);
                   }
                } catch (JSONException e) {

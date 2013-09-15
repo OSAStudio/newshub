@@ -4,11 +4,15 @@ import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.exam.Option;
 import com.osastudio.newshub.data.exam.OptionList;
 import com.osastudio.newshub.data.exam.Question;
+import com.osastudio.newshub.data.exam.QuestionAnswer;
+import com.osastudio.newshub.utils.UIUtils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -25,6 +29,7 @@ public class ExamView extends FrameLayout {
    private ListView optionsListView;
    private OptionAdapter optionAdapter;
    private Question question;
+   private QuestionAnswer answer;
 
    public ExamView(Context context) {
       super(context);
@@ -51,6 +56,8 @@ public class ExamView extends FrameLayout {
 
    public void setContent(Question question) {
       this.question = question;
+      this.answer = new QuestionAnswer();
+      this.answer.setQuestionId(question.getId());
       if (this.currProgressView != null) {
          this.currProgressView.setText(question != null ? String
                .valueOf(question.getOrder()) : "0");
@@ -66,13 +73,83 @@ public class ExamView extends FrameLayout {
                : 0);
       }
       if (this.questionTitleView != null) {
-         this.questionTitleView.setText(question != null ? question.getTitle()
-               : "");
+         this.questionTitleView.setText(question != null ? this.context
+               .getString(R.string.ex_number, question.getOrder(),
+                     question.getTitle()) : "");
       }
       if (this.optionsListView != null) {
-         this.optionAdapter = new OptionAdapter(context, question.getOptions());
+         this.optionsListView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                  int position, long id) {
+               if (view.getTag() != null) {
+                  Option opt = (Option) view.getTag();
+                  if (!opt.isSelected()) {
+                     selectOption(opt);
+                  } else {
+                     deselectOption(opt);
+                  }
+               }
+            }
+         });
+         this.optionAdapter = new OptionAdapter(this.context,
+               question != null ? question.getOptions() : null);
          this.optionsListView.setAdapter(this.optionAdapter);
+         setOptionsListViewHeight();
       }
+   }
+
+   public void selectOption(Option option) {
+      OptionList options = this.question.getOptions();
+      if (this.question.isSingleChoice()) {
+         for (int i = 0; i < options.getCount(); i++) {
+            options.getList().get(i).setSelected(false);
+         }
+         option.setSelected(true);
+         this.answer.clearAllOptionIds();
+         this.answer.addOptionId(option.getId());
+         this.optionAdapter.notifyDataSetChanged();
+      } else if (this.question.isMultipleChoice()) {
+         int count = 0;
+         for (int i = 0; i < options.getCount(); i++) {
+            if (options.getList().get(i).isSelected()) {
+               count++;
+            }
+         }
+         if (count < this.question.getMaxChoices()) {
+            option.setSelected(true);
+            this.answer.addOptionId(option.getId());
+            this.optionAdapter.notifyDataSetChanged();
+         } else {
+            UIUtils.showToast(
+                  this.context,
+                  this.context.getString(R.string.ex_max_choices,
+                        this.question.getMaxChoices()));
+         }
+      }
+   }
+
+   public void deselectOption(Option option) {
+      option.setSelected(false);
+      this.answer.removeOptionId(option.getId());
+      this.optionAdapter.notifyDataSetChanged();
+   }
+
+   public boolean hasAnswered() {
+      return this.answer.getOptionIds().size() > 0;
+   }
+
+   private void setOptionsListViewHeight() {
+      int height = 0;
+      int count = this.optionAdapter.getCount();
+      for (int i = 0; i < count; i++) {
+         View view = this.optionAdapter.getView(i, null, this.optionsListView);
+         view.measure(0, 0);
+         height += view.getMeasuredHeight();
+      }
+      ViewGroup.LayoutParams params = this.optionsListView.getLayoutParams();
+      params.height = height
+            + (this.optionsListView.getDividerHeight() * (count - 1));
+      this.optionsListView.setLayoutParams(params);
    }
 
    public TextView getCurrProgressView() {
@@ -99,6 +176,10 @@ public class ExamView extends FrameLayout {
       return this.question;
    }
 
+   public QuestionAnswer getAnswer() {
+      return this.answer;
+   }
+
    private class OptionAdapter extends BaseAdapter {
 
       private Context context;
@@ -121,7 +202,8 @@ public class ExamView extends FrameLayout {
       @Override
       public Option getItem(int position) {
          try {
-            return this.options.getList().get(position);
+            return this.options != null ? this.options.getList().get(position)
+                  : null;
          } catch (IndexOutOfBoundsException e) {
             return null;
          }
@@ -135,8 +217,7 @@ public class ExamView extends FrameLayout {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.ex_option, null);
+            convertView = new ExamOptionView(this.context);
          }
 
          Option opt = getItem(position);
@@ -144,17 +225,7 @@ public class ExamView extends FrameLayout {
             return convertView;
          }
 
-         TextView icoView = (TextView) convertView
-               .findViewById(R.id.option_ico);
-         if (icoView != null) {
-            icoView.setText(opt.getName());
-         }
-         TextView titleView = (TextView) convertView
-               .findViewById(R.id.option_title);
-         if (titleView != null) {
-            titleView.setText(opt.getTitle());
-         }
-
+         ((ExamOptionView) convertView).setContent(opt);
          convertView.setTag(opt);
          return convertView;
       }

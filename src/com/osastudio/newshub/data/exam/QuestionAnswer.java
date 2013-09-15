@@ -36,7 +36,17 @@ public class QuestionAnswer extends JSONHelper {
    }
 
    public void addOptionId(String optionId) {
-      this.optionIds.add(optionId);
+      if (!this.optionIds.contains(optionId)) {
+         this.optionIds.add(optionId);
+      }
+   }
+   
+   public void removeOptionId(String optionId) {
+      this.optionIds.remove(optionId);
+   }
+   
+   public void clearAllOptionIds() {
+      this.optionIds.clear();
    }
 
    public void setOptionIds(List<String> optionIds) {
@@ -56,7 +66,7 @@ public class QuestionAnswer extends JSONHelper {
             }
             result.put(JSON_KEY_OPTIONS, array);
          } catch (JSONException e) {
-
+            
          }
       }
       return result;

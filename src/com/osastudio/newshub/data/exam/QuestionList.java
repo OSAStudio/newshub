@@ -19,6 +19,8 @@ public class QuestionList extends NewsItemList<Question> {
                try {
                   if (!jsonArray.isNull(i)) {
                      q = new Question(jsonArray.getJSONObject(i));
+                     q.setOrder(i + 1);
+                     q.setTotalCount(jsonArray.length());
                      this.list.add(q);
                   }
                } catch (JSONException e) {

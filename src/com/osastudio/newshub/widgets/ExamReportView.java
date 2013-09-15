@@ -33,7 +33,7 @@ public class ExamReportView extends FrameLayout {
             .findViewById(R.id.report_conclusion);
    }
 
-   private void setContent(ExamReport report) {
+   public void setContent(ExamReport report) {
       this.report = report;
       if (this.scoreView != null) {
          this.scoreView.setText(report != null ? String.valueOf(report
