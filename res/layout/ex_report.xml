@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:orientation="vertical" >
 
     <ImageView
@@ -12,6 +10,7 @@
         android:background="@color/ex_divider_bg" />
 
     <LinearLayout
+        style="@style/ex_report_item"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -25,19 +24,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ex_report_item_text_margin_l"
             android:text="@string/ex_report_score"
             android:textColor="@color/ex_default_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/ex_report_item_text_size" />
 
         <TextView
             android:id="@+id/report_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ex_report_item_score_text_margin_l"
             android:textColor="@color/ex_report_score_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/ex_report_item_score_text_size"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
+        style="@style/ex_report_item"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -52,12 +55,14 @@
             android:id="@+id/report_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ex_report_item_text_margin_l"
             android:text="@string/ex_report_time"
             android:textColor="@color/ex_default_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/ex_report_item_text_size" />
     </LinearLayout>
 
     <LinearLayout
+        style="@style/ex_report_item"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -71,16 +76,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ex_report_item_text_margin_l"
             android:text="@string/ex_report_conclusion"
             android:textColor="@color/ex_default_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/ex_report_item_text_size" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/report_conclusion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ex_report_item_conclusion_margin_t"
         android:textColor="@color/ex_default_text"
-        android:textSize="20sp" />
+        android:textSize="@dimen/ex_report_item_text_size" />
 
 </LinearLayout>

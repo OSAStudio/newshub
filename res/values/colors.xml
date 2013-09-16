@@ -18,7 +18,7 @@
     <color name="ex_default_text">#ff666666</color>
     <color name="ex_btn_bg">#ffe8643e</color>
     <color name="ex_continue_btn_bg">#ffdf4f37</color>
-    <color name="ex_progress_bg">#ffdf4f37</color>
+    <color name="ex_progress_bg">#ffff3636</color>
     <color name="ex_progress_default_bg">#ff3e454d</color>
     <color name="ex_progress_text">#fffd484a</color>
     <color name="ex_progress_default_text">#ff777777</color>

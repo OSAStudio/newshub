@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <dimen name="ex_container_margin_l">25dp</dimen>
+    <dimen name="ex_container_margin_r">25dp</dimen>
+    <dimen name="ex_container_padding_t">25dp</dimen>
+    <dimen name="ex_btn_margin_l">0dp</dimen>
+    <dimen name="ex_btn_margin_r">0dp</dimen>
+    <dimen name="ex_btn_padding_t">10dp</dimen>
+    <dimen name="ex_btn_padding_b">10dp</dimen>
+    <dimen name="ex_btn_text_size">24sp</dimen>
+    <dimen name="ex_title_text_size">24sp</dimen>
+    <dimen name="ex_title_margin_l">10dp</dimen>
+    <dimen name="ex_content_text_size">16sp</dimen>
+    <dimen name="ex_progress_height">10dp</dimen>
+    <dimen name="ex_progress_margin_l">10dp</dimen>
+    <dimen name="ex_progress_margin_b">10dp</dimen>
+    <dimen name="ex_progress_text_size">18sp</dimen>
+    <dimen name="ex_question_title_margin_t">20dp</dimen>
+    <dimen name="ex_question_title_text_size">24sp</dimen>
+    <dimen name="ex_option_padding_t">10dp</dimen>
+    <dimen name="ex_option_padding_b">10dp</dimen>
+    <dimen name="ex_option_ico_size">20dp</dimen>
+    <dimen name="ex_option_ico_text_size">16sp</dimen>
+    <dimen name="ex_option_text_size">20sp</dimen>
+    <dimen name="ex_option_text_margin_l">10dp</dimen>
+    <dimen name="ex_report_item_text_size">22sp</dimen>
+    <dimen name="ex_report_item_margin_t">6dp</dimen>
+    <dimen name="ex_report_item_margin_b">6dp</dimen>
+    <dimen name="ex_report_item_text_margin_l">6dp</dimen>
+    <dimen name="ex_report_item_score_text_size">30dp</dimen>
+    <dimen name="ex_report_item_score_text_margin_l">16dp</dimen>
+    <dimen name="ex_report_item_conclusion_margin_t">15dp</dimen>
+    
+</resources>

@@ -22,6 +22,10 @@
             android:id="@+id/ex_container"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_marginLeft="@dimen/ex_container_margin_l"
+            android:layout_marginRight="@dimen/ex_container_margin_r"
+            android:background="#00000000"
+            android:paddingTop="@dimen/ex_container_padding_t"
             android:scrollbars="none|vertical" />
 
         <ProgressBar
@@ -35,13 +39,11 @@
     <TextView
         android:id="@id/ex_action_btn"
         style="@style/ex_btn_text"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@color/ex_btn_bg"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         android:visibility="invisible" />
 
 </RelativeLayout>

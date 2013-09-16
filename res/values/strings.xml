@@ -149,7 +149,7 @@
     <string name="ex_report_score">你的得分</string>
     <string name="ex_report_time">测试日期：%s</string>
     <string name="ex_report_conclusion">测试结果</string>
-    <string name="ex_step">STEP:</string>
+    <string name="ex_step">STEP: \0</string>
     <string name="ex_number">%1$s、%2$s</string>
     <string name="ex_exit">您确定要退出本次测试吗？</string>
     <string name="ex_max_choices">本题最多只能选%s个</string>

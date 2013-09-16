@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/ex_option_padding_b"
+    android:paddingTop="@dimen/ex_option_padding_t" >
 
     <TextView
         android:id="@+id/option_ico"
@@ -11,13 +14,15 @@
         android:background="@drawable/ex_option"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="@dimen/ex_option_ico_text_size" />
 
     <TextView
         android:id="@+id/option_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/ex_option_text_margin_l"
+        android:gravity="left|center_vertical"
         android:textColor="@color/ex_default_text"
-        android:textSize="20sp" />
+        android:textSize="@dimen/ex_option_text_size" />
 
 </LinearLayout>

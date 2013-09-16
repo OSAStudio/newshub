@@ -82,29 +82,39 @@
     
     <style name="ex_btn_text">
       <item name="android:textColor">@color/white</item>
-      <item name="android:textSize">20sp</item>
+      <item name="android:textSize">@dimen/ex_btn_text_size</item>
       <item name="android:gravity">center_horizontal</item> 
-      <item name="android:paddingTop">10dp</item>   
-      <item name="android:paddingBottom">10dp</item>   
+      <item name="android:layout_marginLeft">@dimen/ex_container_margin_l</item>   
+      <item name="android:layout_marginRight">@dimen/ex_container_margin_r</item>   
+      <item name="android:paddingTop">@dimen/ex_btn_padding_t</item>   
+      <item name="android:paddingBottom">@dimen/ex_btn_padding_b</item>   
     </style> 
     
     <style name="ex_title_text">
       <item name="android:textColor">@color/ex_default_text</item>
-      <item name="android:textSize">30sp</item>
-      <item name="android:gravity">left</item> 
+      <item name="android:textSize">@dimen/ex_title_text_size</item>
+      <item name="android:layout_marginLeft">@dimen/ex_title_margin_l</item>
+      <item name="android:gravity">left|center_vertical</item> 
     </style> 
     
     <style name="ex_content_text">
       <item name="android:textColor">@color/ex_default_text</item>
-      <item name="android:textSize">20sp</item>
-      <item name="android:gravity">left</item> 
+      <item name="android:textSize">@dimen/ex_content_text_size</item>
+      <item name="android:layout_marginLeft">@dimen/ex_title_margin_l</item>
+      <item name="android:gravity">left|center_vertical</item> 
     </style> 
     
     <style name="ex_progress_text">
       <item name="android:textColor">@color/ex_progress_default_text</item>
-      <item name="android:textSize">20sp</item>
+      <item name="android:textSize">@dimen/ex_progress_text_size</item>
+      <item name="android:textStyle">bold</item>
       <item name="android:layout_gravity">center_vertical</item>
     </style> 
+    
+    <style name="ex_report_item">
+        <item name="android:layout_marginTop">@dimen/ex_report_item_margin_t</item>
+        <item name="android:layout_marginBottom">@dimen/ex_report_item_margin_b</item>
+    </style>
     
       <style name="ThemeActivity" mce_bogus="1">
 		<item name="android:windowAnimationStyle">@style/AnimationActivity</item>

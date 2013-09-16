@@ -157,6 +157,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
       if (viewContainer.getChildCount() <= 0) {
          viewContainer.addView(new ExamIntroView(this));
       }
+      viewContainer.scrollTo(0, 0);
 
       ExamIntroView view = (ExamIntroView) viewContainer.getChildAt(0);
       view.setContent(mExamInfo.getIntroduction());
@@ -193,6 +194,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
       if (viewContainer.getChildCount() <= 0) {
          viewContainer.addView(new ExamView(this));
       }
+      viewContainer.scrollTo(0, 0);
 
       ExamView view = (ExamView) viewContainer.getChildAt(0);
       view.setContent(question);
@@ -243,6 +245,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
       if (viewContainer.getChildCount() <= 0) {
          viewContainer.addView(new ExamReportView(this));
       }
+      viewContainer.scrollTo(0, 0);
 
       ExamReportView view = (ExamReportView) viewContainer.getChildAt(0);
       view.setContent(mExamInfo.getReport());
@@ -395,9 +398,17 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
 
          if (result != null && result.isSuccess()) {
             mExam = result;
+            
+            if (mExamInfo == null) {
+               mExamInfo = new ExamInfo();
+            }
+            mExamTitle = result.getTitle();
+            mExamInfo.setId(result.getId());
+            mExamInfo.setTitle(result.getTitle());
+            
             mExamAnswer = new ExamAnswer();
-            mExamAnswer.setExamId(mExamId);
-            QuestionList questions = mExam.getQuestions();
+            mExamAnswer.setExamId(result.getId());
+            QuestionList questions = result.getQuestions();
             if (questions != null && questions.getCount() > 0) {
                setupExamView(getNextView(), questions.getList().get(0),
                      questions.getCount() == 1);

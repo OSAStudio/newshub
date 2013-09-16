@@ -2,32 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/ex_intro_ico" />
 
         <TextView
             android:id="@+id/intro_title"
             style="@style/ex_title_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="title" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageView
@@ -40,32 +38,31 @@
             android:id="@+id/intro_content"
             style="@style/ex_content_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="content" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/ex_how_ico" />
 
         <TextView
             android:id="@+id/how_title"
             style="@style/ex_title_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="title" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageView
@@ -78,32 +75,31 @@
             android:id="@+id/how_content"
             style="@style/ex_content_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="content" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/ex_time_ico" />
 
         <TextView
             android:id="@+id/time_title"
             style="@style/ex_title_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="title" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageView
@@ -116,8 +112,7 @@
             android:id="@+id/time_content"
             style="@style/ex_content_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="content" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>
