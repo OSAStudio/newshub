@@ -65,8 +65,6 @@ public class ExamOptionView extends FrameLayout {
 
       if (this.icoView != null) {
          this.icoView.setSelected(selected);
-         this.icoView.setTextColor(this.context.getResources().getColor(
-               selected ? android.R.color.white : android.R.color.black));
       }
       if (this.titleView != null) {
          this.titleView.setSelected(selected);
