@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.huadi.azker_phone.R;
+import com.osastudio.newshub.data.NewsAbstract;
 import com.osastudio.newshub.data.NewsAbstractList;
 import com.osastudio.newshub.data.NewsResult;
 import com.osastudio.newshub.data.SubscriptionAbstractList;
@@ -243,6 +244,13 @@ public class SummaryActivity extends NewsBaseActivity {
 			startActivityForResult(it, 1);
 		}
 	}
+   
+	private void startExamActivity(NewsAbstract abs) {
+      Intent intent = new Intent(this, ExamActivity.class);
+      intent.putExtra(ExamActivity.EXTRA_EXAM_ID, abs.getId());
+      intent.putExtra(ExamActivity.EXTRA_EXAM_TITLE, abs.getTitle());
+      startActivity(intent);
+	}
 
 	private class SummaryItemClickListener implements OnGridItemClickListener {
 		@Override
@@ -250,6 +258,17 @@ public class SummaryActivity extends NewsBaseActivity {
 			int page = mSwitcher.getCurrentIndex();
 			int index = page * 4 + position-1;
 			if (index < mSummaries.size()) {
+            NewsBaseAbstract baseAbstract = mSummaries.get(index);
+            if (mChannelType == Utils.LESSON_LIST_TYPE
+                  || mChannelType == Utils.DAILY_REMINDER_TYPE) {
+               if (baseAbstract instanceof NewsAbstract) {
+                  NewsAbstract abs = (NewsAbstract) baseAbstract;
+                  if (abs.getType() == NewsAbstract.EXAM_TYPE) {
+                     startExamActivity(abs);
+                     return;
+                  }
+               }
+            }
 				startFileActivity(index);
 			}
 

@@ -10,18 +10,32 @@ import android.os.Parcelable;
 
 public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
 
+   public static final int NEWS_TYPE = 0;
+   public static final int EXAM_TYPE = 1;
+   
    public static final String JSON_KEY_ID = "lesson_id";
    public static final String JSON_KEY_COLOR = "lesson_colour";
    public static final String JSON_KEY_PUBLISHED_TIME = "post_date";
    public static final String JSON_KEY_AUTHOR = "expert_name";
    public static final String JSON_KEY_TITLE = "lesson_title";
+   public static final String JSON_KEY_TYPE = "lesson_class";
 
+   private int type = 0;
+   
    public NewsAbstract() {
       super();
    }
 
    public NewsAbstract(Parcel src) {
       super(src);
+   }
+
+   public int getType() {
+      return this.type;
+   }
+
+   public void setType(int type) {
+      this.type = type;
    }
 
    public String getChannelId() {
