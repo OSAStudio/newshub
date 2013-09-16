@@ -314,6 +314,15 @@ public class NewsService extends Service {
    private void requestNewsMessageList(String userId, int count,
          boolean retryIfFailed, long retryDelayedMillis, ServerType serverType) {
       if (NetworkHelper.isNetworkAvailable(NewsService.this)) {
+         PreferenceManager prefsManager = ((NewsApp) NewsService.this
+               .getApplication()).getPrefsManager();
+         NewsMessageSchedule schedule = NewsMessageSchedule
+               .parseString(prefsManager
+                     .getMessageScheduleByUserId(userId));
+         if (schedule.hasNotifiedToday()) {
+            return;
+         }
+         
          Utils.log(TAG, "requestNewsMessageList: userId=" + userId + " count="
                + count + " retryIfFailed=" + retryIfFailed
                + " retryDelayMillis=" + retryDelayedMillis + "serverType="
@@ -422,8 +431,11 @@ public class NewsService extends Service {
          String action = intent.getAction();
          Utils.log(TAG,
                "onReceive: " + action + " " + System.currentTimeMillis());
-         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)
-               || ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
+         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+            if (NetworkHelper.isNetworkAvailable(context)) {
+               mBinder.checkNewsMessage();
+            }
+         } if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
             if (NetworkHelper.isNetworkAvailable(context)) {
                checkNewsMessageSchedule();
             }
@@ -589,6 +601,9 @@ public class NewsService extends Service {
                      .getMessageScheduleByUserId(this.userId));
          if (result != null && result.isSuccess()) {
             if (schedule != null) {
+               if (schedule.hasNotifiedToday()) {
+                  return;
+               }
                schedule.setCount(3);
                prefsManager.setMessageScheduleByUserId(this.userId,
                      schedule.toString());

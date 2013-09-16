@@ -12,7 +12,7 @@ import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.utils.Utils;
 
 public class NewsMessageSchedule extends NewsBaseObject {
-   
+
    private static final String TAG = "NewsMessageSchedule";
 
    protected static final String JSON_KEY_OFFSET_MILLIS = "sendTime";
@@ -90,7 +90,8 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
 
    public boolean pullNow() {
-      return Math.abs(getRemainingMillis()) <= PULLING_TIME_TOLERANCE;
+      // return Math.abs(getRemainingMillis()) <= PULLING_TIME_TOLERANCE;
+      return getRemainingMillis() <= PULLING_TIME_TOLERANCE;
    }
 
    public boolean isToday() {
@@ -108,7 +109,8 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
 
    public boolean isPullingLate() {
-      return getRemainingMillis() + PULLING_TIME_TOLERANCE < 0;
+//      return getRemainingMillis() + PULLING_TIME_TOLERANCE < 0;
+      return false;
    }
 
    public boolean hasPullingCountExceeded() {
@@ -118,7 +120,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    public boolean allowPulling() {
       return isToday() && !hasPullingCountExceeded() && !isPullingLate();
    }
-   
+
    public boolean hasNotifiedToday() {
       return isToday() && hasPullingCountExceeded();
    }
