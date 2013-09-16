@@ -34,13 +34,14 @@ public class ExamOptionView extends FrameLayout {
    public void setContent(Option option) {
       this.examOption = option;
       if (this.icoView != null) {
-         this.icoView.setText(option != null ? option.getName() : "");
-         this.icoView.setTextColor(this.context.getResources().getColor(
-               option.isSelected() ? android.R.color.white
-                     : android.R.color.black));
+         this.icoView.setText(option.isSelected() ? ""
+               : (option != null ? option.getName() : ""));
          this.icoView.setSelected(option.isSelected());
       }
       if (this.titleView != null) {
+         this.titleView.setTextColor(this.context.getResources().getColor(
+               option.isSelected() ? R.color.ex_option_hl_text
+                     : R.color.ex_default_text));
          this.titleView.setText(option != null ? option.getTitle() : "");
          this.titleView.setSelected(option.isSelected());
       }

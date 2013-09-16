@@ -24,6 +24,7 @@
     <color name="ex_progress_default_text">#ff777777</color>
     <color name="ex_report_score_text">#ffff6666</color>
     <color name="ex_divider_bg">#ffcdcdcd</color>
+    <color name="ex_option_hl_text">#fffe6d6e</color>
 
     <drawable name="transparent_background">#00000000</drawable>
 

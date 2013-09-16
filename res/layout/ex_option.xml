@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ex_option"
         android:gravity="center"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="20sp" />
 
     <TextView
