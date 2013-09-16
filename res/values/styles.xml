@@ -16,117 +16,115 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
+
     <style name="Theme.PageDialog" parent="android:style/Theme.Dialog">
-      <item name="android:windowBackground">@drawable/transparent_background</item> 
-      <item name="android:windowNoTitle">true</item>
-   </style>
-   
+        <item name="android:windowBackground">@drawable/transparent_background</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="text_black">
-      <item name="android:textColor">@color/black</item>
-      <item name="android:textSize">15sp</item>
-      <item name="android:gravity">center_vertical</item>
-      <item name="android:paddingLeft">10dp</item>
-      <item name="android:paddingRight">10dp</item>
-      <item name="android:paddingTop">6dp</item>
-      <item name="android:paddingBottom">6dp</item>
-    </style> 
-    
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+
     <style name="text_title">
-      <item name="android:textColor">@color/white</item>
-      <item name="android:textSize">18sp</item>
-      <item name="android:gravity">center_horizontal</item> 
-      <item name="android:paddingTop">12dp</item>   
-      <item name="android:paddingBottom">12dp</item>   
-    </style> 
-    
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
     <style name="about_text_title">
-      <item name="android:textColor">@color/about_text_color</item>
-      <item name="android:textSize">18sp</item>
-      <item name="android:textStyle">bold</item>
-      <item name="android:gravity">left</item> 
-    </style> 
-    
+        <item name="android:textColor">@color/about_text_color</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="about_text_content">
-      <item name="android:textColor">@color/about_text_color</item>
-      <item name="android:textSize">16sp</item>
-      <item name="android:gravity">left</item> 
-    </style> 
-    
+        <item name="android:textColor">@color/about_text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
     <style name="about_text_button">
-      <item name="android:textColor">@android:color/white</item>
-      <item name="android:textSize">14sp</item>
-      <item name="android:gravity">center</item> 
-      <item name="android:paddingLeft">10dp</item> 
-      <item name="android:paddingRight">10dp</item> 
-      <item name="android:paddingTop">5dp</item> 
-      <item name="android:paddingBottom">5dp</item> 
-      <item name="android:background">#ff333333</item> 
-    </style> 
-    
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:background">#ff333333</item>
+    </style>
+
     <style name="text_big">
-      <item name="android:textSize">18sp</item>
-      <item name="android:textColor">@color/black</item>
-    </style> 
-    
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="text_normal">
-      <item name="android:textSize">16sp</item>
-      <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
-     
+
     <style name="text_small">
-      <item name="android:textSize">12sp</item>
-      <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_gray</item>
     </style>
-    
-    
+
     <style name="ex_btn_text">
-      <item name="android:textColor">@color/white</item>
-      <item name="android:textSize">@dimen/ex_btn_text_size</item>
-      <item name="android:gravity">center_horizontal</item> 
-      <item name="android:layout_marginLeft">@dimen/ex_container_margin_l</item>   
-      <item name="android:layout_marginRight">@dimen/ex_container_margin_r</item>   
-      <item name="android:paddingTop">@dimen/ex_btn_padding_t</item>   
-      <item name="android:paddingBottom">@dimen/ex_btn_padding_b</item>   
-    </style> 
-    
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/ex_btn_text_size</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginLeft">@dimen/ex_container_margin_l</item>
+        <item name="android:layout_marginRight">@dimen/ex_container_margin_r</item>
+        <item name="android:paddingTop">@dimen/ex_btn_padding_t</item>
+        <item name="android:paddingBottom">@dimen/ex_btn_padding_b</item>
+    </style>
+
     <style name="ex_title_text">
-      <item name="android:textColor">@color/ex_default_text</item>
-      <item name="android:textSize">@dimen/ex_title_text_size</item>
-      <item name="android:layout_marginLeft">@dimen/ex_title_margin_l</item>
-      <item name="android:gravity">left|center_vertical</item> 
-    </style> 
-    
+        <item name="android:textColor">@color/ex_default_text</item>
+        <item name="android:textSize">@dimen/ex_title_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/ex_title_margin_l</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
     <style name="ex_content_text">
-      <item name="android:textColor">@color/ex_default_text</item>
-      <item name="android:textSize">@dimen/ex_content_text_size</item>
-      <item name="android:layout_marginLeft">@dimen/ex_title_margin_l</item>
-      <item name="android:gravity">left|center_vertical</item> 
-    </style> 
-    
+        <item name="android:textColor">@color/ex_default_text</item>
+        <item name="android:textSize">@dimen/ex_content_text_size</item>
+        <item name="android:layout_marginLeft">@dimen/ex_title_margin_l</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
     <style name="ex_progress_text">
-      <item name="android:textColor">@color/ex_progress_default_text</item>
-      <item name="android:textSize">@dimen/ex_progress_text_size</item>
-      <item name="android:textStyle">bold</item>
-      <item name="android:layout_gravity">center_vertical</item>
-    </style> 
-    
+        <item name="android:textColor">@color/ex_progress_default_text</item>
+        <item name="android:textSize">@dimen/ex_progress_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ex_report_item">
         <item name="android:layout_marginTop">@dimen/ex_report_item_margin_t</item>
         <item name="android:layout_marginBottom">@dimen/ex_report_item_margin_b</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
-    
-      <style name="ThemeActivity" mce_bogus="1">
-		<item name="android:windowAnimationStyle">@style/AnimationActivity</item>
-		<item name="android:windowNoTitle">true</item>
-	</style>
-        
-    <style name="AnimationActivity" parent="@android:style/Animation.Activity" mce_bogus="1">
-        <item name="android:activityOpenEnterAnimation">@anim/alpha_in</item> 
-		<item name="android:activityOpenExitAnimation">@anim/pull_out_to_top</item>
-		
-		<item name="android:activityCloseEnterAnimation">@anim/alpha_in</item>
-<item name="android:activityCloseExitAnimation">@anim/pull_out_to_bottom</item>  
-	</style>
+
+    <style name="ThemeActivity" mce_bogus="1">
+        <item name="android:windowAnimationStyle">@style/AnimationActivity</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AnimationActivity" mce_bogus="1" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/alpha_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/pull_out_to_top</item>
+        <item name="android:activityCloseEnterAnimation">@anim/alpha_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/pull_out_to_bottom</item>
+    </style>
 
 </resources>

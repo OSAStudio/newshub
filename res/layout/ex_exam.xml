@@ -8,6 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/ex_progress_margin_b"
+        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <TextView
@@ -34,7 +35,6 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/ex_progress_height"
-            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/ex_progress_margin_l"
             android:max="100"
             android:progress="0"

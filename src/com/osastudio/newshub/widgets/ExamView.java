@@ -8,6 +8,7 @@ import com.osastudio.newshub.data.exam.QuestionAnswer;
 import com.osastudio.newshub.utils.UIUtils;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,9 +74,9 @@ public class ExamView extends FrameLayout {
                : 0);
       }
       if (this.questionTitleView != null) {
-         this.questionTitleView.setText(question != null ? this.context
-               .getString(R.string.ex_number, question.getOrder(),
-                     question.getTitle()) : "");
+         this.questionTitleView.setText(question != null ? Html
+               .fromHtml(this.context.getString(R.string.ex_number,
+                     question.getOrder(), question.getTitle())) : "");
       }
       if (this.optionsListView != null) {
          this.optionsListView.setOnItemClickListener(new OnItemClickListener() {
