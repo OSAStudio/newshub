@@ -97,9 +97,6 @@ public class NewsChannel extends NewsBaseObject implements Parcelable {
    }
 
    public int getTitleType() {
-      if (this.titleType == 8) {
-         return 9;
-      }
       return this.titleType;
    }
 

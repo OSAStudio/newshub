@@ -21,7 +21,8 @@ public class ExamReportView extends FrameLayout {
 
       this.context = context;
       LayoutInflater inflater = LayoutInflater.from(context);
-      this.layout = (ViewGroup) inflater.inflate(R.layout.ex_report, this, true);
+      this.layout = (ViewGroup) inflater
+            .inflate(R.layout.ex_report, this, true);
 
       findViews();
    }
@@ -40,7 +41,8 @@ public class ExamReportView extends FrameLayout {
                .getScore()) : "");
       }
       if (this.timeView != null) {
-         this.timeView.setText(report != null ? report.getTime() : "");
+         this.timeView.setText(this.context.getString(R.string.ex_report_time,
+               report != null ? report.getTime() : ""));
       }
       if (this.conclusionView != null) {
          this.conclusionView.setText(report != null ? report.getConclusion()

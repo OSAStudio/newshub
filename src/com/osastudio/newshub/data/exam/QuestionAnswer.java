@@ -15,6 +15,7 @@ public class QuestionAnswer extends JSONHelper {
 
    public static final String JSON_KEY_QUESTION_ID = "quess_id";
    public static final String JSON_KEY_OPTIONS = "option_list";
+   public static final String JSON_KEY_OPTION_ID = "option_id";
 
    protected String questionId;
    protected List<String> optionIds;
@@ -62,7 +63,9 @@ public class QuestionAnswer extends JSONHelper {
             result.put(JSON_KEY_QUESTION_ID, this.questionId);
             JSONArray array = new JSONArray();
             for (int i = 0; i < this.optionIds.size(); i++) {
-               array.put(this.optionIds.get(i));
+               JSONObject item = new JSONObject();
+               item.put(JSON_KEY_OPTION_ID, this.optionIds.get(i));
+               array.put(item);
             }
             result.put(JSON_KEY_OPTIONS, array);
          } catch (JSONException e) {
