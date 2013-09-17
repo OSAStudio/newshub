@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.TextureView;
 import android.view.View;
@@ -49,6 +50,7 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
    private ProgressDialog mPDlg = null;
    private CheckTask mCheckTask = null;
    private TextView mVersionName;
+   private TextView mSystemInfo;
 
    protected ServiceConnection mNewsServiceConn = new ServiceConnection() {
       @Override
@@ -88,6 +90,7 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       mFontSizeGroup = (ViewGroup) findViewById(R.id.font_size_group);
       mAutoDownloadGroup = (ViewGroup) findViewById(R.id.auto_download_group);
       mVersionName = (TextView) findViewById(R.id.version_name);
+      mSystemInfo = (TextView) findViewById(R.id.system_info);
    }
 
    private void initViews() {
@@ -193,6 +196,11 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
             mCheckTask.execute();
          }
       });
+      
+      DisplayMetrics dm = new DisplayMetrics();
+      getWindowManager().getDefaultDisplay().getMetrics(dm);
+      mSystemInfo.setText(getString(R.string.system_sub, dm.heightPixels, 
+            dm.widthPixels, dm.densityDpi, dm.density));
 
       mCheckUpdate.setOnClickListener(new OnClickListener() {
          public void onClick(View v) {

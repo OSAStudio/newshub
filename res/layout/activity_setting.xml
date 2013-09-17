@@ -269,11 +269,55 @@
                 android:orientation="vertical" >
 
                 <LinearLayout
-                    android:id="@+id/help"
+                    android:id="@+id/system"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/setting_help" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            style="@style/text_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/system" />
+
+                        <TextView
+                            android:id="@+id/system_info"
+                            style="@style/text_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/angle_right" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="3px"
+                    android:background="@drawable/line_bg" />
+
+                <LinearLayout
+                    android:id="@+id/help"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone" >
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -308,7 +352,8 @@
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="3px"
-                    android:background="@drawable/line_bg" />
+                    android:background="@drawable/line_bg"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/check_update"

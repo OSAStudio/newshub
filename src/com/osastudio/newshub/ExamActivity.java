@@ -67,6 +67,9 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
    @Override
    public void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
+      
+      cleanup();
+      init();
    }
 
    private void findViews() {
@@ -109,6 +112,16 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          mExamAnswerTask.cancel(true);
          mExamAnswerTask = null;
       }
+      
+      mUserId = null;
+      mExamId = null;
+      mExamTitle = null;
+      mReportId = null;
+      mExamInfo = null;
+      mExamReport = null;
+      mExam = null;
+      mExamAnswer = null;
+      mStatus = NONE;
    }
 
    @Override

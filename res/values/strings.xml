@@ -81,6 +81,8 @@
     <string name="help_sub">了解程序基本操作功能</string>
     <string name="check_update">检查版本</string>
     <string name="check_update_sub">当前版本%s</string>
+    <string name="system">系统参数</string>
+    <string name="system_sub">屏幕尺寸%1$sx%2$s DPI=%3$s density=%4$s</string>
     
     <!-- about -->
     <string name="about">关于我们</string>
