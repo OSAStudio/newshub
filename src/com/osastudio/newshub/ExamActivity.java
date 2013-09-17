@@ -97,7 +97,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
       loadExamInfo();
    }
 
-   private void cleanup() {
+   private void cleanTasks() {
       if (mExamInfoTask != null) {
          mExamInfoTask.cancel(true);
          mExamInfoTask = null;
@@ -112,6 +112,10 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          mExamAnswerTask.cancel(true);
          mExamAnswerTask = null;
       }
+   }
+   
+   private void cleanup() {
+      cleanTasks();
       
       mUserId = null;
       mExamId = null;
@@ -296,7 +300,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          mWaitingDialog.setMax(100);
          mWaitingDialog.setOnDismissListener(new OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
-               cleanup();
+               cleanTasks();
             }
          });
          mWaitingDialog.setCancelable(true);
