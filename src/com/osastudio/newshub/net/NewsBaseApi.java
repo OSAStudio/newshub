@@ -67,8 +67,8 @@ public class NewsBaseApi {
    protected static boolean DEBUG = false;
 
    public static String getDeviceId(Context context) {
-      return new DeviceUuidFactory(context).getDeviceId();
-//      return "5df705bd-7f6b-3fe2-ba24-b86c15183bed";
+//      return new DeviceUuidFactory(context).getDeviceId();
+      return "5df705bd-7f6b-3fe2-ba24-b86c15183bed";
    }
 
    protected static String getDeviceType() {

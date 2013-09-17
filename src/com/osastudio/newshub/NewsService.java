@@ -396,6 +396,7 @@ public class NewsService extends Service {
       Bundle extras = new Bundle();
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());
+      extras.putString(CategoryActivity.MESSAGE_SERVICE_TITLE, msg.getContent());
       extras.putString(CategoryActivity.MESSAGE_USER_ID, msg.getUserId());
       extras.putString(CategoryActivity.MESSAGE_USER_NAME, msg.getUserName());
       intent.putExtras(extras);

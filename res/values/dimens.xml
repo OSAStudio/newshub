@@ -18,6 +18,7 @@
     <dimen name="ex_progress_text_size">18sp</dimen>
     <dimen name="ex_question_title_margin_t">20dp</dimen>
     <dimen name="ex_question_title_text_size">24sp</dimen>
+    <dimen name="ex_option_list_margin_t">10dp</dimen>
     <dimen name="ex_option_padding_t">10dp</dimen>
     <dimen name="ex_option_padding_b">10dp</dimen>
     <dimen name="ex_option_ico_size">20dp</dimen>

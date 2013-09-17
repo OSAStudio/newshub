@@ -107,6 +107,7 @@ public class CategoryActivity extends NewsBaseActivity {
    public static final String LAUNCHER = "launcher";
    public static final String MESSAGE_SEND_TYPE = "message_send_type";
    public static final String MESSAGE_SERVICE_ID = "service_id";
+   public static final String MESSAGE_SERVICE_TITLE = "service_title";
    public static final String MESSAGE_USER_ID = "student_id";
    public static final String MESSAGE_USER_NAME = "student_name";
 
@@ -158,6 +159,7 @@ public class CategoryActivity extends NewsBaseActivity {
 
    private int mMessageType = -1;
    private String mServiceID = null;
+   private String mServiceTitle;
    private boolean mNeedJump = false;
 
    private Handler mHandler = new Handler() {
@@ -261,6 +263,7 @@ public class CategoryActivity extends NewsBaseActivity {
          // mIsLauncher = extras.getBoolean(LAUNCHER);
          mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
          mServiceID = extras.getString(MESSAGE_SERVICE_ID);
+         mServiceTitle = extras.getString(MESSAGE_SERVICE_TITLE);
          String userID = extras.getString(MESSAGE_USER_ID);
          
          if (userID != null && mMessageType >= 0 && mServiceID != null) {
@@ -303,7 +306,8 @@ public class CategoryActivity extends NewsBaseActivity {
       if (extras != null) {
          // mIsLauncher = extras.getBoolean(LAUNCHER);
          mMessageType = extras.getInt(MESSAGE_SEND_TYPE, -1);
-         mServiceID = extras.getString(MESSAGE_SERVICE_ID);String userID = extras.getString(MESSAGE_USER_ID);
+         mServiceID = extras.getString(MESSAGE_SERVICE_ID);
+         String userID = extras.getString(MESSAGE_USER_ID);
          
          if (userID != null && mMessageType >= 0 && mServiceID != null) {
             mNeedJump = true;
@@ -1455,6 +1459,12 @@ public class CategoryActivity extends NewsBaseActivity {
          it.setClass(this, FileActivity.class);
          it.putExtra(FileActivity.START_INDEX, 0);
          
+         break;
+      case Utils.MESSAGE_SEND_TYPE_EXAM:
+         it.setClass(this, ExamActivity.class);
+         it.putExtra(ExamActivity.EXTRA_EXAM_ID, mServiceID);
+         it.putExtra(ExamActivity.EXTRA_EXAM_TITLE, mServiceTitle);
+         startActivity(it);
          break;
 
       }
