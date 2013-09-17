@@ -17,8 +17,8 @@ public class NewsApp extends Application {
    private ActivityStack mActivityStack;
    private PreferenceManager mPrefsManager;
    private CacheManager mCacheManager;
-   private String mCurrentUserId = null;
    private AppDeadline mAppDeadline;
+   private String mCurrentUserId;
 
    @Override
    public void onCreate() {
@@ -78,6 +78,8 @@ public class NewsApp extends Application {
          mCacheManager.cleanup();
          mCacheManager = null;
       }
+      
+      mCurrentUserId = null;
    }
 
    public AppDeadline getAppDeadline() {
