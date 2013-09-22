@@ -36,6 +36,7 @@ public class UserApi extends NewsBaseApi {
    private static final String KEY_SCHOOL_TYPE = "school_class";
    private static final String KEY_USER_NAME = "studentName";
    private static final String KEY_VALIDATE_CODE = "serial";
+   private static final String KEY_PASSWORD = "pwd";
    private static final String KEY_YEAR_ID = "yearID";
    private static final String KEY_PHONE_NUMBER = "mobile";
 
@@ -113,12 +114,16 @@ public class UserApi extends NewsBaseApi {
    }
 
    public static ValidateResult validate(Context context, String validateCode) {
+      return validate(context, validateCode, "");
+   }
+
+   public static ValidateResult validate(Context context, String validateCode,
+         String password) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
-      // params.add(new BasicNameValuePair(KEY_VALIDATE_CODE, ChecksumHelper
-      // .toMD5(validateCode).toUpperCase()));
       params.add(new BasicNameValuePair(KEY_PHONE_NUMBER, validateCode));
+      params.add(new BasicNameValuePair(KEY_PASSWORD, password));
       JSONObject jsonObject = getJsonObject(context, validateService(context),
             params);
       return (jsonObject != null) ? new ValidateResult(jsonObject) : null;
