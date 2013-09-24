@@ -133,7 +133,7 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
    }
 
    public int getMinVersionCode() {
-      return minVersionCode;
+      return this.minVersionCode;
    }
 
    public AppProperties setMinVersionCode(int minVersionCode) {
@@ -160,7 +160,7 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
    }
 
    public List<String> getUserIds() {
-      return userIds;
+      return this.userIds;
    }
 
    public AppProperties setUserIds(List<String> userIds) {
@@ -178,7 +178,7 @@ public class AppProperties extends NewsBaseObject implements Parcelable,
    }
 
    public int getVersionCode() {
-      return versionCode;
+      return this.versionCode;
    }
 
    public AppProperties setVersionCode(int versionCode) {

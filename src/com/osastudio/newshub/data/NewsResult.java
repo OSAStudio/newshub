@@ -74,27 +74,6 @@ public class NewsResult implements ResultCode {
       return this;
    }
    
-   public boolean needAlert() {
-      if (this.resultCode == RESULT_INVALID_VALIDATE_CODE
-            || this.resultCode == RESULT_VALIDATE_FAILURE
-            || this.resultCode == RESULT_ILLEGAL_VALIDATE_CODE_STATUS
-            || this.resultCode == RESULT_VALIDATE_CODE_ALREADY_EXISTS
-            || this.resultCode == RESULT_REGISTER_FAILURE
-            || this.resultCode == RESULT_NO_DEVICE_IDENTIFIER
-            || this.resultCode == RESULT_PAYMENT_NEEDED
-            || this.resultCode == RESULT_ADD_ACCOUNT_FAILURE
-            || this.resultCode == RESULT_FEEDBACK_FAILURE
-            || this.resultCode == RESULT_ILLEGAL_DEVICE
-            || this.resultCode == RESULT_MAX_ACCOUNT_REACHED
-            || this.resultCode == RESULT_NOTICE_ALREADY_FEEDBACK
-            || this.resultCode == RESULT_NO_SUBSCRIPTION
-            || this.resultCode == RESULT_PHONE_NUMBER_ALREADY_REGISTERED
-            || this.resultCode == RESULT_DEVICE_ALREADY_BOUND_PHONE_NUMBER) {
-         return true;
-      }
-      return false;
-   }
-
    public boolean isSuccess() {
       return this.resultCode == RESULT_OK;
    }
