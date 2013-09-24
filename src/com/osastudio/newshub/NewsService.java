@@ -177,7 +177,7 @@ public class NewsService extends Service {
       @Override
       public void checkNewsMessage() {
          mHandler.removeCallbacks(mCheckNewsMessageRunnable);
-         mHandler.postDelayed(mCheckNewsMessageRunnable, 10 * 1000);
+         mHandler.postDelayed(mCheckNewsMessageRunnable, 60 * 1000);
       }
 
    };

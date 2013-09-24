@@ -15,14 +15,15 @@ public class EntryActivity extends NewsBaseActivity {
    @Override
    public void onDestroy() {
       super.onDestroy();
-      
+
       deliverPackage();
    }
 
    private void checkActivityStack() {
       ActivityStack stack = getActivityStack();
       if (stack.getCount() > 0) {
-         while (!(stack.getTop() instanceof CategoryActivity)) {
+         while (stack.getTop() != null
+               && !(stack.getTop() instanceof CategoryActivity)) {
             stack.pop().finish();
          }
       }
