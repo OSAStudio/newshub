@@ -122,6 +122,7 @@ public class CategoryActivity extends NewsBaseActivity {
    private View mToolbar = null;
    private View mActivateLayout = null;
    private DivisionEditText mActivateEdit = null;
+   private EditText mActivatePswd = null;
    private View mActivateBtn = null;
    private View mAccount_btn = null;
    private View mRecommend_btn = null;
@@ -467,12 +468,20 @@ public class CategoryActivity extends NewsBaseActivity {
       mActivateLayout = findViewById(R.id.activite);
       mActivateLayout.setVisibility(View.GONE);
       mActivateEdit = (DivisionEditText) findViewById(R.id.activite_edit);
+      mActivatePswd = (EditText)findViewById(R.id.password_edit);
       mActivateBtn = findViewById(R.id.activite_btn);
       mActivateBtn.setOnClickListener(new View.OnClickListener() {
          public void onClick(View v) {
             String activate_str = mActivateEdit.getResult();
-            if (activate_str != null && !activate_str.equals("")) {
-               new ActivateTask(CategoryActivity.this).execute(activate_str);
+            String pswd_str = mActivatePswd.getText().toString();
+            if (activate_str == null || activate_str.equals("")) {
+               Utils.ShowConfirmDialog(CategoryActivity.this, getString(R.string.phone_num_error), null);
+            } else if (pswd_str == null || pswd_str.equals("")) {
+               Utils.ShowConfirmDialog(CategoryActivity.this, getString(R.string.activite_msg_pswd), null);
+            }
+            if (activate_str != null && !activate_str.equals("") && 
+                  pswd_str != null && !pswd_str.equals("")) {
+               new ActivateTask(CategoryActivity.this).execute(activate_str, pswd_str);
             }
 
          }
@@ -736,7 +745,7 @@ public class CategoryActivity extends NewsBaseActivity {
       @Override
       protected NewsResult doInBackground(String... params) {
          return UserApi.validate(getApplicationContext(),
-               params[0]);
+               params[0], params[1]);
       }
 
       @Override

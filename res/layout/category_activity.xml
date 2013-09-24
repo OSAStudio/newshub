@@ -121,7 +121,26 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:inputType="number"/>"
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/activite_msg_pswd"
+                android:textColor="@color/text_gray"
+                android:textSize="16sp" />
+            <EditText  
+                android:id="@+id/password_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edit"
+                android:padding="5dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:inputType="textVisiblePassword"
+                android:hint="@string/activite_msg_pswd_hint"
+                android:maxLength="20"
+                />
             <Button
                 android:id="@+id/activite_btn"
                 android:layout_width="wrap_content"

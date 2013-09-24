@@ -387,6 +387,11 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          if (result != null && result.isSuccess()) {
             mExamInfo = result;
             mExamTitle = result.getTitle();
+            if (mExamInfo.getReport() != null) {
+               mExamReport = mExamInfo.getReport();
+               mReportId = mExamInfo.getReport().getId();
+            }
+            
             showExamInfoView();
          }
       }
@@ -415,11 +420,10 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
 
          if (result != null && result.isSuccess()) {
             mExam = result;
-            
+            mExamTitle = result.getTitle();
             if (mExamInfo == null) {
                mExamInfo = new ExamInfo();
             }
-            mExamTitle = result.getTitle();
             mExamInfo.setId(result.getId());
             mExamInfo.setTitle(result.getTitle());
             
@@ -468,7 +472,11 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          if (result != null && result.isSuccess()) {
             mReportId = result.getId();
             mExamReport = result;
+            if (mExamInfo == null) {
+               mExamInfo = new ExamInfo();
+            }
             mExamInfo.setReport(result);
+            
             setupExamReportView(getNextView());
             showNextView();
          }
