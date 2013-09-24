@@ -325,7 +325,7 @@ public class NewsService extends Service {
          
          Utils.log(TAG, "requestNewsMessageList: userId=" + userId + " count="
                + count + " retryIfFailed=" + retryIfFailed
-               + " retryDelayMillis=" + retryDelayedMillis + "serverType="
+               + " retryDelayedMillis=" + retryDelayedMillis + " serverType="
                + serverType);
          NewsMessageListTask task = new NewsMessageListTask(mHandler, this,
                userId);
@@ -392,7 +392,7 @@ public class NewsService extends Service {
 
    private Intent getNewsMessageLaunchIntent(NewsMessage msg) {
       Intent intent = new Intent();
-      intent.setClass(this, CategoryActivity.class);
+      intent.setClass(this, EntryActivity.class);
       Bundle extras = new Bundle();
       extras.putInt(CategoryActivity.MESSAGE_SEND_TYPE, msg.getType());
       extras.putString(CategoryActivity.MESSAGE_SERVICE_ID, msg.getId());

@@ -6,6 +6,7 @@ import com.osastudio.newshub.cache.NewsBaseAbstractCache;
 import com.osastudio.newshub.cache.SubscriptionAbstractCache;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.utils.UIUtils;
+import com.osastudio.newshub.utils.Utils;
 import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
@@ -17,11 +18,14 @@ import android.os.Bundle;
 
 public class NewsBaseActivity extends Activity {
 
+   protected static final String TAG = "NewsBaseActivity";
+   
    protected INewsService mNewsService;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      Utils.log(TAG, "onCreate: " + getClass().getCanonicalName());
 
       if (getActivityStack() == null) {
          ((NewsApp) getApplication()).prepareEnvironment();
@@ -45,6 +49,7 @@ public class NewsBaseActivity extends Activity {
    @Override
    protected void onDestroy() {
       super.onDestroy();
+      Utils.log(TAG, "onDestroy: " + getClass().getCanonicalName());
 
       getActivityStack().remove(this);
 
