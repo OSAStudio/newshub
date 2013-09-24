@@ -8,6 +8,9 @@
     <string name="male_name">男</string>
     <string name="female_name">女</string>
     <string name="activite_msg">请您输入真实的手机号\n若输入虚假号码，可能会被停止使用</string>
+    <string name="activite_msg_pswd">请输入密码</string>
+    <string name="activite_msg_pswd_hint">20位以内字符或数字</string>
+    <string name="phone_num_error">请正确填写手机号</string>
     <string name="activite_btn">激活</string>
     <string name="school_c">学校</string>
     <string name="grade_c">入学年份</string>
