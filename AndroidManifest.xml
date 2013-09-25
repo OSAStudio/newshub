@@ -74,6 +74,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.osastudio.newshub.UpgradeActivity"
+            android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -88,9 +89,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.osastudio.newshub.EntryActivity"
+            android:excludeFromRecents="true"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service
