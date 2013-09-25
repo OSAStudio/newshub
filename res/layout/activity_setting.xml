@@ -161,35 +161,24 @@
                         android:orientation="horizontal" >
 
                         <TextView
-                            android:id="@+id/big_btn"
+                            android:id="@+id/increase_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/switch_btn_bg"
+                            android:background="@drawable/font_btn_bg"
                             android:gravity="center"
-                            android:text="@string/big"
+                            android:text="@string/increase"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textSize="20sp" />
 
                         <TextView
-                            android:id="@+id/normal_btn"
+                            android:id="@+id/decrease_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/switch_btn_bg"
+                            android:background="@drawable/font_btn_bg"
                             android:gravity="center"
-                            android:text="@string/normal"
+                            android:text="@string/decrease"
                             android:textColor="@color/white"
-                            android:textSize="16sp" />
-"
-
-                        <TextView
-                            android:id="@+id/small_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/switch_btn_bg"
-                            android:gravity="center"
-                            android:text="@string/small"
-                            android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textSize="20sp" />
                     </LinearLayout>
                 </LinearLayout>
 

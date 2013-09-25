@@ -76,6 +76,8 @@
     <string name="big">大</string>
     <string name="normal">中</string>
     <string name="small">小</string>
+    <string name="increase">+</string>
+    <string name="decrease">-</string>
     <string name="download_concrol">流量控制</string>
     <string name="download_concrol_sub">仅在wifi下加载图片，节省流量</string>
     <string name="open">开</string>

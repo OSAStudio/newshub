@@ -1,12 +1,7 @@
 package com.osastudio.newshub;
 
-import java.util.ArrayList;
-
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.NewsResult;
-import com.osastudio.newshub.data.user.UserInfo;
-import com.osastudio.newshub.data.user.UserInfoList;
-import com.osastudio.newshub.data.user.ValidateResult;
 import com.osastudio.newshub.library.AppSettings;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.net.UserApi;
@@ -20,28 +15,25 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class SettingActivity extends NewsBaseActivity implements AppSettings {
    private View mAccountManager = null;
    private View mAddAcountManager = null;
-   private View mTextBig = null;
-   private View mTextNormal = null;
-   private View mTextSmall = null;
+   private View mIncreaseBtn = null;
+   private View mDecreaseBtn = null;
+   private int mFontSize = DEFAULT_FONT_SIZE;
    private View mDownloadClose = null;
    private View mDownloadOpen = null;
+   private boolean mAutoLoadingPicture = AUTO_LOADING_PICTURE;
    private View mHelp = null;
    private ViewGroup mCheckUpdate = null;
    private View mAbout = null;
@@ -78,9 +70,8 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
    private void findViews() {
       mAccountManager = findViewById(R.id.account_manager);
       mAddAcountManager = findViewById(R.id.add_account);
-      mTextBig = findViewById(R.id.big_btn);
-      mTextNormal = findViewById(R.id.normal_btn);
-      mTextSmall = findViewById(R.id.small_btn);
+      mIncreaseBtn = findViewById(R.id.increase_btn);
+      mDecreaseBtn = findViewById(R.id.decrease_btn);
       mFontSizePrompt = (TextView) findViewById(R.id.font_size_prompt);
       mDownloadClose = findViewById(R.id.close_btn);
       mDownloadOpen = findViewById(R.id.open_btn);
@@ -95,88 +86,43 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
 
    private void initViews() {
       PreferenceManager prefsManager = getPrefsManager();
-      int fontSize = prefsManager.getFontSize();
-      boolean autoLoading = prefsManager.isAutoLoadingPictureEnabled();
-
-      int resId = 0;
-      if (fontSize == FONT_SIZE_BIG) {
-         mTextBig.setSelected(true);
-         mTextNormal.setSelected(false);
-         mTextSmall.setSelected(false);
-         resId = R.string.big;
-      } else if (fontSize == FONT_SIZE_NORMAL) {
-         mTextBig.setSelected(false);
-         mTextNormal.setSelected(true);
-         mTextSmall.setSelected(false);
-         resId = R.string.normal;
-      } else if (fontSize == FONT_SIZE_SMALL) {
-         mTextBig.setSelected(false);
-         mTextNormal.setSelected(false);
-         mTextSmall.setSelected(true);
-         resId = R.string.small;
-      }
-      if (resId > 0) {
-         mFontSizePrompt.setText(getString(R.string.text_size_sub,
-               getString(resId)));
-      }
-
+      mFontSize = prefsManager.getFontSize();
+      mFontSizePrompt.setText(getString(R.string.text_size_sub, mFontSize));
       View.OnClickListener listener = new View.OnClickListener() {
          public void onClick(View v) {
-            int fontSize = 0;
-            int resId = 0;
-            if (v.getId() == R.id.big_btn) {
-               mTextBig.setSelected(true);
-               mTextNormal.setSelected(false);
-               mTextSmall.setSelected(false);
-               fontSize = FONT_SIZE_BIG;
-               resId = R.string.big;
-            } else if (v.getId() == R.id.normal_btn) {
-               mTextBig.setSelected(false);
-               mTextNormal.setSelected(true);
-               mTextSmall.setSelected(false);
-               fontSize = FONT_SIZE_NORMAL;
-               resId = R.string.normal;
-            } else if (v.getId() == R.id.small_btn) {
-               mTextBig.setSelected(false);
-               mTextNormal.setSelected(false);
-               mTextSmall.setSelected(true);
-               fontSize = FONT_SIZE_SMALL;
-               resId = R.string.small;
+            if (v.getId() == R.id.increase_btn) {
+               mFontSize += 2;
+            } else if (v.getId() == R.id.decrease_btn) {
+               mFontSize -= 2;
             }
-            if (fontSize > 0) {
-               getPrefsManager().setFontSize(fontSize);
+            
+            if (mFontSize < MIN_FONT_SIZE) {
+               mFontSize = MIN_FONT_SIZE;
+            } else if (mFontSize > MAX_FONT_SIZE) {
+               mFontSize = MAX_FONT_SIZE;
             }
-            if (resId > 0) {
-               mFontSizePrompt.setText(getString(R.string.text_size_sub,
-                     getString(resId)));
-            }
+		      mFontSizePrompt.setText(getString(R.string.text_size_sub, mFontSize));
          }
       };
-      mTextBig.setOnClickListener(listener);
-      mTextNormal.setOnClickListener(listener);
-      mTextSmall.setOnClickListener(listener);
+      mIncreaseBtn.setOnClickListener(listener);
+      mDecreaseBtn.setOnClickListener(listener);
 
+      mAutoLoadingPicture = prefsManager.isAutoLoadingPictureEnabled();
+      mDownloadOpen.setSelected(!mAutoLoadingPicture);
+      mDownloadClose.setSelected(mAutoLoadingPicture);
       listener = new View.OnClickListener() {
          public void onClick(View v) {
-            PreferenceManager prefsManager = getPrefsManager();
             if (v.getId() == R.id.open_btn) {
-               prefsManager.enableAutoLoadingPicture(false);
+               mAutoLoadingPicture = false;
                mDownloadOpen.setSelected(true);
                mDownloadClose.setSelected(false);
             } else if (v.getId() == R.id.close_btn) {
-               prefsManager.enableAutoLoadingPicture(true);
+               mAutoLoadingPicture = true;
                mDownloadOpen.setSelected(false);
                mDownloadClose.setSelected(true);
             }
          }
       };
-      if (autoLoading) {
-         mDownloadOpen.setSelected(false);
-         mDownloadClose.setSelected(true);
-      } else {
-         mDownloadOpen.setSelected(true);
-         mDownloadClose.setSelected(false);
-      }
       mDownloadOpen.setOnClickListener(listener);
       mDownloadClose.setOnClickListener(listener);
 
@@ -196,10 +142,10 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
             mCheckTask.execute();
          }
       });
-      
+
       DisplayMetrics dm = new DisplayMetrics();
       getWindowManager().getDefaultDisplay().getMetrics(dm);
-      mSystemInfo.setText(getString(R.string.system_sub, dm.heightPixels, 
+      mSystemInfo.setText(getString(R.string.system_sub, dm.heightPixels,
             dm.widthPixels, dm.densityDpi, dm.density));
 
       mCheckUpdate.setOnClickListener(new OnClickListener() {
@@ -207,13 +153,13 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
             try {
                getNewsService().checkNewVersion();
             } catch (Exception e) {
-//               e.printStackTrace();
+               // e.printStackTrace();
             }
          }
       });
       mVersionName.setText(getString(R.string.check_update_sub,
             Utils.getVersionName(this)));
-      
+
       mAbout.setOnClickListener(new OnClickListener() {
          public void onClick(View v) {
             Intent intent = new Intent();
@@ -221,6 +167,15 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
             startActivity(intent);
          }
       });
+   }
+
+   @Override
+   protected void onPause() {
+      super.onPause();
+      
+      PreferenceManager prefsManager = getPrefsManager();
+      prefsManager.setFontSize(mFontSize);
+      prefsManager.enableAutoLoadingPicture(mAutoLoadingPicture);
    }
 
    @Override
@@ -237,16 +192,14 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
    }
 
    private class CheckTask extends NewsResultAsyncTask<Void, Void, NewsResult> {
-      
-      public CheckTask(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
 
-	protected NewsResult doInBackground(Void... params) {
-    	  return UserApi
-               .getValidateStatus(SettingActivity.this);
-         
+      public CheckTask(Context context) {
+         super(context);
+      }
+
+      protected NewsResult doInBackground(Void... params) {
+         return UserApi.getValidateStatus(SettingActivity.this);
+
       }
 
       @Override
