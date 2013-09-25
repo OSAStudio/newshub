@@ -26,6 +26,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class SettingActivity extends NewsBaseActivity implements AppSettings {
+   
+   private static final int FONT_SIZE_STEP = 4;
+   
    private View mAccountManager = null;
    private View mAddAcountManager = null;
    private View mIncreaseBtn = null;
@@ -91,9 +94,9 @@ public class SettingActivity extends NewsBaseActivity implements AppSettings {
       View.OnClickListener listener = new View.OnClickListener() {
          public void onClick(View v) {
             if (v.getId() == R.id.increase_btn) {
-               mFontSize += 2;
+               mFontSize += FONT_SIZE_STEP;
             } else if (v.getId() == R.id.decrease_btn) {
-               mFontSize -= 2;
+               mFontSize -= FONT_SIZE_STEP;
             }
             
             if (mFontSize < MIN_FONT_SIZE) {
