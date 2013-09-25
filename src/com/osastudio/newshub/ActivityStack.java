@@ -6,20 +6,7 @@ import android.app.Activity;
 
 public class ActivityStack {
    
-//   private static ActivityStack sInstance = null;
-
    private LinkedList<Activity> mActivities;
-   
-//   public static ActivityStack getInstance() {
-//      if (sInstance == null) {
-//         synchronized (ActivityStack.class) {
-//            if (sInstance == null) {
-//               sInstance = new ActivityStack();
-//            }
-//         }
-//      }
-//      return sInstance;
-//   }
    
    public ActivityStack() {
       mActivities = new LinkedList<Activity>();
@@ -34,7 +21,10 @@ public class ActivityStack {
    }
    
    public Activity pop() {
-      return mActivities.removeFirst();
+      if (!mActivities.isEmpty()) {
+	      return mActivities.removeFirst();
+      }
+      return null;
    }
    
    public void remove(Activity activity) {
@@ -44,11 +34,17 @@ public class ActivityStack {
    }
    
    public Activity getTop() {
-      return mActivities.getFirst();
+      if (!mActivities.isEmpty()) {
+	      return mActivities.getFirst();
+      }
+      return null;
    }
    
    public Activity getBottom() {
-      return mActivities.getLast();
+      if (!mActivities.isEmpty()) {
+	      return mActivities.getLast();
+      }
+      return null;
    }
    
    public void finishAll() {
@@ -59,8 +55,6 @@ public class ActivityStack {
    
    public void cleanup() {
       finishAll();
-      
-//      sInstance = null;
    }
    
 }

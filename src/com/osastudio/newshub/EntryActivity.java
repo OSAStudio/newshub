@@ -21,11 +21,9 @@ public class EntryActivity extends NewsBaseActivity {
 
    private void checkActivityStack() {
       ActivityStack stack = getActivityStack();
-      if (stack.getCount() > 0) {
-         while (stack.getTop() != null
-               && !(stack.getTop() instanceof CategoryActivity)) {
-            stack.pop().finish();
-         }
+      while (stack.getCount() > 0 && stack.getTop() != null
+            && !(stack.getTop() instanceof CategoryActivity)) {
+         stack.pop().finish();
       }
       finish();
    }
