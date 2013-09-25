@@ -25,7 +25,7 @@ public class AppDeadline {
             if (obj != null && !obj.isNull("date_y")) {
                String dateString = obj.getString("date_y");
                if (!TextUtils.isEmpty(dateString)) {
-                  this.currentTime = new SimpleDateFormat("yyyyÄêMMÔÂddÈÕ").parse(dateString);
+                  this.currentTime = new SimpleDateFormat("yyyyå¹´MMæœˆddæ—¥").parse(dateString);
                }
             }
          }
