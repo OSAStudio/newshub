@@ -20,8 +20,16 @@ public class ValidateResult extends NewsResult {
 
       if (isSuccess()) {
          try {
-            if (!jsonObject.isNull(JSON_KEY_USER_IDS)) {
-               JSONArray jsonArray = jsonObject.getJSONArray(JSON_KEY_USER_IDS);
+            JSONObject idsObject = null;
+            if (!jsonObject.isNull(JSON_KEY_LIST)) {
+               idsObject = jsonObject.getJSONObject(JSON_KEY_LIST);
+            }
+            if (idsObject == null) {
+               return;
+            }
+
+            if (!idsObject.isNull(JSON_KEY_USER_IDS)) {
+               JSONArray jsonArray = idsObject.getJSONArray(JSON_KEY_USER_IDS);
                if (jsonArray != null && jsonArray.length() > 0) {
                   this.userIds = new ArrayList<String>();
                   for (int i = 0; i < jsonArray.length(); i++) {
