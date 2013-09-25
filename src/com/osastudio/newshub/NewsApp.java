@@ -24,8 +24,8 @@ public class NewsApp extends Application {
    public void onCreate() {
       super.onCreate();
       
-      Utils.enableLogging(false);
-      NewsBaseApi.enableDebug(false);
+      Utils.enableLogging(true);
+      NewsBaseApi.enableDebug(true);
    }
 
    public ActivityStack getActivityStack() {

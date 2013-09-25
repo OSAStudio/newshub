@@ -481,6 +481,9 @@ public class CategoryActivity extends NewsBaseActivity {
             }
             if (activate_str != null && !activate_str.equals("") && 
                   pswd_str != null && !pswd_str.equals("")) {
+               if (mDlg == null) {
+               mDlg = Utils.showProgressDlg(CategoryActivity.this, null);
+               }
                new ActivateTask(CategoryActivity.this).execute(activate_str, pswd_str);
             }
 
@@ -751,12 +754,38 @@ public class CategoryActivity extends NewsBaseActivity {
       @Override
       public void onPostExecute(NewsResult rtn) {
          super.onPostExecute(rtn);
+         if (mDlg != null) {
+            mDlg.dismiss();
+            mDlg = null;
+         }
          ValidateResult result = (ValidateResult)rtn;
          if (result != null && result.isSuccess()) {
             mActivateLayout.setVisibility(View.GONE);
-            showRegisterView();
+            if (!result.hasUserIds()) {
+               showRegisterView();
+            } else {
+               List<String> userIds = result.getUserIds();
+               String curId = mApp.getCurrentUserId();
+               int idIndex = -1;
+               if (userIds != null && userIds.size() > 0) {
+                  if (curId != null) {
+                     for (int i = 0; i < userIds.size(); i++) {
+                        if (curId.equals(userIds.get(i))) {
+                           idIndex = i;
+                        }
+                     }
+                  }
+                  if (idIndex < 0) {
+                     mApp.setCurrentUserId(userIds.get(0));
+                     mUserStatus = 3;
+                  }
+               }
+               mTask = new LoadDataTask(CategoryActivity.this);
+               mTask.execute(0);
+            }
          } else {
             mActivateEdit.init();
+            mActivatePswd.setText(null);
          }
       }
    }
