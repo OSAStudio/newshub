@@ -394,7 +394,8 @@ public class AzkerListActivity extends NewsBaseActivity {
 					for (int i = 0; i < mUserIssuesList.size(); i++) {
 						SubscriptionTopic userIssue = mUserIssuesList.get(i);
 						mListDatas.add(new ListData(userIssue.getId(),
-								userIssue.getTitle(), userIssue.getIconUrl()));
+								userIssue.getTitle(), userIssue.getIconUrl(), 
+								userIssue.getType()));
 					}
 				}
 
@@ -645,7 +646,9 @@ public class AzkerListActivity extends NewsBaseActivity {
 		Intent it = new Intent(this, SummaryActivity.class);
 		it.putExtra(SummaryActivity.CHANNEL_TYPE, mListType);
 		it.putExtra(SummaryActivity.CHANNEL_TITLE, mTitle);
-		it.putExtra(SummaryActivity.CHANNEL_ID, mListDatas.get(position).mId);
+		ListData data = mListDatas.get(position);
+		it.putExtra(SummaryActivity.CHANNEL_ID, data.mId);
+		it.putExtra(SummaryActivity.TITLE_TYPE, data.mType);
 		startActivity(it);
 	}
 	
@@ -713,7 +716,6 @@ public class AzkerListActivity extends NewsBaseActivity {
       case Utils.USER_ISSUES_TYPE:
       case Utils.DAILY_REMINDER_TYPE:
          startSummaryActivity(position);
-
          break;
       }
 	}
@@ -726,19 +728,19 @@ public class AzkerListActivity extends NewsBaseActivity {
 			mIconUrl = iconUrl;
 		}
 
+		public ListData(String id, String title, String iconUrl, int type) {
+		   this(id, title, iconUrl);
+		   mType = type;
+		}
+
 		public ListData(String id, String title, String iconUrl, String subTitle) {
-			mId = id;
-			mTitle = title;
-			mIconUrl = iconUrl;
+		   this(id, title, iconUrl);
 			mSubTitle = subTitle;
 		}
 
 		public ListData(String id, String title, String iconUrl,
 				String subTitle, int sortNum) {
-			mId = id;
-			mTitle = title;
-			mIconUrl = iconUrl;
-			mSubTitle = subTitle;
+		   this(id, title, iconUrl, subTitle);
 			mSortNum = mSortNum;
 		}
 
@@ -755,6 +757,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 		String mId = null; // in DailyReminder is issue id
 		String mTitle = null;
 		String mIconUrl = null;;
+		int mType = 0;
 		String mSubTitle = null;
 		Bitmap mBitmap = null;
 		int mSortNum; // for expert list

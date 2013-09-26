@@ -89,6 +89,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.osastudio.newshub.EntryActivity"
+            android:alwaysRetainTaskState="false"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"

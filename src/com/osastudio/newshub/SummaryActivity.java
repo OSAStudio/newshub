@@ -36,6 +36,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	public static final String CHANNEL_TYPE = "Channel_type";
 	public static final String CHANNEL_ID = "Channel_id";
 	public static final String CHANNEL_TITLE = "Channel_title";
+	public static final String TITLE_TYPE = "title_type";
 	
 
 	private NewsApp mApp = null;
@@ -43,6 +44,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	private String mChannelId = null;
 	private String mChannelTitle = null;
 	private String mChannelDsip = null;
+	private int mTitleType = 0;
 	private SlideSwitcher mSwitcher = null;
 	private List<NewsBaseAbstract> mSummaries = new ArrayList<NewsBaseAbstract>();
 	private int mTotalPage = 0;
@@ -65,6 +67,7 @@ public class SummaryActivity extends NewsBaseActivity {
 			mChannelType = extras.getInt(CHANNEL_TYPE);
 			mChannelId = extras.getString(CHANNEL_ID);
 			mChannelTitle = extras.getString(CHANNEL_TITLE);
+			mTitleType = extras.getInt(TITLE_TYPE);
 		}
 
 		ViewConfiguration configuration = ViewConfiguration.get(this);
@@ -153,9 +156,14 @@ public class SummaryActivity extends NewsBaseActivity {
 			NewsResult result = null;
 			switch (mChannelType) {
 			case Utils.USER_ISSUES_TYPE:
-				result = SubscriptionApi
-						.getSubscriptionAbstractList(getApplicationContext(),
-								mApp.getCurrentUserId(), mChannelId);
+			   if (mTitleType == 1) {
+					result = SubscriptionApi
+							.getSubscriptionAbstractList(getApplicationContext(),
+									mApp.getCurrentUserId(), mChannelId);
+			   } else if (mTitleType == 2) {
+					result = NewsAbstractApi.getNewsAbstractList(
+							getApplicationContext(), mChannelId);
+			   }
 				
 				break;
 			case Utils.LESSON_LIST_TYPE:
@@ -179,12 +187,14 @@ public class SummaryActivity extends NewsBaseActivity {
 			}
 
 			if(result != null && result.isSuccess()) {
-				if (mChannelType == Utils.USER_ISSUES_TYPE) {
+				if (mChannelType == Utils.USER_ISSUES_TYPE && mTitleType == 1) {
 					SubscriptionAbstractList userIssueList = (SubscriptionAbstractList)result;
 					mSummaries = userIssueList.asNewsBaseAbstractList();
 					mChannelTitle = userIssueList.getChannelName();
 					mChannelDsip = userIssueList.getChannelDescription();
-				} else if (mChannelType == Utils.LESSON_LIST_TYPE || mChannelType == Utils.DAILY_REMINDER_TYPE) {
+				} else if ((mChannelType == Utils.USER_ISSUES_TYPE && mTitleType == 2)
+				      || mChannelType == Utils.LESSON_LIST_TYPE 
+				      || mChannelType == Utils.DAILY_REMINDER_TYPE) {
 					NewsAbstractList summary_list = (NewsAbstractList)result;
 					mSummaries = summary_list.asNewsBaseAbstractList();
 					mChannelTitle = summary_list.getChannelName();
@@ -230,7 +240,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	}
 
 	private void startFileActivity(int index) {
-		if (mChannelType == Utils.USER_ISSUES_TYPE) {
+		if (mChannelType == Utils.USER_ISSUES_TYPE && mTitleType == 1) {
 			Intent it = new Intent(this, PageActivity.class);
 			it.putExtra(PageActivity.PAGE_TYPE, mChannelType);
 			it.putExtra(PageActivity.START_INDEX, index);
