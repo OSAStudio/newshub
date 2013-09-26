@@ -105,6 +105,7 @@ public class FileView extends LinearLayout {
       ws.setJavaScriptEnabled(true);
       mWebView.addJavascriptInterface(new JSInterface(mWebView), "jsif");
       mWebView.setBackgroundColor(0);
+      mWebView.setHorizontalScrollBarEnabled(false);
       mWebView.setLongClickable(false);
       mWebView.setOnLongClickListener(new WebView.OnLongClickListener() {
          public boolean onLongClick(View v) {
