@@ -28,6 +28,7 @@ public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
 
    public NewsAbstract(Parcel src) {
       super(src);
+      this.type = src.readInt();
    }
 
    public int getType() {
@@ -67,6 +68,9 @@ public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
          if (!jsonObject.isNull(JSON_KEY_TITLE)) {
             result.setTitle(jsonObject.getString(JSON_KEY_TITLE).trim());
          }
+         if (!jsonObject.isNull(JSON_KEY_TYPE)) {
+            result.setType(jsonObject.getInt(JSON_KEY_TYPE));
+         }
       } catch (JSONException e) {
 
       }
@@ -81,6 +85,7 @@ public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
    @Override
    public void writeToParcel(Parcel dst, int flags) {
       super.writeToParcel(dst, flags);
+      dst.writeInt(this.type);
    }
 
    public static final Parcelable.Creator<NewsAbstract> CREATOR = new Creator<NewsAbstract>() {
