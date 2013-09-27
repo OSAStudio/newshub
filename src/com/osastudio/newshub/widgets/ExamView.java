@@ -75,8 +75,7 @@ public class ExamView extends FrameLayout {
       }
       if (this.questionTitleView != null) {
          this.questionTitleView.setText(question != null ? Html
-               .fromHtml(this.context.getString(R.string.ex_number,
-                     question.getOrder(), question.getTitle())) : "");
+               .fromHtml(question.getTitle()) : "");
       }
       if (this.optionsListView != null) {
          this.optionsListView.setOnItemClickListener(new OnItemClickListener() {
