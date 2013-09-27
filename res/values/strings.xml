@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">爱子客</string>
-    <string name="app_name_debug">爱子客(debug)</string>
     <string name="wait">请稍等......</string>
     <string name="confirm">确认</string>
     <string name="empty_alert">您未填写完全</string>
