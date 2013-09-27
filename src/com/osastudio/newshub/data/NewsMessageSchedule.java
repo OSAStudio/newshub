@@ -109,7 +109,7 @@ public class NewsMessageSchedule extends NewsBaseObject {
    }
 
    public boolean isPullingLate() {
-//      return getRemainingMillis() + PULLING_TIME_TOLERANCE < 0;
+      // return getRemainingMillis() + PULLING_TIME_TOLERANCE < 0;
       return false;
    }
 
@@ -136,18 +136,16 @@ public class NewsMessageSchedule extends NewsBaseObject {
       NewsMessageSchedule result = null;
       String[] arr = str.split(SEPARATOR);
       if (arr != null && arr.length == 3) {
+         Utils.log(TAG, "parseString: " + arr[0] + "," + arr[1] + "," + arr[2]);
          result = new NewsMessageSchedule();
          try {
             if (!TextUtils.isEmpty(arr[0])) {
-               Utils.log(TAG, "parseString: baseMillis=" + arr[0]);
                result.setBaseMillis(Long.valueOf(arr[0]));
             }
             if (!TextUtils.isEmpty(arr[1])) {
-               Utils.log(TAG, "parseString: offsetMillis=" + arr[1]);
                result.setOffsetMillis(Long.valueOf(arr[1]));
             }
             if (!TextUtils.isEmpty(arr[2])) {
-               Utils.log(TAG, "parseString: count=" + arr[2]);
                result.setCount(Integer.valueOf(arr[2]));
             }
          } catch (NumberFormatException e) {

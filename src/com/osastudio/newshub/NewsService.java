@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 public class NewsService extends Service {
@@ -188,7 +189,6 @@ public class NewsService extends Service {
 
       @Override
       public void run() {
-         Utils.log(TAG, "checkNewsMessage");
          PreferenceManager prefsManager = ((NewsApp) getApplication())
                .getPrefsManager();
          String str = prefsManager.getMessageScheduleUserIds();
@@ -284,7 +284,6 @@ public class NewsService extends Service {
    }
 
    private void checkNewsMessageSchedule() {
-      Utils.log(TAG, "checkNewsMessageSchedule: " + System.currentTimeMillis());
       PreferenceManager prefsManager = ((NewsApp) getApplication())
             .getPrefsManager();
       String userId = prefsManager.getUserId();
@@ -317,12 +316,11 @@ public class NewsService extends Service {
          PreferenceManager prefsManager = ((NewsApp) NewsService.this
                .getApplication()).getPrefsManager();
          NewsMessageSchedule schedule = NewsMessageSchedule
-               .parseString(prefsManager
-                     .getMessageScheduleByUserId(userId));
+               .parseString(prefsManager.getMessageScheduleByUserId(userId));
          if (schedule.hasNotifiedToday()) {
             return;
          }
-         
+
          Utils.log(TAG, "requestNewsMessageList: userId=" + userId + " count="
                + count + " retryIfFailed=" + retryIfFailed
                + " retryDelayedMillis=" + retryDelayedMillis + " serverType="
@@ -364,28 +362,24 @@ public class NewsService extends Service {
 
    private void notifyNewsMessage(NewsMessageList messages) {
       Utils.log(TAG, "notifyNewsMessage");
+      NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
       for (int i = 0; i < messages.getList().size(); i++) {
          NewsMessage msg = messages.getList().get(i);
          Utils.log(TAG, "notifyNewsMessage: userId=" + msg.getUserId()
                + " userName=" + msg.getUserName() + " msgType=" + msg.getType());
-         Notification noti = new Notification(R.drawable.noti,
-               getString(R.string.news_message_prompt_title),
-               System.currentTimeMillis());
          PendingIntent pi = PendingIntent.getActivity(this, msg.hashCode(),
                getNewsMessageLaunchIntent(msg),
                PendingIntent.FLAG_UPDATE_CURRENT);
-         noti.setLatestEventInfo(this, msg.getContent(),
-               getMsgTitleByType(msg), pi);
+         RemoteViews views = new RemoteViews(getPackageName(),
+               R.layout.notification);
+         views.setTextViewText(R.id.noti_title, msg.getContent());
+         Notification noti = new Notification();
+         noti.icon = R.drawable.noti;
+         noti.contentView = views;
+         noti.when = System.currentTimeMillis();
+         noti.contentIntent = pi;
          noti.flags |= Notification.FLAG_AUTO_CANCEL;
-         if (i == 0) {
-            noti.defaults |= Notification.DEFAULT_SOUND;
-            noti.defaults |= Notification.DEFAULT_LIGHTS;
-            noti.defaults |= Notification.DEFAULT_VIBRATE;
-         } else {
-            noti.defaults = 0;
-         }
-         NotificationManager manager = (NotificationManager) getApplicationContext()
-               .getSystemService(Context.NOTIFICATION_SERVICE);
+         noti.defaults = (i == 0) ? Notification.DEFAULT_ALL : 0;
          manager.notify(msg.hashCode(), noti);
       }
    }
@@ -436,7 +430,8 @@ public class NewsService extends Service {
             if (NetworkHelper.isNetworkAvailable(context)) {
                mBinder.checkNewsMessage();
             }
-         } if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
+         }
+         if (ACTION_CHECK_NEWS_MESSAGE_SCHEDULE.equals(action)) {
             if (NetworkHelper.isNetworkAvailable(context)) {
                checkNewsMessageSchedule();
             }
@@ -608,7 +603,8 @@ public class NewsService extends Service {
                schedule.setCount(3);
                prefsManager.setMessageScheduleByUserId(this.userId,
                      schedule.toString());
-               Utils.log(TAG, "SUCCESS: schedule=" + schedule.toString());
+               Utils.log(TAG, "SUCCESS: " + "[" + this.userId + "]"
+                     + " schedule=" + schedule.toString());
             }
             notifyNewsMessage(result);
          } else {
@@ -616,7 +612,8 @@ public class NewsService extends Service {
                schedule.setCount(this.count);
                prefsManager.setMessageScheduleByUserId(this.userId,
                      schedule.toString());
-               Utils.log(TAG, "FAILED: schedule=" + schedule.toString());
+               Utils.log(TAG, "FAILED: " + "[" + this.userId + "]"
+                     + " schedule=" + schedule.toString());
             }
             Utils.log(TAG, "onPostExecute: retryIfFailed="
                   + this.retryDelayedMillis + " retryDelayedMillis="
