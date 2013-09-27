@@ -15,7 +15,7 @@ public class SubscriptionTopic extends NewsBaseTopic implements Parcelable {
    public static final String JSON_KEY_ID = "recommend_lssue_id";
    public static final String JSON_KEY_TYPE = "recommend_lssue_class";
    
-   protected int type = 0;
+   protected int type = 1;
 
    public SubscriptionTopic() {
       super();

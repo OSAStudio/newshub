@@ -757,7 +757,7 @@ public class AzkerListActivity extends NewsBaseActivity {
 		String mId = null; // in DailyReminder is issue id
 		String mTitle = null;
 		String mIconUrl = null;;
-		int mType = 0;
+		int mType = 1;
 		String mSubTitle = null;
 		Bitmap mBitmap = null;
 		int mSortNum; // for expert list

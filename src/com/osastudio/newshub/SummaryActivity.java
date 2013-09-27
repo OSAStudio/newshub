@@ -44,7 +44,7 @@ public class SummaryActivity extends NewsBaseActivity {
 	private String mChannelId = null;
 	private String mChannelTitle = null;
 	private String mChannelDsip = null;
-	private int mTitleType = 0;
+	private int mTitleType = 1;
 	private SlideSwitcher mSwitcher = null;
 	private List<NewsBaseAbstract> mSummaries = new ArrayList<NewsBaseAbstract>();
 	private int mTotalPage = 0;
