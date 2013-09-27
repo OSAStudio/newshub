@@ -1502,7 +1502,6 @@ public class CategoryActivity extends NewsBaseActivity {
          it.setClass(this, ExamActivity.class);
          it.putExtra(ExamActivity.EXTRA_EXAM_ID, mServiceID);
          it.putExtra(ExamActivity.EXTRA_EXAM_TITLE, mServiceTitle);
-         startActivity(it);
          break;
 
       }
