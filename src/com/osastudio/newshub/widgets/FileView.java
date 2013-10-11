@@ -142,7 +142,7 @@ public class FileView extends LinearLayout {
          String style = "<style type=\"text/css\"> \n"
                + "h2 {text-align:justify; font-size: " + (size + 4)
                + "px; line-height: " + (size + 10) + "px}\n"
-               + "body {text-align:justify; font-size: " + size
+               + "body {text-align:left; font-size: " + size
                + "px; line-height: " + (size * 3 / 2) + "px}\n" + "</style> \n";
          document.head().append(style).toString();
 
