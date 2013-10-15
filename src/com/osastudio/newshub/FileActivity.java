@@ -41,6 +41,7 @@ public class FileActivity extends NewsBaseActivity {
 	public static final String CATEGORY_TITLE = "Category_title";
 	public static final String PAGE_ID = "page_id";
 
+   public NewsApp mApp;
 	public int mCurrentId = 0;
 	public String mCategoryTitle = null;
 	public String mPageId = null;
@@ -73,6 +74,7 @@ public class FileActivity extends NewsBaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_switcher);
+      mApp = (NewsApp) getApplication();
 		mIsWIFI = NetworkHelper.isWifiEnabled(this);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -212,7 +214,7 @@ public class FileActivity extends NewsBaseActivity {
 
 			mSummary_data = mSummary_list.getAbstractList().get(mIndex);
 			mNewsArticle = NewsArticleApi.getNewsArticle(FileActivity.this,
-					mSummary_data.getId());
+					mApp.getCurrentUserId(), mSummary_data.getId());
 			
 			
 			return mNewsArticle;

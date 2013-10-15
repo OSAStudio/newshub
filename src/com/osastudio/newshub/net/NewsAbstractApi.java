@@ -22,10 +22,11 @@ public class NewsAbstractApi extends NewsBaseApi {
    }
 
    public static NewsAbstractList getNewsAbstractList(Context context,
-         String newsChannelId) {
+         String userId, String newsChannelId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_CHANNEL_ID, newsChannelId));
       JSONObject jsonObject = getJsonObject(context,
             getNewsAbstractListService(context), params);

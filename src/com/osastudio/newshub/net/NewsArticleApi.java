@@ -27,10 +27,12 @@ public class NewsArticleApi extends NewsBaseApi {
             "lesson!submitLessonUPByMobile.do").toString();
    }
 
-   public static NewsArticle getNewsArticle(Context context, String articleId) {
+   public static NewsArticle getNewsArticle(Context context, String userId,
+         String articleId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, articleId));
       JSONObject jsonObject = getJsonObject(context,
             getNewsArticleService(context), params);
@@ -43,11 +45,12 @@ public class NewsArticleApi extends NewsBaseApi {
       return result;
    }
 
-   public static NewsArticle getNewsArticle(Context context,
+   public static NewsArticle getNewsArticle(Context context, String userId,
          NewsAbstract newsAbstract) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
       params.add(new BasicNameValuePair(KEY_DEVICE_TYPE, getDeviceType()));
+      params.add(new BasicNameValuePair(KEY_USER_ID, userId));
       params.add(new BasicNameValuePair(KEY_NEWS_ARTICLE_ID, newsAbstract
             .getId()));
       JSONObject jsonObject = getJsonObject(context,

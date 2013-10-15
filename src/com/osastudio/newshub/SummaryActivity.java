@@ -162,14 +162,14 @@ public class SummaryActivity extends NewsBaseActivity {
 									mApp.getCurrentUserId(), mChannelId);
 			   } else if (mTitleType == 2) {
 					result = NewsAbstractApi.getNewsAbstractList(
-							getApplicationContext(), mChannelId);
+							getApplicationContext(), mApp.getCurrentUserId(), mChannelId);
 			   }
 				
 				break;
 			case Utils.LESSON_LIST_TYPE:
 			case Utils.DAILY_REMINDER_TYPE:
 				result = NewsAbstractApi.getNewsAbstractList(
-						getApplicationContext(), mChannelId);
+						getApplicationContext(), mApp.getCurrentUserId(), mChannelId);
 				
 				break;
 			}
