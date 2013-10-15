@@ -18,6 +18,7 @@ import com.osastudio.newshub.widgets.ExamView;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -33,7 +34,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
 
    public static final String EXTRA_EXAM_ID = "exam_id";
    public static final String EXTRA_EXAM_TITLE = "exam_title";
-   
+
    private static final int NONE = 0;
    private static final int INTRO = 1;
    private static final int EXAM = 2;
@@ -67,7 +68,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
    @Override
    public void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
-      
+
       cleanup();
       init();
    }
@@ -113,10 +114,10 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          mExamAnswerTask = null;
       }
    }
-   
+
    private void cleanup() {
       cleanTasks();
-      
+
       mUserId = null;
       mExamId = null;
       mExamTitle = null;
@@ -182,10 +183,12 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          layout.getActionBtn().setText(R.string.ex_continue);
          layout.getActionBtn().setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-               showWaitingDialog();
+               v.setClickable(false);
+               showWaitingDialog(v);
                loadExam();
             }
          });
+         layout.getActionBtn().setClickable(true);
          layout.showActionBtn();
       }
    }
@@ -228,6 +231,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
                   return;
                }
 
+               v.setClickable(false);
                Question question = examView.getQuestion();
                mExamAnswer.addQuestionAnswer(examView.getAnswer());
                int order = question.getOrder();
@@ -237,12 +241,13 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
                         (order + 1) == questions.getCount());
                   showNextView();
                } else {
-                  showWaitingDialog();
+                  showWaitingDialog(v);
                   commitExamAnswer();
                }
             }
          }
       });
+      layout.getActionBtn().setClickable(true);
       layout.showActionBtn();
    }
 
@@ -270,12 +275,45 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          layout.getActionBtn().setText(R.string.ex_do_again);
          layout.getActionBtn().setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-               showWaitingDialog();
+               v.setClickable(false);
+               showWaitingDialog(v);
                loadExam();
             }
          });
+         layout.getActionBtn().setClickable(true);
          layout.showActionBtn();
       }
+   }
+
+   private class WaitingDialogListener implements
+         DialogInterface.OnCancelListener {
+
+      private View view;
+      
+      public WaitingDialogListener(DialogInterface dialog) {
+         
+      }
+
+      public WaitingDialogListener(DialogInterface dialog, View v) {
+         this(dialog);
+         this.view = v;
+      }
+
+      public View getView() {
+         return this.view;
+      }
+
+      public void setView(View v) {
+         this.view = v;
+      }
+
+      @Override
+      public void onCancel(DialogInterface dialog) {
+         if (this.view != null) {
+            this.view.setClickable(true);
+         }
+      }
+
    }
 
    private ExamLayout getCurrView() {
@@ -293,6 +331,10 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
    }
 
    private void showWaitingDialog() {
+      showWaitingDialog(null);
+   }
+
+   private void showWaitingDialog(View v) {
       if (mWaitingDialog == null) {
          mWaitingDialog = new ProgressDialog(this);
          mWaitingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -303,6 +345,8 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
                cleanTasks();
             }
          });
+         mWaitingDialog.setOnCancelListener(new WaitingDialogListener(
+               mWaitingDialog, v));
          mWaitingDialog.setCancelable(true);
       }
       mWaitingDialog.show();
@@ -391,7 +435,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
                mExamReport = mExamInfo.getReport();
                mReportId = mExamInfo.getReport().getId();
             }
-            
+
             showExamInfoView();
          }
       }
@@ -426,7 +470,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
             }
             mExamInfo.setId(result.getId());
             mExamInfo.setTitle(result.getTitle());
-            
+
             mExamAnswer = new ExamAnswer();
             mExamAnswer.setExamId(result.getId());
             QuestionList questions = result.getQuestions();
@@ -476,7 +520,7 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
                mExamInfo = new ExamInfo();
             }
             mExamInfo.setReport(result);
-            
+
             setupExamReportView(getNextView());
             showNextView();
          }
