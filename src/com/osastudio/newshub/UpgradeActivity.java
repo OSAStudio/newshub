@@ -65,8 +65,8 @@ public class UpgradeActivity extends NewsBaseActivity {
          builder.setPositiveButton(R.string.upgrade_now,
                new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
-                     ((NewsApp) getApplication()).getActivityStack()
-                           .finishAll();
+                     // ((NewsApp) getApplication()).getActivityStack()
+                     // .finishAll();
                      downloadApk(mAppProperties.getApkUrl());
                   }
                }).setNegativeButton(R.string.exit,
@@ -96,9 +96,10 @@ public class UpgradeActivity extends NewsBaseActivity {
    private void downloadApk(String url) {
       Uri uri = Uri.parse(url);
       Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       intent.setData(uri);
       try {
-         startActivity(intent);
+         getApplicationContext().startActivity(intent);
       } catch (ActivityNotFoundException e) {
 
       }
