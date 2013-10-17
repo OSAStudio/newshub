@@ -65,8 +65,8 @@ public class UpgradeActivity extends NewsBaseActivity {
          builder.setPositiveButton(R.string.upgrade_now,
                new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
-                     // ((NewsApp) getApplication()).getActivityStack()
-                     // .finishAll();
+                     ((NewsApp) getApplication()).getActivityStack()
+                           .finishAll();
                      downloadApk(mAppProperties.getApkUrl());
                   }
                }).setNegativeButton(R.string.exit,
