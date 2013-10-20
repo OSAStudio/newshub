@@ -9,7 +9,7 @@ import android.text.TextUtils;
 
 public final class IOUtils {
    
-	public static final String ROOT_DIR = ".NewsHub";
+	public static final String ROOT_DIR = ".Azker";
 	private static final String CACHE_DIR = "cache";
 	private static final String DOWNLOAD_DIR = "download";
    

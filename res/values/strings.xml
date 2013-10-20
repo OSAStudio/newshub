@@ -118,6 +118,12 @@
     <string name="upgrade_prompt">检测到新版本：%s</string>
     <string name="upgrade_neccessary">温馨提示：请务必升级您的应用程序，否则将无法继续使用。</string>
     <string name="no_new_version">当前已是最新版本</string>
+    <string name="apk_download_ticker_text">正在下载更新</string>
+    <string name="apk_downloading">正在下载%s...</string>
+    <string name="apk_downloaded">新版本下载完毕</string>
+    <string name="apk_download_cancelled">下载已取消</string>
+    <string name="apk_download_failed">下载失败</string>
+    <string name="apk_install_prompt">新版本下载完毕, 点击安装</string>
     
     <string name="praise">赞！</string>
     <string name="notice_feedback">报名</string>

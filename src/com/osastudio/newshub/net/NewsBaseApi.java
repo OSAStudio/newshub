@@ -426,7 +426,7 @@ public class NewsBaseApi {
    public static String getFile(Context context, final String urlString,
          final String filePath, Handler handler,
          final FileInterface.FileDownloadListener listener,
-         final int progressUpdateInterval, AsyncTask task) {
+         final int progressUpdateInterval) {
       if (TextUtils.isEmpty(urlString) || TextUtils.isEmpty(filePath)) {
          return null;
       }
@@ -479,10 +479,10 @@ public class NewsBaseApi {
       int interval = (progressUpdateInterval > 0) ? (progressUpdateInterval - 1)
             : 0;
       while (true) {
-         if (task != null && task.isCancelled()) {
-            Utils.log(TAG, "getFile() Task cancelled: " + urlString);
-            break;
-         }
+//         if (task != null && task.isCancelled()) {
+//            Utils.log(TAG, "getFile() Task cancelled: " + urlString);
+//            break;
+//         }
 
          try {
             if ((length = bis.read(buffer)) == -1) {

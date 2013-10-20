@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.net.FileInterface.FileDownloadListener;
 import com.osastudio.newshub.net.NewsBaseApi;
+import com.osastudio.newshub.utils.FileHelper;
 import com.osastudio.newshub.utils.IOUtils;
 import com.osastudio.newshub.utils.Utils;
 
@@ -14,9 +15,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -27,9 +26,8 @@ public class UpgradeManager {
 
    private static final String TAG = "UpgradeManager";
 
-   private static final int NOTIFICATION_ID = 1001;
+   private static final int NOTIFICATION = 1024;
    private Notification mNotification;
-   private Bitmap mIcon;
    private int mProgress = 0;
 
    private Context mContext;
@@ -38,17 +36,17 @@ public class UpgradeManager {
    private FileDownloadListener mDownloadListener = new FileDownloadListener() {
       @Override
       public void onPreDownload(String url) {
-         showNotification(url);
+         showDownloadNotification(url);
       }
 
       @Override
       public void onPostDownload(String url) {
-         hideNotification();
+         hideNotification(NOTIFICATION);
       }
 
       @Override
       public void onDownloadProgressUpdate(String url, int progress) {
-         updateNotification(progress);
+         updateDownloadNotification(progress);
       }
    };
 
@@ -65,106 +63,149 @@ public class UpgradeManager {
    }
 
    public void download(String url) {
-      Utils.log(TAG, "download");
       mDownloading = true;
-      new UpgradeTask().execute(url);
+      new UpgradeTask(mHandler, mContext, url).start();
    }
 
-   public void install(String path) {
+   public void install(String filePath) {
       mDownloading = false;
-      Utils.log(TAG, "install");
+      mContext.startActivity(getInstallIntent(filePath));
    }
 
-   private void showNotification(String url) {
+   public Intent getInstallIntent(String filePath) {
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setDataAndType(Uri.fromFile(new File(filePath)),
+            "application/vnd.android.package-archive");
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      return intent;
+   }
+
+   private void showDownloadNotification(String url) {
+      NotificationManager manager = (NotificationManager) mContext
+            .getSystemService(Context.NOTIFICATION_SERVICE);
+      String fileName = IOUtils.getFileNameFromUrl(url);
       if (mNotification == null) {
-         mIcon = BitmapFactory.decodeResource(mContext.getResources(),
-               R.drawable.download);
-         mNotification = new Notification(R.drawable.download, "",
-               System.currentTimeMillis());
-         PendingIntent pendingintent = PendingIntent.getActivity(mContext, 0,
-               new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
-         mNotification.setLatestEventInfo(mContext, "TITLE", "MESSAGE",
-               pendingintent);
-         mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+         PendingIntent pi = PendingIntent.getActivity(mContext, 0,
+               new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+         RemoteViews views = new RemoteViews(mContext.getPackageName(),
+               R.layout.download_notification);
+         Notification noti = new Notification();
+         noti.icon = R.drawable.noti;
+         noti.contentView = views;
+         noti.when = System.currentTimeMillis();
+         noti.contentIntent = pi;
+         noti.tickerText = mContext
+               .getString(R.string.apk_download_ticker_text);
+         noti.flags |= Notification.FLAG_AUTO_CANCEL;
+         mNotification = noti;
       }
-      mNotification.contentView = new RemoteViews(mContext.getPackageName(),
-            R.layout.download_bar);
-      mNotification.icon = R.drawable.download;
-      // mNotification.largeIcon = mIcon;
-      mNotification.contentView.setProgressBar(R.id.download_progress_bar, 100,
-            0, false);
-      String fileName = url.substring(url.lastIndexOf('/') + 1);
       mNotification.contentView.setTextViewText(R.id.download_title,
-            "Downloading...");
+            mContext.getString(R.string.apk_downloading, fileName));
+      mNotification.contentView.setProgressBar(R.id.download_progress, 100, 0,
+            false);
+      manager.notify(NOTIFICATION, mNotification);
+   }
+
+   private void showInstallNotification(String filePath) {
+      NotificationManager manager = (NotificationManager) mContext
+            .getSystemService(Context.NOTIFICATION_SERVICE);
+      PendingIntent pi = PendingIntent.getActivity(mContext, 0,
+            getInstallIntent(filePath), PendingIntent.FLAG_UPDATE_CURRENT);
+      RemoteViews views = new RemoteViews(mContext.getPackageName(),
+            R.layout.msg_notification);
+      Notification noti = new Notification();
+      noti.icon = R.drawable.noti;
+      noti.contentView = views;
+      noti.when = System.currentTimeMillis();
+      noti.contentIntent = pi;
+      noti.tickerText = mContext.getString(R.string.apk_downloaded);
+      noti.flags |= Notification.FLAG_AUTO_CANCEL;
+      noti.contentView.setTextViewText(R.id.noti_title,
+            mContext.getString(R.string.apk_install_prompt));
+      mNotification = noti;
+      manager.notify(NOTIFICATION, mNotification);
+   }
+
+   private void hideNotification(int notificationId) {
       NotificationManager manager = (NotificationManager) mContext
             .getApplicationContext().getSystemService(
                   Context.NOTIFICATION_SERVICE);
-      manager.notify(NOTIFICATION_ID, mNotification);
-
+      manager.cancel(notificationId);
    }
 
-   private void hideNotification() {
-      NotificationManager manager = (NotificationManager) mContext
-            .getApplicationContext().getSystemService(
-                  Context.NOTIFICATION_SERVICE);
-      manager.cancel(NOTIFICATION_ID);
-   }
-
-   private void updateNotification(int progress) {
+   private void updateDownloadNotification(int progress) {
       if (progress <= mProgress) {
          return;
       }
       mProgress = progress;
-      mNotification.contentView.setProgressBar(R.id.download_progress_bar, 100,
+      mNotification.contentView.setProgressBar(R.id.download_progress, 100,
             mProgress, false);
       NotificationManager manager = (NotificationManager) mContext
             .getApplicationContext().getSystemService(
                   Context.NOTIFICATION_SERVICE);
-      manager.notify(NOTIFICATION_ID, mNotification);
+      manager.notify(NOTIFICATION, mNotification);
    }
 
-   private void notifyCompletion() {
-      hideNotification();
-      Toast.makeText(mContext, "Download successfully!", Toast.LENGTH_LONG)
+   private void notifyDownloadCompletion() {
+      hideNotification(NOTIFICATION);
+      Toast.makeText(mContext, R.string.apk_downloaded, Toast.LENGTH_LONG)
             .show();
    }
 
-   private void notifyCancelled() {
-      hideNotification();
-      Toast.makeText(mContext, "Download cancelled!", Toast.LENGTH_LONG).show();
+   private void notifyDownloadCancelled() {
+      hideNotification(NOTIFICATION);
+      Toast.makeText(mContext, R.string.apk_download_cancelled,
+            Toast.LENGTH_LONG).show();
    }
 
-   private void notifyFailure() {
-      hideNotification();
-      Toast.makeText(mContext, "Download failed!", Toast.LENGTH_LONG).show();
+   private void notifyDownloadFailure() {
+      hideNotification(NOTIFICATION);
+      Toast.makeText(mContext, R.string.apk_download_failed, Toast.LENGTH_LONG)
+            .show();
    }
 
-   public static String getApkPath(String url) {
+   public static File getApkFile(String url) {
       File folder = null;
       try {
          folder = IOUtils.getDownloadDir();
       } catch (IOException e) {
          folder = Environment.getExternalStorageDirectory();
       }
-      return new File(folder, IOUtils.getFileNameFromUrl(url))
-            .getAbsolutePath();
+      String fileName = IOUtils.getFileNameFromUrl(url);
+      return TextUtils.isEmpty(fileName) ? null : new File(folder, fileName);
    }
 
-   private class UpgradeTask extends AsyncTask<String, Integer, String> {
+   public static String getApkPath(String url) {
+      File file = getApkFile(url);
+      return (file != null) ? file.getAbsolutePath() : null;
+   }
 
-      @Override
-      protected String doInBackground(String... params) {
-         return NewsBaseApi.getFile(mContext, params[0], getApkPath(params[0]),
-               mHandler, mDownloadListener, 1, this);
+   private class UpgradeTask extends NewsTask<String> {
+
+      private String url;
+
+      public UpgradeTask(Handler handler, Context context, String url) {
+         super(handler, context);
+         this.url = url;
       }
 
       @Override
-      protected void onPostExecute(String result) {
+      public String doInBackground() {
+         String filePath = getApkPath(this.url);
+         if (new File(filePath).exists()) {
+            FileHelper.deleteFile(filePath);
+         }
+         return NewsBaseApi.getFile(this.context, this.url, filePath,
+               this.handler, mDownloadListener, 1);
+      }
+
+      @Override
+      public void onPostExecute(String result) {
          if (!TextUtils.isEmpty(result)) {
+            showInstallNotification(result);
             install(result);
-            notifyCompletion();
          } else {
-            notifyFailure();
+            notifyDownloadFailure();
          }
       }
 

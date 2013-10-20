@@ -8,6 +8,7 @@ import com.osastudio.newshub.data.NewsMessage;
 import com.osastudio.newshub.data.NewsMessageList;
 import com.osastudio.newshub.data.NewsMessageSchedule;
 import com.osastudio.newshub.data.NewsMessageScheduleList;
+import com.osastudio.newshub.library.NewsTask;
 import com.osastudio.newshub.library.PreferenceManager;
 import com.osastudio.newshub.library.UpgradeManager;
 import com.osastudio.newshub.net.AppDeadlineApi;
@@ -371,7 +372,7 @@ public class NewsService extends Service {
                getNewsMessageLaunchIntent(msg),
                PendingIntent.FLAG_UPDATE_CURRENT);
          RemoteViews views = new RemoteViews(getPackageName(),
-               R.layout.notification);
+               R.layout.msg_notification);
          views.setTextViewText(R.id.noti_title, msg.getContent());
          Notification noti = new Notification();
          noti.icon = R.drawable.noti;
@@ -630,39 +631,6 @@ public class NewsService extends Service {
             }
          }
       }
-
-   }
-
-   public abstract class NewsTask<T> extends Thread {
-
-      protected Context context;
-      protected Handler handler;
-
-      public NewsTask(Handler handler) {
-         this.handler = handler;
-      }
-
-      public NewsTask(Handler handler, Context context) {
-         this(handler);
-         this.context = context;
-      }
-
-      @Override
-      public void run() {
-         final T result = doInBackground();
-
-         if (this.handler != null) {
-            this.handler.post(new Runnable() {
-               public void run() {
-                  onPostExecute(result);
-               }
-            });
-         }
-      }
-
-      public abstract T doInBackground();
-
-      public abstract void onPostExecute(T result);
 
    }
 
