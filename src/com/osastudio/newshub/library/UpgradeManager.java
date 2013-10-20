@@ -63,8 +63,17 @@ public class UpgradeManager {
    }
 
    public void download(String url) {
-      mDownloading = true;
-      new UpgradeTask(mHandler, mContext, url).start();
+      if (!mDownloading) {
+         cleanup();
+         mDownloading = true;
+         new UpgradeTask(mHandler, mContext, url).start();
+      }
+   }
+   
+   private void cleanup() {
+      mDownloading = false;
+      mNotification = null;
+      mProgress = 0;
    }
 
    public void install(String filePath) {
@@ -148,18 +157,21 @@ public class UpgradeManager {
 
    private void notifyDownloadCompletion() {
       hideNotification(NOTIFICATION);
+      cleanup();
       Toast.makeText(mContext, R.string.apk_downloaded, Toast.LENGTH_LONG)
             .show();
    }
 
    private void notifyDownloadCancelled() {
       hideNotification(NOTIFICATION);
+      cleanup();
       Toast.makeText(mContext, R.string.apk_download_cancelled,
             Toast.LENGTH_LONG).show();
    }
 
    private void notifyDownloadFailure() {
       hideNotification(NOTIFICATION);
+      cleanup();
       Toast.makeText(mContext, R.string.apk_download_failed, Toast.LENGTH_LONG)
             .show();
    }
@@ -202,6 +214,7 @@ public class UpgradeManager {
       @Override
       public void onPostExecute(String result) {
          if (!TextUtils.isEmpty(result)) {
+            cleanup();
             showInstallNotification(result);
             install(result);
          } else {

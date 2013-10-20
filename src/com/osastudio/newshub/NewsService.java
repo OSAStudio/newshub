@@ -132,7 +132,7 @@ public class NewsService extends Service {
 
       @Override
       public void checkNewVersion() {
-         if (!mCheckingNewVersion) {
+         if (!mCheckingNewVersion && !isDownloadingApk()) {
             mCheckingNewVersion = true;
             new AppPropertiesTask(mHandler, NewsService.this).start();
          }

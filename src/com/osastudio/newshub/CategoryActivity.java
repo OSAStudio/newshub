@@ -982,7 +982,9 @@ public class CategoryActivity extends NewsBaseActivity {
             }
             
             try {
-               getNewsService().hasNewVersion(mAppProperties, false);
+               if (!getNewsService().isDownloadingApk()) {
+                  getNewsService().hasNewVersion(mAppProperties, false);
+               }
                getNewsService().checkNewsMessage();
             } catch (Exception e) {
                // e.printStackTrace();
