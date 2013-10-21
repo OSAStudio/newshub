@@ -129,6 +129,7 @@ public class UpgradeManager {
       noti.contentIntent = pi;
       noti.tickerText = mContext.getString(R.string.apk_downloaded);
       noti.flags |= Notification.FLAG_AUTO_CANCEL;
+      noti.defaults = Notification.DEFAULT_ALL;
       noti.contentView.setTextViewText(R.id.noti_title,
             mContext.getString(R.string.apk_install_prompt));
       mNotification = noti;
@@ -216,7 +217,7 @@ public class UpgradeManager {
          if (!TextUtils.isEmpty(result)) {
             cleanup();
             showInstallNotification(result);
-            install(result);
+//            install(result);
          } else {
             notifyDownloadFailure();
          }
