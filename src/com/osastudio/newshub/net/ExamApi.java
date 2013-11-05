@@ -38,6 +38,17 @@ public class ExamApi extends NewsBaseApi {
             "evaluation!submitEvaluationResultByMobile.do").toString();
    }
 
+   /**
+    * Get exam information of specified exam id & user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param examId
+    *           exam identifier
+    * @return exam information, or null if failed
+    */
    public static ExamInfo getExamInfo(Context context, String userId,
          String examId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -50,6 +61,17 @@ public class ExamApi extends NewsBaseApi {
       return (jsonObject != null) ? new ExamInfo(jsonObject) : null;
    }
 
+   /**
+    * Get exam content of specified exam id & user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param examId
+    *           exam identifier
+    * @return exam content, or null if failed
+    */
    public static Exam getExam(Context context, String userId, String examId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
@@ -66,6 +88,19 @@ public class ExamApi extends NewsBaseApi {
       return commitExamAnswer(context, userId, examAnswer, null);
    }
 
+   /**
+    * Commit exam answer to server, exam report will be returned
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param examAnswer
+    *           answers of an exam, including answers to all questions
+    * @param reportId
+    *           report identifier if user has committed before
+    * @return exam report according to user answers, or null if failed
+    */
    public static ExamReport commitExamAnswer(Context context, String userId,
          ExamAnswer examAnswer, String reportId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

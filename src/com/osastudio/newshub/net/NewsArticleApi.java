@@ -27,6 +27,17 @@ public class NewsArticleApi extends NewsBaseApi {
             "lesson!submitLessonUPByMobile.do").toString();
    }
 
+   /**
+    * Get specified news article content by article id & user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           specified user identifier
+    * @param articleId
+    *           specified news article identifier
+    * @return news article content, of null if failed
+    */
    public static NewsArticle getNewsArticle(Context context, String userId,
          String articleId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -45,6 +56,17 @@ public class NewsArticleApi extends NewsBaseApi {
       return result;
    }
 
+   /**
+    * Get specified news article content by abstract & user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           specified user identifer
+    * @param newsAbstract
+    *           abstract of news article
+    * @return news article content, or null if failed
+    */
    public static NewsArticle getNewsArticle(Context context, String userId,
          NewsAbstract newsAbstract) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -64,6 +86,15 @@ public class NewsArticleApi extends NewsBaseApi {
       return result;
    }
 
+   /**
+    * Commit a praise request of an article if user really likes it
+    * 
+    * @param context
+    *           application context
+    * @param articleId
+    *           specified new article identifier
+    * @return result code & description, or null if failed
+    */
    public static NewsResult likeArticle(Context context, String articleId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));

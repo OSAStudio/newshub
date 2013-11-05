@@ -6,6 +6,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsObjectList;
 
+/**
+ * List for processing feedback type
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class FeedbackTypeList extends NewsObjectList<FeedbackType> {
 
    public FeedbackTypeList(JSONObject jsonObject) {

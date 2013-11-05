@@ -24,6 +24,13 @@ public class AppPropertiesApi extends NewsBaseApi {
             "loginpicture!checkLoginInfoByMobile.do").toString();
    }
 
+   /**
+    * Get current information & properties of application from remote server
+    * 
+    * @param context
+    *           application context
+    * @return application information & properties, or null if failed
+    */
    public static AppProperties getAppProperties(Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));

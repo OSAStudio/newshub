@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseTitle;
 
+/**
+ * Class for processing exam content, including id, title, questions, options
+ * etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class Exam extends NewsBaseTitle {
 
    public static final String JSON_KEY_ID = "evaluation_id";

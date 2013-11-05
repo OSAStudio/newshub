@@ -6,6 +6,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsObjectList;
 
+/**
+ * List for processing user account information
+ * 
+ * @author arm
+ * 
+ */
 public class UserList extends NewsObjectList<User> {
 
    public UserList(JSONObject jsonObject) {

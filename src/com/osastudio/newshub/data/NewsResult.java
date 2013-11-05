@@ -5,11 +5,18 @@ import org.json.JSONObject;
 
 import android.text.TextUtils;
 
+/**
+ * Common result for processing network request response, including result code
+ * (success or errors), short description of result
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsResult implements ResultCode {
 
    public static final String JSON_KEY_RESULT_DESCRIPTION = "msg";
    public static final String JSON_KEY_RESULT_CODE = "stat";
-   
+
    protected static final String JSON_KEY_LIST = "list";
    protected static final String JSON_KEY_USER_ID = "student_id";
    protected static final String JSON_KEY_USER_NAME = "student_name";
@@ -18,7 +25,7 @@ public class NewsResult implements ResultCode {
    protected String resultDesc = "";
 
    public NewsResult() {
-      
+
    }
 
    public NewsResult(JSONObject jsonObject) {
@@ -73,7 +80,7 @@ public class NewsResult implements ResultCode {
       this.resultDesc = resultDescription;
       return this;
    }
-   
+
    public boolean isSuccess() {
       return this.resultCode == RESULT_OK;
    }
@@ -81,19 +88,19 @@ public class NewsResult implements ResultCode {
    public boolean isFailure() {
       return !isSuccess();
    }
-   
+
    public boolean isNetworkError() {
       return this.resultCode >= RESULT_NETWORK_ERROR_BASE;
    }
-   
+
    public static int httpCode2ResultCode(int httpCode) {
       return httpCode + RESULT_HTTP_BASE;
    }
-   
+
    public static int resultCode2HttpCode(int resultCode) {
       return resultCode - RESULT_HTTP_BASE;
    }
-   
+
    public static JSONObject toJsonObject(String jsonString) {
       if (!TextUtils.isEmpty(jsonString)) {
          try {
@@ -102,10 +109,10 @@ public class NewsResult implements ResultCode {
                return jsonObject;
             }
          } catch (JSONException e) {
-            
+
          }
       }
       return null;
    }
-   
+
 }

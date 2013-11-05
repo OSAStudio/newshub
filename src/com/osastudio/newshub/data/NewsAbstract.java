@@ -8,11 +8,17 @@ import com.osastudio.newshub.data.base.NewsBaseTopicAbstract;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * News abstract for processing abstract data of an news article
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
 
    public static final int NEWS_TYPE = 0;
    public static final int EXAM_TYPE = 1;
-   
+
    public static final String JSON_KEY_ID = "lesson_id";
    public static final String JSON_KEY_COLOR = "lesson_colour";
    public static final String JSON_KEY_PUBLISHED_TIME = "post_date";
@@ -21,7 +27,7 @@ public class NewsAbstract extends NewsBaseTopicAbstract implements Parcelable {
    public static final String JSON_KEY_TYPE = "lesson_class";
 
    private int type = 0;
-   
+
    public NewsAbstract() {
       super();
    }

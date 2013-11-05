@@ -18,6 +18,15 @@ public class DailyReminderApi extends NewsBaseApi {
             "dailyreminder!getDailyReminderListByMobile.do").toString();
    }
 
+   /**
+    * Get daily reminder content list by user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @return daily reminder list, or null if failed
+    */
    public static DailyReminderList getDailyReminderList(Context context,
          String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

@@ -5,6 +5,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseContent;
 
+/**
+ * News notice detail content including content, if feedback required.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsNoticeArticle extends NewsBaseContent {
 
    public static final String JSON_KEY_CONTENT = "notify_content";

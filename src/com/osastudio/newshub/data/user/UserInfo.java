@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
 
+/**
+ * User detail information for processing provided service, including service
+ * type, validate time etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class UserInfo extends NewsBaseObject {
 
    public static final String JSON_KEY_SERVICE_TYPE = "custom_type";

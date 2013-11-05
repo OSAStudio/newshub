@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
 
+/**
+ * Class for processing exam report content, including exam score, date, report
+ * details etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class ExamReport extends NewsBaseObject {
 
    public static final String JSON_KEY_ID = "result_id";
@@ -35,8 +42,7 @@ public class ExamReport extends NewsBaseObject {
             this.time = jsonObject.getString(JSON_KEY_TIME).trim();
          }
          if (!jsonObject.isNull(JSON_KEY_CONCLUSION)) {
-            this.conclusion = jsonObject.getString(JSON_KEY_CONCLUSION)
-                  .trim();
+            this.conclusion = jsonObject.getString(JSON_KEY_CONCLUSION).trim();
          }
       } catch (JSONException e) {
 

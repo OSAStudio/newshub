@@ -27,12 +27,31 @@ public class FeedbackApi extends NewsBaseApi {
             "problemfeedback!submitProblemFeedbackByMobile.do").toString();
    }
 
+   /**
+    * Get user feedback type list
+    * 
+    * @param context
+    *           application context
+    * @return feedback type list, or null if failed
+    */
    public static FeedbackTypeList getFeedbackTypeList(Context context) {
       JSONObject jsonObject = getJsonObject(context,
             getFeedbackTypeListService(context), null);
       return (jsonObject != null) ? new FeedbackTypeList(jsonObject) : null;
    }
 
+   /**
+    * Commit suggestions or other types of content about application to server
+    * 
+    * @param context
+    *           application context
+    * @param feedbackTypeId
+    *           feedback type identifier
+    * @param feedbackContent
+    *           feedback content to be committed
+    * @return feedback result including result code & description, or null if
+    *         failed
+    */
    public static NewsResult feedback(Context context, String feedbackTypeId,
          String feedbackContent) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
 
+/**
+ * User account for processing committed register information, including user
+ * name, gender, birthday, school, class, enrollment year etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class User extends NewsBaseObject {
 
    public static final String FEMALE_NAME = "女";

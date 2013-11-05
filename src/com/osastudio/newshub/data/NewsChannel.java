@@ -9,6 +9,12 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * News channel information, including channel id, title, icon etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsChannel extends NewsBaseObject implements Parcelable {
 
    public static final String JSON_KEY_CHANNEL_ID = "service_id";

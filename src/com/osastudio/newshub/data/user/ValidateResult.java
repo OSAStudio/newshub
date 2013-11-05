@@ -9,6 +9,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.NewsResult;
 
+/**
+ * Validate result for processing device validation
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class ValidateResult extends NewsResult {
 
    public static final String JSON_KEY_USER_IDS = "student_ids";

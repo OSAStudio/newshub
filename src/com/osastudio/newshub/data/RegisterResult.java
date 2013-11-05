@@ -5,6 +5,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.NewsResult;
 
+/**
+ * Register result for processing user register on an device
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class RegisterResult extends NewsResult {
 
    private String userId = "";

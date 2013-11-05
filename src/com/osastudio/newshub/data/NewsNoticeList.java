@@ -6,6 +6,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsObjectList;
 
+/**
+ * List for processing news notice
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsNoticeList extends NewsObjectList<NewsNotice> {
 
    public NewsNoticeList(JSONObject jsonObject) {

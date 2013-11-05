@@ -33,6 +33,15 @@ public class NewsNoticeApi extends NewsBaseApi {
             "notify!submitNotifyFeedbackByMobile.do").toString();
    }
 
+   /**
+    * Get news notice information list by user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @return news notice list, or null if failed
+    */
    public static NewsNoticeList getNewsNoticeList(Context context, String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));
@@ -43,6 +52,17 @@ public class NewsNoticeApi extends NewsBaseApi {
       return (jsonObject != null) ? new NewsNoticeList(jsonObject) : null;
    }
 
+   /**
+    * Get news notice content by news notice information
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param newsNotice
+    *           information of an news notice
+    * @return news notice content, or null if failed
+    */
    public static NewsNoticeArticle getNewsNoticeArticle(Context context,
          String userId, NewsNotice newsNotice) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -62,6 +82,17 @@ public class NewsNoticeApi extends NewsBaseApi {
       return result;
    }
 
+   /**
+    * Get news notice content by news notice id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param noticeId
+    *           notice identifier
+    * @return news notice content, or null if failed
+    */
    public static NewsNoticeArticle getNewsNoticeArticle(Context context,
          String userId, String noticeId) {
       NewsNotice notice = new NewsNotice();
@@ -69,6 +100,16 @@ public class NewsNoticeApi extends NewsBaseApi {
       return getNewsNoticeArticle(context, userId, notice);
    }
 
+   /**
+    * Commit feedback to a notice by notice id
+    * 
+    * @param context
+    *           application context
+    * @param noticeId
+    *           notice identifier
+    * @return notice result including result code & description, or null if
+    *         failed
+    */
    public static NoticeResult feedbackNotice(Context context, String noticeId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
       params.add(new BasicNameValuePair(KEY_DEVICE_ID, getDeviceId(context)));

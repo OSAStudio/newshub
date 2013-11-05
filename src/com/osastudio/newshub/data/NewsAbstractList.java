@@ -9,6 +9,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseAbstractList;
 
+/**
+ * List for processing news abstracts
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsAbstractList extends NewsBaseAbstractList<NewsAbstract> {
 
    public static final String JSON_KEY_CHANNEL_NAME = "lssue_title";

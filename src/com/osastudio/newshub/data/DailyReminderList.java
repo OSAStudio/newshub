@@ -6,6 +6,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsItemList;
 
+/**
+ * Daily reminder list for processing recommended content list for different
+ * user pushed by server
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class DailyReminderList extends NewsItemList<DailyReminder> {
 
    public DailyReminderList(JSONObject jsonObject) {

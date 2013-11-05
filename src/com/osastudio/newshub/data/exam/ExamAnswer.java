@@ -11,6 +11,12 @@ import android.text.TextUtils;
 
 import com.osastudio.library.json.JSONHelper;
 
+/**
+ * Class for committing answers to all questions of an exam
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class ExamAnswer extends JSONHelper {
 
    public static final String JSON_KEY_EXAM_ID = "evaluation_id";
@@ -59,7 +65,7 @@ public class ExamAnswer extends JSONHelper {
             }
             result.put(JSON_KEY_QUESTIONS, array);
          } catch (JSONException e) {
-            
+
          }
       }
       return result;

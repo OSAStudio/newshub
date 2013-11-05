@@ -21,6 +21,17 @@ public class NewsAbstractApi extends NewsBaseApi {
             "lesson!getLessonListByMobile.do").toString();
    }
 
+   /**
+    * Get news abstract list of specified channel by user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           specified user identifier
+    * @param newsChannelId
+    *           specified news channel identifier
+    * @return news abstract list, or null if failed
+    */
    public static NewsAbstractList getNewsAbstractList(Context context,
          String userId, String newsChannelId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

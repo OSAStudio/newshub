@@ -8,6 +8,12 @@ import com.osastudio.newshub.data.base.NewsBaseTimestampTitle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * News notice information including id, title, publish time etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsNotice extends NewsBaseTimestampTitle implements Parcelable {
 
    public static final String JSON_KEY_ID = "notify_id";

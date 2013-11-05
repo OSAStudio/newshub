@@ -18,6 +18,15 @@ public class NewsChannelApi extends NewsBaseApi {
             "titleshow!getTitleListByMobile.do").toString();
    }
 
+   /**
+    * Get news channel information list from remote server
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           specified user identifier
+    * @return news channel information list, or null if failed
+    */
    public static NewsChannelList getNewsChannelList(Context context,
          String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();

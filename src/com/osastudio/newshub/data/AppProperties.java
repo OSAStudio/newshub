@@ -14,6 +14,14 @@ import android.os.Parcelable;
 import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.data.user.UserStatus;
 
+/**
+ * Application information & kinds of properties, for example splash picture,
+ * application release notes, upgrade information, main entry server and backup
+ * server configurations etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class AppProperties extends NewsBaseObject implements Parcelable,
       UserStatus {
 

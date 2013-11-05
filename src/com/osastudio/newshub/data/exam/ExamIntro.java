@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
 
+/**
+ * Class for processing introduction of an exam, may including several
+ * paragraphs with title and description
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class ExamIntro extends NewsBaseObject {
 
    private static final String JSON_KEY_INTRO_TITLE = "description1_title";

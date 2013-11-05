@@ -5,6 +5,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.PairedStringFieldsObject;
 
+/**
+ * Feedback type including type id & type name
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class FeedbackType extends PairedStringFieldsObject {
 
    public static final String JSON_KEY_ID = "problem_type_id";

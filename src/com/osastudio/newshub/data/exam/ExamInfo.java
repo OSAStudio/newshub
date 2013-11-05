@@ -5,28 +5,34 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseTitle;
 
+/**
+ * Class for processing exam information including id, title, type etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class ExamInfo extends NewsBaseTitle {
-   
-   public static final int INTRODUCTION = 1; 
+
+   public static final int INTRODUCTION = 1;
    public static final int REPORT = 2;
-   
+
    public static final String JSON_KEY_ID = "evaluation_id";
    public static final String JSON_KEY_TITLE = "evaluation_title";
    public static final String JSON_KEY_TYPE = "evaluation_type";
    public static final String JSON_KEY_ALLOW_ANSWER = "show_button";
-   
+
    protected int type;
    protected ExamIntro introduction;
    protected ExamReport report;
    protected boolean allowAnswer = false;
-   
+
    public ExamInfo() {
       super();
    }
 
    public ExamInfo(JSONObject jsonObject) {
       super(jsonObject);
-      
+
       if (isSuccess()) {
          try {
             JSONObject infoObject = null;
@@ -36,7 +42,7 @@ public class ExamInfo extends NewsBaseTitle {
             if (infoObject == null) {
                return;
             }
-            
+
             if (!infoObject.isNull(JSON_KEY_ID)) {
                this.id = infoObject.getString(JSON_KEY_ID).trim();
             }
@@ -52,7 +58,7 @@ public class ExamInfo extends NewsBaseTitle {
             this.introduction = new ExamIntro(infoObject);
             this.report = new ExamReport(infoObject);
          } catch (JSONException e) {
-   
+
          }
       }
    }
@@ -64,15 +70,15 @@ public class ExamInfo extends NewsBaseTitle {
    public void setType(int type) {
       this.type = type;
    }
-   
+
    public boolean isIntroduction() {
       return this.type == INTRODUCTION;
    }
-   
+
    public boolean isReport() {
       return this.type == REPORT;
    }
-   
+
    public boolean hasExamined() {
       return this.type == REPORT;
    }
@@ -92,11 +98,11 @@ public class ExamInfo extends NewsBaseTitle {
    public void setReport(ExamReport report) {
       this.report = report;
    }
-   
+
    public boolean allowAnswer() {
       return this.allowAnswer;
    }
-   
+
    public void setAllowAnswer(boolean allow) {
       this.allowAnswer = allow;
    }
