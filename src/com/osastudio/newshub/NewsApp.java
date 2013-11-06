@@ -49,6 +49,9 @@ public class NewsApp extends Application {
       return mCacheManager;
    }
 
+   /**
+    * Prepare environment while application is launched
+    */
    public void prepareEnvironment() {
       if (mActivityStack == null) {
          mActivityStack = new ActivityStack();
@@ -63,6 +66,9 @@ public class NewsApp extends Application {
       }
    }
 
+   /**
+    * Cleanup environment while application is exitting
+    */
    public void cleanupEnvironment() {
       if (mActivityStack != null) {
          mActivityStack.cleanup();

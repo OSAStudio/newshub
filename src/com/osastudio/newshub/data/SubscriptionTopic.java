@@ -8,13 +8,19 @@ import com.osastudio.newshub.data.base.NewsBaseTopic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Class for subscription topic, including id, title, type, icon etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class SubscriptionTopic extends NewsBaseTopic implements Parcelable {
 
    public static final String JSON_KEY_ICON_URL = "recommend_lssue_icon";
    public static final String JSON_KEY_TITLE = "recommend_lssue_title";
    public static final String JSON_KEY_ID = "recommend_lssue_id";
    public static final String JSON_KEY_TYPE = "recommend_lssue_class";
-   
+
    protected int type = 1;
 
    public SubscriptionTopic() {
@@ -46,11 +52,11 @@ public class SubscriptionTopic extends NewsBaseTopic implements Parcelable {
       }
       return result;
    }
-   
+
    public int getType() {
       return this.type;
    }
-   
+
    public void setType(int type) {
       this.type = type;
    }

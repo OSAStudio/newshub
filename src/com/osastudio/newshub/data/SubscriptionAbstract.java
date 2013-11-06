@@ -8,6 +8,13 @@ import com.osastudio.newshub.data.base.NewsBaseTopicAbstract;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Class for abstract information of subscription article, including id, title,
+ * published date, author name etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class SubscriptionAbstract extends NewsBaseTopicAbstract implements
       Parcelable {
 

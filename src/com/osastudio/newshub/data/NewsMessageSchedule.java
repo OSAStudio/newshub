@@ -11,6 +11,13 @@ import android.text.TextUtils;
 import com.osastudio.newshub.data.base.NewsBaseObject;
 import com.osastudio.newshub.utils.Utils;
 
+/**
+ * Class for news message push schedule, including push basic millisecond of
+ * date, offset millisecond compared to basic millisecond, user id etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsMessageSchedule extends NewsBaseObject {
 
    private static final String TAG = "NewsMessageSchedule";

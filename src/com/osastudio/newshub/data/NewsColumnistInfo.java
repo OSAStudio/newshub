@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseObject;
 
+/**
+ * Class for news columnist detail information, including resume, summery,
+ * portrait url etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsColumnistInfo extends NewsBaseObject {
 
    public static final String JSON_KEY_RESUME = "expert_resume";

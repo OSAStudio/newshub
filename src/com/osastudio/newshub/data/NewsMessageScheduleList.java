@@ -6,9 +6,15 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsObjectList;
 
+/**
+ * List for processing news message push schedule
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsMessageScheduleList extends
       NewsObjectList<NewsMessageSchedule> {
-   
+
    protected static final String SEPARATOR = ",";
 
    public NewsMessageScheduleList(JSONObject jsonObject) {
@@ -34,5 +40,5 @@ public class NewsMessageScheduleList extends
          }
       }
    }
-   
+
 }

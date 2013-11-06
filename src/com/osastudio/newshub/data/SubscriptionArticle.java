@@ -5,6 +5,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseTopicArticle;
 
+/**
+ * Class for detail content of subscription article
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class SubscriptionArticle extends NewsBaseTopicArticle {
 
    public static final String JSON_KEY_CONTENT = "expand_lesson_content";

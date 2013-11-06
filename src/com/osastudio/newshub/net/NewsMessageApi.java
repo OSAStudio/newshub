@@ -29,6 +29,13 @@ public class NewsMessageApi extends NewsBaseApi {
             .toString();
    }
 
+   /**
+    * Get pushed news message schedule list of an device
+    * 
+    * @param context
+    *           application context
+    * @return news message schedule list, or null if failed
+    */
    public static NewsMessageScheduleList getNewsMessageScheduleList(
          Context context) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -44,6 +51,17 @@ public class NewsMessageApi extends NewsBaseApi {
       return getNewsMessageList(context, userId, ServerType.AUTOMATIC);
    }
 
+   /**
+    * Get pushed news message list by user id, with specified server
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param serverType
+    *           specified server, main or backup server
+    * @return pushed news message list, or null if failed
+    */
    public static NewsMessageList getNewsMessageList(Context context,
          String userId, ServerType serverType) {
       ExtraParameter extras = new ExtraParameter();

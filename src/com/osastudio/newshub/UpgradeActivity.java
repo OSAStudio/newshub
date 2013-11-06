@@ -16,10 +16,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 
+/**
+ * Acitvity for showing dialog of application upgrade prompt if necessary
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class UpgradeActivity extends NewsBaseActivity {
 
    private AppProperties mAppProperties;
-   
+
    protected ServiceConnection mNewsServiceConn = new ServiceConnection() {
       @Override
       public void onServiceDisconnected(ComponentName name) {
@@ -32,11 +38,10 @@ public class UpgradeActivity extends NewsBaseActivity {
       }
    };
 
-
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
+
       bindNewsService(mNewsServiceConn);
 
       setContentView(R.layout.upgrade_activity);
@@ -122,17 +127,17 @@ public class UpgradeActivity extends NewsBaseActivity {
       try {
          getNewsService().downloadApk(url);
       } catch (Exception e) {
-         
+
       }
-//      Uri uri = Uri.parse(url);
-//      Intent intent = new Intent(Intent.ACTION_VIEW);
-//      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//      intent.setData(uri);
-//      try {
-//         getApplicationContext().startActivity(intent);
-//      } catch (ActivityNotFoundException e) {
-//
-//      }
+      // Uri uri = Uri.parse(url);
+      // Intent intent = new Intent(Intent.ACTION_VIEW);
+      // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      // intent.setData(uri);
+      // try {
+      // getApplicationContext().startActivity(intent);
+      // } catch (ActivityNotFoundException e) {
+      //
+      // }
    }
 
 }

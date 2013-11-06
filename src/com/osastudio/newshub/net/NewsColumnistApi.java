@@ -27,6 +27,15 @@ public class NewsColumnistApi extends NewsBaseApi {
             "expert!getExpertContentByMobile.do").toString();
    }
 
+   /**
+    * Get news columnist brief list by user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @return news columnist, or null if failed
+    */
    public static NewsColumnistList getNewsColumnistList(Context context,
          String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -38,6 +47,17 @@ public class NewsColumnistApi extends NewsBaseApi {
       return (jsonObject != null) ? new NewsColumnistList(jsonObject) : null;
    }
 
+   /**
+    * Get news columnist detail information by specific columnist brief
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param newsColumnist
+    *           brief of news columnist
+    * @return news columnist detail information, or null if failed
+    */
    public static NewsColumnistInfo getNewsColumnistInfo(Context context,
          String userId, NewsColumnist newsColumnist) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -58,7 +78,6 @@ public class NewsColumnistApi extends NewsBaseApi {
       return result;
    }
 
-   @Deprecated
    public static NewsColumnistInfo getNewsColumnistInfo(Context context,
          String userId, String columnistId) {
       NewsColumnist columnist = new NewsColumnist();

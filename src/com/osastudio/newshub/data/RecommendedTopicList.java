@@ -8,6 +8,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsItemList;
 
+/**
+ * List for recommended topic
+ * 
+ * @author Rujin Xue
+ *
+ */
 public class RecommendedTopicList extends
       NewsItemList<RecommendedTopic> {
 

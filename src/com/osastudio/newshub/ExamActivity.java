@@ -30,6 +30,13 @@ import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 import android.widget.ViewSwitcher.ViewFactory;
 
+/**
+ * Activity for exam feature, with exam introduction, questions & options,
+ * report after commit etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class ExamActivity extends NewsBaseActivity implements ViewFactory {
 
    public static final String EXTRA_EXAM_ID = "exam_id";
@@ -289,9 +296,9 @@ public class ExamActivity extends NewsBaseActivity implements ViewFactory {
          DialogInterface.OnCancelListener {
 
       private View view;
-      
+
       public WaitingDialogListener(DialogInterface dialog) {
-         
+
       }
 
       public WaitingDialogListener(DialogInterface dialog, View v) {

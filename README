@@ -1,73 +1,105 @@
-一、接口说明：
+一、server接口说明：
+server接口都在com.osastudio.newshub.net包里，以下是接口函数列表，请参照server接口文档。
 
 验证手机提交激活码的有效性
-com.osastudio.newshub.net.UserApi.validate
+UserApi.validate
 
 下拉注册信息列表获取接口
-com.osastudio.newshub.net.UserApi.getCityList
-com.osastudio.newshub.net.UserApi.getCityDistrictList
-com.osastudio.newshub.net.UserApi.getSchoolTypeList
-com.osastudio.newshub.net.UserApi.getSchoolList
-com.osastudio.newshub.net.UserApi.getSchoolYearList
-com.osastudio.newshub.net.UserApi.getSchoolClassList
-com.osastudio.newshub.net.UserApi.getQualificationList
+UserApi.getCityList
+UserApi.getCityDistrictList
+UserApi.getSchoolTypeList
+UserApi.getSchoolList
+UserApi.getSchoolYearList
+UserApi.getSchoolClassList
+UserApi.getQualificationList
 
 提交注册接口
-com.osastudio.newshub.net.UserApi.registerUser
+UserApi.registerUser
 
 获取当前设备所有的用户信息
-com.osastudio.newshub.net.UserApi.getUserList
+UserApi.getUserList
 
 获取当前设备所有的用户及服务期限
-com.osastudio.newshub.net.UserApi.getUserInfoList
+UserApi.getUserInfoList
 
 添加子账号前，检查此设备是否存在未激活的订制记录
 获取当前设备所有的用户及服务期限
-com.osastudio.newshub.net.getValidateStatus
+getValidateStatus
 
 添加子账号
 获取当前设备所有的用户及服务期限
-com.osastudio.newshub.net.addUser
+addUser
 
 获取当前手机的首页图片URL文件名
-com.osastudio.newshub.net.AppPropertiesApi.getAppProperties
+AppPropertiesApi.getAppProperties
 
 获取当前手机的瓦片信息
-com.osastudio.newshub.net.NewsChannelApi.getNewsChannelList
+NewsChannelApi.getNewsChannelList
 
 获取一个课题下的所有课程标题
-com.osastudio.newshub.net.NewsAbstractApi.getNewsAbstractList
+NewsAbstractApi.getNewsAbstractList
 
 获取一个课程的具体内容
-com.osastudio.newshub.net.NewsArticleApi.getNewsArticle
+NewsArticleApi.getNewsArticle
 
 对一个具体的文章提交赞同
-com.osastudio.newshub.net.NewsArticleApi.likeArticle
+NewsArticleApi.likeArticle
 
 获取当前有效的持之以恒列表
-com.osastudio.newshub.net.DailyReminderApi.getDailyReminderList
+DailyReminderApi.getDailyReminderList
 
-测评开始页接口
-com.osastudio.newshub.net.ExamApi.getExamInfo
+获取当前设备及子账号有效的推荐课题列表
+RecommendApi.getRecommendedTopicList
 
-获取答卷接口
-com.osastudio.newshub.net.ExamApi.getExam
+获取推荐的课题内容介绍
+RecommendApi.getRecommendedTopicIntro
 
-提交答卷接口
-com.osastudio.newshub.net.ExamApi.commitExamAnswer
+提交订阅接口
+RecommendApi.subscribeRecommendedTopic
+
+获取本人订阅的推荐课题列表
+SubscriptionApi.getSubscriptionTopicList
+
+获取某一推荐课题的课程列表
+SubscriptionApi.getSubscriptionAbstractList
+
+获取推荐的课题内容介绍
+SubscriptionApi.getSubscriptionArticle
+
+获取当前设备及子账号有效的专栏列表
+NewsColumnistApi.getNewsColumnistList
+
+获取专栏的具体内容
+NewsColumnistApi.getNewsColumnistInfo
 
 获取当前设备及子账号有效的通知列表
-com.osastudio.newshub.net.NewsNoticeApi.getNewsNoticeList
+NewsNoticeApi.getNewsNoticeList
 
 获取通知的具体内容
-com.osastudio.newshub.net.NewsNoticeApi.getNewsNoticeArticle
+NewsNoticeApi.getNewsNoticeArticle
 
 通知内容界面提交反馈报名
-com.osastudio.newshub.net.NewsNoticeApi.feedbackNotice
+NewsNoticeApi.feedbackNotice
+
+获取当前设备的请求消息时间
+NewsMessageApi.getNewsMessageScheduleList
+
+获取本设备和子账号的状态栏消息
+NewsMessageApi.getNewsMessageList
 
 获取反馈问题类型
-com.osastudio.newshub.net.FeedbackApi.getFeedbackTypeList
+FeedbackApi.getFeedbackTypeList
 
 提交反馈内容接口
-com.osastudio.newshub.net.FeedbackApi.feedback
+FeedbackApi.feedback
+
+测评开始页接口
+ExamApi.getExamInfo
+
+获取答卷接口
+ExamApi.getExam
+
+提交答卷接口
+ExamApi.commitExamAnswer
+
 

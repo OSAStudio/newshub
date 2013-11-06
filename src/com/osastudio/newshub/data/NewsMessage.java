@@ -9,6 +9,13 @@ import com.osastudio.newshub.data.base.NewsId;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Class for news message content, including user id, user name, detail content
+ * etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsMessage extends NewsBaseObject implements NewsId, Parcelable {
 
    private static final String JSON_KEY_CONTENT = "message_content";

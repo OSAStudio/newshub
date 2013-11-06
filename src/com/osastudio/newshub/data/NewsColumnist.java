@@ -8,6 +8,12 @@ import com.osastudio.newshub.data.base.NewsBaseObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Class for news columnist brief information, including id, name, icon url etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsColumnist extends NewsBaseObject implements Parcelable {
 
    public static final String JSON_KEY_ICON_URL = "expert_icon";

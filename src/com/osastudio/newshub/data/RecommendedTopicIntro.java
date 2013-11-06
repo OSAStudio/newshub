@@ -5,6 +5,13 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsBaseTopicIntro;
 
+/**
+ * Class for introduction of recommended topic, including content of
+ * recommended topic introduction
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class RecommendedTopicIntro extends NewsBaseTopicIntro {
 
    public static final String JSON_KEY_CONTENT = "recommend_lssue_content";
@@ -26,8 +33,7 @@ public class RecommendedTopicIntro extends NewsBaseTopicIntro {
             if (!articleObject.isNull(JSON_KEY_CONTENT)) {
                setContent(articleObject.getString(JSON_KEY_CONTENT).trim());
             }
-            setNewsBaseTopic(RecommendedTopic
-                  .parseJsonObject(articleObject));
+            setNewsBaseTopic(RecommendedTopic.parseJsonObject(articleObject));
          } catch (JSONException e) {
 
          }

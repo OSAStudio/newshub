@@ -8,6 +8,12 @@ import com.osastudio.newshub.data.base.NewsBaseTopic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Class for recommended topic, including id, title, icon.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class RecommendedTopic extends NewsBaseTopic implements Parcelable {
 
    public static final String JSON_KEY_ID = "recommend_lssue_id";

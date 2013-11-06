@@ -37,6 +37,17 @@ import android.text.format.DateUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+/**
+ * Service for getting application information & properties, getting news
+ * message schedule, checking if it's time for pulling news message from remote
+ * server, scheduling pulling news message events, notifying news message on
+ * status bar if news message comes, checking if application upgrade is
+ * available, downloading upgrade apk from remote server, showing apk
+ * downloading progress on status bar etc.
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class NewsService extends Service {
 
    private static final String TAG = "NewsService";

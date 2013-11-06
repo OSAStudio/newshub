@@ -8,6 +8,12 @@ import org.json.JSONObject;
 
 import com.osastudio.newshub.data.base.NewsItemList;
 
+/**
+ * List for processing subscription topic
+ * 
+ * @author Rujin Xue
+ * 
+ */
 public class SubscriptionTopicList extends NewsItemList<SubscriptionTopic> {
 
    public SubscriptionTopicList(JSONObject jsonObject) {

@@ -35,6 +35,15 @@ public class SubscriptionApi extends NewsBaseApi {
             "expandlesson!getExpandLessonContentByMobile.do").toString();
    }
 
+   /**
+    * Get user subscription topic list by user id
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @return subscription topic list, or null if failed
+    */
    public static SubscriptionTopicList getSubscriptionTopicList(
          Context context, String userId) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -47,6 +56,17 @@ public class SubscriptionApi extends NewsBaseApi {
             : null;
    }
 
+   /**
+    * Get abstract list of specific subscription topic
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param newsTopic
+    *           topic of subscription
+    * @return abstract list of subscription topic, or null if failed
+    */
    public static SubscriptionAbstractList getSubscriptionAbstractList(
          Context context, String userId, SubscriptionTopic newsTopic) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -81,6 +101,17 @@ public class SubscriptionApi extends NewsBaseApi {
       return getSubscriptionAbstractList(context, userId, topic);
    }
 
+   /**
+    * Get article content of subscription by subscription abstract
+    * 
+    * @param context
+    *           application context
+    * @param userId
+    *           user identifier
+    * @param newsAbstract
+    *           abstract of subscription
+    * @return article content of subscription, or null if failed
+    */
    public static SubscriptionArticle getSubscriptionArticle(Context context,
          String userId, SubscriptionAbstract newsAbstract) {
       List<NameValuePair> params = new ArrayList<NameValuePair>();
