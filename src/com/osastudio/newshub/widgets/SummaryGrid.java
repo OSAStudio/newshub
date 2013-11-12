@@ -13,6 +13,12 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+/**
+ * Used for lesson summarys display
+ * 
+ * @author pengyue
+ *
+ */
 public class SummaryGrid extends LinearLayout implements
 		View.OnClickListener, View.OnLongClickListener {
 	private final static int CONTINER_ID[] = { R.id.container0,

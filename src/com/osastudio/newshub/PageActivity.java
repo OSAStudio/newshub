@@ -54,6 +54,15 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+
+
+/**
+ * Content page activity, notify cotent page, expert content page, recommend content page,
+ * user issues page use this activity.
+ * 
+ * @author pengyue
+ *
+ */
 public class PageActivity extends NewsBaseActivity {
 	public static final String DIRECT_ENTER="direct_enter";
 	public static final String PAGE_TYPE = "page_type";

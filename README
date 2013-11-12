@@ -102,4 +102,31 @@ ExamApi.getExam
 提交答卷接口
 ExamApi.commitExamAnswer
 
+二、UI界面说明
+每个界面都是一个Activity，代码保存在com.osastudio.newshub目录下
+这些Activity中调用的自定义控件保存在com.osastudio.newshub.widgets目录下
+
+瓦片界面：CategoryActivity，用户状态检测，注册，登录，操作均在这个activity完成。
+
+普通列表界面：AzkerListActivity，推荐列表、用户定制列表、通知列表、持之以恒列表都调用这个activity实现。
+
+课程列表界面：SummaryActivity
+
+内容界面：PageActivity、FileActivity，课程内容使用FileActivity,
+          其他内容界面（通知内容, 专家内容, 推荐内容,用户定制内容）使用PageActivity。
+
+设置界面：SettingActivity
+
+反馈界面：FeedbackActivity
+
+用户列表界面：UserInfosActivity
+
+用户管理界面：UserManagerActivity
+
+com.osastudio.newshub.utils.Utils 是UI上使用到的一些通用接口
+
+
+
+
+
 

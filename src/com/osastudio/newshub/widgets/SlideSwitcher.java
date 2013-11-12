@@ -11,6 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ViewSwitcher;
 
+/**
+ * Used for switch pages
+ * 
+ * @author pengyue
+ *
+ */
 public class SlideSwitcher extends ViewSwitcher implements ViewSwitcher.ViewFactory {
 	Context mContext = null;
 	int mSize = 0;

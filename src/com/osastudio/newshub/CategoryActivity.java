@@ -86,6 +86,13 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
+/**
+ * The first activity.
+ * Include register, login and all other interfaces' entrance.
+ * 
+ * @author pengyue
+ *
+ */
 @SuppressLint("NewApi")
 public class CategoryActivity extends NewsBaseActivity {
    private static final String DEFAULT_BACKGROUND_FILE = "file:///android_asset/1.jpg";
@@ -299,6 +306,7 @@ public class CategoryActivity extends NewsBaseActivity {
          checkNetWork();
       }
    }
+   
    
    @Override
    protected void onNewIntent(Intent intent) {
@@ -795,35 +803,15 @@ public class CategoryActivity extends NewsBaseActivity {
       Bitmap mBitmap;
    }
 
-   // private class LoadImageTask extends AsyncTask<Void, BMP_Item, Void> {
-   //
-   // @Override
-   // protected Void doInBackground(Void... params) {
-   // BMP_Item item = new BMP_Item();
-   // item.mPath = DEFAULT_SPLASH_FILE;
-   // item.mBitmap = Utils.loadBitmap(DEFAULT_SPLASH_FILE, mScreenWidth,
-   // 0, 0);
-   // if (item.mBitmap != null) {
-   // publishProgress(item);
-   // }
-   // item = new BMP_Item();
-   // item.mPath = DEFAULT_BACKGROUND_FILE;
-   // item.mBitmap = Utils.loadBitmap(DEFAULT_SPLASH_FILE, mScreenWidth,
-   // 0, 0);
-   // if (item.mBitmap != null) {
-   // publishProgress(item);
-   // }
-   // return null;
-   // }
-   //
-   // @Override
-   // protected void onProgressUpdate(BMP_Item... values) {
-   // BMP_Item item = values[0];
-   // super.onProgressUpdate(values);
-   // }
-   //
-   // }
+   
 
+   /**
+    * Call web API in this task, 
+    * like get user status, getNewsChannelList, getSplashImage
+    * 
+    * @author pengyue
+    *
+    */
    private class LoadDataTask extends NewsResultAsyncTask<Integer, Integer, NewsResult> {
 
       public LoadDataTask(Context context) {

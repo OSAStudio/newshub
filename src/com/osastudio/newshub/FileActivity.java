@@ -35,6 +35,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+
+/**
+ * Activity to display lesson content pages.
+ * 
+ * @author pengyue
+ *
+ */
 public class FileActivity extends NewsBaseActivity {
 	public static final String DIRECT_ENTER = "direct_enter";
 	public static final String START_INDEX = "Start_index";

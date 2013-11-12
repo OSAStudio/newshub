@@ -21,6 +21,13 @@ import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
+
+/**
+ * This activity is used to manage users.
+ * 
+ * @author pengyue
+ *
+ */
 public class UserManagerActivity extends NewsBaseActivity {
 	private LinearLayout mLayout = null;
 

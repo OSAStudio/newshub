@@ -28,6 +28,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+
+
+/**
+ * User feedback activity
+ * 
+ * @author pengyue
+ *
+ */
 public class FeedbackActivity extends NewsBaseActivity {
 	final static private int MIN_LENGTH = 10;
 	final static private int MAX_LENGTH = 500;

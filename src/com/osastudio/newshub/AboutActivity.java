@@ -11,6 +11,14 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+
+
+/**
+ * Show about content page.
+ * 
+ * @author pengyue
+ *
+ */
 public class AboutActivity extends NewsBaseActivity {
 
    private ViewGroup mTextContentLayout;

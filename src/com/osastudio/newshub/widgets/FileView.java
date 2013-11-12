@@ -26,6 +26,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+
+
+/**
+ * This view is used to show web page
+ * 
+ * @author pengyue
+ *
+ */
 public class FileView extends LinearLayout {
 
    final String jsLoadImageMethods = "<script type='text/javascript'>"

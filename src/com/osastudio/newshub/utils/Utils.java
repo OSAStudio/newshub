@@ -27,6 +27,12 @@ import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.os.Environment;
 
+/**
+ * Some static public api.
+ * 
+ * @author pengyue
+ *
+ */
 public class Utils {
 
    private static final Logger logger = LoggerFactory.getLogger();
@@ -63,6 +69,15 @@ public class Utils {
 			+ "/Android/data/com.huadi.azker_phone/";
 	public static final String TEMP_CACHE_FOLDER = TEMP_FOLDER + "cache/";
 
+	/**
+	 * Decode file to bitmap from file path.
+	 * 
+	 * @param pathName complete file path
+	 * @param outputW output width
+	 * @param outputH output height
+	 * @param rotate output rotation
+	 * @return the decoded bitmap
+	 */
 	public synchronized static Bitmap loadBitmap(String pathName, int outputW,
 			int outputH, int rotate) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -198,7 +213,12 @@ public class Utils {
 
 	}
 
-	
+	/**
+	 * Decode file to bitmap from file url.
+	 * 
+	 * @param url the file url string
+	 * @return
+	 */
 	public static Bitmap getBitmapFromUrl(String url) {
 		Bitmap bmp = null;
 		if (url != null) {
@@ -230,6 +250,15 @@ public class Utils {
 		 return TEMP_CACHE_FOLDER+temp;
 	}
 
+	/**
+	 * Decode file to bitmap from file url 
+	 * and you can encode this bitmap to png and save into filesystem.
+	 * 
+	 * @param url the file url string
+	 * @param bNeedCache set true is to encode this bitmap to png 
+	 *        and save into filesystem
+	 * @return the decode bitmap
+	 */
 	public static Bitmap getBitmapFromUrl(String url, boolean bNeedCache) {
 		Bitmap bmp = null;
 		if (!bNeedCache) {
@@ -254,7 +283,18 @@ public class Utils {
 		return bmp;
 
 	}
-
+	
+	
+   /**
+    * Decode file to bitmap from file url and set the bitmap's large size,
+    * you can encode this bitmap to png and save into filesystem.
+    * 
+    * @param url the file url string
+    * @param bNeedCache set true is to encode this bitmap to png 
+    *        and save into filesystem
+    * @param largeSize value of long side    
+    * @return the decode bitmap
+    */
 	public static Bitmap getBitmapFromUrl(String url, int largeSize, boolean bNeedCache) {
 		Bitmap bmp = null;
 		if (!bNeedCache) {
@@ -280,6 +320,13 @@ public class Utils {
 
 	}
 
+   /**
+    * Decode file to bitmap from file url and set the bitmap's large size.
+    * 
+    * @param url the file url string
+    * @param largeSize value of long side    
+    * @return the decode bitmap
+    */
 	
 	public static Bitmap getBitmapFromUrl(String url, int largeSize) {
 		Bitmap bmp = null;
@@ -332,7 +379,14 @@ public class Utils {
 		return bmp;
 
 	}
-
+	
+	
+   /**
+    * convert some special character.
+    * 
+    * @param title the string need to be comvert
+    * @return the converted string
+    */
 	public static String convertUrl(String title) {
 		title = title.replace("%", "%25");
 		title = title.replace(" ", "%20");
@@ -389,6 +443,13 @@ public class Utils {
     }
 
 
+   /**
+    * Display a progress dialog
+    * 
+    * @param context the context used to show dialog
+    * @param msg dialog message
+    * @return
+    */
 	public static ProgressDialog showProgressDlg(Context context, String msg) {
 		ProgressDialog dlg = null;
 		if (msg == null) {
@@ -406,13 +467,24 @@ public class Utils {
 		}
 		return dlg;
 	}
-
+	
+	/**
+	 * close the progress dialog
+	 * @param dlg dialog need to be closed
+	 */
 	public static void closeProgressDlg(ProgressDialog dlg) {
 		if (dlg != null) {
 			dlg.dismiss();
 		}
 	}
 
+	/**
+	 * Show dialog with message and a confirm button
+	 * 
+	 * @param context 
+	 * @param msg the dialog message
+	 * @param cb confirm button click callback
+	 */
 	public static void ShowConfirmDialog(Context context, String msg,
 			final DialogConfirmCallback cb) {
 		if (((Activity)context).isFinishing()) {
@@ -432,6 +504,15 @@ public class Utils {
 						}).setCancelable(false).show();
 	}
 	
+	
+	/**
+	 * Show web error dialog with a confirm dialog
+	 * 
+	 * @param context
+	 * @param resultCode web error code
+	 * @param bNeedFinish set true to finish dialog when confirm
+	 * @return 
+	 */
 	public static boolean ShowResultErrorDialog(final Context context, int resultCode,
 			final boolean bNeedFinish) {
 		String msg = getErrorResultMsg(context, resultCode);
@@ -453,6 +534,14 @@ public class Utils {
 		return true;
 	}
 	
+	/**
+	 * Show web error dialog with a confirm dialog
+	 * 
+	 * @param context
+	 * @param resultCode web error code
+	 * @param cb confirm button click callback
+	 * @return
+	 */
 	public static boolean ShowResultErrorDialog(final Context context, int resultCode,
 			final DialogConfirmCallback cb) {
 		String msg = getErrorResultMsg(context, resultCode);
@@ -510,6 +599,11 @@ public class Utils {
 		void onConfirm(DialogInterface dialog);
 	}
 	
+	/**
+	 * get error message resource id by network result code
+	 * @param recult_code network result code
+	 * @return error message resource id
+	 */
 	public static int getErrorResultMsgId(int recult_code) {
 	   int msgId = -1;
 
@@ -573,7 +667,12 @@ public class Utils {
       }
       return msgId;
 	}
-
+	
+	/**
+    * get error message string by network result code
+    * @param recult_code network result code
+    * @return error message string
+    */
 	public static String getErrorResultMsg(Context context, int recult_code) {
 		String msg = null;
 		int msgId = getErrorResultMsgId(recult_code);

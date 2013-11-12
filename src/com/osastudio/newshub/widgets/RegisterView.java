@@ -58,6 +58,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+
 public class RegisterView extends Dialog {
 	public enum USER_TYPE {
 		REGISTER, ADD

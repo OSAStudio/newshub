@@ -25,6 +25,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
+
+/**
+ * Include all setting views and functions.
+ * 
+ * @author pengyue
+ *
+ */
 public class SettingActivity extends NewsBaseActivity implements AppSettings {
    
    private static final int FONT_SIZE_STEP = 4;

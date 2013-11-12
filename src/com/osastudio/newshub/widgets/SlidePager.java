@@ -15,6 +15,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ViewSwitcher;
 
+/**
+ * Used for scroll in first activity
+ * 
+ * @author pengyue
+ *
+ */
 public class SlidePager extends android.support.v4.view.ViewPager {
 	Context mContext = null;
 	int mSize = 0;

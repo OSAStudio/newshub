@@ -25,6 +25,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+/**
+ * This activity is used to show all users' info.
+ * 
+ * @author pengyue
+ *
+ */
 public class UserInfosActivity extends NewsBaseActivity {
 
 	private static final int[] USER_VIEW_ID = { R.id.user0, R.id.user1,

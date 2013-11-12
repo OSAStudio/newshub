@@ -12,10 +12,10 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * 鍒嗗壊杈撳叆妗�
+ * This view is used to show edit whit division.
  * 
- * @author Administrator
- * 
+ * @author pengyue
+ *
  */
 public class DivisionEditText extends EditText {
 

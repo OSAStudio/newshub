@@ -32,6 +32,14 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.TextView;
 
+/**
+ * The Activity to display lesson list,
+ * lessons list, user issue lessons list 
+ * and daily reminder lessons list all user this activity
+ * 
+ * @author pengyue
+ *
+ */
 public class SummaryActivity extends NewsBaseActivity {
 	public static final String CHANNEL_TYPE = "Channel_type";
 	public static final String CHANNEL_ID = "Channel_id";

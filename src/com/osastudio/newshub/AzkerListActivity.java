@@ -52,6 +52,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
+
+/**
+ * Activity to display list layout,
+ * recommend list, expert list, user issue list,
+ * nority list and daily reminder list user this activity.
+ * 
+ * @author pengyue
+ *
+ */
 public class AzkerListActivity extends NewsBaseActivity {
 
 	public static final String DIRECT_ENTER="direct_enter";

@@ -16,6 +16,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 
+
+
+/**
+ * The Activities of this application are extends from NewsBaseActivity.
+ * 
+ * @author pengyue
+ *
+ */
 public class NewsBaseActivity extends Activity {
 
    protected static final String TAG = "NewsBaseActivity";

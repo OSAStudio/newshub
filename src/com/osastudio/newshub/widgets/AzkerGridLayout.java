@@ -13,6 +13,13 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+
+/**
+ * This view is used to show title grid in first activity
+ * 
+ * @author pengyue
+ *
+ */
 public class AzkerGridLayout extends LinearLayout implements View.OnClickListener, View.OnLongClickListener {
 	private final static int RAW_ID[] = { R.id.row0, R.id.row1, R.id.row2,
 			R.id.row3 };
