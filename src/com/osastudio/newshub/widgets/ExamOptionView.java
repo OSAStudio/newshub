@@ -48,15 +48,15 @@ public class ExamOptionView extends FrameLayout {
    }
 
    public TextView getIcoView() {
-      return icoView;
+      return this.icoView;
    }
 
    public TextView getTitleView() {
-      return titleView;
+      return this.titleView;
    }
 
    public Option getExamOption() {
-      return examOption;
+      return this.examOption;
    }
 
    @Override
@@ -68,6 +68,21 @@ public class ExamOptionView extends FrameLayout {
       }
       if (this.titleView != null) {
          this.titleView.setSelected(selected);
+      }
+   }
+
+   @Override
+   public void invalidate() {
+      if (this.icoView != null) {
+         this.icoView.setText(isSelected() ? ""
+               : (this.examOption != null ? this.examOption.getName() : ""));
+      }
+      if (this.titleView != null) {
+         this.titleView.setTextColor(this.context.getResources().getColor(
+               isSelected() ? R.color.ex_option_hl_text
+                     : R.color.ex_default_text));
+         this.titleView.setText(this.examOption != null ? this.examOption
+               .getTitle() : "");
       }
    }
 

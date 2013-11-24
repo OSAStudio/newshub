@@ -1,5 +1,8 @@
 package com.osastudio.newshub.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.huadi.azker_phone.R;
 import com.osastudio.newshub.data.exam.Option;
 import com.osastudio.newshub.data.exam.OptionList;
@@ -12,11 +15,8 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,10 +27,10 @@ public class ExamView extends FrameLayout {
    private TextView currProgressView, totalProgressView;
    private ProgressBar progressBar;
    private TextView questionTitleView;
-   private ListView optionsListView;
    private OptionAdapter optionAdapter;
    private Question question;
    private QuestionAnswer answer;
+   private ViewGroup optionsLayout;
 
    public ExamView(Context context) {
       super(context);
@@ -51,7 +51,7 @@ public class ExamView extends FrameLayout {
             .findViewById(R.id.progress_bar);
       this.questionTitleView = (TextView) this.layout
             .findViewById(R.id.question_title);
-      this.optionsListView = (ListView) this.layout
+      this.optionsLayout = (ViewGroup) this.layout
             .findViewById(R.id.options_list);
    }
 
@@ -77,24 +77,27 @@ public class ExamView extends FrameLayout {
          this.questionTitleView.setText(question != null ? Html
                .fromHtml(question.getTitle()) : "");
       }
-      if (this.optionsListView != null) {
-         this.optionsListView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                  int position, long id) {
-               if (view.getTag() != null) {
-                  Option opt = (Option) view.getTag();
-                  if (!opt.isSelected()) {
-                     selectOption(opt);
-                  } else {
-                     deselectOption(opt);
-                  }
-               }
-            }
-         });
+      if (this.optionsLayout != null) {
+         this.optionsLayout.removeAllViews();
          this.optionAdapter = new OptionAdapter(this.context,
                question != null ? question.getOptions() : null);
-         this.optionsListView.setAdapter(this.optionAdapter);
-         setOptionsListViewHeight();
+         View view = null;
+         for (int i = 0; i < question.getOptions().getCount(); i++) {
+            view = this.optionAdapter.getView(i, null, null);
+            view.setOnClickListener(new OnClickListener() {
+               public void onClick(View v) {
+                  if (v.getTag() != null) {
+                     Option opt = (Option) v.getTag();
+                     if (!opt.isSelected()) {
+                        selectOption(opt);
+                     } else {
+                        deselectOption(opt);
+                     }
+                  }
+               }
+            });
+            this.optionsLayout.addView(view, i);
+         }
       }
    }
 
@@ -138,20 +141,6 @@ public class ExamView extends FrameLayout {
       return this.answer.getOptionIds().size() > 0;
    }
 
-   private void setOptionsListViewHeight() {
-      int height = 0;
-      int count = this.optionAdapter.getCount();
-      for (int i = 0; i < count; i++) {
-         View view = this.optionAdapter.getView(i, null, this.optionsListView);
-         view.measure(0, 0);
-         height += view.getMeasuredHeight();
-      }
-      ViewGroup.LayoutParams params = this.optionsListView.getLayoutParams();
-      params.height = height
-            + (this.optionsListView.getDividerHeight() * (count - 1));
-      this.optionsListView.setLayoutParams(params);
-   }
-
    public TextView getCurrProgressView() {
       return this.currProgressView;
    }
@@ -168,10 +157,6 @@ public class ExamView extends FrameLayout {
       return this.questionTitleView;
    }
 
-   public ListView getOptionsListView() {
-      return this.optionsListView;
-   }
-
    public Question getQuestion() {
       return this.question;
    }
@@ -184,6 +169,7 @@ public class ExamView extends FrameLayout {
 
       private Context context;
       private OptionList options;
+      private List<View> itemViews = new ArrayList<View>();
 
       public OptionAdapter(Context context, OptionList opts) {
          this.context = context;
@@ -218,6 +204,7 @@ public class ExamView extends FrameLayout {
       public View getView(int position, View convertView, ViewGroup parent) {
          if (convertView == null) {
             convertView = new ExamOptionView(this.context);
+            this.itemViews.add(convertView);
          }
 
          Option opt = getItem(position);
@@ -228,6 +215,19 @@ public class ExamView extends FrameLayout {
          ((ExamOptionView) convertView).setContent(opt);
          convertView.setTag(opt);
          return convertView;
+      }
+
+      @Override
+      public void notifyDataSetChanged() {
+         View view = null;
+         for (int i = 0; i < this.itemViews.size(); i++) {
+            view = this.itemViews.get(i);
+            if (view != null) {
+               Option opt = (Option) view.getTag();
+               view.setSelected(opt.isSelected());
+               view.invalidate();
+            }
+         }
       }
 
    }

@@ -55,13 +55,12 @@
         android:textSize="@dimen/ex_question_title_text_size"
         android:textStyle="bold" />
 
-    <ListView
+    <LinearLayout
         android:id="@+id/options_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/ex_option_list_margin_t"
-        android:divider="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
-        android:listSelector="@android:color/transparent" />
+        android:orientation="vertical" >
+    </LinearLayout>
 
 </LinearLayout>

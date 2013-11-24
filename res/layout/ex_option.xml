@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/ex_option_padding_b"
     android:paddingTop="@dimen/ex_option_padding_t" >
@@ -11,6 +10,7 @@
         android:id="@+id/option_ico"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:background="@drawable/ex_option"
         android:gravity="center"
         android:textColor="@android:color/white"
@@ -20,6 +20,7 @@
         android:id="@+id/option_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/ex_option_text_margin_l"
         android:gravity="left|center_vertical"
         android:textColor="@color/ex_default_text"
