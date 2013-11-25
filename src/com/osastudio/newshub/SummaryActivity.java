@@ -278,7 +278,8 @@ public class SummaryActivity extends NewsBaseActivity {
 			if (index < mSummaries.size()) {
             NewsBaseAbstract baseAbstract = mSummaries.get(index);
             if (mChannelType == Utils.LESSON_LIST_TYPE
-                  || mChannelType == Utils.DAILY_REMINDER_TYPE) {
+                  || mChannelType == Utils.DAILY_REMINDER_TYPE
+                  || mChannelType == Utils.USER_ISSUES_TYPE) {
                if (baseAbstract instanceof NewsAbstract) {
                   NewsAbstract abs = (NewsAbstract) baseAbstract;
                   if (abs.getType() == NewsAbstract.EXAM_TYPE) {
