@@ -75,7 +75,7 @@ public class ExamView extends FrameLayout {
       }
       if (this.questionTitleView != null) {
          this.questionTitleView.setText(question != null ? Html
-               .fromHtml(question.getTitle()) : "");
+               .fromHtml(question.getTitle().trim()) : "");
       }
       if (this.optionsLayout != null) {
          this.optionsLayout.removeAllViews();

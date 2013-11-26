@@ -42,7 +42,7 @@ public class ExamOptionView extends FrameLayout {
          this.titleView.setTextColor(this.context.getResources().getColor(
                option.isSelected() ? R.color.ex_option_hl_text
                      : R.color.ex_default_text));
-         this.titleView.setText(option != null ? option.getTitle() : "");
+         this.titleView.setText(option != null ? option.getTitle().trim() : "");
          this.titleView.setSelected(option.isSelected());
       }
    }
