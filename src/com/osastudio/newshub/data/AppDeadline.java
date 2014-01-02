@@ -38,12 +38,12 @@ public class AppDeadline {
 
    public boolean hasExpired() {
       boolean expired = false;
-      try {
-         expired = this.currentTime.after(new SimpleDateFormat("MM,dd,yyyy")
-               .parse(EXPIRED_TIME));
-      } catch (ParseException e) {
-         // e.printStackTrace();
-      }
+//      try {
+//         expired = this.currentTime.after(new SimpleDateFormat("MM,dd,yyyy")
+//               .parse(EXPIRED_TIME));
+//      } catch (ParseException e) {
+//          e.printStackTrace();
+//      }
       return expired;
    }
 
